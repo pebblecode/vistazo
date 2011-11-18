@@ -76,6 +76,20 @@ get '/' do
   erb :index
 end
 
+
+get '/create' do
+  protected!
+  
+  
+  redirect '/'
+end
+
+get '/delete_all' do
+  protected!
+  
+  redirect '/'  
+end
+
 get '/css/style.css' do
   scss "sass/style".intern
 end
