@@ -1,0 +1,21 @@
+@font-face {
+    font-family: 'MenschBold';
+    src: url('mensch-bold-wf.eot');
+    src: url('mensch-bold-wf.eot?#iefix') format('embedded-opentype'),
+         url('mensch-bold-wf.woff') format('woff'),
+         url('mensch-bold-wf.ttf') format('truetype'),
+         url('mensch-bold-wf.svg#MenschMenschBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'WebSymbolsRegular';
+    src: url('websymbols-regular-webfont.eot');
+    src: url('websymbols-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('websymbols-regular-webfont.woff') format('woff'),
+         url('websymbols-regular-webfont.ttf') format('truetype'),
+         url('websymbols-regular-webfont.svg#WebSymbolsRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
