@@ -100,7 +100,8 @@ get '/create' do
 
   toby.update_attributes(:team_member_projects => [
     TeamMemberProject.new(:project_id => ideapi.id, :date => Time.now),
-    TeamMemberProject.new(:project_id => space.id, :date => Time.now + 1.day)
+    TeamMemberProject.new(:project_id => space.id, :date => Time.now + 1.day),
+    TeamMemberProject.new(:project_id => space.id, :date => Date.parse('2011-11-14'))
   ])
   
   redirect '/'
