@@ -22,6 +22,39 @@ elsif settings.environment == "development"
 end
 ##############################################################################
 
+
+##############################################################################
+# Models
+##############################################################################
+class TeamMember
+  include MongoMapper::Document
+
+  key :name, String, :required => true
+  
+  many :team_member_projects
+end
+
+class TeamMemberProject
+  include MongoMapper::EmbeddedDocument
+  
+  key :date, Date, :required => true
+  
+  belongs_to :team_member
+  belongs_to :project
+end
+
+class Project
+  include MongoMapper::Document
+  
+  key :name, String, :required => true
+  key :colour, String
+  
+  many :team_member_projects
+end
+
+##############################################################################
+
+
 helpers do
 
   def protected!
