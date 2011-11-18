@@ -37,7 +37,7 @@ class TeamMember
 end
 
 class TeamMemberProject
-  include MongoMapper::Document
+  include MongoMapper::EmbeddedDocument
   
   key :date, Date, :required => true
   
@@ -51,7 +51,8 @@ class Project
   key :name, String, :required => true
   key :hex_colour, String
   
-  many :team_member_projects
+  # Not needed
+  # many :team_member_projects
 end
 
 ##############################################################################
@@ -110,7 +111,7 @@ end
 get '/delete_all' do
   protected!
   
-  TeamMemberProject.delete_all()
+  # TeamMemberProject.delete_all()
   TeamMember.delete_all()
   Project.delete_all()
   
