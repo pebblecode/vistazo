@@ -92,18 +92,16 @@ get '/create' do
   ldn_taxi = Project.create(:name => "LDN taxi", :hex_colour => "#f7ae35")
   vistazo = Project.create(:name => "Vistazo", :hex_colour => "#a1579c")
   
-  toby = TeamMember.create(:name => "Toby H", :team_member_projects => [
-      TeamMemberProject.new(:project_id => ideapi.id, :date => Time.now)
-    ])
+  toby = TeamMember.create(:name => "Toby H")
   george = TeamMember.create(:name => "George O")
   mark = TeamMember.create(:name => "Mark D")
   tak = TeamMember.create(:name => "Tak T")
   vince = TeamMember.create(:name => "Vince M")
 
-  # toby.push(:team_member_projects => TeamMemberProject.new(:project => ideapi, :date => Time.now))
-  # toby.push_all(:team_member_projects => [TeamMemberProject.new(:project => ideapi, :date => Time.now)])
-  # toby.push_all(:team_member_projects => [TeamMemberProject.new(:project => ideapi)])
-  # tm = TeamMemberProject.new(:project_id => ideapi)
+  toby.update_attributes(:team_member_projects => [
+    TeamMemberProject.new(:project_id => ideapi.id, :date => Time.now),
+    TeamMemberProject.new(:project_id => space.id, :date => Time.now + 1.day)
+  ])
   
   redirect '/'
 end
