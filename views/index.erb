@@ -7,7 +7,15 @@
   <h3>Team members:</h3>
   <ul>
     <% for tm in @team_members %>
-      <li><%= tm.name %></li>
+      <li><%= tm.name %>
+        <% if tm.team_member_projects.present? %>
+          <ul>
+            <% for tmp in tm.team_member_projects %>
+              <li>- <%= "#{tmp.project_id}: #{tmp.date}" %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </li>
     <% end %>
   </ul>
 <% end %>

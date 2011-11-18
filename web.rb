@@ -37,12 +37,12 @@ class TeamMember
 end
 
 class TeamMemberProject
-  include MongoMapper::EmbeddedDocument
+  include MongoMapper::Document
   
   key :date, Date, :required => true
   
-  belongs_to :team_member
-  belongs_to :project
+  # belongs_to :team_member
+  one :project
 end
 
 class Project
@@ -91,17 +91,18 @@ get '/create' do
   ldn_taxi = Project.create(:name => "LDN taxi", :hex_colour => "#f7ae35")
   vistazo = Project.create(:name => "Vistazo", :hex_colour => "#a1579c")
   
-  toby = TeamMember.create(:name => "Toby H")
+  toby = TeamMember.create(:name => "Toby H", :team_member_projects => [
+      TeamMemberProject.new(:project_id => ideapi.id, :date => Time.now)
+    ])
   george = TeamMember.create(:name => "George O")
   mark = TeamMember.create(:name => "Mark D")
   tak = TeamMember.create(:name => "Tak T")
   vince = TeamMember.create(:name => "Vince M")
 
-  puts ideapi
   # toby.push(:team_member_projects => TeamMemberProject.new(:project => ideapi, :date => Time.now))
   # toby.push_all(:team_member_projects => [TeamMemberProject.new(:project => ideapi, :date => Time.now)])
   # toby.push_all(:team_member_projects => [TeamMemberProject.new(:project => ideapi)])
-  # toby.push(:team_member_projects => [ ])
+  # tm = TeamMemberProject.new(:project_id => ideapi)
   
   redirect '/'
 end
@@ -109,8 +110,10 @@ end
 get '/delete_all' do
   protected!
   
+  TeamMemberProject.delete_all()
   TeamMember.delete_all()
   Project.delete_all()
+  
   
   redirect '/'  
 end
