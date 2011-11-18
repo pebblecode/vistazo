@@ -73,6 +73,9 @@ end
 
 get '/' do
   protected!
+  
+  @team_members = TeamMember.all
+  
   erb :index
 end
 
@@ -80,12 +83,19 @@ end
 get '/create' do
   protected!
   
+  TeamMember.create(:name => "Toby H")
+  TeamMember.create(:name => "George O")
+  TeamMember.create(:name => "Mark D")
+  TeamMember.create(:name => "Tak T")
+  TeamMember.create(:name => "Vince M")
   
   redirect '/'
 end
 
 get '/delete_all' do
   protected!
+  
+  TeamMember.delete_all()
   
   redirect '/'  
 end

@@ -3,6 +3,14 @@
   <li><a href="/delete_all">Delete all</a></li>
 </ul>
 
+<% if @team_members.present? %>
+  <ul>
+    <% for tm in @team_members %>
+      <li><%= tm.name %></li>
+    <% end %>
+  </ul>
+<% end %>
+
 <div class="line line1"></div><div class="line line2"></div><div class="line line3"></div><div class="line line4"></div><div class="line line5"></div><div class="line line6"></div>
 
 <table>
