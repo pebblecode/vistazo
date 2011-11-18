@@ -4,12 +4,23 @@
 </ul>
 
 <% if @team_members.present? %>
+  <h3>Team members:</h3>
   <ul>
     <% for tm in @team_members %>
       <li><%= tm.name %></li>
     <% end %>
   </ul>
 <% end %>
+
+<% if @projects.present? %>
+  <h3>Projects:</h3>
+  <ul>
+    <% for p in @projects %>
+      <li style="color: <%= p.hex_colour %>"><%= p.name %></li>
+    <% end %>
+  </ul>
+<% end %>
+
 
 <div class="line line1"></div><div class="line line2"></div><div class="line line3"></div><div class="line line4"></div><div class="line line5"></div><div class="line line6"></div>
 

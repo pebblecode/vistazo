@@ -2,6 +2,8 @@ require 'sinatra'
 require 'mongo_mapper'
 require 'uri'
 require 'sass'
+require 'time'
+require 'date'
 
 set :environment, ENV["RACK_ENV"] || "development"
 
@@ -47,7 +49,7 @@ class Project
   include MongoMapper::Document
   
   key :name, String, :required => true
-  key :colour, String
+  key :hex_colour, String
   
   many :team_member_projects
 end
@@ -74,6 +76,7 @@ end
 get '/' do
   protected!
   
+  @projects = Project.all
   @team_members = TeamMember.all
   
   erb :index
@@ -83,11 +86,22 @@ end
 get '/create' do
   protected!
   
-  TeamMember.create(:name => "Toby H")
-  TeamMember.create(:name => "George O")
-  TeamMember.create(:name => "Mark D")
-  TeamMember.create(:name => "Tak T")
-  TeamMember.create(:name => "Vince M")
+  ideapi = Project.create(:name => "ideapi", :hex_colour => "#adca3a")
+  space = Project.create(:name => "Space", :hex_colour => "#e74679")
+  ldn_taxi = Project.create(:name => "LDN taxi", :hex_colour => "#f7ae35")
+  vistazo = Project.create(:name => "Vistazo", :hex_colour => "#a1579c")
+  
+  toby = TeamMember.create(:name => "Toby H")
+  george = TeamMember.create(:name => "George O")
+  mark = TeamMember.create(:name => "Mark D")
+  tak = TeamMember.create(:name => "Tak T")
+  vince = TeamMember.create(:name => "Vince M")
+
+  puts ideapi
+  # toby.push(:team_member_projects => TeamMemberProject.new(:project => ideapi, :date => Time.now))
+  # toby.push_all(:team_member_projects => [TeamMemberProject.new(:project => ideapi, :date => Time.now)])
+  # toby.push_all(:team_member_projects => [TeamMemberProject.new(:project => ideapi)])
+  # toby.push(:team_member_projects => [ ])
   
   redirect '/'
 end
@@ -96,6 +110,7 @@ get '/delete_all' do
   protected!
   
   TeamMember.delete_all()
+  Project.delete_all()
   
   redirect '/'  
 end
