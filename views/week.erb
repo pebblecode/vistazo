@@ -9,7 +9,7 @@
   <tr>
     <th class="row1 col1"> 
       <% if @prev_week_url.present? %>
-        <a href="<%= @prev_week_url %>" class="arrows">(</a>
+        <a href="<%= @prev_week_url %>" class="arrows" title="Previous week">(</a>
       <% end %>
     </th>
     <th class="row1 col2"> <p class="day">MON</p> <p class="date">14th</p> <p class="month">NOV</p> </th>
@@ -17,7 +17,7 @@
     <th class="row1 col4"> <p class="day">WED</p> <p class="date">16th</p> <p class="month">NOV</p> </th>
     <th class="row1 col5"> <p class="day">THU</p> <p class="date">17th</p> <p class="month">NOV</p> </th>
     <th class="row1 col6"> <p class="day">FRI</p> <p class="date">18th</p> <p class="month">NOV</p> </th>
-    <th class="row1 col7"> <a href="<%= @next_week_url %>" class="arrows">)</a></th>
+    <th class="row1 col7"> <a href="<%= @next_week_url %>" class="arrows" title="Next week">)</a></th>
   </tr>
   
   
