@@ -107,6 +107,7 @@ end
 MONDAY = 1
 FRIDAY = 5
 START_YEAR = 2010
+NUM_WEEKS_IN_A_YEAR = 52
 
 get '/' do
   protected!
@@ -120,7 +121,17 @@ get '/:year/week/:week_num' do
   
   year = params[:year].to_i
   week_num = params[:week_num].to_i
-  if ((1..52).include? week_num) and (year > START_YEAR)
+  
+  if ((1..NUM_WEEKS_IN_A_YEAR).include? week_num) and (year > START_YEAR)
+    # Weeks start from 1
+    prev_week_num = ((week_num - 1) <= 0) ? NUM_WEEKS_IN_A_YEAR : week_num - 1
+    prev_week_year = ((week_num - 1) <= 0) ? year - 1 : year
+    @prev_week_url = (prev_week_year > START_YEAR) ? "/#{prev_week_year}/week/#{prev_week_num}" : nil
+    
+    next_week_num = ((week_num + 1) > NUM_WEEKS_IN_A_YEAR) ? 1 : week_num + 1
+    next_week_year = ((week_num + 1) > NUM_WEEKS_IN_A_YEAR) ? year + 1 : year
+    @next_week_url = "/#{next_week_year}/week/#{next_week_num}"
+
     monday_of_week = Date.commercial(year, week_num, MONDAY)
   
     @projects = Project.all
