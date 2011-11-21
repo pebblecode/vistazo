@@ -193,18 +193,18 @@ get '/create' do
   vince = TeamMember.create(:name => "Vince M")
 
   toby.update_attributes(:team_member_projects => [
-    TeamMemberProject.new(:project_id => ideapi.id, :project => ideapi, :date => Date.parse('2011-11-14')),
-    TeamMemberProject.new(:project_id => ldn_taxi.id, :date => Date.parse('2011-11-14')),
+    TeamMemberProject.new(:project_id => ideapi.id, :project => ideapi, :date => Time.now),
+    TeamMemberProject.new(:project_id => ldn_taxi.id, :date => Time.now),
     
-    TeamMemberProject.new(:project_id => space.id, :date => Date.parse('2011-11-15')),
+    TeamMemberProject.new(:project_id => space.id, :date => Time.now + 1.day),
     
-    TeamMemberProject.new(:project_id => ideapi.id, :date => Date.parse('2011-11-16')),
-    TeamMemberProject.new(:project_id => space.id, :date => Date.parse('2011-11-16')),
-    TeamMemberProject.new(:project_id => ldn_taxi.id, :date => Date.parse('2011-11-16')),
+    TeamMemberProject.new(:project_id => ideapi.id, :date => Time.now + 2.day),
+    TeamMemberProject.new(:project_id => space.id, :date => Time.now + 2.day),
+    TeamMemberProject.new(:project_id => ldn_taxi.id, :date => Time.now + 2.day),
     
-    TeamMemberProject.new(:project_id => vistazo.id, :date => Date.parse('2011-11-17')),
+    TeamMemberProject.new(:project_id => vistazo.id, :date => Time.now + 3.day),
     
-    TeamMemberProject.new(:project_id => vistazo.id, :date => Date.parse('2011-11-18'))
+    TeamMemberProject.new(:project_id => vistazo.id, :date => Time.now + 4.day)
   ])
   
   george.update_attributes(:team_member_projects => [
