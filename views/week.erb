@@ -79,10 +79,9 @@
 </table>
 
 <div id="d-test"><div class="highlight"></div> <p id="d-title">Add a new project </p>
-  <div class="d-project"> <div class="circle ideapi"></div> <p class="project-title">ideapi</p></div> 
-  <div class="d-project"> <div class="circle LDN"></div> <p class="project-title">LDN taxi</p></div>
-  <div class="d-project"> <div class="circle vistazo"></div> <p class="project-title">Vistazo</p></div> 
-  <div class="d-project"> <div class="circle space"></div> <p class="project-title">Space</p></div>
+  <% for project in @projects %>
+    <div class="d-project"> <div class="circle <%= project.css_class %>"></div> <p class="project-title"><%= project.name %></p></div>
+  <% end %>
   <div class="d-project d-new"> <p class="d-new-type">Add new project</p> <p id="d-plus">+</p></div>
   <img src="/img/point.png" id="point"/>
 </div>

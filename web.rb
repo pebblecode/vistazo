@@ -114,6 +114,9 @@ class Project
   key :name, String, :required => true
   key :hex_colour, String
 
+  def css_class
+    get_css_class(self.name)
+  end
 end
 
 ##############################################################################
