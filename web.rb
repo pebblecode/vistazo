@@ -53,13 +53,10 @@ class TeamMemberProject
   private
   
   def cache_project
-    puts self.project_id
     if self.project_id.present?
       project = Project.find(self.project_id)
       self.project_name = project.name
       self.project_hex_colour = project.hex_colour
-      
-      puts "Saved #{self.project_name}"
     end
   end
   
