@@ -51,7 +51,8 @@
           <div class="new-project">+</div>
         </td>
       <% end %>
-    
+      <td class="<%= "#{row_class} col7" %>"></td>
+    </tr>
     <% unless tm == @team_members.last %>
       <tr>
         <td><hr / class="row-divider"></td>
@@ -83,5 +84,5 @@
   <div class="d-project"> <div class="circle vistazo"></div> <p class="project-title">Vistazo</p></div> 
   <div class="d-project"> <div class="circle space"></div> <p class="project-title">Space</p></div>
   <div class="d-project d-new"> <p class="d-new-type">Add new project</p> <p id="d-plus">+</p></div>
-  <img src="img/point.png" id="point"/>
+  <img src="/img/point.png" id="point"/>
 </div>
