@@ -11,7 +11,7 @@
         <% if tm.team_member_projects.present? %>
           <ul>
             <% for tmp in tm.team_member_projects %>
-              <li>- <%= "#{tmp.project_id}: #{tmp.date}" %></li>
+              <li>- <%= "#{tmp.project_id}: #{tmp.date} (#{tmp.project_name}, #{tmp.project_hex_colour})" %></li>
             <% end %>
           </ul>
         <% end %>

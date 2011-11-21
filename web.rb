@@ -32,17 +32,37 @@ class TeamMember
   include MongoMapper::Document
 
   key :name, String, :required => true
-  
+
+  # Relationships  
   many :team_member_projects
 end
 
 class TeamMemberProject
   include MongoMapper::EmbeddedDocument
+  before_save :cache_project
   
   key :date, Date, :required => true
   
-  # belongs_to :team_member
+  # Cache project
+  key :project_name, String
+  key :project_hex_colour, String
+  
+  # Relationships
   one :project
+  
+  private
+  
+  def cache_project
+    puts self.project_id
+    if self.project_id.present?
+      project = Project.find(self.project_id)
+      self.project_name = project.name
+      self.project_hex_colour = project.hex_colour
+      
+      puts "Saved #{self.project_name}"
+    end
+  end
+  
 end
 
 class Project
@@ -50,9 +70,7 @@ class Project
   
   key :name, String, :required => true
   key :hex_colour, String
-  
-  # Not needed
-  # many :team_member_projects
+
 end
 
 ##############################################################################
@@ -99,7 +117,7 @@ get '/create' do
   vince = TeamMember.create(:name => "Vince M")
 
   toby.update_attributes(:team_member_projects => [
-    TeamMemberProject.new(:project_id => ideapi.id, :date => Date.parse('2011-11-14')),
+    TeamMemberProject.new(:project_id => ideapi.id, :project => ideapi, :date => Date.parse('2011-11-14')),
     TeamMemberProject.new(:project_id => ldn_taxi.id, :date => Date.parse('2011-11-14')),
     
     TeamMemberProject.new(:project_id => space.id, :date => Date.parse('2011-11-15')),
