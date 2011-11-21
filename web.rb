@@ -188,6 +188,7 @@ get '/create' do
   space = Project.create(:name => "Space", :hex_colour => "#e74679")
   ldn_taxi = Project.create(:name => "LDN taxi", :hex_colour => "#f7ae35")
   vistazo = Project.create(:name => "Vistazo", :hex_colour => "#a1579c")
+  pebblecode = Project.create(:name => "Pebble code", :hex_colour => "#419fda")
   
   toby = TeamMember.create(:name => "Toby H")
   george = TeamMember.create(:name => "George O")
