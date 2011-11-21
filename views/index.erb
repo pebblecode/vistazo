@@ -3,33 +3,6 @@
   <li><a href="/delete_all">Delete all</a></li>
 </ul>
 
-<% if @team_members.present? %>
-  <h3>Team members:</h3>
-  <ul>
-    <% for tm in @team_members %>
-      <li><%= tm.name %>
-        <% if tm.team_member_projects.present? %>
-          <ul>
-            <% for tmp in tm.team_member_projects %>
-              <li>- <%= "#{tmp.project_id}: #{tmp.date} (#{tmp.project_name}, #{tmp.project_hex_colour})" %></li>
-            <% end %>
-          </ul>
-        <% end %>
-      </li>
-    <% end %>
-  </ul>
-<% end %>
-
-<% if @projects.present? %>
-  <h3>Projects:</h3>
-  <ul>
-    <% for p in @projects %>
-      <li style="color: <%= p.hex_colour %>"><%= p.name %></li>
-    <% end %>
-  </ul>
-<% end %>
-
-
 <div class="line line1"></div><div class="line line2"></div><div class="line line3"></div><div class="line line4"></div><div class="line line5"></div><div class="line line6"></div>
 
 <table>
@@ -44,33 +17,22 @@
   </tr>
   
   
-  <% for tm in @team_members %>
+  <% @team_members.each_with_index do |tm, tm_index| %>
+    <% prev_rows = 1 %>
+    <% row_class = "row#{(tm_index + 1) + prev_rows}" %>
     <tr>
-      <td class="row2 col1"> <div class="person"><hr / class="highlight"><%= tm.name %></div></td>
-      <td class="row2 col2">           
-        <div class="project"> <div class="circle ideapi"></div> <p class="project-title">ideapi</p></div> 
-        <div class="project"> <div class="circle LDN"></div> <p class="project-title">LDN taxi</p></div>
-        <div class="new-project">+</div>
-      </td>
-      <td class="row2 col3">
-        <div class="project"> <div class="circle space"></div> <p class="project-title">Space</p></div>
-        <div class="new-project">+</div>
-      </td>
-      <td class="row2 col4">
-        <div class="project"> <div class="circle ideapi"></div> <p class="project-title">ideapi</p></div>
-        <div class="project"> <div class="circle space"></div> <p class="project-title">Space</p></div>
-        <div class="project"> <div class="circle LDN"></div> <p class="project-title">LDN taxi</p></div>
-      </td>
-      <td class="row2 col5">
-        <div class="project"> <div class="circle vistazo"></div> <p class="project-title">Vistazo</p></div>
-        <div class="new-project">+</div>
-      </td>
-      <td class="row2 col6">
-        <div class="project"> <div class="circle vistazo"></div> <p class="project-title">Vistazo</p></div>
-        <div class="new-project">+</div>
-      </td>
-      <td class="row2 col7"></td>
-    </tr>
+      <td class="<%= row_class %> col1"> <div class="person"><hr / class="highlight"><%= tm.name %></div></td>
+
+      <% prev_cols = 1 %>
+      <% (MONDAY..FRIDAY).each do |work_day| %>
+        <td class="<%= "#{row_class} col#{work_day + prev_cols}" %>">
+          <% projects = @team_member_projects_on_day[tm][work_day] %>
+          <% for project in projects %>
+            <div class="project"> <div class="circle <%= project.css_class %>"></div> <p class="project-title"><%= project.project_name %></p></div>
+          <% end %>
+          <div class="new-project">+</div>
+        </td>
+      <% end %>
     
     <% unless tm == @team_members.last %>
       <tr>

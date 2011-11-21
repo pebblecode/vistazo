@@ -28,6 +28,17 @@ end
 ##############################################################################
 # Models
 ##############################################################################
+
+def get_css_class(str)
+  str.downcase.gsub(/ /, "-")
+end
+
+##############################################################################
+
+
+##############################################################################
+# Models
+##############################################################################
 class TeamMember
   include MongoMapper::Document
 
@@ -49,6 +60,10 @@ class TeamMemberProject
   
   # Relationships
   one :project
+  
+  def css_class
+    get_css_class(self.project_name)
+  end
   
   private
   
@@ -94,6 +109,18 @@ get '/' do
   
   @projects = Project.all
   @team_members = TeamMember.all
+  
+  # Assume it's the right week of dates
+  @team_member_projects_on_day = {}
+  MONDAY = 1
+  FRIDAY = 5
+  for tm in @team_members do
+    @team_member_projects_on_day[tm] = {}
+    
+    (MONDAY..FRIDAY).each do |work_day|
+      @team_member_projects_on_day[tm][work_day] = tm.team_member_projects.select { |proj| proj.date.wday == work_day }
+    end
+  end
   
   erb :index
 end
