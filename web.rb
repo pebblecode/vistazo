@@ -33,6 +33,21 @@ def get_css_class(str)
   str.downcase.gsub(/ /, "-")
 end
 
+class Fixnum
+  def ordinalize
+    if (11..13).include?(self % 100)
+      "#{self}th"
+    else
+      case self % 10
+        when 1; "#{self}st"
+        when 2; "#{self}nd"
+        when 3; "#{self}rd"
+        else    "#{self}th"
+      end
+    end
+  end
+end
+
 helpers do
 
   def protected!
@@ -105,6 +120,9 @@ end
 
 
 MONDAY = 1
+TUESDAY = 2
+WEDNESDAY = 3
+THURSDAY = 4
 FRIDAY = 5
 START_YEAR = 2010
 NUM_WEEKS_IN_A_YEAR = 52
@@ -132,7 +150,11 @@ get '/:year/week/:week_num' do
     next_week_year = ((week_num + 1) > NUM_WEEKS_IN_A_YEAR) ? year + 1 : year
     @next_week_url = "/#{next_week_year}/week/#{next_week_num}"
 
-    monday_of_week = Date.commercial(year, week_num, MONDAY)
+    @monday_date = Date.commercial(year, week_num, MONDAY)
+    @tuesday_date = Date.commercial(year, week_num, TUESDAY)
+    @wednesday_date = Date.commercial(year, week_num, WEDNESDAY)
+    @thursday_date = Date.commercial(year, week_num, THURSDAY)
+    @friday_date = Date.commercial(year, week_num, FRIDAY)
   
     @projects = Project.all
     @team_members = TeamMember.all

@@ -12,12 +12,26 @@
         <a href="<%= @prev_week_url %>" class="arrows" title="Previous week">(</a>
       <% end %>
     </th>
-    <th class="row1 col2"> <p class="day">MON</p> <p class="date">14th</p> <p class="month">NOV</p> </th>
-    <th class="row1 col3"> <p class="day">TUE</p> <p class="date">15th</p> <p class="month">NOV</p> </th>
-    <th class="row1 col4"> <p class="day">WED</p> <p class="date">16th</p> <p class="month">NOV</p> </th>
-    <th class="row1 col5"> <p class="day">THU</p> <p class="date">17th</p> <p class="month">NOV</p> </th>
-    <th class="row1 col6"> <p class="day">FRI</p> <p class="date">18th</p> <p class="month">NOV</p> </th>
-    <th class="row1 col7"> <a href="<%= @next_week_url %>" class="arrows" title="Next week">)</a></th>
+    
+    <th class="row1 col2">
+      <p class="day"><%= @monday_date.strftime("%a") %></p> <p class="date"><%= @monday_date.day.ordinalize %></p><p class="month"><%= @monday_date.strftime("%b") %></p>
+    </th>
+    <th class="row1 col3">
+      <p class="day"><%= @tuesday_date.strftime("%a") %></p> <p class="date"><%= @tuesday_date.day.ordinalize %></p><p class="month"><%= @tuesday_date.strftime("%b") %></p>
+    </th>
+    <th class="row1 col4">
+      <p class="day"><%= @wednesday_date.strftime("%a") %></p> <p class="date"><%= @wednesday_date.day.ordinalize %></p><p class="month"><%= @wednesday_date.strftime("%b") %></p>
+    </th>
+    <th class="row1 col5">
+      <p class="day"><%= @thursday_date.strftime("%a") %></p> <p class="date"><%= @thursday_date.day.ordinalize %></p><p class="month"><%= @thursday_date.strftime("%b") %></p>
+    </th>
+    <th class="row1 col6">
+      <p class="day"><%= @friday_date.strftime("%a") %></p> <p class="date"><%= @friday_date.day.ordinalize %></p><p class="month"><%= @friday_date.strftime("%b") %></p>
+    </th>
+    
+    <th class="row1 col7">
+      <a href="<%= @next_week_url %>" class="arrows" title="Next week">)</a>
+    </th>
   </tr>
   
   
