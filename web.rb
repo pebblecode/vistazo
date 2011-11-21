@@ -165,7 +165,9 @@ get '/:year/week/:week_num' do
       @team_member_projects_on_day[tm] = {}
 
       (MONDAY..FRIDAY).each do |work_day|
-        @team_member_projects_on_day[tm][work_day] = tm.team_member_projects.select { |proj| proj.date.wday == work_day }
+        @team_member_projects_on_day[tm][work_day] = tm.team_member_projects.select { |proj| 
+          (proj.date.wday == work_day) and (proj.date >= @monday_date) and (proj.date <= @friday_date)
+        }
       end
     end
 
