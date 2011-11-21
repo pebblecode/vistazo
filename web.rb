@@ -136,7 +136,7 @@ get '/:year/week/:week_num' do
       end
     end
 
-    erb :index
+    erb :week
   else
     redirect '/'
   end
