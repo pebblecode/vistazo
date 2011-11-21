@@ -104,25 +104,42 @@ end
 ##############################################################################
 
 
+MONDAY = 1
+FRIDAY = 5
+START_YEAR = 2010
+
 get '/' do
   protected!
   
-  @projects = Project.all
-  @team_members = TeamMember.all
+  redirect "/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+end
+
+
+get '/:year/week/:week_num' do
+  protected!
   
-  # Assume it's the right week of dates
-  @team_member_projects_on_day = {}
-  MONDAY = 1
-  FRIDAY = 5
-  for tm in @team_members do
-    @team_member_projects_on_day[tm] = {}
-    
-    (MONDAY..FRIDAY).each do |work_day|
-      @team_member_projects_on_day[tm][work_day] = tm.team_member_projects.select { |proj| proj.date.wday == work_day }
+  year = params[:year].to_i
+  week_num = params[:week_num].to_i
+  if ((1..52).include? week_num) and (year > START_YEAR)
+    monday_of_week = Date.commercial(year, week_num, MONDAY)
+  
+    @projects = Project.all
+    @team_members = TeamMember.all
+
+    # Assume it's the right week of dates
+    @team_member_projects_on_day = {}
+    for tm in @team_members do
+      @team_member_projects_on_day[tm] = {}
+
+      (MONDAY..FRIDAY).each do |work_day|
+        @team_member_projects_on_day[tm][work_day] = tm.team_member_projects.select { |proj| proj.date.wday == work_day }
+      end
     end
+
+    erb :index
+  else
+    redirect '/'
   end
-  
-  erb :index
 end
 
 
