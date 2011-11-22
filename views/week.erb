@@ -79,6 +79,7 @@
 </table>
 
 <div id="new-project-form"><div class="highlight"></div> <h4 id="d-title">Add a new project</h4>
+  <a href="#" class="close">close</a>
   <% for project in @projects %>
     <div class="d-project"> <div class="circle <%= project.css_class %>"></div> <p class="project-title"><%= project.name %></p></div>
   <% end %>
