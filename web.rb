@@ -80,6 +80,12 @@ class TeamMember
 
   # Relationships  
   many :team_member_projects
+  
+  def add_project_on_date(project, date)
+    # TODO: Check that it gets saved! Mongo doesn't check by default
+    self.team_member_projects << TeamMemberProject.new(:project_id => project.id, :date => date)
+    self.save
+  end
 end
 
 class TeamMemberProject
@@ -108,7 +114,6 @@ class TeamMemberProject
       self.project_hex_colour = project.hex_colour
     end
   end
-  
 end
 
 class Project
@@ -194,10 +199,7 @@ post '/team-member-project/add' do
     puts params
     if project_name.present?
       project = Project.create(:name => project_name, :hex_colour => "#000000")
-      
-      tm_project = TeamMemberProject.new(:project_id => project.id, :date => date)
-      team_member.team_member_projects << tm_project
-      team_member.save      
+      team_member.add_project_on_date(project, date)
       
       flash[:success] = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
     else
@@ -206,11 +208,8 @@ post '/team-member-project/add' do
   else
     project = Project.find(params[:project_id])
     if (team_member.present? and project.present? and date.present?)
-      # TODO: Check that it gets saved! Mongo doesn't check by default
-      tm_project = TeamMemberProject.new(:project_id => project.id, :date => date)
-      team_member.team_member_projects << tm_project
-      team_member.save
-    
+      team_member.add_project_on_date(project, date)
+      
       flash[:success] = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
     else
       flash[:warning] = "Something went wrong when adding a team member project. Please try again later."
