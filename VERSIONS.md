@@ -1,3 +1,9 @@
+# 0.0.4
+
+* Sort team members/projects
+* Changed team member project url
+* Flash messages
+
 # 0.0.3
 
 * Set up project
