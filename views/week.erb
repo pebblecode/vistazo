@@ -48,7 +48,7 @@
           <% for project in projects %>
             <div class="project"> <div class="circle <%= project.css_class %>"></div> <p class="project-title"><%= project.project_name %></p></div>
           <% end %>
-          <div class="new-project">+</div>
+          <a href="#new-project" class="new-project">+</a>
         </td>
       <% end %>
       <td class="<%= "#{row_class} col7" %>"></td>
@@ -83,5 +83,8 @@
     <div class="d-project"> <div class="circle <%= project.css_class %>"></div> <p class="project-title"><%= project.name %></p></div>
   <% end %>
   <div class="d-project d-new"> <p class="d-new-type">Add new project</p> <p id="d-plus">+</p></div>
+  <!-- <form action="/project/add" method="post">
+    <button type="submit" class="new-project" value="+"/>
+  </form> -->
   <img src="/img/point.png" id="point"/>
 </div>

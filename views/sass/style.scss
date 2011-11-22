@@ -325,6 +325,8 @@ body{
 }
 
 .new-project{
+  display: block;
+  text-decoration: none;
   opacity: 0;
   height: 16px;
   margin: 5px 5px 0 10px;
