@@ -1,3 +1,7 @@
+# 0.0.5
+
+* Can add new projects
+
 # 0.0.4
 
 * Sort team members/projects
