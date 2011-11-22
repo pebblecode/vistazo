@@ -187,18 +187,34 @@ post '/team-member-project/add' do
   protected!
 
   team_member = TeamMember.find(params[:team_member_id])
-  project = Project.find(params[:project_id])
   date = Date.parse(params[:date])
   
-  if (team_member.present? and project.present? and date.present?)
-    # TODO: Check that it gets saved! Mongo doesn't check by default
-    tm_project = TeamMemberProject.new(:project_id => project.id, :date => date)
-    team_member.team_member_projects << tm_project
-    team_member.save
-    
-    flash[:success] = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
+  if params[:new_project].present?
+    project_name = params[:new_project_name]
+    puts params
+    if project_name.present?
+      project = Project.create(:name => project_name, :hex_colour => "#000000")
+      
+      tm_project = TeamMemberProject.new(:project_id => project.id, :date => date)
+      team_member.team_member_projects << tm_project
+      team_member.save      
+      
+      flash[:success] = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
+    else
+      flash[:warning] = "Please specify a project name."
+    end
   else
-    flash[:warning] = "Something went wrong when adding a team member project. Please try again later."
+    project = Project.find(params[:project_id])
+    if (team_member.present? and project.present? and date.present?)
+      # TODO: Check that it gets saved! Mongo doesn't check by default
+      tm_project = TeamMemberProject.new(:project_id => project.id, :date => date)
+      team_member.team_member_projects << tm_project
+      team_member.save
+    
+      flash[:success] = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
+    else
+      flash[:warning] = "Something went wrong when adding a team member project. Please try again later."
+    end
   end
   
   redirect '/'

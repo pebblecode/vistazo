@@ -84,13 +84,20 @@
     <input type="hidden" name="date" value=""/>
     <input type="hidden" name="team_member_id" value=""/>
     
+    <fieldset title="Existing projects">
     <% for project in @projects %>
       <div class="d-project">
         <div class="circle <%= project.css_class %>"></div> <!-- <a class="project-title"><%= project.name %></a> -->
         <button name="project_id" type="submit" value="<%= project.id %>"><%= project.name %></button>
       </div>
     <% end %>
+    
+    <fieldset title="New project">
+      <label for="new_project_name">Add new project</label>
+      <input type="text"name="new_project_name" title="Add new project"/> <button type="submit" name="new_project" value="true">+</button>
+    </fieldset>
   </form>
-  <div class="d-project d-new"> <p class="d-new-type">Add new project</p> <p id="d-plus">+</p></div>
+
+  
   <img src="/img/point.png" id="point"/>
 </div>

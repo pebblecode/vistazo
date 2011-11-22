@@ -490,19 +490,23 @@ body{
   margin-top: 20px;
 }
 
-.d-new-type{
-  margin: 3px 0 0 5px;
-  color: #c6c6c6;
-  text-shadow: 0;
-}
-
-
-#d-plus{
-  margin: -13px 4px 0 0;
-  float: right;
-  color: #d7d7d7;
-  font: 10px 'WebSymbolsRegular';
-  text-shadow: none;
+#new-project-form {
+  background-color: #fff;
+  font-size: 14px;
+  color: #808080;
+  
+  label {
+  }
+  
+  input {
+    color: #808080;
+  }
+  
+  button {
+    color: #d7d7d7;
+    font: 10px 'WebSymbolsRegular';
+    text-shadow: none;
+  }
 }
 
 #modify-data {
