@@ -219,6 +219,25 @@ post '/team-member-project/add' do
   redirect '/'
 end
 
+post '/team-member/:team_member_id/project/:tm_project_id/delete' do
+  team_member = TeamMember.find(params[:team_member_id])
+  
+  if team_member.present?
+    deleted_team_member = team_member.team_member_projects.delete_if { |proj| proj.id.to_s == params[:tm_project_id] }
+    team_member.save
+
+    if deleted_team_member.present?
+      flash[:success] = "Successfully deleted team member project for #{team_member.name}."
+    else
+      flash[:warning] = "Something went wrong when trying to delete a team member project for #{team_member.name}. Please try again later."
+    end
+  else
+    flash[:warning] = "Something went wrong when trying to delete a team member project. Please try again later."
+  end
+  
+  redirect '/'
+end
+
 get '/create' do
   protected!
   
