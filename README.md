@@ -5,6 +5,7 @@ A light weight application to keep track of who's working on what, when.
 ## Installation
 
 1. [Install mongodb](http://www.mongodb.org/display/DOCS/Quickstart+OS+X)
+1. Install [MongoHub](http://mongohub.todayclose.com/) if you'd like a GUI interface
 
 ## Development
 
@@ -15,7 +16,7 @@ To set up
 
 To run
 
-    foreman start dev -p 6000
+    foreman start dev
     # open http://localhost:6100/
     
 ## Production
