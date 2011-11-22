@@ -383,8 +383,7 @@ body{
   background-color: #d2ecf6;
 }
 
-#d-test{
-  opacity: 0;
+#new-project-form{
   color: #fff;
   font-size: 14px;
   font-weight: bold;
@@ -402,6 +401,17 @@ body{
   -moz-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
   -webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  
+  h4 {
+    color: #FFFFFF;
+    font-size: 14px;
+    line-height: 16px;
+    font-weight: bold;
+    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+    
+    margin: 5px 0 10px 7px;
+  }
+  
 }
 
 #point{
@@ -443,10 +453,6 @@ body{
   color: #d7d7d7;
   font: 10px 'WebSymbolsRegular';
   text-shadow: none;
-}
-
-#d-title{
-  margin: 5px 0 10px 7px;
 }
 
 #modify-data {
