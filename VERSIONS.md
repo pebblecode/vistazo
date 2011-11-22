@@ -1,3 +1,7 @@
+# 0.0.6
+
+* Can add delete projects
+
 # 0.0.5
 
 * Can add new projects
