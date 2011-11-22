@@ -1,13 +1,17 @@
 $(function () {
-  $("#new-project-form").hide(); // Hide by default
+  $("#new-project-dialog").hide(); // Hide by default
   
   $(".new-project").click(function () {
     $(this).css({opacity: "1"});
-    $("#new-project-form").show();
+    
+    $("#new-project-dialog form input[name=date]").val($(this).attr("data-date"));
+    $("#new-project-dialog form input[name=team_member]").val($(this).attr("data-team-member"));
+    $("#new-project-dialog").show();
+    return false;
   });
   
-  $("#new-project-form .close").click(function() {
-    $("#new-project-form").hide();
+  $("#new-project-dialog .close").click(function() {
+    $("#new-project-dialog").hide();
     return false;
   });
   

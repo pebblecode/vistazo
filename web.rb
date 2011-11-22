@@ -180,6 +180,22 @@ get '/:year/week/:week_num' do
   end
 end
 
+post '/project/add' do
+  protected!
+
+  team_member = TeamMember.find(params[:team_member])
+  project = Project.find(params[:project])
+  date = Date.parse(params[:date])
+  
+  if (team_member.present? and project.present? and date.present?)
+    # TODO: Check that it gets saved! Mongo doesn't check by default
+    tm_project = TeamMemberProject.new(:project_id => project.id, :date => date)
+    team_member.team_member_projects << tm_project
+    team_member.save
+  end
+  
+  redirect '/'
+end
 
 get '/create' do
   protected!
