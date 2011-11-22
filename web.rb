@@ -1,9 +1,12 @@
 require 'sinatra'
+require 'sinatra/flash'
 require 'mongo_mapper'
 require 'uri'
 require 'sass'
 require 'time'
 require 'date'
+
+enable :sessions
 
 set :environment, ENV["RACK_ENV"] || "development"
 
@@ -192,6 +195,10 @@ post '/team-member-project/add' do
     tm_project = TeamMemberProject.new(:project_id => project.id, :date => date)
     team_member.team_member_projects << tm_project
     team_member.save
+    
+    flash[:success] = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
+  else
+    flash[:warning] = "Something went wrong when adding a team member project. Please try again later."
   end
   
   redirect '/'
@@ -252,6 +259,7 @@ get '/create' do
     TeamMemberProject.new(:project_id => vistazo.id, :date => Date.parse('2011-11-18'))
   ])
   
+  flash[:success] = "Successfully created new seed data. Enjoy!"
   redirect '/'
 end
 
@@ -262,7 +270,7 @@ get '/delete_all' do
   TeamMember.delete_all()
   Project.delete_all()
   
-  
+  flash[:info] = "Everything is GONE, and it's all your fault! But it's ok, just create some <a href='/create'>seed data</a>."
   redirect '/'  
 end
 

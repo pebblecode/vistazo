@@ -41,6 +41,8 @@ GEM
     sinatra (1.1.0)
       rack (~> 1.1)
       tilt (~> 1.1)
+    sinatra-flash (0.3.0)
+      sinatra (>= 1.0.0)
     term-ansicolor (1.0.7)
     thin (1.2.7)
       daemons (>= 1.0.9)
@@ -58,4 +60,5 @@ DEPENDENCIES
   sass
   shotgun
   sinatra (= 1.1.0)
+  sinatra-flash
   thin (= 1.2.7)
