@@ -159,7 +159,7 @@ get '/:year/week/:week_num' do
     @thursday_date = Date.commercial(year, week_num, THURSDAY)
     @friday_date = Date.commercial(year, week_num, FRIDAY)
   
-    @projects = Project.all
+    @projects = Project.sort(:name)
     @team_members = TeamMember.sort(:name)
 
     # Assume it's the right week of dates
