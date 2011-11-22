@@ -180,11 +180,11 @@ get '/:year/week/:week_num' do
   end
 end
 
-post '/project/add' do
+post '/team-member-project/add' do
   protected!
 
-  team_member = TeamMember.find(params[:team_member])
-  project = Project.find(params[:project])
+  team_member = TeamMember.find(params[:team_member_id])
+  project = Project.find(params[:project_id])
   date = Date.parse(params[:date])
   
   if (team_member.present? and project.present? and date.present?)

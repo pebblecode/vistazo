@@ -48,7 +48,7 @@
           <% for tm_project in tm_projects %>
             <div class="project"> <div class="circle <%= tm_project.css_class %>"></div> <p class="project-title"><%= tm_project.project_name %></p></div>
           <% end %>
-          <a href="#new-project" class="new-project" data-date="<%= (@monday_date - 1.day) + work_day.day %>" data-team-member="<%= tm.id %>">+</a>
+          <a href="#new-project" class="new-project" data-date="<%= (@monday_date - 1.day) + work_day.day %>" data-team-member-id="<%= tm.id %>">+</a>
         </td>
       <% end %>
       <td class="<%= "#{row_class} col7" %>"></td>
@@ -80,14 +80,14 @@
 
 <div id="new-project-dialog"><div class="highlight"></div> <h4 id="d-title">Add a new project</h4>
   <a href="#" class="close">close</a>
-  <form id="new-project-form" action="/project/add" method="post">
+  <form id="new-tm-project-form" action="/team-member-project/add" method="post">
     <input type="hidden" name="date" value=""/>
-    <input type="hidden" name="team_member" value=""/>
+    <input type="hidden" name="team_member_id" value=""/>
     
     <% for project in @projects %>
       <div class="d-project">
         <div class="circle <%= project.css_class %>"></div> <!-- <a class="project-title"><%= project.name %></a> -->
-        <button name="project" type="submit" value="<%= project.id %>"><%= project.name %></button>
+        <button name="project_id" type="submit" value="<%= project.id %>"><%= project.name %></button>
       </div>
     <% end %>
   </form>

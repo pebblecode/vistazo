@@ -5,7 +5,7 @@ $(function () {
     $(this).css({opacity: "1"});
     
     $("#new-project-dialog form input[name=date]").val($(this).attr("data-date"));
-    $("#new-project-dialog form input[name=team_member]").val($(this).attr("data-team-member"));
+    $("#new-project-dialog form input[name=team_member_id]").val($(this).attr("data-team-member-id"));
     $("#new-project-dialog").show();
     return false;
   });
