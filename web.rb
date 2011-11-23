@@ -116,13 +116,34 @@ end
 
 class Project
   include MongoMapper::Document
+  after_save :save_hex_colour_used
   
   key :name, String, :required => true
   key :hex_colour, String
-
+  
   def css_class
     get_css_class(self.name)
   end
+  
+  private
+  
+  def save_hex_colour_used
+    # TODO: There must be an easier way to update! Try push/set?
+    colour_setting = ColourSetting.first
+    if colour_setting.present?
+      colour_setting.last_hex_colour_saved = self.hex_colour
+      colour_setting.save
+    else
+      ColourSetting.create(:last_hex_colour_saved => self.hex_colour)
+    end
+  end
+  
+end
+
+class ColourSetting
+  include MongoMapper::Document
+  
+  key :last_hex_colour_saved, String
 end
 
 ##############################################################################
