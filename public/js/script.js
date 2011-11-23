@@ -27,6 +27,18 @@ $(function () {
         return true;
      }
   }); // end of function
+  
+  // Drag and drop for projects
+  $('table .box').sortable({
+      connectWith: '.box',
+      handle: '.circle',
+      cursor: 'move',
+      placeholder: 'placeholder',
+      forcePlaceholderSize: true,
+      opacity: 0.4,
+  })
+  .disableSelection();
+  
 });
 
 $(function () {

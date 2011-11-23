@@ -355,7 +355,7 @@ body{
   color: #e6e6e6;
 }
 
-.project{
+.project {
   height: 20px;
   background-color: #fff;
   margin: 5px 5px 0 10px;
@@ -367,6 +367,20 @@ body{
   -moz-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
   -webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+  
+  .project-title{
+    float: left;
+    margin-top: 3px;
+  }
+
+  .circle{
+    width: 10px;
+    height: 10px;
+    margin: 5px;
+    float: left;
+    border-radius: 10px;
+    cursor: move;
+  }
 }
 
 .new-project{
@@ -384,21 +398,6 @@ body{
   border: 1px solid rgba(0, 0, 0, 0.1);
   color: rgba(0, 0, 0, .1);
   cursor: pointer;
-}
-
-
-
-.project-title{
-  float: left;
-  margin-top: 3px;
-}
-
-.circle{
-  width: 10px;
-  height: 10px;
-  margin: 5px;
-  float: left;
-  border-radius: 10px;
 }
 
 .row-divider{
