@@ -15,7 +15,7 @@ $flash_yellow: #EEDC94;
 -----------------------------------------------------------------------------*/
 
 body {
-  background: #f4fbfe url('../img/bg.png') repeat-x;
+  background: #f4fbfe url('/img/bg.png') repeat-x;
 }
 
 
@@ -129,12 +129,12 @@ body {
   }
 
   .row2, .row4, .row6{
-    background:url('../img/hatch1.gif');
+    background:url('/img/hatch1.gif');
     padding-bottom: 20px;
   }
 
   .row3, .row5{
-    background:url('../img/hatch2.gif');
+    background:url('/img/hatch2.gif');
     padding-bottom: 20px;
   }
 
@@ -238,7 +238,7 @@ body {
 
   .person{
     height: 20px;
-    background: rgba(41, 171, 226, 1) url('../img/people-arrow.png') no-repeat 115px 6px;
+    background: rgba(41, 171, 226, 1) url('/img/people-arrow.png') no-repeat 115px 6px;
     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
     color: #fff;
     font-size: 14px;
