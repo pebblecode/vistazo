@@ -15,6 +15,18 @@ $(function () {
     return false;
   });
   
+  // Enter key for new project submits the form
+  $("#new-project-dialog .new-project-text-box").bind("keydown", function(event) {
+     // track enter key
+     var keycode = (event.keyCode ? event.keyCode : (event.which ? event.which : event.charCode));
+     if (keycode == 13) { // keycode for enter key
+        // force the 'Enter Key' to implicitly click the Update button
+        $("#new-project-dialog .new-project-submit-button").click();
+        return false;
+     } else  {
+        return true;
+     }
+  }); // end of function
 });
 
 $(function () {
