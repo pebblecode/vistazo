@@ -46,7 +46,7 @@
         <td class="box <%= "#{row_class} col#{work_day + prev_cols}" %>">
           <% tm_projects = @team_member_projects_on_day[tm][work_day] %>
           <% for tm_project in tm_projects %>
-            <div class="project"> 
+            <div class="project" data-team-member-id="<%= tm.id %>" data-team-member-project-id="<%= tm_project.id %>"> 
               <div class="circle <%= tm_project.css_class %>"></div> <p class="project-title"><%= h tm_project.project_name %></p>
               <form id="new-tm-project-form" action="/team-member/<%= tm.id %>/project/<%= tm_project.id %>/delete" method="post">
                 <button name="delete_project" type="submit" value="true">x</button>

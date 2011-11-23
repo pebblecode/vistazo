@@ -29,6 +29,9 @@ $(function () {
   }); // end of function
   
   // Drag and drop for projects
+  $('table .box .project').click(function() {
+    updateTeamMemberProject($(this));
+  })
   $('table .box').sortable({
       connectWith: '.box',
       handle: '.circle',
@@ -36,6 +39,18 @@ $(function () {
       placeholder: 'placeholder',
       forcePlaceholderSize: true,
       opacity: 0.4,
+      start: function(event, ui){  
+        // Firefox, Safari/Chrome fire click event after drag is complete, fix for that
+        if($.browser.mozilla || $.browser.safari) {
+          
+        }
+      },  
+      stop: function(event, ui){  
+        ui.item.css({'top':'0','left':'0'}); // Opera fix  
+        if(!$.browser.mozilla && !$.browser.safari) {
+          updateTeamMemberProject($(this));
+        }
+      }
   })
   .disableSelection();
   
@@ -52,4 +67,17 @@ $(function () {
   });
 }); // New project tab hover
 
-// style dates
+// Update team member project
+function updateTeamMemberProject(proj) {
+  var teamMemberId = $(proj).attr("data-team-member-id");
+  var teamMemberProjectId = $(proj).attr("data-team-member-project-id");
+  var url = "/team-member/" + teamMemberId + "/team-member-project/" + teamMemberProjectId + "/update";
+  var new_date = "TODO";
+  $.post(url, { date: new_date }, function(response) {
+    if(response == "success")
+      $("").html('<div class="success">Saved</div>').hide().fadeIn(1000);
+    setTimeout(function(){  
+      $('#console').fadeOut(1000);  
+    }, 2000);
+  });
+}

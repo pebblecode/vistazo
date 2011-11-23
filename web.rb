@@ -285,6 +285,27 @@ post '/team-member-project/add' do
   redirect '/'
 end
 
+post '/team-member/:team_member_id/team-member-project/:tm_project_id/update' do
+  protected!
+
+  team_member = TeamMember.find(params[:team_member_id])
+  date = Date.parse(params[:date])
+  
+  puts "Update team member project: #{params}"
+  
+  project = Project.find(params[:project_id])
+  if (team_member.present? and project.present? and date.present?)
+    team_member.add_project_on_date(project, date)
+    
+    flash[:success] = "Successfully updated '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
+  else
+    flash[:warning] = "Something went wrong when adding a team member project. Please try again later."
+  end
+
+  
+  redirect '/'
+end
+
 post '/team-member/:team_member_id/project/:tm_project_id/delete' do
   protected!
   
