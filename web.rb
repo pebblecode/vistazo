@@ -33,7 +33,7 @@ end
 ##############################################################################
 
 def get_css_class(str)
-  str.downcase.gsub(/ /, "-") if str.present?
+  "class-#{str.downcase.gsub(/\W/, "-")}" if str.present?
 end
 
 class Fixnum
