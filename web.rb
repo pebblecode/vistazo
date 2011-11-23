@@ -52,7 +52,9 @@ class Fixnum
 end
 
 helpers do
-
+  include Rack::Utils
+  alias_method :h, :escape_html
+  
   def protected!
     unless authorized?
       response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
