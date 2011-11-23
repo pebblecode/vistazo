@@ -286,6 +286,8 @@ post '/team-member-project/add' do
 end
 
 post '/team-member/:team_member_id/project/:tm_project_id/delete' do
+  protected!
+  
   team_member = TeamMember.find(params[:team_member_id])
   
   if team_member.present?
