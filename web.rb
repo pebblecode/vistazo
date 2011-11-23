@@ -114,9 +114,17 @@ class TeamMemberProject
   end
 end
 
+# To create a new project use
+#
+#      Project.create(:name => "ideapi")
+#
+# The class will figure out the hex colour for you. If you specify a 
+# `:hex_colour` explicitly, this will still be stored, however, if the colour
+# is not in `COLOURS`, the next project added will use the first colour in
+# `COLOURS`
 class Project
   include MongoMapper::Document
-  after_save :save_hex_colour_used
+  before_save :save_hex_colour
   
   key :name, String, :required => true
   key :hex_colour, String
@@ -127,7 +135,25 @@ class Project
   
   private
   
-  def save_hex_colour_used
+  def save_hex_colour
+    unless self.hex_colour.present?
+      # Find next colour from teh last save
+      last_colour_setting = ColourSetting.first
+      if last_colour_setting.present?
+        last_colour_index = COLOURS.index{ |c| c.values.include? last_colour_setting.last_hex_colour_saved }
+        
+        self.hex_colour = last_colour_index.present? ? 
+                            COLOURS[(last_colour_index + 1) % COLOURS.length].values[0] :
+                            COLOURS[0].values[0]
+      else
+        self.hex_colour = COLOURS[0].values[0]
+      end
+      
+      save_hex_colour_used_in_settings
+    end
+  end
+  
+  def save_hex_colour_used_in_settings
     # TODO: There must be an easier way to update! Try push/set?
     colour_setting = ColourSetting.first
     if colour_setting.present?
@@ -140,6 +166,19 @@ class Project
   
 end
 
+# Colours to cycle through for projects.
+COLOURS = [
+    { :light_green => "#afce3f" },
+    { :purple => "#ae3fce" },
+    { :orange => "#eeb028" },
+    { :light_blue => "#3fa9ce" },
+    { :red => "#e22626" },
+    { :medium_green => "#3fce68" },
+    { :pink => "#f118ad" },
+    { :yellow => "#fede4f" },
+    { :aqua => "#1ee4bc" },
+    { :dark_blue => "#5f4bd5" },
+  ]
 class ColourSetting
   include MongoMapper::Document
   
@@ -217,7 +256,7 @@ post '/team-member-project/add' do
     project_name = params[:new_project_name]
     puts params
     if project_name.present?
-      project = Project.create(:name => project_name, :hex_colour => "#000000")
+      project = Project.create(:name => project_name)
       team_member.add_project_on_date(project, date)
       
       flash[:success] = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
@@ -260,11 +299,11 @@ end
 get '/create' do
   protected!
   
-  ideapi = Project.create(:name => "ideapi", :hex_colour => "#adca3a")
-  space = Project.create(:name => "Space", :hex_colour => "#e74679")
-  ldn_taxi = Project.create(:name => "LDN taxi", :hex_colour => "#f7ae35")
-  vistazo = Project.create(:name => "Vistazo", :hex_colour => "#a1579c")
-  pebblecode = Project.create(:name => "Pebble code", :hex_colour => "#419fda")
+  ideapi = Project.create(:name => "ideapi")
+  space = Project.create(:name => "Space")
+  ldn_taxi = Project.create(:name => "LDN taxi")
+  vistazo = Project.create(:name => "Vistazo")
+  pebblecode = Project.create(:name => "Pebble code")
   
   toby = TeamMember.create(:name => "Toby H")
   george = TeamMember.create(:name => "George O")
@@ -322,6 +361,7 @@ get '/delete_all' do
   # TeamMemberProject.delete_all()
   TeamMember.delete_all()
   Project.delete_all()
+  ColourSetting.delete_all()
   
   flash[:info] = "Everything is GONE, and it's all your fault! But it's ok, just create some <a href='/create'>seed data</a>."
   redirect '/'  
