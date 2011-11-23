@@ -32,8 +32,12 @@ end
 # Helper classes
 ##############################################################################
 
-def get_css_class(str)
-  "class-#{str.downcase.gsub(/\W/, "-")}" if str.present?
+def get_project_css_class(str)
+  get_css_class(str, "project")
+end
+
+def get_css_class(str, prefix)
+  "#{prefix}-#{str.downcase.gsub(/\W/, "-")}" if str.present?
 end
 
 class Fixnum
@@ -103,7 +107,7 @@ class TeamMemberProject
   one :project
   
   def css_class
-    get_css_class(self.project_name)
+    get_project_css_class(self.project_name)
   end
   
   private
@@ -132,7 +136,7 @@ class Project
   key :hex_colour, String
   
   def css_class
-    get_css_class(self.name)
+    get_project_css_class(self.name)
   end
   
   private
