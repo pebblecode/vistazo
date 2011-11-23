@@ -1,0 +1,43 @@
+/* Vistazo typography
+-----------------------------------------------------------------------------*/
+
+body{
+  font-family: Cabin, Helvetica, sans-serif;
+}
+
+h1{
+  color: #fff;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+  font: 30px 'MenschBold';
+  letter-spacing: 0;
+  float: left;
+  margin: 5px 12px 2px 5px;
+  
+  a {
+    color: #fff;
+    text-decoration: none;
+  }
+}
+
+h2{
+  color: #fff;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+  margin: 10px 0 0 10px;
+  float: left;
+}
+
+h3{
+  
+}
+
+h4{
+  
+}
+
+p{
+  
+}
+
+em {
+  font-style: italic;
+}
