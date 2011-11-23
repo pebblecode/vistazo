@@ -90,13 +90,12 @@ end
 
 class TeamMemberProject
   include MongoMapper::EmbeddedDocument
-  before_save :cache_project
+  before_save :cache_project_name
   
   key :date, Date, :required => true
   
   # Cache project
   key :project_name, String
-  key :project_hex_colour, String
   
   # Relationships
   one :project
@@ -107,11 +106,10 @@ class TeamMemberProject
   
   private
   
-  def cache_project
+  def cache_project_name
     if self.project_id.present?
       project = Project.find(self.project_id)
       self.project_name = project.name
-      self.project_hex_colour = project.hex_colour
     end
   end
 end
