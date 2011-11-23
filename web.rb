@@ -252,9 +252,11 @@ post '/team-member-project/add' do
   team_member = TeamMember.find(params[:team_member_id])
   date = Date.parse(params[:date])
   
+  puts "Add team member project: #{params}"
+  
   if params[:new_project].present?
     project_name = params[:new_project_name]
-    puts params
+    
     if project_name.present?
       project = Project.create(:name => project_name)
       team_member.add_project_on_date(project, date)
