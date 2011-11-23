@@ -298,17 +298,17 @@ body {
       float: left;
       margin-top: 3px;
     }
-
-    .circle{
-      width: 10px;
-      height: 10px;
-      margin: 5px;
-      float: left;
-      border-radius: 10px;
-      cursor: move;
-    }
   }
-
+  
+  .circle {
+    width: 10px;
+    height: 10px;
+    margin: 5px;
+    float: left;
+    border-radius: 10px;
+    cursor: move;
+  }
+  
   .new-project{
     display: block;
     text-decoration: none;
