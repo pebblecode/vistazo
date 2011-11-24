@@ -9,8 +9,10 @@ A light weight application to keep track of who's working on what, when.
 1. Install [MongoHub](http://mongohub.todayclose.com/) if you'd like a GUI interface
 1. Add your heroku account to the `vistazo` and `vistazo-staging` projects (through the `dev@pebblecode.com` account) and set up the staging/production git deployment environments:
 
+    ```
     git remote add staging git@heroku.com:vistazo-staging.git
     git remote add production git@heroku.com:vistazo.git
+    ```
 
 ## Development
 
