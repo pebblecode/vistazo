@@ -1,3 +1,10 @@
+# 0.0.7
+
+* Drag and drop
+* Automatic colour selection for new projects
+* Escape html in view
+* Some clean up of code
+
 # 0.0.6
 
 * Can add delete projects
