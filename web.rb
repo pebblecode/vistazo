@@ -93,8 +93,23 @@ class TeamMember
     self.save
   end
   
-  def move_project(to_team_member, to_date)
-    puts "Moving from #{self.name} to #{to_team_member.name} on #{to_date}"
+  def move_project(team_member_project, to_team_member, to_date)
+    puts "Moving from #{self.name} (#{team_member_project}) to #{to_team_member.name} on #{to_date}"
+    project_id = team_member_project.project_id
+    
+    did_delete = self.team_member_projects.reject! { |proj| proj == team_member_project }
+    puts did_delete
+    self.save
+    puts did_delete
+        
+    if did_delete
+      to_team_member.team_member_projects << TeamMemberProject.new(:project_id => project_id, :date => to_date)
+      to_team_member.save
+      
+      true
+    else
+      false
+    end
   end
 end
 
@@ -294,17 +309,18 @@ post '/team-member-project/:tm_project_id/update.json' do
 
   from_team_member = TeamMember.find(params[:from_team_member_id])
   to_team_member = TeamMember.find(params[:to_team_member_id])
+  team_member_project = from_team_member.team_member_projects.find(params[:tm_project_id]) if from_team_member
   to_date = Date.parse(params[:to_date])
   
   puts "Update team member project: #{params}"
 
   output = ""
-  if (from_team_member.present? and to_team_member.present? and to_date.present?)
-    from_team_member.move_project(to_team_member, to_date)
+  if (from_team_member.present? and to_team_member.present? and team_member_project.present? and to_date.present?)
+    status = from_team_member.move_project(team_member_project, to_team_member, to_date)
     
-    output = "success"
+    output = status ? "success" : "{ fail: 'update fail' }"
   else
-    output = "fail"
+    output = "{ fail: 'input fail' }"
   end
 
   output
@@ -316,10 +332,10 @@ post '/team-member/:team_member_id/project/:tm_project_id/delete' do
   team_member = TeamMember.find(params[:team_member_id])
   
   if team_member.present?
-    deleted_team_member = team_member.team_member_projects.delete_if { |proj| proj.id.to_s == params[:tm_project_id] }
+    did_delete = team_member.team_member_projects.reject! { |proj| proj.id.to_s == params[:tm_project_id] }
     team_member.save
 
-    if deleted_team_member.present?
+    if did_delete
       flash[:success] = "Successfully deleted team member project for #{team_member.name}."
     else
       flash[:warning] = "Something went wrong when trying to delete a team member project for #{team_member.name}. Please try again later."
