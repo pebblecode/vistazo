@@ -19,7 +19,7 @@ def setup_mongo_connection(mongo_url)
   MongoMapper.database = url.path.gsub(/^\//, '')
   MongoMapper.database.authenticate(url.user, url.password) if url.user && url.password
 end
-if settings.environment == "production"
+if (settings.environment == "staging") or (settings.environment == "production")
   # From heroku settings: http://devcenter.heroku.com/articles/mongolab
   setup_mongo_connection(ENV['MONGOLAB_URI'])
 elsif settings.environment == "development"
