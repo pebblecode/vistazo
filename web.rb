@@ -304,7 +304,7 @@ post '/team-member-project/add' do
     end
   end
   
-  redirect '/'
+  redirect back
 end
 
 post '/team-member-project/:tm_project_id/update.json' do
@@ -353,7 +353,7 @@ post '/team-member/:team_member_id/project/:tm_project_id/delete' do
     flash[:warning] = "Something went wrong when trying to delete a team member project. Please try again later."
   end
   
-  redirect '/'
+  redirect back
 end
 
 post '/reset' do
