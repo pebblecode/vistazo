@@ -356,14 +356,19 @@ post '/team-member/:team_member_id/project/:tm_project_id/delete' do
   redirect '/'
 end
 
-get '/create' do
+post '/reset' do
   protected!
   
+  # Delete everything
+  TeamMember.delete_all()
+  Project.delete_all()
+  ColourSetting.delete_all()
+  
+  # Seed data
   ideapi = Project.create(:name => "ideapi")
   space = Project.create(:name => "Space")
   ldn_taxi = Project.create(:name => "LDN taxi")
   vistazo = Project.create(:name => "Vistazo")
-  pebblecode = Project.create(:name => "Pebble code")
   
   toby = TeamMember.create(:name => "Toby H")
   george = TeamMember.create(:name => "George O")
@@ -371,60 +376,8 @@ get '/create' do
   tak = TeamMember.create(:name => "Tak T")
   vince = TeamMember.create(:name => "Vince M")
 
-  toby.update_attributes(:team_member_projects => [
-    TeamMemberProject.new(:project_id => ideapi.id, :project => ideapi, :date => Time.now),
-    TeamMemberProject.new(:project_id => ldn_taxi.id, :date => Time.now),
-    
-    TeamMemberProject.new(:project_id => space.id, :date => Time.now + 1.day),
-    
-    TeamMemberProject.new(:project_id => ideapi.id, :date => Time.now + 2.day),
-    TeamMemberProject.new(:project_id => space.id, :date => Time.now + 2.day),
-    TeamMemberProject.new(:project_id => ldn_taxi.id, :date => Time.now + 2.day),
-    
-    TeamMemberProject.new(:project_id => vistazo.id, :date => Time.now + 3.day),
-    
-    TeamMemberProject.new(:project_id => vistazo.id, :date => Time.now + 4.day)
-  ])
-  
-  george.update_attributes(:team_member_projects => [
-    TeamMemberProject.new(:project_id => ldn_taxi.id, :date => Date.parse('2011-11-14')),
-    
-    TeamMemberProject.new(:project_id => ldn_taxi.id, :date => Date.parse('2011-11-15')),
-    
-    TeamMemberProject.new(:project_id => ldn_taxi.id, :date => Date.parse('2011-11-16')),
-    
-    TeamMemberProject.new(:project_id => ldn_taxi.id, :date => Date.parse('2011-11-17')),
-    
-    TeamMemberProject.new(:project_id => ldn_taxi.id, :date => Date.parse('2011-11-18'))
-  ])
-  
-  mark.update_attributes(:team_member_projects => [
-    TeamMemberProject.new(:project_id => vistazo.id, :date => Date.parse('2011-11-14')),
-    
-    TeamMemberProject.new(:project_id => vistazo.id, :date => Date.parse('2011-11-15')),
-    
-    TeamMemberProject.new(:project_id => vistazo.id, :date => Date.parse('2011-11-16')),
-    
-    TeamMemberProject.new(:project_id => space.id, :date => Date.parse('2011-11-17')),
-    TeamMemberProject.new(:project_id => ideapi.id, :date => Date.parse('2011-11-17')),
-    
-    TeamMemberProject.new(:project_id => vistazo.id, :date => Date.parse('2011-11-18'))
-  ])
-  
-  flash[:success] = "Successfully created new seed data. Enjoy!"
+  flash[:success] = "Successfully cleared out the database and added seed data. Enjoy!"
   redirect '/'
-end
-
-get '/delete_all' do
-  protected!
-  
-  # TeamMemberProject.delete_all()
-  TeamMember.delete_all()
-  Project.delete_all()
-  ColourSetting.delete_all()
-  
-  flash[:info] = "Everything is GONE, and it's all your fault! But it's ok, just create some <a href='/create'>seed data</a>."
-  redirect '/'  
 end
 
 get '/css/style.css' do
