@@ -80,7 +80,10 @@ function updateTeamMemberProject(proj) {
     function(response) {
       if(response == "success") {
         $("#main").before("<div id='flash'><div class='flash success'>Successfully updated.</div></div>");
-        // TODO: update .project data attributes
+        
+        // Update team member
+        var fromTeamMemberId = $(proj).attr("data-team-member-id", toTeamMemberId);
+        
       } else {
         $("#main").before("<div id='flash'><div class='flash warning'>Something went wrong with the update. Please try again later.</div></div>");
     }
