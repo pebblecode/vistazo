@@ -319,10 +319,16 @@ post '/team-member-project/:tm_project_id/update.json' do
   
   output = ""
   if (from_team_member.present? and to_team_member.present? and team_member_project.present? and to_date.present?)
-    status = from_team_member.move_project(team_member_project, to_team_member, to_date)
+    successful_move = from_team_member.move_project(team_member_project, to_team_member, to_date)
     
-    output = status ? "success" : "{ fail: 'update fail' }"
+    if successful_move
+      output = "success"
+    else
+      status 500
+      output = "{ fail: 'update fail' }"
+    end
   else
+    status 400
     output = "{ fail: 'input fail' }"
   end
 
