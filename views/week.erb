@@ -55,8 +55,9 @@
             <%#
               data-team-member-id: Used for update to know the team member moving from
               data-team-member-project-id: Used for update to know the team member project
+              data-date: Used for update to know the date of the team member project
             %>
-            <div class="project" data-team-member-id="<%= tm.id %>" data-team-member-project-id="<%= tm_project.id %>"> 
+            <div class="project" data-team-member-id="<%= tm.id %>" data-team-member-project-id="<%= tm_project.id %>" data-date="<%= tm_project.date %>"> 
               <div class="handle-container"><div class="handle <%= tm_project.css_class %>"></div></div> <p class="project-title"><%= h tm_project.project_name %></p>
               <form id="new-tm-project-form" action="/team-member/<%= tm.id %>/project/<%= tm_project.id %>/delete" method="post">
                 <button name="delete_project" type="submit" value="true">x</button>

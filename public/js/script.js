@@ -37,7 +37,16 @@ $(function () {
       forcePlaceholderSize: true,
       opacity: 0.4,
       stop: function(event, ui) {
-        updateTeamMemberProject(ui.item);
+        var project = ui.item;
+        var projectTeamMemberId = $(project).attr("data-team-member-id");
+        var projectDate = $(project).attr("data-date");
+        
+        var containerTeamMemberId = $(project).parents(".team-member").first().attr("data-team-member-id");
+        var containerDate = $(project).parents(".box").first().attr("data-date");
+        
+        if ((projectTeamMemberId != containerTeamMemberId) || (projectDate != containerDate)) {
+          updateTeamMemberProject(project);
+        }
       }
   })
   .disableSelection();
@@ -60,17 +69,18 @@ function updateTeamMemberProject(proj) {
   var fromTeamMemberId = $(proj).attr("data-team-member-id");
   var toTeamMemberId = $(proj).parents('.team-member').first().attr("data-team-member-id");
   var teamMemberProjectId = $(proj).attr("data-team-member-project-id");
-  var to_date = $(proj).parents('.box').first().attr("data-date");
+  var toDate = $(proj).parents('.box').first().attr("data-date");
     
   var url = "/team-member-project/" + teamMemberProjectId + "/update.json";
   $(proj).addClass('is_loading');
-  $.post(url, { from_team_member_id: fromTeamMemberId, to_team_member_id: toTeamMemberId, to_date: to_date },
+  $.post(url, { from_team_member_id: fromTeamMemberId, to_team_member_id: toTeamMemberId, to_date: toDate },
     function(response) {
       if(response == "success") {
         $("#main").before("<div id='flash'><div class='flash success'>Successfully updated.</div></div>");
         
         // Update team member
-        var fromTeamMemberId = $(proj).attr("data-team-member-id", toTeamMemberId);
+        $(proj).attr("data-team-member-id", toTeamMemberId);
+        $(proj).attr("data-date", toDate);
         
         $(proj).removeClass('is_loading');
       } else {
