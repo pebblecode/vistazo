@@ -39,13 +39,17 @@ Project was created with (shouldn't need to be done again, but here just for ref
 
 Staging uses [MongoLab](http://devcenter.heroku.com/articles/mongolab).
 
-To deploy the staging branch:
-
-1. Check out the staging branch
+Initial setup
 
     git checkout --track -b staging origin/staging
 
-1. Push to the staging server
+Merging code and pushing to staging branch
+
+    git checkout staging; git merge master
+    git push
+
+
+To push to the staging server
 
     git push staging staging:master
 
@@ -64,13 +68,17 @@ Project was created with (shouldn't need to be done again, but here just for ref
     
 Production uses [MongoLab](http://devcenter.heroku.com/articles/mongolab).
 
-To deploy the production branch:
-
-1. Check out the staging branch
+Initial setup
 
     git checkout --track -b production origin/production
 
-1. Push to the staging server
+Merging code and pushing to production branch
+
+    git checkout production; git merge master
+    git push
+
+
+To push to the production server
 
     git push production production:master
 
