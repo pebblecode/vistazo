@@ -29,8 +29,8 @@ $(function () {
   }); // end of function
   
   // Drag and drop for projects
-  $('table .box .project').click(function() {
-    updateTeamMemberProject($(this));
+  $('table .box .circle').click(function() {
+    updateTeamMemberProject($(this).parents(".project").first());
     return false;
   })
   $('table .box').sortable({
