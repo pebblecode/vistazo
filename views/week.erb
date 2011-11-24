@@ -57,7 +57,7 @@
               data-team-member-project-id: Used for update to know the team member project
             %>
             <div class="project" data-team-member-id="<%= tm.id %>" data-team-member-project-id="<%= tm_project.id %>"> 
-              <div class="circle <%= tm_project.css_class %>"></div> <p class="project-title"><%= h tm_project.project_name %></p>
+              <div class="handle-container"><div class="handle <%= tm_project.css_class %>"></div></div> <p class="project-title"><%= h tm_project.project_name %></p>
               <form id="new-tm-project-form" action="/team-member/<%= tm.id %>/project/<%= tm_project.id %>/delete" method="post">
                 <button name="delete_project" type="submit" value="true">x</button>
               </form>
@@ -106,7 +106,7 @@
     <fieldset title="Existing projects">
     <% for project in @projects %>
       <div class="d-project">
-        <div class="circle <%= project.css_class %>"></div>
+        <div class="handle <%= project.css_class %>"></div>
         <button name="project_id" type="submit" value="<%= project.id %>"><%= h project.name %></button>
       </div>
     <% end %>

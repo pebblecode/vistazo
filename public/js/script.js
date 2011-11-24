@@ -29,13 +29,13 @@ $(function () {
   }); // end of function
   
   // Drag and drop for projects
-  $('table .box .circle').click(function() {
+  $('table .box .handle').click(function() {
     updateTeamMemberProject($(this).parents(".project").first());
     return false;
   })
   $('table .box').sortable({
       connectWith: '.box',
-      handle: '.circle',
+      handle: '.handle',
       cursor: 'move',
       placeholder: 'placeholder',
       forcePlaceholderSize: true,
@@ -76,6 +76,7 @@ function updateTeamMemberProject(proj) {
   var to_date = $(proj).parents('.box').first().attr("data-date");
     
   var url = "/team-member-project/" + teamMemberProjectId + "/update.json";
+  $(proj).addClass('is_loading');
   $.post(url, { from_team_member_id: fromTeamMemberId, to_team_member_id: toTeamMemberId, to_date: to_date },
     function(response) {
       if(response == "success") {
@@ -84,6 +85,7 @@ function updateTeamMemberProject(proj) {
         // Update team member
         var fromTeamMemberId = $(proj).attr("data-team-member-id", toTeamMemberId);
         
+        $(proj).removeClass('is_loading');
       } else {
         $("#main").before("<div id='flash'><div class='flash warning'>Something went wrong with the update. Please try again later.</div></div>");
     }
