@@ -97,23 +97,22 @@ class TeamMember
     puts "Moving from #{self.name} (#{team_member_project}) to #{to_team_member.name} on #{to_date}"
     project_id = team_member_project.project_id
     
-    if self == to_team_member
-      team_member_project.date = to_date
-      self.save
-      
-      true
-    else
+    team_member_project.date = to_date
+    self.save
+    
+    if self != to_team_member
       did_delete = self.team_member_projects.reject! { |proj| proj == team_member_project }
       self.save
+      puts "Team member should still exist: #{team_member_project}"
       unless did_delete.nil?
-        to_team_member.team_member_projects << TeamMemberProject.new(:project_id => project_id, :date => to_date)
+        to_team_member.team_member_projects << team_member_project
         to_team_member.save
-      
-        true
       else
-        false
+        return false
       end
     end
+    
+    return true
   end
 end
 
