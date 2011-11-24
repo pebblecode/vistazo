@@ -29,10 +29,6 @@ $(function () {
   }); // end of function
   
   // Drag and drop for projects
-  $('table .box .handle').click(function() {
-    updateTeamMemberProject($(this).parents(".project").first());
-    return false;
-  })
   $('table .box').sortable({
       connectWith: '.box',
       handle: '.handle',
@@ -40,17 +36,8 @@ $(function () {
       placeholder: 'placeholder',
       forcePlaceholderSize: true,
       opacity: 0.4,
-      start: function(event, ui){  
-        // Firefox, Safari/Chrome fire click event after drag is complete, fix for that
-        if($.browser.mozilla || $.browser.safari) {
-          
-        }
-      },  
-      stop: function(event, ui){  
-        ui.item.css({'top':'0','left':'0'}); // Opera fix  
-        if(!$.browser.mozilla && !$.browser.safari) {
-          updateTeamMemberProject($(this));
-        }
+      stop: function(event, ui) {
+        updateTeamMemberProject(ui.item);
       }
   })
   .disableSelection();
