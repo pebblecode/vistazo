@@ -315,8 +315,8 @@ post '/team-member-project/:tm_project_id/update.json' do
   team_member_project = from_team_member.team_member_projects.find(params[:tm_project_id]) if from_team_member
   to_date = Date.parse(params[:to_date])
   
-  puts "Update team member project: #{params}"
-
+  puts "Update team member project params: #{params}"
+  
   output = ""
   if (from_team_member.present? and to_team_member.present? and team_member_project.present? and to_date.present?)
     status = from_team_member.move_project(team_member_project, to_team_member, to_date)
