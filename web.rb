@@ -92,6 +92,10 @@ class TeamMember
     self.team_member_projects << TeamMemberProject.new(:project_id => project.id, :date => date)
     self.save
   end
+  
+  def move_project(to_team_member, to_date)
+    puts "Moving from #{self.name} to #{to_team_member.name} on #{to_date}"
+  end
 end
 
 class TeamMemberProject
@@ -285,25 +289,25 @@ post '/team-member-project/add' do
   redirect '/'
 end
 
-post '/team-member/:team_member_id/team-member-project/:tm_project_id/update' do
+post '/team-member-project/:tm_project_id/update.json' do
   protected!
 
-  team_member = TeamMember.find(params[:team_member_id])
-  date = Date.parse(params[:date])
+  from_team_member = TeamMember.find(params[:from_team_member_id])
+  to_team_member = TeamMember.find(params[:to_team_member_id])
+  to_date = Date.parse(params[:to_date])
   
   puts "Update team member project: #{params}"
-  
-  project = Project.find(params[:project_id])
-  if (team_member.present? and project.present? and date.present?)
-    team_member.add_project_on_date(project, date)
+
+  output = ""
+  if (from_team_member.present? and to_team_member.present? and to_date.present?)
+    from_team_member.move_project(to_team_member, to_date)
     
-    flash[:success] = "Successfully updated '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
+    output = "success"
   else
-    flash[:warning] = "Something went wrong when adding a team member project. Please try again later."
+    output = "fail"
   end
 
-  
-  redirect '/'
+  output
 end
 
 post '/team-member/:team_member_id/project/:tm_project_id/delete' do

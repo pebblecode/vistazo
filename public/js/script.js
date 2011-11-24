@@ -31,6 +31,7 @@ $(function () {
   // Drag and drop for projects
   $('table .box .project').click(function() {
     updateTeamMemberProject($(this));
+    return false;
   })
   $('table .box').sortable({
       connectWith: '.box',
@@ -69,15 +70,19 @@ $(function () {
 
 // Update team member project
 function updateTeamMemberProject(proj) {
-  var teamMemberId = $(proj).attr("data-team-member-id");
+  var fromTeamMemberId = $(proj).attr("data-team-member-id");
+  var toTeamMemberId = $(proj).parents('.team-member').first().attr("data-team-member-id");
   var teamMemberProjectId = $(proj).attr("data-team-member-project-id");
-  var url = "/team-member/" + teamMemberId + "/team-member-project/" + teamMemberProjectId + "/update";
-  var new_date = "TODO";
-  $.post(url, { date: new_date }, function(response) {
-    if(response == "success")
-      $("").html('<div class="success">Saved</div>').hide().fadeIn(1000);
-    setTimeout(function(){  
-      $('#console').fadeOut(1000);  
-    }, 2000);
+  var to_date = $(proj).parents('.box').first().attr("data-date");
+    
+  var url = "/team-member-project/" + teamMemberProjectId + "/update.json";
+  $.post(url, { from_team_member_id: fromTeamMemberId, to_team_member_id: toTeamMemberId, to_date: to_date },
+    function(response) {
+      if(response == "success") {
+        $("#main").before("<div id='flash'><div class='flash success'>Successfully updated.</div></div>");
+        // TODO: update .project data attributes
+      } else {
+        $("#main").before("<div id='flash'><div class='flash warning'>Something went wrong with the update. Please try again later.</div></div>");
+    }
   });
 }
