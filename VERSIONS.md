@@ -1,3 +1,9 @@
+# 0.1.0
+
+* Create staging/production branches
+* Change /create and /delete_all to just /reset post to clear out the database
+* Bug fix
+
 # 0.0.7
 
 * Drag and drop
