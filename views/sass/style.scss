@@ -26,12 +26,11 @@ body {
 /* @group top-nav */
 
 #top-nav {
+  @include box-shadow(0, 3px, 0, rgba(0, 0, 0, 0.1));
+  
   width: 100%;
   float: left;
   background-color: rgba(41, 171, 226, 1);
-  -moz-box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
-  -webkit-box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
   margin-bottom: 100px;
 
   .top-spacer {
@@ -112,6 +111,9 @@ body {
 /* @group main-styles */
 
 #main {
+  @include border-radius(10px);
+  @include box-shadow(0, 5px, 20px, rgba(0, 0, 0, 0.1));
+  
   position: relative;
   width: 920px;
   clear: both;
@@ -119,11 +121,6 @@ body {
   padding: 20px;
   background-color: #fff;
   margin-top: 0 auto;
-  
-  @include border-radius(10px);
-  -moz-box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  -webkit-box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
   
   #week-view {
     td, .row1.col1, .row1.col6 {
@@ -165,17 +162,16 @@ body {
       }
       
       .project {
+        @include border-radius(5px);
+        @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.1));
+        
         height: 20px;
         background-color: #fff;
         margin: 5px 5px 0 10px;
-        @include border-radius(5px);
         font-size: 14px;
         color: #808080;
         border: 1px solid #cccccc;
         padding-right: 2px;
-        -moz-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
-        -webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
-        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
 
         .project-title{
           float: left;
@@ -220,15 +216,15 @@ body {
     width: 140px;
   }
 
-  .col2, .col3, .col4, .col5, .col6{
+  .col2, .col3, .col4, .col5, .col6 {
     width: 150px;
   }
 
-  .col7{
+  .col7 {
     width: 30px;
   }
 
-  .arrows{
+  .arrows {
     font-family: 'WebSymbolsRegular';
     float: right;
     color: rgba(41, 171, 226, 1);
@@ -236,18 +232,18 @@ body {
     text-decoration: none;
   }
 
-  .day{
+  .day {
     color: #999999;
     font-size: 14px;
     text-transform: uppercase;
   }
 
-  .date{
+  .date {
     color: #999999;
     font-size: 12px;
   }
 
-  .month{
+  .month {
     color: #999999;
     font-size: 8px;
     line-height: 12px;
@@ -255,7 +251,10 @@ body {
     text-transform: uppercase;
   }
 
-  .person{
+  .person {
+    @include border-radius(5px);
+    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+    
     height: 20px;
     background: rgba(41, 171, 226, 1) url('/img/people-arrow.png') no-repeat 115px 6px;
     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
@@ -263,35 +262,30 @@ body {
     font-size: 14px;
     font-weight: bold;
     margin: 5px;
-    @include border-radius(5px);
     border: 1px solid #259acb;
     padding: 0px 5px;
-    -moz-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-    -webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
   }
 
-  .highlight{
+  .highlight {
     height: 1px;
     background-color: rgba(255, 255, 255, 0.2);
     border: none;
     margin: 0 0 2px 0;
   }
 
-  #new-person{
+  #new-person {
+    @include border-radius(5px);
+    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.05));
+    
     height: 18px;
     border: 1px solid #e6e6e6;
     color: #e6e6e6;
-    @include border-radius(5px);
     font-size: 14px;
     margin: 10px 5px 5px 5px;
     padding: 2px 5px 0 5px;
-    -moz-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05);
-    -webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05);
-    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05);
   }
 
-  #plus{
+  #plus {
     font-family: 'WebSymbolsRegular';
     float: right;
     font-size: 10px;
@@ -304,11 +298,14 @@ body {
     height: 10px;
     margin: 5px;
     float: left;
-    @include border-radius(10px);
     cursor: move;
+    
+    @include border-radius(10px);
   }
   
-  .new-project{
+  .new-project {
+    @include border-radius(5px);
+        
     display: block;
     text-decoration: none;
     opacity: 0;
@@ -318,7 +315,6 @@ body {
     font-size: 12px;
     text-align: center;
     padding-top: 4px;
-    @include border-radius(5px);
     cursor: pointer;
     border: 1px solid rgba(0, 0, 0, 0.1);
     color: rgba(0, 0, 0, .1);
@@ -333,6 +329,9 @@ body {
 -----------------------------------------------------------------------------*/
 
 #new-project-dialog {
+  @include border-radius(8px);
+  @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+  
   color: #fff;
   font-size: 14px;
   font-weight: bold;
@@ -345,11 +344,7 @@ body {
   width: 200px;
   background-color: rgba(41, 171, 226, 1);
   margin: 5px;
-  @include border-radius(8px);
   border: 1px solid #259acb;
-  -moz-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-  -webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
   
   h4 {
     color: #FFFFFF;
@@ -375,18 +370,17 @@ body {
 }
 
 .d-project{
+  @include border-radius(5px);
+  @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+  
   font-weight: normal;
   height: 20px;
   background-color: #fff;
   margin: 5px;
-  @include border-radius(5px);
   font-size: 14px;
   color: #808080;
   cursor: pointer;
   border: 1px solid #a1a1a1;
-  -moz-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-  -webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
   text-shadow: none;
 }
 
