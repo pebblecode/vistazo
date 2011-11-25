@@ -6,6 +6,17 @@ $(function () {
     });
   }
   
+  // Delete button - only show on hover
+  {
+    $(".delete-tm-project-form button").hide();
+    $(".project").hover(function() {
+      $(this).find(".delete-tm-project-form button").fadeIn(200);
+    },
+    function() {
+      $(this).find(".delete-tm-project-form button").fadeOut(100);
+    });
+  }
+  
   $("#new-project-dialog").hide(); // Hide by default
   
   $(".new-project").click(function () {
