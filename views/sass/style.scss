@@ -123,6 +123,25 @@ body {
   -webkit-box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
   
+  #week-view {
+    td, .row1.col1, .row1.col6 {
+      border-right: 1px dashed #b3b3b3;
+    }
+    .col7 {
+      border-right: none; /* Cancel out border on last column */
+    }
+    
+    .row-divider {
+      background-colour: #ffffff;
+      height: 2px;
+      
+      td {
+        border-bottom: 1px solid #d2ecf6;
+        border-right: none; /* Cancel out border on last column */
+      }
+    }
+  }
+  
   .row1{
     height: 50px;
     vertical-align: bottom;
@@ -138,7 +157,7 @@ body {
     padding-bottom: 20px;
   }
 
-  .col1{
+  .col1 {
     width: 140px;
   }
 
@@ -164,49 +183,6 @@ body {
 
   .row6.col7{
     border-bottom-right-radius: 10px;
-  }
-
-  .line{
-    position: absolute;
-    width: 1px;
-    z-index: 50;
-    border-right: 1px dashed #b3b3b3;
-  }
-
-  .line1{
-    top: 20px;
-    left: 160px;
-    height: 420px;
-  }
-
-  .line2{
-    left: 310px;
-    top: 50px;
-    height: 390px;
-  }
-
-  .line3{
-    left: 460px;
-    top: 50px;
-    height: 390px;
-  }
-
-  .line4{
-    left: 610px;
-    top: 50px;
-    height: 390px;
-  }
-
-  .line5{
-    left: 760px;
-    top: 50px;
-    height: 390px;
-  }
-
-  .line6{
-    left: 910px;
-    top: 20px;
-    height: 420px;
   }
 
   .arrows{
@@ -334,13 +310,6 @@ body {
     border: 1px solid rgba(0, 0, 0, 0.1);
     color: rgba(0, 0, 0, .1);
     cursor: pointer;
-  }
-
-  .row-divider{
-    margin: 1px 0;
-    height: 1px;
-    border: none;
-    background-color: #d2ecf6;
   }
   
 } // #main

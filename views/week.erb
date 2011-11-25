@@ -1,6 +1,4 @@
-<div class="line line1"></div><div class="line line2"></div><div class="line line3"></div><div class="line line4"></div><div class="line line5"></div><div class="line line6"></div>
-
-<table>
+<table id="week-view">
   <tr>
     <th class="row1 col1"> 
       <% if @prev_week_url.present? %>
@@ -69,14 +67,8 @@
       <td class="<%= "#{row_class} col7" %>"></td>
     </tr>
     <% unless tm == @team_members.last %>
-      <tr>
-        <td><hr / class="row-divider"></td>
-        <td><hr / class="row-divider"></td>
-        <td><hr / class="row-divider"></td>
-        <td><hr / class="row-divider"></td>
-        <td><hr / class="row-divider"></td>
-        <td><hr / class="row-divider"></td>
-        <td><hr / class="row-divider"></td>
+      <tr class="row-divider">
+        <td colspan="7"></td>
       </tr>  <!--the divider-->
     <% end %>
   <% end %>
