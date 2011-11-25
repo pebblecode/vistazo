@@ -104,6 +104,14 @@ function updateTeamMemberProject(proj) {
   
 }
 
-function updateFlash(status, msg) {
-  $("#main").before("<div id='flash'><div class='flash " + status + "'>" + msg + "</div></div>");
+function updateFlash(flashType, msg) {
+  var flashMessage = "<div class='flash " + flashType + "'>" + msg + "</div>";
+  
+  if ($("#flash").length > 0) {
+    $("#flash .flash").remove();
+    $("#flash").append(flashMessage);
+  } else {
+    $("#main").before("<div id='flash'>" + flashMessage + "</div>");
+  }
+  
 }
