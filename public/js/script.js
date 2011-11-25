@@ -90,16 +90,20 @@ function updateTeamMemberProject(proj) {
     .complete(function(data, status) {
       response = JSON.parse(data.responseText);
       if (status == "success") {
-        $("#main").before("<div id='flash'><div class='flash success'>" + response["message"] + "</div></div>");
+        updateFlash("success", response["message"]);
       } else {
         if (response) {
-          $("#main").before("<div id='flash'><div class='flash warning'>" + response["message"] + "</div></div>");
+          updateFlash("warning", response["message"]);
         } else {
-          $("#main").before("<div id='flash'><div class='flash warning'>Something weird happened. Please contact support about it.</div></div>");
+          updateFlash("warning", "Something weird happened. Please contact support about it.");
         }
       }
       
       $(proj).removeClass('is_loading');
     });
   
+}
+
+function updateFlash(status, msg) {
+  $("#main").before("<div id='flash'><div class='flash " + status + "'>" + msg + "</div></div>");
 }
