@@ -73,18 +73,33 @@ function updateTeamMemberProject(proj) {
     
   var url = "/team-member-project/" + teamMemberProjectId + "/update.json";
   $(proj).addClass('is_loading');
-  $.post(url, { from_team_member_id: fromTeamMemberId, to_team_member_id: toTeamMemberId, to_date: toDate },
-    function(response) {
-      if(response == "success") {
-        $("#main").before("<div id='flash'><div class='flash success'>Successfully updated.</div></div>");
-        
-        // Update team member
-        $(proj).attr("data-team-member-id", toTeamMemberId);
-        $(proj).attr("data-date", toDate);
-        
-        $(proj).removeClass('is_loading');
+  $.post(url, { from_team_member_id: fromTeamMemberId, to_team_member_id: toTeamMemberId, to_date: toDate })
+    .success(function(response) {
+      // Update team member project info in data attributes
+      $(proj).attr("data-team-member-id", toTeamMemberId);
+      $(proj).attr("data-date", toDate);
+    })
+    .error(function(response) {
+      // Move team member project back
+      var fromDate = $(proj).attr("data-date");
+      var fromLocation = $(".team-member[data-team-member-id=" + fromTeamMemberId + "]").find(".box[data-date=" + fromDate + "]");
+      
+      $(proj).remove();
+      $(fromLocation).find(".new-project").before(proj);
+    })
+    .complete(function(data, status) {
+      response = JSON.parse(data.responseText);
+      if (status == "success") {
+        $("#main").before("<div id='flash'><div class='flash success'>" + response["message"] + "</div></div>");
       } else {
-        $("#main").before("<div id='flash'><div class='flash warning'>Something went wrong with the update. Please try again later.</div></div>");
-    }
-  });
+        if (response) {
+          $("#main").before("<div id='flash'><div class='flash warning'>" + response["message"] + "</div></div>");
+        } else {
+          $("#main").before("<div id='flash'><div class='flash warning'>Something weird happened. Please contact support about it.</div></div>");
+        }
+      }
+      
+      $(proj).removeClass('is_loading');
+    });
+  
 }

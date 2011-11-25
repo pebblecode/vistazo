@@ -5,6 +5,7 @@ require 'uri'
 require 'sass'
 require 'time'
 require 'date'
+require 'json'
 
 enable :sessions
 
@@ -300,7 +301,7 @@ post '/team-member-project/add' do
       
       flash[:success] = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
     else
-      flash[:warning] = "Something went wrong when adding a team member project. Please try again later."
+      flash[:warning] = "Something went wrong when adding a team member project. Please refresh and try again later."
     end
   end
   
@@ -322,17 +323,19 @@ post '/team-member-project/:tm_project_id/update.json' do
     successful_move = from_team_member.move_project(team_member_project, to_team_member, to_date)
     
     if successful_move
-      output = "success"
+      status 200
+      output = { :message => "Successfully moved '<em>#{team_member_project.project_name}</em>' project to #{to_team_member.name} on #{to_date}." }
     else
       status 500
-      output = "{ fail: 'update fail' }"
+      output = { :message => "Something went wrong with saving the changes when updating team member project. Please refresh and try again later." }
     end
   else
     status 400
-    output = "{ fail: 'input fail' }"
+    output = { :message => "Something went wrong with the input when updating team member project. Please refresh and try again later." }
   end
 
-  output
+  content_type :json 
+  output.to_json
 end
 
 post '/team-member/:team_member_id/project/:tm_project_id/delete' do
@@ -350,7 +353,7 @@ post '/team-member/:team_member_id/project/:tm_project_id/delete' do
       flash[:warning] = "Something went wrong when trying to delete a team member project for #{team_member.name}. Please try again later."
     end
   else
-    flash[:warning] = "Something went wrong when trying to delete a team member project. Please try again later."
+    flash[:warning] = "Something went wrong when trying to delete a team member project. Please refresh and try again later."
   end
   
   redirect back

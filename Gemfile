@@ -4,6 +4,7 @@ gem 'thin', '1.2.7'
 gem 'shotgun'
 
 gem 'sinatra-flash'
+gem 'json'
 
 # Views
 gem 'sass'
