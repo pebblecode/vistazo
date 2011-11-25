@@ -336,8 +336,6 @@ body {
   font-size: 14px;
   font-weight: bold;
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-  top: 60px;
-  left: 440px;
   position: absolute;
   z-index: 50;
   min-height: 150px;
@@ -357,8 +355,13 @@ body {
   }
   
   .close {
+    position: absolute;
+    top: 8px;
+    right: 5px;
+    outline: none;
     color: #ffffff;
-    margin-left: 5px;
+    font: 10px 'WebSymbolsRegular';
+    text-decoration: none;
   }
   
 }
@@ -405,7 +408,7 @@ body {
     font: 10px 'WebSymbolsRegular';
     text-shadow: none;
   }
-}
+} // #new-project-form
 
 
 /* Misc
