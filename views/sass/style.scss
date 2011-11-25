@@ -178,6 +178,10 @@ body {
           margin-top: 3px;
         }
 
+        .handle {
+          cursor: move;
+        }
+        
         &.is_loading .handle-container {
           background: transparent url("/img/loading.gif") no-repeat 2px 2px;
           width: 20px;
@@ -301,7 +305,6 @@ body {
     height: 10px;
     margin: 5px;
     float: left;
-    cursor: move;
   }
   
   .new-project {
