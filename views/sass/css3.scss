@@ -1,0 +1,51 @@
+/* From https://gist.github.com/1330345 */
+@mixin border-radius($values) {
+  @include css3-prefix(3, border-radius, $values);
+}
+
+@mixin box-shadow($x, $y, $offset, $color) {
+  @include css3-prefix(4, box-shadow, $x $y $offset $color);
+  
+  $iecolor: '#' + red($color) + green($color) + blue($color);
+  filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=#{$x}, OffY=#{$y}, Color='#{$iecolor}');
+  -ms-filter: quote(progid:DXImageTransform.Microsoft.dropshadow(OffX=#{$x}, OffY=#{$y}, Color='#{$iecolor}'));
+}
+
+@mixin translate($x, $y) {
+  @include css3-prefix(5, transform, translate3d(#{$x}px, #{$x}px, 0px));
+}
+
+@mixin rotate($deg) {
+  @include css3-prefix(5, transform, rotate(#{$deg}deg));
+}
+
+@mixin transform($x, $y, $deg) {
+  @include css3-prefix(5, transform, translate3d(#{$x}px, #{$x}px, 0px) rotate(#{$deg}deg));
+}
+
+@mixin transition-property($props) {
+  @include css3-prefix(4, transition-property, $props);
+}
+
+@mixin transition-duration($duration) {
+  @include css3-prefix(4, transition-duration, #{$duration}s);
+}
+
+@mixin columns($count, $gap) {
+  @include css3-prefix(4, column-count, $count);
+  @include css3-prefix(4, column-gap, $gap);
+}
+
+@mixin css3-prefix($num, $prop, $value) {
+  @if $num >= 3 {
+    -webkit-#{$prop}: $value;
+    -moz-#{$prop}: $value;
+  }
+  @if $num >= 4 {
+    -o-#{$prop}: $value;
+  }
+  @if $num >= 5 {
+    -ms-#{$prop}: $value;
+  }
+  #{$prop}: $value;
+}

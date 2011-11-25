@@ -1,79 +1,81 @@
 <table id="week-view">
-  <tr>
-    <th class="row1 col1"> 
-      <% if @prev_week_url.present? %>
-        <a href="<%= @prev_week_url %>" class="arrows" title="Previous week">(</a>
-      <% end %>
-    </th>
+  <thead>
+    <tr>
+      <th class="row1 col1"> 
+        <% if @prev_week_url.present? %>
+          <a href="<%= @prev_week_url %>" class="arrows" title="Previous week">(</a>
+        <% end %>
+      </th>
     
-    <th class="row1 col2">
-      <p class="day"><%= @monday_date.strftime("%a") %></p> <p class="date"><%= @monday_date.day.ordinalize %></p><p class="month"><%= @monday_date.strftime("%b") %></p>
-    </th>
-    <th class="row1 col3">
-      <p class="day"><%= @tuesday_date.strftime("%a") %></p> <p class="date"><%= @tuesday_date.day.ordinalize %></p><p class="month"><%= @tuesday_date.strftime("%b") %></p>
-    </th>
-    <th class="row1 col4">
-      <p class="day"><%= @wednesday_date.strftime("%a") %></p> <p class="date"><%= @wednesday_date.day.ordinalize %></p><p class="month"><%= @wednesday_date.strftime("%b") %></p>
-    </th>
-    <th class="row1 col5">
-      <p class="day"><%= @thursday_date.strftime("%a") %></p> <p class="date"><%= @thursday_date.day.ordinalize %></p><p class="month"><%= @thursday_date.strftime("%b") %></p>
-    </th>
-    <th class="row1 col6">
-      <p class="day"><%= @friday_date.strftime("%a") %></p> <p class="date"><%= @friday_date.day.ordinalize %></p><p class="month"><%= @friday_date.strftime("%b") %></p>
-    </th>
+      <th class="row1 col2">
+        <p class="day"><%= @monday_date.strftime("%a") %></p> <p class="date"><%= @monday_date.day.ordinalize %></p><p class="month"><%= @monday_date.strftime("%b") %></p>
+      </th>
+      <th class="row1 col3">
+        <p class="day"><%= @tuesday_date.strftime("%a") %></p> <p class="date"><%= @tuesday_date.day.ordinalize %></p><p class="month"><%= @tuesday_date.strftime("%b") %></p>
+      </th>
+      <th class="row1 col4">
+        <p class="day"><%= @wednesday_date.strftime("%a") %></p> <p class="date"><%= @wednesday_date.day.ordinalize %></p><p class="month"><%= @wednesday_date.strftime("%b") %></p>
+      </th>
+      <th class="row1 col5">
+        <p class="day"><%= @thursday_date.strftime("%a") %></p> <p class="date"><%= @thursday_date.day.ordinalize %></p><p class="month"><%= @thursday_date.strftime("%b") %></p>
+      </th>
+      <th class="row1 col6">
+        <p class="day"><%= @friday_date.strftime("%a") %></p> <p class="date"><%= @friday_date.day.ordinalize %></p><p class="month"><%= @friday_date.strftime("%b") %></p>
+      </th>
     
-    <th class="row1 col7">
-      <a href="<%= @next_week_url %>" class="arrows" title="Next week">)</a>
-    </th>
-  </tr>
-  
-  
-  <% @team_members.each_with_index do |tm, tm_index| %>
-    <% prev_rows = 1 %>
-    <% row_num = (tm_index + 1) + prev_rows %>
-    <% row_class = "row#{row_num}" %>
-    <%#
-      data-team-member-id: Used for update to know the team member moving to
-    %>
-    <tr class="team-member <%= row_num.odd? ? "odd" : "even" %>" data-team-member-id="<%= tm.id %>">
-      <td class="<%= row_class %> col1"> <div class="person"><hr / class="highlight"><%= h tm.name %></div></td>
-
-      <% prev_cols = 1 %>
-      <% (MONDAY..FRIDAY).each do |work_day| %>
-        <%#
-          data-date: Used for update to know the date moving to
-        %>
-        <td class="box <%= "#{row_class} col#{work_day + prev_cols}" %>" data-date="<%= (@monday_date - 1.day) + work_day.day %>">
-          <% tm_projects = @team_member_projects_on_day[tm][work_day] %>
-          <% for tm_project in tm_projects %>
-            <%#
-              data-team-member-id: Used for update to know the team member moving from
-              data-team-member-project-id: Used for update to know the team member project
-              data-date: Used for update to know the date of the team member project
-            %>
-            <div class="project" data-team-member-id="<%= tm.id %>" data-team-member-project-id="<%= tm_project.id %>" data-date="<%= tm_project.date %>"> 
-              <div class="handle-container"><div class="handle <%= tm_project.css_class %>"></div></div> <p class="project-title"><%= h tm_project.project_name %></p>
-              <form class="delete-tm-project-form" action="/team-member/<%= tm.id %>/project/<%= tm_project.id %>/delete" method="post">
-                <button name="delete_project" type="submit" value="true">'</button>
-              </form>
-            </div>
-          <% end %>
-          <%#
-            data-date: Used for adding a new project to know the date to add project to
-            data-team-member-id: Used for adding a new project to know the team member to add to
-          %>
-          <a href="#new-project" class="new-project" data-date="<%= (@monday_date - 1.day) + work_day.day %>" data-team-member-id="<%= tm.id %>">+</a>
-        </td>
-      <% end %>
-      <td class="<%= "#{row_class} col7" %>"></td>
+      <th class="row1 col7">
+        <a href="<%= @next_week_url %>" class="arrows" title="Next week">)</a>
+      </th>
     </tr>
-    <% unless tm == @team_members.last %>
-      <tr class="row-divider">
-        <td colspan="7"><hr/></td>
-      </tr>  <!--the divider-->
-    <% end %>
-  <% end %>
+  </thead>
   
+  <tbody>
+    <% @team_members.each_with_index do |tm, tm_index| %>
+      <% prev_rows = 1 %>
+      <% row_num = (tm_index + 1) + prev_rows %>
+      <% row_class = "row#{row_num}" %>
+      <%#
+        data-team-member-id: Used for update to know the team member moving to
+      %>
+      <tr class="team-member <%= row_num.odd? ? "odd" : "even" %>" data-team-member-id="<%= tm.id %>">
+        <td class="<%= row_class %> col1"> <div class="person"><hr / class="highlight"><%= h tm.name %></div></td>
+
+        <% prev_cols = 1 %>
+        <% (MONDAY..FRIDAY).each do |work_day| %>
+          <%#
+            data-date: Used for update to know the date moving to
+          %>
+          <td class="box <%= "#{row_class} col#{work_day + prev_cols}" %>" data-date="<%= (@monday_date - 1.day) + work_day.day %>">
+            <% tm_projects = @team_member_projects_on_day[tm][work_day] %>
+            <% for tm_project in tm_projects %>
+              <%#
+                data-team-member-id: Used for update to know the team member moving from
+                data-team-member-project-id: Used for update to know the team member project
+                data-date: Used for update to know the date of the team member project
+              %>
+              <div class="project" data-team-member-id="<%= tm.id %>" data-team-member-project-id="<%= tm_project.id %>" data-date="<%= tm_project.date %>"> 
+                <div class="handle-container"><div class="handle <%= tm_project.css_class %>"></div></div> <p class="project-title"><%= h tm_project.project_name %></p>
+                <form class="delete-tm-project-form" action="/team-member/<%= tm.id %>/project/<%= tm_project.id %>/delete" method="post">
+                  <button name="delete_project" type="submit" value="true">'</button>
+                </form>
+              </div>
+            <% end %>
+            <%#
+              data-date: Used for adding a new project to know the date to add project to
+              data-team-member-id: Used for adding a new project to know the team member to add to
+            %>
+            <a href="#new-project" class="new-project" data-date="<%= (@monday_date - 1.day) + work_day.day %>" data-team-member-id="<%= tm.id %>">+</a>
+          </td>
+        <% end %>
+        <td class="<%= "#{row_class} col7" %>"></td>
+      </tr>
+      <% unless tm == @team_members.last %>
+        <tr class="row-divider">
+          <td colspan="7"><hr/></td>
+        </tr>  <!--the divider-->
+      <% end %>
+    <% end %>
+  </tbody>
   
   <!-- <tr>
     <td class="row7 col1"> <div id="new-person">Add new person <div id="plus">+</div></div></td>
