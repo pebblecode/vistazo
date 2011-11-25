@@ -83,3 +83,18 @@ To push to the production server
     git push production production:master
 
 This is deployed at: http://vistazo.herokuapp.com/
+
+## Mongo
+
+To an a new team member in the mongo backend interface on staging or production:
+
+1. Log into heroku
+1. My apps > `vistazo` or `vistazo-staging` > Add-ons > Mongo Lab > team_members > 
+Add > Copy the following code (making sure oid is unique):
+
+    ```
+    { "_id" : {"$oid": "4ecf82c6b01a520547000011"},
+      "name" : "Satish S",
+      "team_member_projects" : [] }
+    ```
+1. Click on create

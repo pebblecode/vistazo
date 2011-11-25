@@ -378,6 +378,7 @@ post '/reset' do
   mark = TeamMember.create(:name => "Mark D")
   tak = TeamMember.create(:name => "Tak T")
   vince = TeamMember.create(:name => "Vince M")
+  satish = TeamMember.create(:name => "Satish S")
 
   flash[:success] = "Successfully cleared out the database and added seed data. Enjoy!"
   redirect '/'
