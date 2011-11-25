@@ -1,4 +1,11 @@
 $(function () {
+  // Flash the flash message
+  if ($("#flash").length > 0) {
+    $("#flash").hide(0, function() {
+      $(this).fadeIn(1000);
+    });
+  }
+  
   $("#new-project-dialog").hide(); // Hide by default
   
   $(".new-project").click(function () {
@@ -107,11 +114,15 @@ function updateTeamMemberProject(proj) {
 function updateFlash(flashType, msg) {
   var flashMessage = "<div class='flash " + flashType + "'>" + msg + "</div>";
   
-  if ($("#flash").length > 0) {
-    $("#flash .flash").remove();
-    $("#flash").append(flashMessage);
-  } else {
-    $("#main").before("<div id='flash'>" + flashMessage + "</div>");
-  }
+  if ($("#flash").length <= 0) {
+    $("#main").before("<div id='flash'></div>");
+  }  
+  
+  $("#flash .flash").remove();
+  // Flash the flash message
+  $("#flash").append(flashMessage).hide(0, function() {
+    $(this).fadeIn(1000);
+  });
+
   
 }
