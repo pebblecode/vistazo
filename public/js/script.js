@@ -21,6 +21,16 @@ $(function () {
   {
     $("#new-project-dialog").hide(); // Hide by default
     
+    // Hide if clicking outside #new-project-dialog
+    $('html').click(function() {
+      $("#new-project-dialog").hide();
+    });
+    
+    // Prevent clicking on form from hiding the form
+    $("#new-project-dialog").click(function(event) {
+      event.stopPropagation(); 
+    });
+    
     $(".new-project").click(function (event) {
       $(this).css({opacity: "1"});
       
@@ -31,6 +41,8 @@ $(function () {
       var new_project_dialog_left_offset = 20;
       $("#new-project-dialog").show().offset({ top: event.pageY + new_project_dialog_top_offset, left: event.pageX + new_project_dialog_left_offset });
       $("#new-project-dialog").show();
+      
+      event.stopPropagation(); // Prevent click from hiding form
       return false;
     });
 
