@@ -56,7 +56,7 @@
               <div class="project" data-team-member-id="<%= tm.id %>" data-team-member-project-id="<%= tm_project.id %>" data-date="<%= tm_project.date %>"> 
                 <div class="handle-container"><div class="handle <%= tm_project.css_class %>"></div></div> <p class="project-title"><%= h tm_project.project_name %></p>
                 <form class="delete-tm-project-form" action="/team-member/<%= tm.id %>/project/<%= tm_project.id %>/delete" method="post">
-                  <button name="delete_project" type="submit" value="true">'</button>
+                  <button name="delete_project" type="submit" value="true">×</button>
                 </form>
               </div>
             <% end %>
