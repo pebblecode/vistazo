@@ -133,11 +133,16 @@ body {
     
     .row-divider {
       background-colour: #ffffff;
-      height: 2px;
       
       td {
-        border-bottom: 1px solid #d2ecf6;
         border-right: none; /* Cancel out border on last column */
+        
+        hr {
+          margin: 1px 0;
+          height: 1px;
+          border: none;
+          background-color: #d2ecf6;
+        }
       }
     }
     
