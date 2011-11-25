@@ -140,21 +140,23 @@ body {
         border-right: none; /* Cancel out border on last column */
       }
     }
-  }
-  
-  .row1{
-    height: 50px;
-    vertical-align: bottom;
-  }
+    
+    .row1 {
+      height: 50px;
+      vertical-align: bottom;
+    }
+    
+    tr.team-member {
+      padding-bottom: 20px;
+      
+      &.even {
+        background:url('/img/hatch1.gif');
+      }
 
-  .row2, .row4, .row6{
-    background:url('/img/hatch1.gif');
-    padding-bottom: 20px;
-  }
-
-  .row3, .row5{
-    background:url('/img/hatch2.gif');
-    padding-bottom: 20px;
+      &.odd {
+        background:url('/img/hatch2.gif');
+      }
+    }
   }
 
   .col1 {

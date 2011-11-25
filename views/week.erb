@@ -30,11 +30,12 @@
   
   <% @team_members.each_with_index do |tm, tm_index| %>
     <% prev_rows = 1 %>
-    <% row_class = "row#{(tm_index + 1) + prev_rows}" %>
+    <% row_num = (tm_index + 1) + prev_rows %>
+    <% row_class = "row#{row_num}" %>
     <%#
       data-team-member-id: Used for update to know the team member moving to
     %>
-    <tr class="team-member" data-team-member-id="<%= tm.id %>">
+    <tr class="team-member <%= row_num.odd? ? "odd" : "even" %>" data-team-member-id="<%= tm.id %>">
       <td class="<%= row_class %> col1"> <div class="person"><hr / class="highlight"><%= h tm.name %></div></td>
 
       <% prev_cols = 1 %>
