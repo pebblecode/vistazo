@@ -96,7 +96,7 @@
     
     <fieldset title="Existing projects">
     <% for project in @projects %>
-      <div class="d-project">
+      <div class="existing-project">
         <div class="handle <%= project.css_class %>"></div>
         <button name="project_id" type="submit" value="<%= project.id %>"><%= h project.name %></button>
       </div>

@@ -358,6 +358,39 @@ body {
     margin: 5px 0 10px 7px;
   }
   
+  .existing-project {
+    @include border-radius(5px);
+    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+
+    font-weight: normal;
+    height: 20px;
+    background-color: #fff;
+    margin: 5px;
+    border: 1px solid #a1a1a1;
+    text-shadow: none;
+    
+    .handle {
+      position: absolute;
+      z-index: 10;
+    }
+    button {
+      font-family: Cabin,Helvetica,sans-serif;
+      font-size: 14px;
+      line-height: 20px;
+      text-align: left;
+      color: #808080;
+      cursor: pointer;
+      
+      background: none;
+      border: none;
+      width: 188px;
+      padding: 0 0 0 20px;
+      
+      position: relative;
+      z-index: 20;
+    }
+  }
+  
   .new-project-fieldset {
     @include border-radius(5px);
     @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
@@ -411,29 +444,10 @@ body {
   }
 }
 
-#point{
+#point {
   position: absolute;
   top: 36px;
   left: -15px;
-}
-
-.d-project{
-  @include border-radius(5px);
-  @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-  
-  font-weight: normal;
-  height: 20px;
-  background-color: #fff;
-  margin: 5px;
-  font-size: 14px;
-  color: #808080;
-  cursor: pointer;
-  border: 1px solid #a1a1a1;
-  text-shadow: none;
-}
-
-.d-new{
-  margin-top: 20px;
 }
 
 #new-project-form {
