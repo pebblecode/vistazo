@@ -21,6 +21,9 @@ $(function () {
   {
     $("#new-project-dialog").hide(); // Hide by default
     
+    // Labelify new project text box
+    $("#new-project-dialog .new-project-text-box").labelify({ labelledClass: "new-project-text-box-label" });
+    
     // Hide if clicking outside #new-project-dialog
     $('html').click(function() {
       $("#new-project-dialog").hide();
