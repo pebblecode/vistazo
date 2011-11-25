@@ -17,21 +17,36 @@ $(function () {
     });
   }
   
-  $("#new-project-dialog").hide(); // Hide by default
-  
-  $(".new-project").click(function () {
-    $(this).css({opacity: "1"});
+  // Project dialog
+  {
+    $("#new-project-dialog").hide(); // Hide by default
     
-    $("#new-project-dialog form input[name=date]").val($(this).attr("data-date"));
-    $("#new-project-dialog form input[name=team_member_id]").val($(this).attr("data-team-member-id"));
-    $("#new-project-dialog").show();
-    return false;
-  });
-  
-  $("#new-project-dialog .close").click(function() {
-    $("#new-project-dialog").hide();
-    return false;
-  });
+    $(".new-project").click(function (event) {
+      $(this).css({opacity: "1"});
+      
+      $("#new-project-dialog form input[name=date]").val($(this).attr("data-date"));
+      $("#new-project-dialog form input[name=team_member_id]").val($(this).attr("data-team-member-id"));
+      
+      var new_project_dialog_top_offset = -46;
+      var new_project_dialog_left_offset = 20;
+      $("#new-project-dialog").show().offset({ top: event.pageY + new_project_dialog_top_offset, left: event.pageX + new_project_dialog_left_offset });
+      $("#new-project-dialog").show();
+      return false;
+    });
+
+    $("#new-project-dialog .close").click(function() {
+      $("#new-project-dialog").hide();
+      return false;
+    });
+    
+    // New project tab hover
+    $(".new-project").hover(function () {
+        $(this).animate({opacity: "1"});
+      }, function () {
+        $(this).animate({opacity: "0"});
+      }
+    );
+  }
   
   // Enter key for new project submits the form
   $("#new-project-dialog .new-project-text-box").bind("keydown", function(event) {
@@ -70,17 +85,6 @@ $(function () {
   .disableSelection();
   
 });
-
-$(function () {
-  $(".new-project").hover(function () {
-    $(this).animate({opacity: "1"});
-    
-  }, function () {
-  
-    $(this).animate({opacity: "0"});  
-      
-  });
-}); // New project tab hover
 
 // Update team member project
 function updateTeamMemberProject(proj) {
