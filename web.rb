@@ -418,7 +418,7 @@ post '/reset' do
     TeamMember.create(:name => "Daniel B")
   ])
   
-  pebble_it = Account.create(:name => "pebble.it", :url_slug => "pebble_code_dot_net")
+  pebble_it = Account.create(:name => "pebble.it", :url_slug => "pebble_it")
   pebble_it.update_attributes(:projects => [
     Project.create(:name => "Frukt"),
     Project.create(:name => "Kane")
