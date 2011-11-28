@@ -161,19 +161,30 @@ body {
         background:url('/img/hatch2.gif');
       }
       
+      .box {
+        padding-bottom: 30px;
+        cursor: pointer;
+        
+        &:hover {
+          background: transparent url("/img/new-project.png") no-repeat center bottom;
+        }
+      } // .box
+      
       .project {
         @include border-radius(5px);
         @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.1));
         
         height: 20px;
         background-color: #fff;
-        margin: 5px 5px 0 10px;
+        margin: 5px 6px 0 8px;
         font-size: 14px;
         color: #808080;
         border: 1px solid #cccccc;
         padding-right: 2px;
         
         position: relative;
+        
+        cursor: default;
         
         .project-title{
           float: left;
@@ -184,18 +195,29 @@ body {
           cursor: move;
         }
         
-        &.is_loading .handle-container {
-          background: transparent url("/img/loading.gif") no-repeat 2px 2px;
-          width: 20px;
-          height: 20px;
-          float: left;
+        &.is_loading {
+          cursor: wait;
+          
+          .handle-container {
+            background: transparent url("/img/loading.gif") no-repeat 2px 2px;
+            width: 20px;
+            height: 20px;
+            float: left;
 
-          .handle {
-            display: none;
-          }
-        }
+            .handle {
+              display: none;
+            }
+          } // .handle-container
+          
+          .delete-tm-project-form {
+            display: none; /* Hide delete form if loading */
+          } // .delete-tm-project-form
+          
+        } // &.is_loading
         
         .delete-tm-project-form {
+          display: inline;
+          
           button {
             color: #B0B0B0;
             cursor: pointer;
@@ -311,24 +333,6 @@ body {
     height: 10px;
     margin: 5px;
     float: left;
-  }
-  
-  .new-project {
-    @include border-radius(5px);
-        
-    display: block;
-    text-decoration: none;
-    opacity: 0;
-    height: 16px;
-    margin: 5px 5px 0 10px;
-    font-family: 'WebSymbolsRegular';
-    font-size: 12px;
-    text-align: center;
-    padding-top: 4px;
-    cursor: pointer;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    color: rgba(0, 0, 0, .1);
-    cursor: pointer;
   }
   
 } // #main

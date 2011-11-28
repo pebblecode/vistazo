@@ -29,14 +29,15 @@ $(function () {
       $("#new-project-dialog").hide();
     });
     
-    // Prevent clicking on form from hiding the form
     $("#new-project-dialog").click(function(event) {
-      event.stopPropagation(); 
+      event.stopPropagation(); // Prevent clicking on form from hiding the form
     });
     
-    $(".new-project").click(function (event) {
-      $(this).css({opacity: "1"});
-      
+    $(".project").click(function(event) {
+      $("#new-project-dialog").hide();
+      event.stopPropagation(); // Prevent openning new project dialog
+    });
+    $(".box").click(function (event) {
       $("#new-project-dialog form input[name=date]").val($(this).attr("data-date"));
       $("#new-project-dialog form input[name=team_member_id]").val($(this).attr("data-team-member-id"));
       
@@ -53,14 +54,7 @@ $(function () {
       $("#new-project-dialog").hide();
       return false;
     });
-    
-    // New project tab hover
-    $(".new-project").hover(function () {
-        $(this).animate({opacity: "1"});
-      }, function () {
-        $(this).animate({opacity: "0"});
-      }
-    );
+
   }
   
   // Enter key for new project submits the form
@@ -95,6 +89,9 @@ $(function () {
         if ((projectTeamMemberId != containerTeamMemberId) || (projectDate != containerDate)) {
           updateTeamMemberProject(project);
         }
+        
+        // Hide new dialog in case a click gets triggered and shows it
+        $("#new-project-dialog").hide();
       }
   })
   .disableSelection();
@@ -122,7 +119,7 @@ function updateTeamMemberProject(proj) {
       var fromLocation = $(".team-member[data-team-member-id=" + fromTeamMemberId + "]").find(".box[data-date=" + fromDate + "]");
       
       $(proj).remove();
-      $(fromLocation).find(".new-project").before(proj);
+      $(fromLocation).append(proj);
     })
     .complete(function(data, status) {
       response = JSON.parse(data.responseText);

@@ -43,9 +43,10 @@
         <% prev_cols = 1 %>
         <% (MONDAY..FRIDAY).each do |work_day| %>
           <%#
-            data-date: Used for update to know the date moving to
+            data-date: Used for update to know the date moving to, and the date when adding a project
+            data-team-member-id: Used for adding a new project to know the team member to add to
           %>
-          <td class="box <%= "#{row_class} col#{work_day + prev_cols}" %>" data-date="<%= (@monday_date - 1.day) + work_day.day %>">
+          <td class="box <%= "#{row_class} col#{work_day + prev_cols}" %>" data-date="<%= (@monday_date - 1.day) + work_day.day %>" data-team-member-id="<%= tm.id %>">
             <% tm_projects = @team_member_projects_on_day[tm][work_day] %>
             <% for tm_project in tm_projects %>
               <%#
@@ -60,11 +61,6 @@
                 </form>
               </div>
             <% end %>
-            <%#
-              data-date: Used for adding a new project to know the date to add project to
-              data-team-member-id: Used for adding a new project to know the team member to add to
-            %>
-            <a href="#new-project" class="new-project" data-date="<%= (@monday_date - 1.day) + work_day.day %>" data-team-member-id="<%= tm.id %>">+</a>
           </td>
         <% end %>
         <td class="<%= "#{row_class} col7" %>"></td>
