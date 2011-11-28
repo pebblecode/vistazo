@@ -27,13 +27,15 @@
     <h1><a href="/">VISTAZO</a></h1> <div class="top-spacer">
     </div> <h2>pebble{code} web-dev team</h2>
     
-    <ul id="modify-data">
-      <li>
-        <form action="/reset" method="post">
-          <button name="reset_database" type="submit" value="submit">Reset database</button>
-        </form>
-      </li>
-    </ul>
+    <% unless settings.environment == "production" %>
+      <ul id="modify-data">
+        <li>
+          <form action="/reset" method="post">
+            <button name="reset_database" type="submit" value="submit">Reset database</button>
+          </form>
+        </li>
+      </ul>
+    <% end %>
     
     <p class="top-symbols">U</p> 
     <div class="top-spacer right"></div> 
