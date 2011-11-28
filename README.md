@@ -46,12 +46,21 @@ Initial setup
 Merging code and pushing to staging branch
 
     git checkout staging; git merge master
-    git push
+    git push origin staging:staging
+
+    # Or as a rake task
+    rake merge_push_to:staging
 
 
 To push to the staging server
 
     git push staging staging:master
+
+    # Or as a rake task
+    rake deploy:staging
+
+    # Or as a merge, push and deploy rake task
+    rake merge_push_deploy:staging
 
 This is deployed at: http://vistazo-staging.herokuapp.com/
 
@@ -75,13 +84,22 @@ Initial setup
 Merging code and pushing to production branch
 
     git checkout production; git merge master
-    git push
-
+    git push origin production:production
+    
+    # Or as a rake task
+    rake merge_push_to:production
+    
 
 To push to the production server
 
     git push production production:master
-
+    
+    # Or as a rake task
+    rake deploy:production
+    
+    # Or as a merge, push and deploy rake task
+    rake merge_push_deploy:production
+    
 This is deployed at: http://vistazo.herokuapp.com/
 
 ## Mongo

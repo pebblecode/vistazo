@@ -42,13 +42,35 @@ namespace "deploy" do
   end
   
   desc "Deploy staging branch to http://vistazo-staging.herokuapp.com/"
-  task :staging do |t, args|
+  task :staging do
     Rake::Task["deploy:branch"].invoke("staging")
   end
   
   desc "Deploy production branch to http://vistazo.herokuapp.com/"
-  task :production do |t, args|
+  task :production do
     Rake::Task["deploy:branch"].invoke("production")
+  end
+  
+end
+
+desc "Merge and pushes branches to github, then deploy them to the server."
+namespace "merge_push_deploy" do
+
+  desc "Merge and push branch to github, then deploy to server."
+  task :branch, [:branch] do |t, args|
+    args.with_defaults(:branch => "staging")
+    Rake::Task["merge_push_to:branch"].invoke(args.branch)
+    Rake::Task["deploy:branch"].invoke(args.branch)
+  end
+
+  desc "Merge and push staging branch to github, then deploy to http://vistazo-staging.herokuapp.com/"
+  task :staging do
+    Rake::Task["merge_push_deploy:branch"].invoke("staging")
+  end
+  
+  desc "Merge and push production branch to github, then deploy to http://vistazo.herokuapp.com/"
+  task :production do
+    Rake::Task["merge_push_deploy:branch"].invoke("production")
   end
   
 end
