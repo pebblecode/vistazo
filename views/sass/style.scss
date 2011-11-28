@@ -487,6 +487,28 @@ body {
 } // #new-project-form
 
 
+/* Homepage
+-----------------------------------------------------------------------------*/
+
+#homepage {
+  padding: 10px;
+  h1 {
+    color: #999999;
+    float: none;
+    margin-bottom: 20px;
+    margin-left: 0;
+  }
+  ul {
+    list-style: disc;
+    margin: 10px 0 0 30px;
+    
+    li {
+      margin-bottom: 5px;
+    }
+  }
+}
+
+
 /* Misc
 -----------------------------------------------------------------------------*/
 

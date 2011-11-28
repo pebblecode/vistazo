@@ -246,11 +246,13 @@ NUM_WEEKS_IN_A_YEAR = 52
 get '/' do
   protected!
   
-  redirect "/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+  @accounts = Account.all
+  
+  erb :homepage
 end
 
 
-get '/:year/week/:week_num' do
+get '/:account/:year/week/:week_num' do
   protected!
   
   year = params[:year].to_i
