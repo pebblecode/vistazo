@@ -29,7 +29,7 @@
     <h1><a href="/">VISTAZO</a></h1> <div class="top-spacer">
     </div> 
     <% if @account.present? %>
-      <h2><%= @account.name %></h2>
+      <h2><a href="/<%= @account.url_slug %>"><%= @account.name %></a></h2>
     <% end %>
     
     <% unless settings.environment == "production" %>
