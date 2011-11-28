@@ -4,7 +4,7 @@
   <% if @accounts.present? %>
     <ul>
       <% for account in @accounts %>
-        <li><a href="<%= account.url_slug %>/"><%= account.name %></a></li>
+        <li><a href="<%= account.url_slug %>"><%= account.name %></a></li>
       <% end %>
     </ul>
   <% end %>
