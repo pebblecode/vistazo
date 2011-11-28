@@ -86,12 +86,24 @@ end
 ##############################################################################
 # Models
 ##############################################################################
+class Account
+  include MongoMapper::Document
+  
+  key :name, String, :required => true
+  key :url_slug, String, :required => true
+  
+  # Relationships
+  many :team_members
+  many :projects
+  
+end
+
 class TeamMember
   include MongoMapper::Document
 
   key :name, String, :required => true
 
-  # Relationships  
+  # Relationships
   many :team_member_projects
   
   def add_project_on_date(project, date)
@@ -372,19 +384,27 @@ post '/reset' do
   TeamMember.delete_all()
   Project.delete_all()
   ColourSetting.delete_all()
+  Account.delete_all()
   
   # Seed data
-  ideapi = Project.create(:name => "ideapi")
-  space = Project.create(:name => "Space")
-  ldn_taxi = Project.create(:name => "LDN taxi")
-  vistazo = Project.create(:name => "Vistazo")
+  pebble_code_web_dev = Account.create(:name => "pebble{code} web-dev team", :url_slug => "pebble_code_web_dev")
+  pebble_code_web_dev.update_attributes(:projects => [
+    Project.create(:name => "ideapi"),
+    Project.create(:name => "Space"),
+    Project.create(:name => "LDN taxi"),
+    Project.create(:name => "Vistazo")
+  ])
+  pebble_code_web_dev.update_attributes(:team_members => [
+    TeamMember.create(:name => "Toby H"),
+    TeamMember.create(:name => "George O"),
+    TeamMember.create(:name => "Mark D"),
+    TeamMember.create(:name => "Tak T"),
+    TeamMember.create(:name => "Vince M"),
+    TeamMember.create(:name => "Satish S")
+  ])
   
-  toby = TeamMember.create(:name => "Toby H")
-  george = TeamMember.create(:name => "George O")
-  mark = TeamMember.create(:name => "Mark D")
-  tak = TeamMember.create(:name => "Tak T")
-  vince = TeamMember.create(:name => "Vince M")
-  satish = TeamMember.create(:name => "Satish S")
+  pebble_code_dot_net = Account.create(:name => "pebble{code} .net team", :url_slug => "pebble_code_dot_net")
+  pebble_it = Account.create(:name => "pebble.it", :url_slug => "pebble_code_dot_net")
 
   flash[:success] = "Successfully cleared out the database and added seed data. Enjoy!"
   redirect '/'
