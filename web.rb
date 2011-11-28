@@ -96,6 +96,9 @@ class Account
   many :team_members
   many :projects
   
+  # Validations
+  validates_uniqueness_of :name, :url_slug
+  
 end
 
 class TeamMember
