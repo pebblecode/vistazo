@@ -292,8 +292,8 @@ get '/:account/:year/week/:week_num' do
       @thursday_date = Date.commercial(year, week_num, THURSDAY)
       @friday_date = Date.commercial(year, week_num, FRIDAY)
   
-      @projects = Project.sort(:name)
-      @team_members = TeamMember.sort(:name)
+      @projects = Project.where(:account_id => @account.id).sort(:name)
+      @team_members = TeamMember.where(:account_id => @account.id).sort(:name)
 
       # Assume it's the right week of dates
       @team_member_projects_on_day = {}
