@@ -172,7 +172,9 @@ body {
         color: #808080;
         border: 1px solid #cccccc;
         padding-right: 2px;
-
+        
+        position: relative;
+        
         .project-title{
           float: left;
           margin-top: 3px;
@@ -206,6 +208,10 @@ body {
             vertical-align: center;
             float: right;
             padding: 2px 0 0 0;
+            
+            position: absolute;
+            right: 0;
+            top: 0;
             
             &:active {
               color: #999999;

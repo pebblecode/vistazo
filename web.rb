@@ -60,6 +60,12 @@ helpers do
   include Rack::Utils
   alias_method :h, :escape_html
   
+  # From http://api.rubyonrails.org/classes/ActionView/Helpers/TextHelper.html#method-i-truncate
+  def truncate(text, options = {})
+    options.reverse_merge!(:length => 30)
+    text.truncate(options.delete(:length), options) if text
+  end
+  
   def protected!
     unless authorized?
       response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
