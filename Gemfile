@@ -5,6 +5,7 @@ gem 'shotgun'
 
 gem 'sinatra-flash'
 gem 'json'
+gem 'rake'
 
 # Views
 gem 'sass'
