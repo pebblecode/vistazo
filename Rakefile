@@ -10,7 +10,8 @@ namespace "merge_push_to" do
     checkout_merge_cmd = "git checkout #{args.branch}; git merge master"
     sh(checkout_merge_cmd) do |ok, res|
       if ok
-        sh %{ git push }
+        push_cmd = "git push origin #{args.branch}:#{args.branch}"
+        sh push_cmd
         sh %{ git checkout master }
       else
         puts res
