@@ -280,11 +280,11 @@ get '/:account/:year/week/:week_num' do
       # Weeks start from 1
       prev_week_num = ((week_num - 1) <= 0) ? NUM_WEEKS_IN_A_YEAR : week_num - 1
       prev_week_year = ((week_num - 1) <= 0) ? year - 1 : year
-      @prev_week_url = (prev_week_year > START_YEAR) ? "/#{prev_week_year}/week/#{prev_week_num}" : nil
+      @prev_week_url = (prev_week_year > START_YEAR) ? "/#{params[:account]}/#{prev_week_year}/week/#{prev_week_num}" : nil
     
       next_week_num = ((week_num + 1) > NUM_WEEKS_IN_A_YEAR) ? 1 : week_num + 1
       next_week_year = ((week_num + 1) > NUM_WEEKS_IN_A_YEAR) ? year + 1 : year
-      @next_week_url = "/#{next_week_year}/week/#{next_week_num}"
+      @next_week_url = "/#{params[:account]}/#{next_week_year}/week/#{next_week_num}"
 
       @monday_date = Date.commercial(year, week_num, MONDAY)
       @tuesday_date = Date.commercial(year, week_num, TUESDAY)
