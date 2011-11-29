@@ -108,6 +108,7 @@ class TeamMember
 
   # Relationships
   many :team_member_projects
+  one :account
   
   def add_project_on_date(project, date)
     # TODO: Check that it gets saved! Mongo doesn't check by default
@@ -178,6 +179,9 @@ class Project
   
   key :name, String, :required => true
   key :hex_colour, String
+  
+  # Relationships
+  one :account
   
   def css_class
     get_project_css_class(self.name)
@@ -318,9 +322,10 @@ get '/:account/:year/week/:week_num' do
   end
 end
 
-post '/team-member-project/add' do
+post '/:account/team-member-project/add' do
   protected!
 
+  account = Account.find_by_url_slug(params[:account])
   team_member = TeamMember.find(params[:team_member_id])
   date = Date.parse(params[:date])
   
@@ -330,7 +335,7 @@ post '/team-member-project/add' do
     project_name = params[:new_project_name]
     
     if project_name.present?
-      project = Project.create(:name => project_name)
+      project = Project.create(:name => project_name, :account_id => account.id)
       team_member.add_project_on_date(project, date)
       
       flash[:success] = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
