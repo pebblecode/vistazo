@@ -28,10 +28,13 @@ To run
 
 ### Testing
 
-To run tests
+To run tests manually
 
     bundle exec rake test
 
+To run tests automatically with [guard](https://github.com/guard/guard)
+
+    bundle exec guard
 
 ## Staging
 

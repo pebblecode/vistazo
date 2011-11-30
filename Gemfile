@@ -18,8 +18,11 @@ group :development, :test do
   # Servers
   gem 'thin', '1.2.7'
   gem 'shotgun'
-  
+
   # Testing
+  gem 'guard'
+  gem 'rb-fsevent'
+  gem 'guard-minitest'
   gem 'minitest'
   gem 'rack-test'
   gem "factory_girl", "~> 2.1.0"
