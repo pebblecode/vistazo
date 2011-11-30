@@ -1,3 +1,9 @@
+# 0.3.0
+
+* Design and code clean up
+* Ability store different projects/team members in different accounts
+* Ability to add new team members in an account
+
 # 0.1.0
 
 * Create staging/production branches
