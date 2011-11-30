@@ -25,6 +25,8 @@ if (settings.environment == "staging") or (settings.environment == "production")
   setup_mongo_connection(ENV['MONGOLAB_URI'])
 elsif settings.environment == "development"
   setup_mongo_connection('mongomapper://localhost:27017/vistazo-development')
+elsif settings.environment == "test"
+  setup_mongo_connection('mongomapper://localhost:27017/vistazo-test')
 end
 ##############################################################################
 
