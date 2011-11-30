@@ -26,6 +26,12 @@ To run
     foreman start dev
     # open http://localhost:6100/
 
+### Testing
+
+To run tests
+
+    bundle exec rake test
+
 
 ## Staging
 
