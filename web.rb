@@ -430,7 +430,6 @@ post '/reset' do
     TeamMember.create(:name => "Mark D"),
     TeamMember.create(:name => "Tak T"),
     TeamMember.create(:name => "Vince M"),
-    TeamMember.create(:name => "Satish S")
   ])
   
   pebble_code_dot_net = Account.create(:name => "pebble{code} .net team", :url_slug => "pebble_code_dot_net")
