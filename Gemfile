@@ -16,3 +16,7 @@ gem 'heroku'
 # Mongo db
 gem 'mongo_mapper'
 gem 'bson_ext'
+
+# Authentication
+gem 'omniauth'
+gem 'omniauth-google-oauth2'

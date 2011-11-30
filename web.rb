@@ -6,8 +6,18 @@ require 'sass'
 require 'time'
 require 'date'
 require 'json'
+require 'omniauth'
+require 'omniauth-google-oauth2'
 
 enable :sessions
+
+
+
+use OmniAuth::Builder do
+  provider :google_oauth2, '443819582294.apps.googleusercontent.com', 'nBlfJxFwHbyOKN_PKSgTJtbt', {
+  }
+end
+
 
 set :environment, ENV["RACK_ENV"] || "development"
 
@@ -256,6 +266,20 @@ get '/' do
   @accounts = Account.all
   
   erb :homepage
+end
+
+get '/oauth' do
+  protected!
+  erb :oauth
+end
+get '/auth/:provider/callback' do
+  content_type 'text/plain'
+  request.env['omniauth.auth'].to_hash.inspect rescue puts "No Data"
+end
+
+get '/auth/failure' do
+  content_type 'text/plain'
+  request.env['omniauth.auth'].to_hash.inspect rescue "No Data"
 end
 
 get '/:account' do
