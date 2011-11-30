@@ -335,10 +335,14 @@ post '/:account/team-member-project/add' do
     project_name = params[:new_project_name]
     
     if project_name.present?
-      project = Project.create(:name => project_name, :account_id => account.id)
-      team_member.add_project_on_date(project, date)
+      if account.present?
+        project = Project.create(:name => project_name, :account_id => account.id)
+        team_member.add_project_on_date(project, date)
       
-      flash[:success] = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
+        flash[:success] = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
+      else
+        flash[:warning] = "Invalid account."
+      end
     else
       flash[:warning] = "Please specify a project name."
     end
