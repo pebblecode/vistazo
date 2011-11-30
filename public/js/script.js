@@ -17,12 +17,12 @@ $(function () {
     });
   }
   
+  // Labelify new object text boxes
+  $(".new-object-text-box").labelify({ labelledClass: "new-object-text-box-label" });
+  
   // Project dialog
   {
     $("#new-project-dialog").hide(); // Hide by default
-    
-    // Labelify new project text box
-    $("#new-project-dialog .new-project-text-box").labelify({ labelledClass: "new-project-text-box-label" });
     
     // Hide if clicking outside #new-project-dialog
     $('html').click(function() {
@@ -54,21 +54,20 @@ $(function () {
       $("#new-project-dialog").hide();
       return false;
     });
-
+    
+    // Enter key for new project submits the form
+    $("#new-project-dialog .new-object-text-box").bind("keydown", function(event) {
+       // track enter key
+       var keycode = (event.keyCode ? event.keyCode : (event.which ? event.which : event.charCode));
+       if (keycode == 13) { // keycode for enter key
+          // force the 'Enter Key' to implicitly click the Update button
+          $("#new-project-dialog .submit-button").click();
+          return false;
+       } else  {
+          return true;
+       }
+    }); // end of function
   }
-  
-  // Enter key for new project submits the form
-  $("#new-project-dialog .new-project-text-box").bind("keydown", function(event) {
-     // track enter key
-     var keycode = (event.keyCode ? event.keyCode : (event.which ? event.which : event.charCode));
-     if (keycode == 13) { // keycode for enter key
-        // force the 'Enter Key' to implicitly click the Update button
-        $("#new-project-dialog .new-project-submit-button").click();
-        return false;
-     } else  {
-        return true;
-     }
-  }); // end of function
   
   // Drag and drop for projects
   $('table .box').sortable({

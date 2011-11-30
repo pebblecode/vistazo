@@ -20,6 +20,59 @@ body {
 }
 
 
+/* Forms */
+.new-object-fieldset {
+  @include border-radius(5px);
+  @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+  
+  background: #ffffff;
+  margin: 20px 5px 5px 5px;
+  display: block;
+  position: relative;
+  
+  font-weight: normal;
+  font-size: 14px;
+  height: 20px;
+  background-color: #fff;
+  color: #808080;
+  border: 1px solid #a1a1a1;
+  text-shadow: none;
+  
+  label {
+    display: none;
+  }
+  
+  /* For labelify*/
+  .new-object-text-box-label {
+    font-family: Cabin, Helvetica, sans-serif;
+    color: #808080;
+    font-size: 14px;
+    line-height: 16px;
+    height: 16px;
+  }
+  
+  .new-object-text-box {
+    margin: 2px 0 0 5px;
+    width: 163px;
+    border: none;
+  }
+  
+  .submit-button {
+    position: absolute;
+    bottom: 1px;
+    right: 0px;
+    padding: 0;
+    
+    color: #D7D7D7;
+    font: 12px 'WebSymbolsRegular';
+    line-height: 14px;
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
+} // .new-object-fieldset
+
+
 /* Top nav
 -----------------------------------------------------------------------------*/
 
@@ -123,7 +176,7 @@ body {
   margin-top: 0 auto;
   
   #week-view {
-    td, .row1.col1, .row1.col6 {
+    td, .first-row.col1, .first-row.col6 {
       border-right: 1px dashed #b3b3b3;
     }
     .col7 {
@@ -145,9 +198,23 @@ body {
       }
     }
     
-    .row1 {
+    .first-row {
       height: 50px;
       vertical-align: bottom;
+    }
+    
+    .last-row {
+      border-right: none; /* Cancel out border on last column */
+      
+      #new-person-form {
+        .new-object-fieldset {
+          width: 127px;
+          
+          .new-object-text-box {
+            width: 103px;
+          }
+        }
+      }
     }
 
     tr.team-member {
@@ -306,18 +373,6 @@ body {
     margin: 0 0 2px 0;
   }
 
-  #new-person {
-    @include border-radius(5px);
-    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.05));
-    
-    height: 18px;
-    border: 1px solid #e6e6e6;
-    color: #e6e6e6;
-    font-size: 14px;
-    margin: 10px 5px 5px 5px;
-    padding: 2px 5px 0 5px;
-  }
-
   #plus {
     font-family: 'WebSymbolsRegular';
     float: right;
@@ -338,6 +393,7 @@ body {
 } // #main
 
 /* @end */
+
 
 /* New project dialog box
 -----------------------------------------------------------------------------*/
@@ -398,55 +454,6 @@ body {
       
       position: relative;
       z-index: 20;
-    }
-  }
-  
-  .new-project-fieldset {
-    @include border-radius(5px);
-    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-    
-    background: #ffffff;
-    margin: 20px 5px 5px 5px;
-    display: block;
-    position: relative;
-    
-    font-weight: normal;
-    font-size: 14px;
-    height: 20px;
-    background-color: #fff;
-    color: #808080;
-    border: 1px solid #a1a1a1;
-    text-shadow: none;
-    
-    label {
-      display: none;
-    }
-    
-    .new-project-text-box-label {
-      font-family: Cabin,Helvetica,sans-serif;
-      color: #808080;
-      font-size: 14px;
-      height: 16px;
-    }
-    
-    input {
-      margin: 2px 0 0 5px;
-      width: 163px;
-      border: none;
-    }
-    
-    .new-project-submit-button {
-      position: absolute;
-      bottom: 1px;
-      right: 0px;
-      padding: 0;
-      
-      color: #D7D7D7;
-      font: 12px 'WebSymbolsRegular';
-      line-height: 14px;
-      cursor: pointer;
-      background: none;
-      border: none;
     }
   }
   
