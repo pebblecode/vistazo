@@ -1,5 +1,6 @@
+require_relative 'main'
 require_relative 'account'
+require_relative 'login'
 require_relative 'team_member'
-require_relative 'team_member_project'
 require_relative 'project'
-require_relative 'colour_setting'
+require_relative 'admin_testing'
