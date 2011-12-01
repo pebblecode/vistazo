@@ -9,7 +9,7 @@ class VistazoApp < Sinatra::Application
         :email => hash["info"]["email"]
       )
       unless @user.valid?
-        flash.next[:warning] = "Could not retrieve user."
+        flash[:warning] = "Could not retrieve user."
         @user = nil
         redirect '/'
       end
@@ -20,10 +20,13 @@ class VistazoApp < Sinatra::Application
   end
 
   get '/auth/failure' do
-    content_type 'text/plain'
-    request.env['omniauth.auth'].to_hash.inspect rescue "No Data"
+    flash[:warning] = "To access vistazo, you need to login with your google account."
+    redirect "/"
   end
-
+  get '/logout' do
+    flash[:success] = "Logged out successfully"
+    log_out
+  end
 
   def get_account
     @account = @user.account

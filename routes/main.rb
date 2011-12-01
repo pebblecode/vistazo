@@ -11,7 +11,7 @@ class VistazoApp < Sinatra::Application
   # Vistazo weekly view - the crux of the app
   get '/:account_id/:year/week/:week_num' do
     protected!
-
+    require_account_user!(params[:account_id])
     @account = Account.find(params[:account_id])
 
     if @account.present?
