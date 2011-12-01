@@ -2,9 +2,9 @@
 class VistazoApp < Sinatra::Application
   get '/' do
     protected!
-    @user = User.find_by_uid(session['uid'])
-    
-    #@accounts = Account.all
+    if current_user?
+      redirect "/#{current_user.account.url_slug}" if current_user.account
+    end
     erb :main
   end
 
