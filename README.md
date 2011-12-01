@@ -36,6 +36,21 @@ To run tests automatically with [guard](https://github.com/guard/guard)
 
     bundle exec guard
 
+## Sandbox
+
+For playing around with things, where you don't want to break staging or production. 
+Deployed on [heroku](http://www.heroku.com/).
+
+Project was created with (shouldn't need to be done again, but here just for reference)
+
+    heroku create vistazo-sandbox --stack cedar --remote sandbox
+    heroku config:add RACK_ENV=staging --app vistazo-sandbox
+    heroku addons:add mongolab:starter --app vistazo-sandbox
+
+To push
+
+    git push sandbox [branch of code]:master
+
 ## Staging
 
 Deployed on [heroku](http://www.heroku.com/).
