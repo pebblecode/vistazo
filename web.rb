@@ -25,13 +25,15 @@ def get_css_class(str, prefix)
 end
 
 class VistazoApp < Sinatra::Application
-
+  APP_CONFIG = YAML.load_file("#{root}/config/config.yml")[settings.environment.to_s]
   enable :sessions
   set :environment, ENV["RACK_ENV"] || "development"
 
   use OmniAuth::Builder do
-    provider :google_oauth2, '443819582294.apps.googleusercontent.com', 'nBlfJxFwHbyOKN_PKSgTJtbt', {
-    }
+    provider :google_oauth2,
+      (APP_CONFIG['client_id']),
+      (APP_CONFIG['google_secret']),
+      {}
   end
 
   ##############################################################################
