@@ -102,4 +102,4 @@ DEPENDENCIES
   shotgun
   sinatra (= 1.1.0)
   sinatra-flash
-  thin (= 1.2.7)
+  thin
