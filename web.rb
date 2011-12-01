@@ -38,6 +38,7 @@ class VistazoApp < Sinatra::Application
 
   configure :development do
     setup_mongo_connection('mongomapper://localhost:27017/vistazo-development')
+    set :session_secret, "wj-Sf/sdf_P49usi#sn132_sdnfij3"
   end
 
   configure :test do
