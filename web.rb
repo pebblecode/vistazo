@@ -52,9 +52,10 @@ class VistazoApp < Sinatra::Application
   ##############################################################################
   # Mongo mapper settings
   ##############################################################################  
-  configure :production, :staging do
-    # From heroku settings: http://devcenter.heroku.com/articles/mongolab
-    setup_mongo_connection(ENV['MONGOLAB_URI'])
+  [:production, :stagingº].each do |env|
+    configure env do
+      setup_mongo_connection(ENV['MONGOLAB_URI'])
+    end
   end
   
   configure :development do
