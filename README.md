@@ -26,6 +26,15 @@ To run
     foreman start dev
     # open http://localhost:6100/
 
+### Testing
+
+To run tests manually
+
+    bundle exec rake test
+
+To run tests automatically with [guard](https://github.com/guard/guard)
+
+    bundle exec guard
 
 ## Staging
 

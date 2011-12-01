@@ -1,8 +1,5 @@
 source :rubyforge
 gem 'sinatra', '1.1.0'
-gem 'thin', '1.2.7'
-gem 'shotgun'
-
 gem 'sinatra-flash'
 gem 'json'
 gem 'rake'
@@ -20,3 +17,18 @@ gem 'bson_ext'
 # Authentication
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
+
+group :development, :test do
+  # Servers
+  gem 'thin', '1.2.7'
+  gem 'shotgun'
+
+  # Testing
+  gem 'guard'
+  gem 'rb-fsevent'
+  gem 'guard-minitest'
+  gem 'minitest'
+  gem 'rack-test'
+  gem "factory_girl", "~> 2.1.0"
+end
+
