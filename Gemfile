@@ -1,5 +1,6 @@
 source :rubyforge
 gem 'sinatra', '1.1.0'
+gem 'thin', '1.2.7'
 gem 'sinatra-flash'
 gem 'json'
 gem 'rake'
@@ -20,7 +21,6 @@ gem 'omniauth-google-oauth2'
 
 group :development, :test do
   # Servers
-  gem 'thin', '1.2.7'
   gem 'shotgun'
 
   # Testing
