@@ -52,7 +52,7 @@ class VistazoApp < Sinatra::Application
   ##############################################################################
   # Mongo mapper settings
   ##############################################################################  
-  [:production, :stagingº].each do |env|
+  [:production, :staging].each do |env|
     configure env do
       setup_mongo_connection(ENV['MONGOLAB_URI'])
     end
