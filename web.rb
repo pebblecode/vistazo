@@ -1,3 +1,5 @@
+# encoding utf-8
+
 require 'sinatra'
 require 'sinatra/flash'
 require 'mongo_mapper'
