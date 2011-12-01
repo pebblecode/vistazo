@@ -1,9 +1,9 @@
 # Handles all project and team member project functionality
 class VistazoApp < Sinatra::Application
-  post '/:account/team-member-project/add' do
+  post '/:account_id/team-member-project/add' do
     protected!
 
-    account = Account.find_by_url_slug(params[:account])
+    account = Account.find(params[:account_id])
     team_member = TeamMember.find(params[:team_member_id])
     date = Date.parse(params[:date])
   

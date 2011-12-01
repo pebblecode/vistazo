@@ -15,8 +15,10 @@ require 'omniauth-google-oauth2'
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
 
 class VistazoApp < Sinatra::Application
-  APP_CONFIG = YAML.load_file("#{root}/config/config.yml")[settings.environment.to_s]
   enable :sessions
+
+  APP_CONFIG = YAML.load_file("#{root}/config/config.yml")[settings.environment.to_s]
+
   set :environment, ENV["RACK_ENV"] || "development"
 
   use OmniAuth::Builder do
@@ -38,6 +40,7 @@ class VistazoApp < Sinatra::Application
 
   configure :development do
     setup_mongo_connection('mongomapper://localhost:27017/vistazo-development')
+    set :session_secret, "wj-Sf/sdf_P49usi#sn132_sdnfij3"
   end
 
   configure :test do

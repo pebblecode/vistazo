@@ -15,5 +15,6 @@ module Sinatra
       @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == ['vistazo', 'vistazo']
     end
   end
+
   helpers HttpAuthentication
 end
