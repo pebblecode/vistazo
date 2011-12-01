@@ -40,15 +40,15 @@ class Fixnum
 end
 
 class VistazoApp < Sinatra::Application
+
   enable :sessions
+  set :environment, ENV["RACK_ENV"] || "development"
 
   use OmniAuth::Builder do
     provider :google_oauth2, '443819582294.apps.googleusercontent.com', 'nBlfJxFwHbyOKN_PKSgTJtbt', {
     }
   end
 
-  set :environment, ENV["RACK_ENV"] || "development"
-  
   ##############################################################################
   # Mongo mapper settings
   ##############################################################################  
@@ -58,7 +58,7 @@ class VistazoApp < Sinatra::Application
       # what
     end
   end
-  
+
   configure :development do
     setup_mongo_connection('mongomapper://localhost:27017/vistazo-development')
   end

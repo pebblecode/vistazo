@@ -2,12 +2,10 @@
 class VistazoApp < Sinatra::Application
   get '/' do
     protected!
-  
     @accounts = Account.all
-  
     erb :homepage
   end
-  
+
   # Vistazo weekly view - the crux of the app
   get '/:account/:year/week/:week_num' do
     protected!
