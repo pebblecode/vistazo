@@ -55,6 +55,7 @@ class VistazoApp < Sinatra::Application
   [:production, :staging].each do |env|
     configure env do
       setup_mongo_connection(ENV['MONGOLAB_URI'])
+      # what
     end
   end
   
