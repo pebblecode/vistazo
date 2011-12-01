@@ -23,8 +23,8 @@ class VistazoApp < Sinatra::Application
 
   use OmniAuth::Builder do
     provider :google_oauth2,
-      (APP_CONFIG['client_id']),
-      (APP_CONFIG['google_secret']),
+      (ENV['GOOGLE_CLIENT_ID']||APP_CONFIG['client_id']),
+      (ENV['GOOGLE_SECRET']||APP_CONFIG['google_secret']),
       {}
   end
 
