@@ -54,36 +54,12 @@ class VistazoApp < Sinatra::Application
 
   ##############################################################################
 
-  ##############################################################################
-  # Helper classes
-  ##############################################################################
-
   helpers do
     include Rack::Utils
     alias_method :h, :escape_html
-
-    # From http://api.rubyonrails.org/classes/ActionView/Helpers/TextHelper.html#method-i-truncate
-    def truncate(text, options = {})
-      options.reverse_merge!(:length => 30)
-      text.truncate(options.delete(:length), options) if text
-    end
-
-    def protected!
-      unless authorized?
-        response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
-        throw(:halt, [401, "Not authorized\n"])
-      end
-    end
-
-    def authorized?
-      @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-      @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == ['vistazo', 'vistazo']
-    end
-
+    
+    # More methods in /helpers/*
   end
-
-  ##############################################################################
-
   
   MONDAY = 1
   TUESDAY = 2
@@ -97,4 +73,5 @@ end
 
 require_relative "lib/fixnum"
 require_relative 'models/init'
+require_relative 'helpers/init'
 require_relative 'routes/init'
