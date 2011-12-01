@@ -1,8 +1,8 @@
 class VistazoApp < Sinatra::Application
-  post '/:account/team-member/add' do
+  post '/:account_id/team-member/add' do
     protected!
   
-    account = Account.find_by_url_slug(params[:account])
+    account = Account.find(params[:account_id])
   
     puts "Add team member: #{params}"
   

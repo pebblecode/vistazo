@@ -1,5 +1,5 @@
 source :rubyforge
-gem 'sinatra', '1.1.0'
+gem 'sinatra'
 gem 'thin'
 gem 'sinatra-flash'
 gem 'json'
@@ -30,5 +30,8 @@ group :development, :test do
   gem 'minitest'
   gem 'rack-test'
   gem "factory_girl", "~> 2.1.0"
+
+  # Tux, console like
+  gem 'tux'
 end
 

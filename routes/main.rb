@@ -2,15 +2,17 @@
 class VistazoApp < Sinatra::Application
   get '/' do
     protected!
-    @accounts = Account.all
-    erb :homepage
+    @user = User.find_by_uid(session['uid'])
+    
+    #@accounts = Account.all
+    erb :main
   end
 
   # Vistazo weekly view - the crux of the app
-  get '/:account/:year/week/:week_num' do
+  get '/:account_id/:year/week/:week_num' do
     protected!
 
-    @account = Account.find_by_url_slug(params[:account])
+    @account = Account.find(params[:account_id])
 
     if @account.present?
       year = params[:year].to_i
@@ -20,11 +22,11 @@ class VistazoApp < Sinatra::Application
         # Weeks start from 1
         prev_week_num = ((week_num - 1) <= 0) ? NUM_WEEKS_IN_A_YEAR : week_num - 1
         prev_week_year = ((week_num - 1) <= 0) ? year - 1 : year
-        @prev_week_url = (prev_week_year > START_YEAR) ? "/#{params[:account]}/#{prev_week_year}/week/#{prev_week_num}" : nil
+        @prev_week_url = (prev_week_year > START_YEAR) ? "/#{params[:account_id]}/#{prev_week_year}/week/#{prev_week_num}" : nil
 
         next_week_num = ((week_num + 1) > NUM_WEEKS_IN_A_YEAR) ? 1 : week_num + 1
         next_week_year = ((week_num + 1) > NUM_WEEKS_IN_A_YEAR) ? year + 1 : year
-        @next_week_url = "/#{params[:account]}/#{next_week_year}/week/#{next_week_num}"
+        @next_week_url = "/#{params[:account_id]}/#{next_week_year}/week/#{next_week_num}"
 
         @monday_date = Date.commercial(year, week_num, MONDAY)
         @tuesday_date = Date.commercial(year, week_num, TUESDAY)
@@ -50,7 +52,7 @@ class VistazoApp < Sinatra::Application
         erb :week
       else
         flash.next[:warning] = "Invalid week and year."
-        redirect "/#{params[:account]}"
+        redirect "/#{params[:account_id]}"
       end
     else
       flash.next[:warning] = "Invalid account."

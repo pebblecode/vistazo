@@ -1,12 +1,12 @@
 class VistazoApp < Sinatra::Application
 
-  get '/:account' do
+  get '/:account_id' do
     protected!
   
-    @account = Account.find_by_url_slug(params[:account])
+    @account = Account.find(params[:account_id])
   
     if @account.present?
-      redirect "/#{params[:account]}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+      redirect "/#{params[:account_id]}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
     else
       flash.next[:warning] = "Invalid account."
       redirect '/'
