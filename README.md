@@ -60,6 +60,14 @@ Project was created with (shouldn't need to be done again, but here just for ref
     heroku create vistazo-staging --stack cedar --remote staging
     heroku config:add RACK_ENV=staging --app vistazo-staging
     heroku addons:add mongolab:starter --app vistazo-staging
+    heroku config:add GOOGLE_CLIENT_ID=[google client id] --app vistazo
+    heroku config:add GOOGLE_SECRET=[google api secret] --app vistazo
+
+To find the google api client id/secret go to [google api console](https://code.google.com/apis/console/b/0/#project:565404561857:access)
+
+Google client callback url:
+
+    http://vistazo-staging.herokuapp.com/auth/google_oauth2/callback
 
 Staging uses [MongoLab](http://devcenter.heroku.com/articles/mongolab).
 
@@ -98,6 +106,14 @@ Project was created with (shouldn't need to be done again, but here just for ref
     heroku create vistazo --stack cedar --remote production
     heroku config:add RACK_ENV=production --app vistazo
     heroku addons:add mongolab:starter --app vistazo
+    heroku config:add GOOGLE_CLIENT_ID=[google client id] --app vistazo
+    heroku config:add GOOGLE_SECRET=[google api secret] --app vistazo
+    
+To find the google api client id/secret go to [google api console](https://code.google.com/apis/console/b/0/#project:139948808699:access)
+
+Google client callback url:
+
+    http://vistazo.herokuapp.com/auth/google_oauth2/callback
     
 Production uses [MongoLab](http://devcenter.heroku.com/articles/mongolab).
 
