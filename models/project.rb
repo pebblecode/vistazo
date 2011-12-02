@@ -12,6 +12,8 @@ class Project
 
   key :name, String, :required => true
   key :hex_colour, String
+  
+  timestamps!
 
   # Relationships
   one :account

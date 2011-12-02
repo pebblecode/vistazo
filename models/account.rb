@@ -3,12 +3,12 @@ class Account
 
   key :name, String, :required => true
 
+  timestamps!
+
   # Relationships
   many :team_members
   many :projects
   many :users
-
-  # Validation
 
 
   def url_slug

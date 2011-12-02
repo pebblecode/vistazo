@@ -3,6 +3,8 @@ class TeamMember
 
   key :name, String, :required => true
 
+  timestamps!
+
   # Relationships
   many :team_member_projects
   one :account

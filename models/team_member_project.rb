@@ -1,11 +1,15 @@
 class TeamMemberProject
   include MongoMapper::EmbeddedDocument
+  plugin MongoMapper::Plugins::Timestamps
+  
   before_save :cache_project_name
   
   key :date, Date, :required => true
   
   # Cache project
   key :project_name, String
+  
+  timestamps!
   
   # Relationships
   one :project
