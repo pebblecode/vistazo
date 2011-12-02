@@ -10,13 +10,11 @@ def app() Sinatra::Application end
 
 describe "Vistazo homepage" do
   before do
-    authorize 'vistazo', 'vistazo'
+    http_login
   end
   
   after do
-    MongoMapper.database.collections.each do |coll|
-      coll.remove
-    end
+    clear_database
   end
   
   it "should return show Vistazo description" do

@@ -18,3 +18,16 @@ rescue NameError
   require File.expand_path('../web', __FILE__)
 end
 
+##############################################################################
+# Helper methods
+##############################################################################
+
+def clear_database
+  MongoMapper.database.collections.each do |coll|
+    coll.remove
+  end
+end
+
+def http_login
+  authorize 'vistazo', 'vistazo'
+end
