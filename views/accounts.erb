@@ -1,0 +1,10 @@
+<div id="homepage">
+  <h1>Accounts</h1>
+  <% if @accounts %>
+    <ul>
+      <% for account in @accounts %>
+        <li><a href="/<%= account.id %>"><%= account.name %></a></li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
