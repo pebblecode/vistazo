@@ -1,6 +1,7 @@
 class VistazoApp < Sinatra::Application
 
   get '/accounts' do
+    protected!
     @accounts = Account.all
     
     flash[:warning] = "Note: This place is temporary. For privileged access only!"
