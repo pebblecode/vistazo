@@ -20,7 +20,7 @@ class VistazoApp < Sinatra::Application
   end
 
   get '/auth/failure' do
-    flash[:warning] = "To access vistazo, you need to login with your google account."
+    flash[:warning] = "To access vistazo, you need to login with your Google account."
     redirect "/"
   end
   get '/logout' do
