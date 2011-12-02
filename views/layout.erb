@@ -41,13 +41,15 @@
     </ul>
     
     
-    <p class="top-symbols">U</p> 
+    <!-- <p class="top-symbols">U</p> 
     <div class="top-spacer right"></div> 
     <p class="top-symbols">S</p>
     <div class="top-spacer right"></div>
     <p id="help">?</p>
-    <div class="top-spacer right"></div>
-    <p class="top-symbols"><a href="/logout">X</a></p>
+    <div class="top-spacer right"></div> -->
+    <% if logged_in? %>
+      <p class="top-symbols"><a href="/logout" title="Log out">X</a></p>
+    <% end %>
   </div>
   
   <%= styled_flash %>
