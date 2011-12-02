@@ -14,7 +14,13 @@ class VistazoApp < Sinatra::Application
         redirect '/'
       end
     end
-    get_account || create_account
+    
+    @account = @user.account
+    unless @account
+      @account = create_account
+      flash[:success] = "Welcome to Vistazo!"
+    end
+    
     session['uid'] = @user.uid
     redirect '/'
   end
@@ -28,9 +34,9 @@ class VistazoApp < Sinatra::Application
     log_out
   end
 
-  def get_account
-    @account = @user.account
-  end
+
+  private
+  
   def create_account
     @user.account = Account.create(:name => "#{@user.name}'s schedule")
     @user.save
