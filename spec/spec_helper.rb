@@ -18,6 +18,10 @@ rescue NameError
   require File.expand_path('../web', __FILE__)
 end
 
+class MiniTest::Spec
+  include Capybara::DSL
+end
+
 ##############################################################################
 # Helper methods
 ##############################################################################

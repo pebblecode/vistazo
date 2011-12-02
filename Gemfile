@@ -28,6 +28,8 @@ group :development, :test do
   gem 'rb-fsevent'
   gem 'guard-minitest'
   gem 'minitest'
+  gem 'capybara'
+  gem 'capybara_minitest_spec'
   gem 'rack-test'
   gem "factory_girl", "~> 2.1.0"
 

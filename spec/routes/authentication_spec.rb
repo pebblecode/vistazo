@@ -1,12 +1,12 @@
 begin 
   require_relative '../spec_helper'
 rescue NameError
-  require File.expand_path('../spec_helper', __FILE__)
+  require File.expand_path('../../spec_helper', __FILE__)
 end
 
 include Rack::Test::Methods
 
-def app() Sinatra::Application end
+def app Sinatra::Application end
 
 describe "Vistazo HTTP authentication" do
 
@@ -28,6 +28,8 @@ describe "Vistazo Google sign in" do
   
   it "should show sign in link on homepage" do
     get '/'
+    last_response.body.must_include 'Start using Vistazo'
+    visit('/')
     last_response.body.must_include 'Start using Vistazo'
   end
 end

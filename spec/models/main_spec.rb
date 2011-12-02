@@ -1,7 +1,7 @@
 begin 
   require_relative '../spec_helper'
 rescue NameError
-  require File.expand_path('../spec_helper', __FILE__)
+  require File.expand_path('../../spec_helper', __FILE__)
 end
 
 include Rack::Test::Methods
