@@ -7,7 +7,7 @@ class TeamMember
 
   # Relationships
   many :team_member_projects
-  one :account
+  belongs_to :account
   
   def add_project_on_date(project, date)
     # TODO: Check that it gets saved! Mongo doesn't check by default

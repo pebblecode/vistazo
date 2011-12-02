@@ -18,7 +18,11 @@ class VistazoApp < Sinatra::Application
     @account = @user.account
     unless @account
       @account = create_account
-      flash[:success] = "Welcome to Vistazo!"
+      
+      # Add the user as the first team member
+      @account.team_members << TeamMember.create(:name => @user.name)
+      
+      flash[:success] = "Welcome to Vistazo! We're ready for you to add projects for yourself."
     end
     
     session['uid'] = @user.uid
