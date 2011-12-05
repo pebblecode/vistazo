@@ -76,10 +76,10 @@ namespace "merge_push_deploy" do
 end
 
 # Test rake tasks
-# require 'rake/testtask'
-# Rake::TestTask.new do |t|
-#   t.libs << "test"
-#   t.libs << "spec"
-#   t.test_files = FileList['test/factories.rb', 'test/test_*.rb', 'spec/spec_helper.rb', 'spec/*_spec.rb']
-#   t.verbose = true
-# end
+require 'rspec/core/rake_task'
+desc "Run specs"
+task :spec do
+  RSpec::Core::RakeTask.new(:spec) do |t|
+    t.pattern = './spec/**/*_spec.rb'
+  end
+end
