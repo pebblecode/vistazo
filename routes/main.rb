@@ -13,7 +13,9 @@ class VistazoApp < Sinatra::Application
     protected!
     require_account_user!(params[:account_id])
     @account = Account.find(params[:account_id])
-    @users = @account.users
+    @active_users = @account.active_users
+    @pending_users = @account.pending_users
+    
     if @account.present?
       year = params[:year].to_i
       week_num = params[:week_num].to_i

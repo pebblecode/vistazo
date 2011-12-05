@@ -454,8 +454,13 @@ body {
       margin: 5px;
       border: 1px solid #a1a1a1;
     }
+  } // .listing
+  
+  .help {
+    color: #999;
+    margin-left: 5px;
   }
-}
+} // .new-object-dialog
 
 #new-project-dialog {
   @extend .new-object-dialog;
@@ -531,8 +536,15 @@ body {
   margin: 0 auto;
   
   .listing {
+    
+    &.pending li .list-image {
+      background: url('/img/hatch1.gif');
+      width: 9px;
+      height: 9px;
+      border: 1px solid #29ABE2;
+    }
     li {
-      .point {
+      .list-image {
         @extend .circle;
         background-color: #29ABE2;
       } // #point
@@ -543,6 +555,10 @@ body {
       } // .email
     } // li
   } // .listing
+  
+  .pending-users-title {
+    margin-top: 20px;
+  }
   
   .add-new-user-title {
     margin-top: 20px;

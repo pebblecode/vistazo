@@ -14,4 +14,12 @@ class Account
   def url_slug
     self.id.to_s
   end
+  
+  def active_users
+    self.users.select { |u| u.is_active? }
+  end
+  
+  def pending_users
+    self.users.select { |u| u.is_pending? }
+  end
 end
