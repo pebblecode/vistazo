@@ -92,11 +92,15 @@
     <input type="hidden" name="team_member_id" value=""/>
     
     <fieldset title="Existing projects">
-      <% for project in @projects %>
-        <div class="existing-project">
-          <div class="handle <%= project.css_class %>"></div>
-          <button name="project_id" type="submit" value="<%= project.id %>" title="<%= h project.name %>"><%= h truncate(project.name, :length => 22) %></button>
-        </div>
+      <% if @projects %>
+        <ul class="listing">
+          <% for project in @projects %>
+            <li>
+              <div class="handle <%= project.css_class %>"></div>
+              <button name="project_id" type="submit" value="<%= project.id %>" title="<%= h project.name %>"><%= h truncate(project.name, :length => 22) %></button>
+            </li>
+          <% end %>
+        </ul>
       <% end %>
     </fieldset> <!-- Existing projects -->
     
@@ -105,7 +109,6 @@
       <input type="text"name="new_project_name" title="Add new project" class="new-object-text-box" /> <button type="submit" name="new_project" value="true" class="submit-button">+</button>
     </fieldset> <!-- New project -->
   </form>
-
   
-  <img src="/img/point.png" id="point"/>
+  <img src="/img/point.png" id="dialog-arrow"/>
 </div>

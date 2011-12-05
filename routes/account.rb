@@ -13,4 +13,9 @@ class VistazoApp < Sinatra::Application
     end
   end
 
+  get '/:account_id/invite-user' do
+    logger.log params
+    "Invite user for #{account_id}"
+  end
+
 end

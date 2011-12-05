@@ -19,6 +19,14 @@ body {
   background: #f4fbfe url('/img/bg.png') repeat-x;
 }
 
+.circle {
+  @include border-radius(10px);
+  
+  width: 10px;
+  height: 10px;
+  margin: 5px;
+  float: left;
+}
 
 /* Forms */
 .new-object-fieldset {
@@ -102,12 +110,21 @@ body {
     float: right;
     margin: 11px 10px 0 10px;
     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-    a{
+    a {
       color: white;
       text-decoration: none;
     }
   }
-
+  
+  .invite-user {
+    float: right;
+    margin: 11px 10px 0 10px;
+    
+    a {
+      color: white;
+      text-decoration: none;
+    }
+  }
   .right {
     float: right;
   }
@@ -386,12 +403,7 @@ body {
   }
   
   .handle {
-    @include border-radius(10px);
-    
-    width: 10px;
-    height: 10px;
-    margin: 5px;
-    float: left;
+    @extend .circle;
   }
   
 } // #main
@@ -399,10 +411,10 @@ body {
 /* @end */
 
 
-/* New project dialog box
+/* Dialogs
 -----------------------------------------------------------------------------*/
 
-#new-project-dialog {
+.new-object-dialog {
   @include border-radius(8px);
   @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
   
@@ -410,10 +422,6 @@ body {
   font-size: 14px;
   font-weight: bold;
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-  position: absolute;
-  z-index: 50;
-  min-height: 150px;
-  width: 200px;
   background-color: rgba(41, 171, 226, 1);
   margin: 5px;
   border: 1px solid #259acb;
@@ -428,38 +436,58 @@ body {
     margin: 5px 0 10px 7px;
   }
   
-  .existing-project {
-    @include border-radius(5px);
-    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+  .listing {
+    li {
+      @include border-radius(5px);
+      @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
 
-    font-weight: normal;
-    height: 20px;
-    background-color: #fff;
-    margin: 5px;
-    border: 1px solid #a1a1a1;
-    text-shadow: none;
-    
-    .handle {
-      position: absolute;
-      z-index: 10;
-    }
-    button {
       font-family: Cabin,Helvetica,sans-serif;
       font-size: 14px;
       line-height: 20px;
-      text-align: left;
+      font-weight: normal;
+      text-shadow: none;
+      
       color: #808080;
-      cursor: pointer;
+      background-color: #fff;
       
-      background: none;
-      border: none;
-      width: 188px;
-      padding: 0 0 0 20px;
-      
-      position: relative;
-      z-index: 20;
+      height: 20px;
+      margin: 5px;
+      border: 1px solid #a1a1a1;
     }
   }
+}
+
+#new-project-dialog {
+  @extend .new-object-dialog;
+  position: absolute;
+  z-index: 50;
+  width: 200px;
+
+  .listing {
+    li {
+      .handle {
+        position: absolute;
+        z-index: 10;
+      }
+      
+      button {
+        font-family: Cabin,Helvetica,sans-serif;
+        font-size: 14px;
+        line-height: 20px;
+        text-align: left;
+        color: #808080;
+        cursor: pointer;
+      
+        background: none;
+        border: none;
+        width: 188px;
+        padding: 0 0 0 20px;
+      
+        position: relative;
+        z-index: 20;
+      } // button
+    } // li
+  } // .listing
   
   .close {
     position: absolute;
@@ -472,7 +500,7 @@ body {
   }
 }
 
-#point {
+#dialog-arrow {
   position: absolute;
   top: 36px;
   left: -15px;
@@ -496,6 +524,41 @@ body {
     text-shadow: none;
   }
 } // #new-project-form
+
+#account-users-dialog {
+  @extend .new-object-dialog;
+  width: 500px;
+  margin: 0 auto;
+  
+  .listing {
+    li {
+      .point {
+        @extend .circle;
+        background-color: #29ABE2;
+      } // #point
+      
+      .email {
+        font-style: italic;
+        font-weight: normal;
+      } // .email
+    } // li
+  } // .listing
+  
+  .add-new-user-title {
+    margin-top: 20px;
+  }
+  
+  #invite-user-form {
+  } // #invite-user-form
+  
+  .new-object-fieldset {
+    margin-top: 0;
+    .new-object-text-box {
+      width: 465px;
+    }
+  } // .new-object-fieldset
+  
+} // #account-users
 
 
 /* Homepage

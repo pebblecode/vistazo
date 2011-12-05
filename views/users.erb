@@ -1,0 +1,18 @@
+<div id="account-users-dialog">
+  <h4>Existing users</h4>
+  <% if @users %>
+    <ul class="listing">
+      <% for user in @users %>
+        <li><div class="point"></div><%= h user.name %> &lt;<span class="email"><%= h user.email %></span>&gt;</li>
+      <% end %>
+    </ul>
+  <% end %>
+  
+  <h4 class="add-new-user-title">Add new user</h4>
+  <form id="invite-user-form" action="/<%= @account.url_slug %>/invite-user" method="post">
+    <fieldset class="new-object-fieldset" title="Invite new user">
+      <label for="invite_user_email">Invite new user</label>
+      <input type="text"name="invite_user_email" title="New user email" class="new-object-text-box" /> <button type="submit" name="invite_user" value="true" class="submit-button">+</button>
+    </fieldset> <!-- Invite new user -->
+  </form>
+</div>
