@@ -4,10 +4,6 @@ rescue NameError
   require File.expand_path('spec_helper', __FILE__)
 end
 
-include Rack::Test::Methods
-
-def app() Sinatra::Application end
-
 describe "Vistazo authentication" do
   
   it "should work on all pages" do
@@ -15,7 +11,7 @@ describe "Vistazo authentication" do
     
     all_pages.each do |page|
       get page
-      assert_equal 401, last_response.status
+      last_response.status.should == 401
     end
   end
   
@@ -34,7 +30,7 @@ describe "Vistazo homepage" do
   
   it "should return show welcome message" do
     get '/'
-    last_response.body.must_include 'Welcome to the Vistazo prototype'
+    last_response.body.should include('Welcome to the Vistazo prototype')
   end
   
   it "should show accounts" do
@@ -43,8 +39,8 @@ describe "Vistazo homepage" do
     
     get '/'
     
-    last_response.body.must_include "Fancy web shop"
-    last_response.body.must_include "Software sweets shop"
+    last_response.body.should include('Fancy web shop')
+    last_response.body.should include('Software sweets shop')
   end
   
 end

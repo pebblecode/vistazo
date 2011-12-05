@@ -26,8 +26,9 @@ group :development, :test do
   # Testing
   gem 'guard'
   gem 'rb-fsevent'
-  gem 'guard-minitest'
-  gem 'minitest'
+  # gem 'guard-minitest'
+  # gem 'minitest'
+  gem 'rspec'
   gem 'rack-test'
   gem "factory_girl", "~> 2.1.0"
 
