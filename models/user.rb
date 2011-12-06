@@ -23,13 +23,11 @@ class User
   end
   
   def status
-    if self.valid?
-      if (self.name == nil) and (self.uid == nil) and (self.email != nil)
+    if self.valid? 
+      if (self.uid == nil) and (self.email != nil)     # Missing email
         :pending
-      elsif (self.name != nil) and (self.uid != nil) and (self.email != nil)
+      elsif (self.uid != nil) and (self.email != nil)  # Email and uid present
         :active
-      elsif (self.name == nil) and (self.uid != nil) and (self.email != nil)
-        :active_name_missing
       else
         :unknown
       end
