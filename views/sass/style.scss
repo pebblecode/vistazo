@@ -52,7 +52,7 @@ body {
   
   /* For labelify*/
   .new-object-text-box-label {
-    font-family: Cabin, Helvetica, sans-serif;
+    font-family: $default_font_family;
     color: #808080;
     font-size: 14px;
     line-height: 16px;
@@ -103,18 +103,30 @@ body {
     border-right: 1px solid rgba(255, 255, 255, .15);
   }
 
-  .top-symbols {
-    color: #fff;
-    font-family: 'WebSymbolsRegular';
-    font-size: 14px;
-    float: right;
-    margin: 11px 10px 0 10px;
-    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-    a {
-      color: white;
-      text-decoration: none;
-    }
-  }
+  .action-bar {
+    li {
+      float: right;
+      margin: 11px 10px 0 10px;
+      font-size: 14px;
+      line-height: 16px;
+      
+      a {
+        color: #fff;
+        font-family: 'WebSymbolsRegular';
+        text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+        text-decoration: none;
+        
+        &.help {
+          font-family: 'MenschBold' ;
+          text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+        }
+      } // a
+      
+      &.logged-in-as {
+        color: #fff;
+      } // .logged-in-as
+    } // li
+  } // .action-bar
   
   .invite-user {
     float: right;
@@ -124,17 +136,6 @@ body {
       color: white;
       text-decoration: none;
     }
-  }
-  .right {
-    float: right;
-  }
-
-  #help {
-    color: #fff;
-    font-family: 'MenschBold' ;
-    float: right;
-    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-    margin: 12px 10px 0 0 ;
   }
 } // #top-nav
 
@@ -441,7 +442,7 @@ body {
       @include border-radius(5px);
       @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
 
-      font-family: Cabin,Helvetica,sans-serif;
+      font-family: $default_font_family;
       font-size: 14px;
       line-height: 20px;
       font-weight: normal;
@@ -476,7 +477,7 @@ body {
       }
       
       button {
-        font-family: Cabin,Helvetica,sans-serif;
+        font-family: $default_font_family;
         font-size: 14px;
         line-height: 20px;
         text-align: left;
