@@ -4,7 +4,7 @@
     <% if @active_users %>
       <ul class="listing active">
         <% for user in @active_users %>
-          <li><div class="list-image"></div><%= h user.name %> &lt;<span class="email"><%= h user.email %></span>&gt;</li>
+          <li><div class="list-bullet"></div><%= h user.name %> &lt;<span class="email"><%= h user.email %></span>&gt;</li>
         <% end %>
       </ul>
     <% end %>
@@ -13,7 +13,7 @@
     <h4 class="pending-users-title">Pending users (awaiting confirmation)</h4>
     <ul class="listing pending">
       <% for user in @pending_users %>
-        <li><div class="list-image"></div><%= h user.email %></span></li>
+        <li><div class="list-bullet"></div><%= h user.email %></li>
       <% end %>
     </ul>
     <% end %>

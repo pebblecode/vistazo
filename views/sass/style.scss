@@ -537,14 +537,14 @@ body {
   
   .listing {
     
-    &.pending li .list-image {
+    &.pending li .list-bullet {
       background: url('/img/hatch1.gif');
       width: 9px;
       height: 9px;
       border: 1px solid #29ABE2;
     }
     li {
-      .list-image {
+      .list-bullet {
         @extend .circle;
         background-color: #29ABE2;
       } // #point
