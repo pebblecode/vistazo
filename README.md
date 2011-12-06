@@ -47,6 +47,13 @@ Project was created with (shouldn't need to be done again, but here just for ref
     heroku config:add RACK_ENV=staging --app vistazo-sandbox
     heroku addons:add mongolab:starter --app vistazo-sandbox
     heroku addons:add sendgrid:starter --app vistazo-sandbox
+    heroku config:add LOG_LEVEL=DEBUG --app vistazo-sandbox
+    heroku config:add GOOGLE_CLIENT_ID=[google client id] --app vistazo-sandbox
+    heroku config:add GOOGLE_SECRET=[google api secret] --app vistazo-sandbox
+
+Google client callback url:
+
+    http://vistazo-sandbox.herokuapp.com/auth/google_oauth2/callback
 
 To push
 
@@ -65,6 +72,7 @@ Project was created with (shouldn't need to be done again, but here just for ref
     heroku config:add RACK_ENV=staging --app vistazo-staging
     heroku addons:add mongolab:starter --app vistazo-staging
     heroku addons:add sendgrid:starter --app vistazo-staging
+    heroku config:add LOG_LEVEL=DEBUG --app vistazo-staging
     heroku config:add GOOGLE_CLIENT_ID=[google client id] --app vistazo
     heroku config:add GOOGLE_SECRET=[google api secret] --app vistazo
 
@@ -112,6 +120,7 @@ Project was created with (shouldn't need to be done again, but here just for ref
     heroku config:add RACK_ENV=production --app vistazo
     heroku addons:add mongolab:starter --app vistazo
     heroku addons:add sendgrid:starter --app vistazo
+    heroku config:add LOG_LEVEL=DEBUG --app vistazo
     heroku config:add GOOGLE_CLIENT_ID=[google client id] --app vistazo
     heroku config:add GOOGLE_SECRET=[google api secret] --app vistazo
     
