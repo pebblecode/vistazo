@@ -23,7 +23,7 @@ def send_email(from_email, to_email, subject, email_erb_view, params)
   Pony.mail :to => to_email,
             :from => from_email,
             :subject => subject,
-            :body => erb(email_erb_view),
+            :body => erb(email_erb_view, :layout => false),
             :via => :smtp,
             :via_options => extra_options
 
