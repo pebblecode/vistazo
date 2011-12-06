@@ -6,6 +6,7 @@ base: &base
   email_service_username:
   email_service_password:
   email_service_domain: localhost
+  send_from_email: info@vistazoapp.com
 development:
   base_url: http://localhost:6100
   <<: *base

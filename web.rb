@@ -20,6 +20,7 @@ class VistazoApp < Sinatra::Application
   APP_CONFIG = YAML.load_file("#{root}/config/config.yml")[settings.environment.to_s]
 
   set :environment, ENV["RACK_ENV"] || "development"
+  set :send_from_email, APP_CONFIG["send_from_email"]
 
   use OmniAuth::Builder do
     provider :google_oauth2,

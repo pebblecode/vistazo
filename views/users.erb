@@ -13,7 +13,7 @@
     <h4 class="pending-users-title">Pending users (awaiting confirmation)</h4>
     <ul class="listing pending">
       <% for user in @pending_users %>
-        <li><div class="list-bullet"></div><%= h user.email %></li>
+        <li><div class="list-bullet"></div><%= h user.email %><a class="resend" href="/<%= @account.url_slug %>/new-user/<%= user.id %>/resend">resend</a></li>
       <% end %>
     </ul>
     <% end %>

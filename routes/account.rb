@@ -24,19 +24,7 @@ class VistazoApp < Sinatra::Application
         
         # Send registration email
         begin
-          @signup_link = "#{APP_CONFIG['base_url']}/#{params[:account_id]}/new-user/register"
-          
-          if ENV['RACK_ENV'] == "development"
-            puts "DEVELOPMENT MODE: email not actually sent, but this is what it'd look like..."
-            puts erb(:new_user_email, :layout => false)
-          elsif (ENV['RACK_ENV'] != "test")
-            send_email(settings.send_from_email, send_to_email, "You are invited to Vistazo", :new_user_email, {
-              email_service_address => "smtp.sendgrid.net",
-              email_service_username => ENV['SENDGRID_USERNAME'] || APP_CONFIG['email_service_username'],
-              email_service_password => ENV['SENDGRID_PASSWORD'] || APP_CONFIG['email_service_password'],
-              email_sevice_domain => ENV['SENDGRID_DOMAIN'] || APP_CONFIG['email_service_domain']
-            })
-          end
+          send_registration_email_to @user.email
           flash[:success] = "Invitation email has been sent to #{@user.email}"
         rescue Exception => e
           puts "Email error: #{e}"
@@ -61,6 +49,57 @@ class VistazoApp < Sinatra::Application
     else
       flash[:warning] = "Invalid account"
       redirect '/'
+    end
+  end
+  
+  get '/:account_id/new-user/:user_id/resend' do
+    protected!
+  
+    @account = Account.find(params[:account_id])
+    if @account.present?
+      begin
+        @user = User.find(params[:user_id])
+        if @user.present?
+          send_registration_email_to @user.email
+          flash[:success] = "Invitation email has been resent to #{@user.email}"
+        else
+          flash[:warning] = "Invalid user to resend email to."
+        end
+      rescue Exception => e
+        puts "Email error: #{ e}"
+        flash[:warning] = "It looks like something went wrong while attempting to send your email. Please try again another time."
+      end
+    else
+      flash[:warning] = "Invalid account"
+    end
+    
+    redirect back
+  end
+  
+  private
+  
+  
+  def send_registration_email_to(send_to_email)
+    @signup_link = "#{APP_CONFIG['base_url']}/#{params[:account_id]}/new-user/register"
+    
+    send_from_email = settings.send_from_email
+    subject = "You are invited to Vistazo"
+    
+    email_params = {
+      :email_service_address => "smtp.sendgrid.net",
+      :email_service_username => ENV['SENDGRID_USERNAME'] || APP_CONFIG['email_service_username'],
+      :email_service_password => ENV['SENDGRID_PASSWORD'] || APP_CONFIG['email_service_password'],
+      :email_sevice_domain => ENV['SENDGRID_DOMAIN'] || APP_CONFIG['email_service_domain']
+    }
+    
+    if ENV['RACK_ENV'] == "development"
+      puts "DEVELOPMENT MODE: email not actually sent, but this is what it'd look like..."
+      puts "send_from_email: #{send_from_email}"
+      puts "send_to_email: #{send_to_email}"
+      
+      puts erb(:new_user_email, :layout => false)
+    elsif (ENV['RACK_ENV'] != "test")
+      send_email(send_from_email, send_to_email, subject, :new_user_email, email_params)
     end
   end
 

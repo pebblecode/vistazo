@@ -553,6 +553,15 @@ body {
         font-style: italic;
         font-weight: normal;
       } // .email
+      
+      .resend {
+        float: right;
+        padding: 0 3px 0 5px;
+        display: block;
+        background-color: #dddddd;
+        color: #808080;
+        text-decoration: none;
+      } // .resend
     } // li
   } // .listing
   
