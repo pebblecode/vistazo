@@ -51,6 +51,9 @@ Project was created with (shouldn't need to be done again, but here just for ref
 To push
 
     git push sandbox [branch of code]:master
+    
+    # Or if there are conflicts, you may need to do a force push
+    git push sandbox [branch of code]:master --force
 
 ## Staging
 
