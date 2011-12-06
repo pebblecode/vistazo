@@ -10,6 +10,7 @@ require 'date'
 require 'json'
 require 'omniauth'
 require 'omniauth-google-oauth2'
+require 'pony'
 
 # Require all in lib directory
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
