@@ -96,9 +96,23 @@ class VistazoApp < Sinatra::Application
       puts "DEVELOPMENT MODE: email not actually sent, but this is what it'd look like..."
       puts "send_from_email: #{send_from_email}"
       puts "send_to_email: #{send_to_email}"
-      
+      puts "params: #{email_params}"
+      puts "subject: #{subject}"
+              
       puts erb(:new_user_email, :layout => false)
     elsif (ENV['RACK_ENV'] != "test")
+      if ENV['RACK_ENV'] == "staging"
+        puts "STAGING MODE: this email should be sent:"
+        puts "send_from_email: #{send_from_email}"
+        puts "send_to_email: #{send_to_email}"
+        puts "params: #{email_params}"
+        puts "subject: #{subject}"
+        
+        puts erb(:new_user_email, :layout => false)
+      end
+    
+      puts erb(:new_user_email, :layout => false)
+      
       send_email(send_from_email, send_to_email, subject, :new_user_email, email_params)
     end
   end
