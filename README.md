@@ -105,7 +105,7 @@ To push to the staging server
     rake deploy:staging
 
     # Or as a merge, push and deploy rake task
-    rake merge_push_deploy:staging
+    rake shipit:staging
 
 This is deployed at: http://vistazo-staging.herokuapp.com/
 
@@ -153,7 +153,7 @@ To push to the production server
     rake deploy:production
     
     # Or as a merge, push and deploy rake task
-    rake merge_push_deploy:production
+    rake shipit:production
     
 This is deployed at: http://vistazo.herokuapp.com/
 

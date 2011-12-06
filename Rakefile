@@ -53,8 +53,8 @@ namespace "deploy" do
   
 end
 
-desc "Merge and pushes branches to github, then deploy them to the server."
-namespace "merge_push_deploy" do
+desc "Ship it! Merge and pushes branches to github, then deploy them to the server."
+namespace "shipit" do
 
   desc "Merge and push branch to github, then deploy to server."
   task :branch, [:branch] do |t, args|
@@ -65,12 +65,12 @@ namespace "merge_push_deploy" do
 
   desc "Merge and push staging branch to github, then deploy to http://vistazo-staging.herokuapp.com/"
   task :staging do
-    Rake::Task["merge_push_deploy:branch"].invoke("staging")
+    Rake::Task["shipit:branch"].invoke("staging")
   end
   
   desc "Merge and push production branch to github, then deploy to http://vistazo.herokuapp.com/"
   task :production do
-    Rake::Task["merge_push_deploy:branch"].invoke("production")
+    Rake::Task["shipit:branch"].invoke("production")
   end
   
 end
