@@ -12,7 +12,7 @@ class User
 
   # Validations
   validates_format_of :email, :with => /\b[a-zA-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i
-  validates_presence_of :account_id
+  # validates_presence_of :account_id  # Need it to be nil, so that a user can be created before the account is created
 
   def is_pending?
     self.status == :pending

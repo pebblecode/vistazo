@@ -5,7 +5,7 @@ class VistazoApp < Sinatra::Application
     unless @user.present?
       @user = User.find_by_email(hash["info"]["email"])
 
-      if @user.is_pending? # Occurs after registration
+      if @user.present? # Present if invited and following registration link
         @user.uid = hash["uid"]
         @user.name = hash["info"]["name"]
         
@@ -34,7 +34,10 @@ class VistazoApp < Sinatra::Application
           flash[:success] = "Welcome to Vistazo! We're ready for you to add projects for yourself."
         else
           flash[:warning] = "Could not retrieve user."
-          puts @user.errors
+          
+          puts "Error creating user:"
+          @user.errors.each { |e| puts "#{e}: #{@user.errors[e]}" }
+          
           @user = nil
           redirect '/'
         end
