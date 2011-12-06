@@ -9,7 +9,7 @@
       </ul>
     <% end %>
     
-    <% if @pending_users %>
+    <% if @pending_users.present? %>
     <h4 class="pending-users-title">Pending users (awaiting confirmation)</h4>
     <ul class="listing pending">
       <% for user in @pending_users %>
@@ -18,7 +18,7 @@
     </ul>
     <% end %>
     
-    <h4 class="add-new-user-title">Add new user</h4>
+    <h4 class="add-new-user-title">Add new user (NOTE: needs to be a Google email address)</h4>
     <form id="invite-user-form" action="/<%= @account.url_slug %>/new-user" method="post">
       <fieldset class="new-object-fieldset" title="Invite new user">
         <label for="new_user_email">Invite new user</label>

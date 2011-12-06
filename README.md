@@ -46,6 +46,7 @@ Project was created with (shouldn't need to be done again, but here just for ref
     heroku create vistazo-sandbox --stack cedar --remote sandbox
     heroku config:add RACK_ENV=staging --app vistazo-sandbox
     heroku addons:add mongolab:starter --app vistazo-sandbox
+    heroku addons:add sendgrid:starter --app vistazo-sandbox
 
 To push
 
@@ -60,6 +61,7 @@ Project was created with (shouldn't need to be done again, but here just for ref
     heroku create vistazo-staging --stack cedar --remote staging
     heroku config:add RACK_ENV=staging --app vistazo-staging
     heroku addons:add mongolab:starter --app vistazo-staging
+    heroku addons:add sendgrid:starter --app vistazo-staging
     heroku config:add GOOGLE_CLIENT_ID=[google client id] --app vistazo
     heroku config:add GOOGLE_SECRET=[google api secret] --app vistazo
 
@@ -106,6 +108,7 @@ Project was created with (shouldn't need to be done again, but here just for ref
     heroku create vistazo --stack cedar --remote production
     heroku config:add RACK_ENV=production --app vistazo
     heroku addons:add mongolab:starter --app vistazo
+    heroku addons:add sendgrid:starter --app vistazo
     heroku config:add GOOGLE_CLIENT_ID=[google client id] --app vistazo
     heroku config:add GOOGLE_SECRET=[google api secret] --app vistazo
     

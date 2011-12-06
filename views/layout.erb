@@ -58,7 +58,9 @@
   <div id="main">
     <%= yield %>
   </div>
-
-  <%= erb :users %>
+  
+  <% if @show_users %>
+    <%= erb :users %>
+  <% end %>
 
 </body>

@@ -16,6 +16,8 @@ class VistazoApp < Sinatra::Application
     @active_users = @account.active_users
     @pending_users = @account.pending_users
     
+    @show_users = true
+    
     if @account.present?
       year = params[:year].to_i
       week_num = params[:week_num].to_i

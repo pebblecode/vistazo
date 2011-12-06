@@ -19,6 +19,9 @@ gem 'bson_ext'
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
 
+# Email
+gem 'pony'
+
 group :development, :test do
   # Servers
   gem 'shotgun'
