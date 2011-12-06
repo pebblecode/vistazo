@@ -66,7 +66,7 @@ class VistazoApp < Sinatra::Application
           flash[:warning] = "Invalid user to resend email to."
         end
       rescue Exception => e
-        puts "Email error: #{ e}"
+        puts "Email error: #{e}"
         flash[:warning] = "It looks like something went wrong while attempting to send your email. Please try again another time."
       end
     else
