@@ -28,7 +28,7 @@ class VistazoApp < Sinatra::Application
           flash[:success] = "Invitation email has been sent to #{@user.email}"
         rescue Exception => e
           puts "Email error: #{e}"
-          flash[:warning] = "It looks like something went wrong while attempting to send your email. Please try again another time."
+          flash[:warning] = "It looks like something went wrong while attempting to send your email. Please try again another time. Error: #{e}"
         end
       else
         flash[:warning] = "Email is not valid"
@@ -67,7 +67,7 @@ class VistazoApp < Sinatra::Application
         end
       rescue Exception => e
         puts "Email error: #{e}"
-        flash[:warning] = "It looks like something went wrong while attempting to send your email. Please try again another time."
+        flash[:warning] = "It looks like something went wrong while attempting to send your email. Please try again another time. Error: #{e}"
       end
     else
       flash[:warning] = "Invalid account"
