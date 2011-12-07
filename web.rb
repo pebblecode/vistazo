@@ -340,15 +340,15 @@ get '/logout' do
   log_out
 end
 
-
-private
-
 def create_account
   @user.account = Account.create(:name => "#{@user.name}'s schedule")
   @user.save
   return @user.account
 end
 
+# ----------------------------------------------------------------------------
+# Project
+# ----------------------------------------------------------------------------
 
 post '/:account_id/team-member-project/add' do
   protected!
@@ -387,10 +387,6 @@ post '/:account_id/team-member-project/add' do
 
   redirect back
 end
-
-# ----------------------------------------------------------------------------
-# Project
-# ----------------------------------------------------------------------------
 
 post '/team-member-project/:tm_project_id/update.json' do
   protected!
