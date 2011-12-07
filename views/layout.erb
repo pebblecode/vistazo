@@ -32,13 +32,15 @@
       <h2><a href="/<%= @account.url_slug %>"><%= @account.name %></a></h2>
     <% end %>
     
-    <ul id="modify-data" style="<%= (settings.environment == "production") ? "display: none" : "" %>">
-      <li>
-        <form action="/reset" method="post">
-          <button name="reset_database" type="submit" value="submit">Reset database</button>
-        </form>
-      </li>
-    </ul>
+    <% if is_super_admin? %>
+      <ul id="modify-data" style="<%= (settings.environment == "production") ? "display: none" : "" %>">
+        <li>
+          <form action="/reset" method="post">
+            <button name="reset_database" type="submit" value="submit">Reset database</button>
+          </form>
+        </li>
+      </ul>
+    <% end %>
     
     
     <!-- <p class="top-symbols">U</p> 

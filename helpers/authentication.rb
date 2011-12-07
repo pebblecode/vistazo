@@ -34,6 +34,15 @@ module Sinatra
         redirect "/"
       end
     end
+    
+    def is_super_admin?
+      if current_user
+        if current_user.email == "ttt@pebblecode.com"
+          return true
+        end
+      end
+      return false
+    end
   end
   helpers BasicAuthentication
 end
