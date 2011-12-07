@@ -33,6 +33,40 @@ describe "Homepage" do
   
 end
 
+describe "Authentication:" do
+  before do
+    http_authorization!
+    
+    # OmniAuth.config.add_mock(:google_oauth2, {
+    #   :uid => '111965288093828509275',
+    #   :email => "ttt@pebblecode.com",
+    #   :name => 'Tu Tak Tran'})
+  end
+  
+  after do
+    clean_db!
+  end
+  
+  describe "Logging in as a new user" do
+    it "should create a new account with the user's name" do
+      get '/auth/google_oauth2/'
+      
+      
+      last_response.body.should include("Tu Tak Tran's schedule")
+    end
+  end
+  
+  describe "Logging out" do
+    pending "should return to homepage" do
+      get '/auth/google_oauth2/'
+      
+      get '/logout'
+      last_response.status.should == 302 # Follow redirect
+      follow_redirect!
+      last_response.body.should include("Logged out successfully")
+    end
+  end
+end
 
 # OmniAuth.config.mock_auth[:google_oauth2] = {
 #     'provider' => 'google',
@@ -41,33 +75,32 @@ end
 #     'name' => 'Tu Tak Tran'
 #   }
 
-describe "Admin:" do
-  before do
-    http_authorization!
-    
-    # Super admin account
-    OmniAuth.config.add_mock(:google_oauth2, {
-      :uid => '111965288093828509275',
-      :email => "ttt@pebblecode.com",
-      :name => 'Tu Tak Tran'})
-  end
-  
-  describe "Logged in super admin" do
-    it "should have 'is-super-admin' in the body class" do
-      get '/auth/google_oauth2'
-      puts last_response.body
-      last_response.body.should include("<body class='is-super-admin'>")
-    end
-  end
-  
-  describe "Reset database button" do
-    it "should not be shown by default" do
-      get '/'
-      last_response.body.should_not include('Reset database')
-    end
-    
-    it "should only show if ttt@pebblecode.com is logged in" do 
-      pending "check that ttt@pebblecode.com is logged in"
-    end
-  end
-end
+# describe "Admin:" do
+#   before do
+#     http_authorization!
+#     
+#     # Super admin account
+#     OmniAuth.config.add_mock(:google_oauth2, {
+#       :uid => '111965288093828509275',
+#       :email => "ttt@pebblecode.com",
+#       :name => 'Tu Tak Tran'})
+#   end
+#   
+#   describe "Logged in super admin" do
+#     it "should have 'is-super-admin' in the body class" do
+#       get '/auth/google_oauth2'
+#       last_response.body.should include("<body class='is-super-admin'>")
+#     end
+#   end
+#   
+#   describe "Reset database button" do
+#     it "should not be shown by default" do
+#       get '/'
+#       last_response.body.should_not include('Reset database')
+#     end
+#     
+#     it "should only show if ttt@pebblecode.com is logged in" do 
+#       pending "check that ttt@pebblecode.com is logged in"
+#     end
+#   end
+# end
