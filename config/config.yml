@@ -16,4 +16,6 @@ production:
 staging:
   base_url: http://vistazo-staging.herokuapp.com
   <<: *base
-  
+test:
+  base_url: http://vistazo-testing.pebbleit.com
+  <<: *base  

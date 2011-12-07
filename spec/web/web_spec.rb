@@ -1,10 +1,10 @@
-begin 
-  require_relative 'spec_helper'
-rescue NameError
-  require File.expand_path('spec_helper', __FILE__)
-end
+require_relative '../spec_helper'
 
 describe "Vistazo authentication" do
+  # Define application for all spec files
+  def app
+    Sinatra::Application
+  end
   
   it "should work on all pages" do
     all_pages = ['/', '/pebble_code_web_dev', '/pebble_code_web_dev/2011/week/48']
@@ -18,6 +18,11 @@ describe "Vistazo authentication" do
 end
 
 describe "Vistazo homepage" do
+  # Define application for all spec files
+  def app
+    Sinatra::Application
+  end
+  
   before do
     authorize 'vistazo', 'vistazo'
   end

@@ -30,7 +30,7 @@ To run
 
 To run tests manually
 
-    bundle exec rake test
+    bundle exec rake spec
 
 To run tests automatically with [guard](https://github.com/guard/guard)
 
