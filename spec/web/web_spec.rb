@@ -45,7 +45,6 @@ describe "Authentication:" do
         :name => 'Tu Tak Tran'
       }
     })
-    # request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2] # required?
   end
   
   after do
@@ -54,7 +53,9 @@ describe "Authentication:" do
   
   describe "Logging in as a new user" do
     it "should create a new account with the user's name" do
-      get '/auth/google_oauth2/'
+      get '/auth/google_oauth2/callback', nil, {"omniauth.auth" => OmniAuth.config.mock_auth[:google_oauth2]}
+      follow_redirect!
+      # debugger
       last_response.body.should include("Tu Tak Tran's schedule")
     end
   end
