@@ -37,10 +37,15 @@ describe "Authentication:" do
   before do
     http_authorization!
     
-    # OmniAuth.config.add_mock(:google_oauth2, {
-    #   :uid => '111965288093828509275',
-    #   :email => "ttt@pebblecode.com",
-    #   :name => 'Tu Tak Tran'})
+    OmniAuth.config.test_mode = true
+    OmniAuth.config.add_mock(:google_oauth2, {
+      :uid => '111965288093828509275',
+      :info => {
+        :email => "ttt@pebblecode.com",
+        :name => 'Tu Tak Tran'
+      }
+    })
+    # request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2] # required?
   end
   
   after do
@@ -50,8 +55,6 @@ describe "Authentication:" do
   describe "Logging in as a new user" do
     it "should create a new account with the user's name" do
       get '/auth/google_oauth2/'
-      
-      
       last_response.body.should include("Tu Tak Tran's schedule")
     end
   end
@@ -63,6 +66,7 @@ describe "Authentication:" do
       get '/logout'
       last_response.status.should == 302 # Follow redirect
       follow_redirect!
+      last_request.path.should == "/"
       last_response.body.should include("Logged out successfully")
     end
   end
