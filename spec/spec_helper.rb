@@ -9,12 +9,12 @@ require_relative '../test/factories.rb'
 require 'rspec'
 require 'rack/test'
 require 'factory_girl'
-
+require 'ruby-debug'
 
 # Include Rack::Test in all rspec tests
 RSpec.configure do |conf|
   conf.include Rack::Test::Methods
-  # conf.mock_with :rspec
+  conf.mock_with :rspec
 end
 
 # OmniAuth

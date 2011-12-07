@@ -25,6 +25,7 @@ gem 'pony'
 group :development, :test do
   # Servers
   gem 'shotgun'
+  gem 'ruby-debug19'
 
   # Testing
   gem 'guard'
