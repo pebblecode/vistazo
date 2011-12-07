@@ -28,7 +28,10 @@ group :development, :test do
 
   # Testing
   gem 'guard'
-  gem 'rb-fsevent'
+  gem 'rb-inotify', :require => false
+  gem 'rb-fsevent', :require => false
+  gem 'rb-fchange', :require => false
+  gem 'guard-rspec'
   # gem 'guard-minitest'
   # gem 'minitest'
   gem 'rspec'
