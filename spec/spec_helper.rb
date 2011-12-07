@@ -17,6 +17,11 @@ RSpec.configure do |conf|
   # conf.mock_with :rspec
 end
 
+# OmniAuth
+OmniAuth.config.test_mode = true
+
+# Helper methods
+
 def http_authorization!
   authorize 'vistazo', 'vistazo'
 end

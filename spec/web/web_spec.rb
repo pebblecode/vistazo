@@ -5,7 +5,7 @@ def app
   Sinatra::Application
 end
 
-describe "Authentication" do
+describe "Http authentication" do
   it "should work on all pages" do
     all_pages = ['/', '/pebble_code_web_dev', '/pebble_code_web_dev/2011/week/48']
     
@@ -33,9 +33,31 @@ describe "Homepage" do
   
 end
 
+
+# OmniAuth.config.mock_auth[:google_oauth2] = {
+#     'provider' => 'google',
+#     'uid' => '111965288093828509275'
+#     'email' => "ttt@pebblecode.com"
+#     'name' => 'Tu Tak Tran'
+#   }
+
 describe "Admin:" do
   before do
     http_authorization!
+    
+    # Super admin account
+    OmniAuth.config.add_mock(:google_oauth2, {
+      :uid => '111965288093828509275',
+      :email => "ttt@pebblecode.com",
+      :name => 'Tu Tak Tran'})
+  end
+  
+  describe "Logged in super admin" do
+    it "should have 'is-super-admin' in the body class" do
+      get '/auth/google_oauth2'
+      puts last_response.body
+      last_response.body.should include("<body class='is-super-admin'>")
+    end
   end
   
   describe "Reset database button" do

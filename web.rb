@@ -16,12 +16,17 @@ require 'pony'
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
 
 class VistazoApp < Sinatra::Application
-  enable :sessions
 
   APP_CONFIG = YAML.load_file("#{root}/config/config.yml")[settings.environment.to_s]
 
   set :environment, ENV["RACK_ENV"] || "development"
   set :send_from_email, APP_CONFIG["send_from_email"]
+
+  if (settings.environment == "test")
+    set :sessions, false
+  else
+    set :sessions, true
+  end
 
   use OmniAuth::Builder do
     provider :google_oauth2,
