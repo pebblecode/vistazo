@@ -31,7 +31,7 @@ class VistazoApp < Sinatra::Application
   end
 
   ##############################################################################
-  # Mongo mapper settings
+  # Configurations for different environments
   ##############################################################################  
   [:production, :staging].each do |env|
     configure env do
