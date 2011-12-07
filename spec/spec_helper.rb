@@ -23,6 +23,20 @@ def http_authorization!
   authorize 'vistazo', 'vistazo'
 end
 
+def login!
+  OmniAuth.config.test_mode = true
+  OmniAuth.config.add_mock(:google_oauth2, {
+    :uid => '111965288093828509275',
+    :info => {
+      :email => "ttt@pebblecode.com",
+      :name => 'Tu Tak Tran'
+    }
+  })
+  
+  get '/auth/google_oauth2/callback', nil, {"omniauth.auth" => OmniAuth.config.mock_auth[:google_oauth2]}
+  follow_redirect!
+end
+
 def clean_db!
   MongoMapper.database.collections.each do |coll|
     coll.remove
