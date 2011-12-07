@@ -38,14 +38,4 @@ describe "Vistazo homepage" do
     last_response.body.should include('Welcome to the Vistazo prototype')
   end
   
-  it "should show accounts" do
-    Factory(:account, :name => "Fancy web shop")
-    Factory(:account, :name => "Software sweets shop")
-    
-    get '/'
-    
-    last_response.body.should include('Fancy web shop')
-    last_response.body.should include('Software sweets shop')
-  end
-  
 end
