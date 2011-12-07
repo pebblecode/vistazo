@@ -1,11 +1,11 @@
 require_relative '../spec_helper'
 
-describe "Vistazo authentication" do
-  # Define application for all spec files
-  def app
-    Sinatra::Application
-  end
-  
+# Define application for all spec files
+def app
+  Sinatra::Application
+end
+
+describe "Authentication" do
   it "should work on all pages" do
     all_pages = ['/', '/pebble_code_web_dev', '/pebble_code_web_dev/2011/week/48']
     
@@ -17,20 +17,13 @@ describe "Vistazo authentication" do
   
 end
 
-describe "Vistazo homepage" do
-  # Define application for all spec files
-  def app
-    Sinatra::Application
-  end
-  
+describe "Homepage" do
   before do
-    authorize 'vistazo', 'vistazo'
+    http_authorization!
   end
   
   after do
-    MongoMapper.database.collections.each do |coll|
-      coll.remove
-    end
+    clean_db!
   end
   
   it "should return show welcome message" do
@@ -38,4 +31,21 @@ describe "Vistazo homepage" do
     last_response.body.should include('Welcome to the Vistazo prototype')
   end
   
+end
+
+describe "Admin:" do
+  before do
+    http_authorization!
+  end
+  
+  describe "Reset database button" do
+    it "should not be shown by default" do
+      get '/'
+      last_response.body.should_not include('Reset database')
+    end
+    
+    it "should only show if ttt@pebblecode.com is logged in" do 
+      pending "check that ttt@pebblecode.com is logged in"
+    end
+  end
 end

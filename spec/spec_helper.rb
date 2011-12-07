@@ -14,5 +14,15 @@ require 'factory_girl'
 # Include Rack::Test in all rspec tests
 RSpec.configure do |conf|
   conf.include Rack::Test::Methods
-  conf.mock_with :rspec
+  # conf.mock_with :rspec
+end
+
+def http_authorization!
+  authorize 'vistazo', 'vistazo'
+end
+
+def clean_db!
+  MongoMapper.database.collections.each do |coll|
+    coll.remove
+  end
 end
