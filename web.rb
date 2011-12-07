@@ -22,12 +22,14 @@ class VistazoApp < Sinatra::Application
   set :environment, ENV["RACK_ENV"] || "development"
   set :send_from_email, APP_CONFIG["send_from_email"]
 
-  if (settings.environment == "test")
-    set :sessions, false
-  else
-    set :sessions, true
-  end
-
+  # May need to disable sessions in tests
+  # if (settings.environment == "test")
+  #   set :sessions, false
+  # else
+  #   set :sessions, true
+  # end
+  enable :sessions
+  
   use OmniAuth::Builder do
     provider :google_oauth2,
       (ENV['GOOGLE_CLIENT_ID']||APP_CONFIG['client_id']),
@@ -85,6 +87,75 @@ require_relative 'helpers/init'
 # Routes/Controllers
 # To be moved once I figure out how to (http://stackoverflow.com/q/8356750/111884)
 ##############################################################################
+
+# ----------------------------------------------------------------------------
+# Authentication
+# NOTE: This must be loaded first
+# ----------------------------------------------------------------------------
+
+get '/auth/:provider/callback' do
+  hash = request.env['omniauth.auth'].to_hash
+  @user = User.find_by_uid(hash["uid"])
+  unless @user.present?
+    @user = User.find_by_email(hash["info"]["email"])
+
+    if @user.present? # Present if invited and following registration link
+      @user.uid = hash["uid"]
+      @user.name = hash["info"]["name"]
+      
+      @user.save
+
+      if @user.valid?
+        flash[:success] = "Welcome to Vistazo! You've successfully registered."
+      else
+        flash[:warning] = "Could not register user."
+        puts @user.errors
+        @user = nil
+        redirect '/'
+      end
+    else
+      @user = User.create(
+        :uid   => hash["uid"],
+        :name  => hash["info"]["name"],
+        :email => hash["info"]["email"]
+      )
+      if @user.valid?
+        @account = create_account
+
+        # Add the user as the first team member
+        @account.team_members << TeamMember.create(:name => @user.name)
+
+        flash[:success] = "Welcome to Vistazo! We're ready for you to add projects for yourself."
+      else
+        flash[:warning] = "Could not retrieve user."
+        
+        puts "Error creating user:"
+        @user.errors.each { |e| puts "#{e}: #{@user.errors[e]}" }
+        
+        @user = nil
+        redirect '/'
+      end
+    end
+  end
+  
+  session['uid'] = @user.uid
+  redirect '/'
+end
+
+get '/auth/failure' do
+  flash[:warning] = "To access vistazo, you need to login with your Google account."
+  redirect "/"
+end
+get '/logout' do
+  flash[:success] = "Logged out successfully"
+  log_out
+end
+
+def create_account
+  @user.account = Account.create(:name => "#{@user.name}'s schedule")
+  @user.save
+  return @user.account
+end
 
 # ----------------------------------------------------------------------------
 # Main
@@ -276,74 +347,6 @@ def send_registration_email_to(send_to_email)
     
     send_email(send_from_email, send_to_email, subject, :new_user_email, email_params)
   end
-end
-
-# ----------------------------------------------------------------------------
-# Authentication
-# ----------------------------------------------------------------------------
-
-get '/auth/:provider/callback' do
-  hash = request.env['omniauth.auth'].to_hash
-  @user = User.find_by_uid(hash["uid"])
-  unless @user.present?
-    @user = User.find_by_email(hash["info"]["email"])
-
-    if @user.present? # Present if invited and following registration link
-      @user.uid = hash["uid"]
-      @user.name = hash["info"]["name"]
-      
-      @user.save
-
-      if @user.valid?
-        flash[:success] = "Welcome to Vistazo! You've successfully registered."
-      else
-        flash[:warning] = "Could not register user."
-        puts @user.errors
-        @user = nil
-        redirect '/'
-      end
-    else
-      @user = User.create(
-        :uid   => hash["uid"],
-        :name  => hash["info"]["name"],
-        :email => hash["info"]["email"]
-      )
-      if @user.valid?
-        @account = create_account
-
-        # Add the user as the first team member
-        @account.team_members << TeamMember.create(:name => @user.name)
-
-        flash[:success] = "Welcome to Vistazo! We're ready for you to add projects for yourself."
-      else
-        flash[:warning] = "Could not retrieve user."
-        
-        puts "Error creating user:"
-        @user.errors.each { |e| puts "#{e}: #{@user.errors[e]}" }
-        
-        @user = nil
-        redirect '/'
-      end
-    end
-  end
-  
-  session['uid'] = @user.uid
-  redirect '/'
-end
-
-get '/auth/failure' do
-  flash[:warning] = "To access vistazo, you need to login with your Google account."
-  redirect "/"
-end
-get '/logout' do
-  flash[:success] = "Logged out successfully"
-  log_out
-end
-
-def create_account
-  @user.account = Account.create(:name => "#{@user.name}'s schedule")
-  @user.save
-  return @user.account
 end
 
 # ----------------------------------------------------------------------------
