@@ -45,11 +45,15 @@
     <div class="top-spacer right"></div> 
     <p class="top-symbols">S</p>
     <div class="top-spacer right"></div>
-    <p id="help">?</p>
     <div class="top-spacer right"></div> -->
-    <% if logged_in? %>
-      <p class="top-symbols"><a href="/logout" title="Log out">X</a></p>
-    <% end %>
+    <ul class="action-bar">
+      <% if logged_in? %>
+        <li><a href="/logout" title="Log out">X</a></li>
+        <li class="logged-in-as">Logged in as: <%= current_user.name %></li>
+      <% end %>
+      <li><a class="help" title="Coming soon" href="#">?</a></li>
+    </ul>
+    <!-- <p class="invite-user"><a href="#account-users">Invite people to view this schedule</a></p> -->
   </div>
   
   <%= styled_flash %>
@@ -57,7 +61,9 @@
   <div id="main">
     <%= yield %>
   </div>
-
-
+  
+  <% if @show_users %>
+    <%= erb :users %>
+  <% end %>
 
 </body>

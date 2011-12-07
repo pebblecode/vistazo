@@ -3,10 +3,17 @@ base: &base
   password: vistazo
   client_id: 443819582294.apps.googleusercontent.com
   google_secret: nBlfJxFwHbyOKN_PKSgTJtbt
+  email_service_username:
+  email_service_password:
+  email_service_domain: localhost
+  send_from_email: info@vistazoapp.com
 development:
+  base_url: http://localhost:6100
   <<: *base
 production:
+  base_url: http://vistazo.herokuapp.com
   <<: *base
 staging:
+  base_url: http://vistazo-staging.herokuapp.com
   <<: *base
   

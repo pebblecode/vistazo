@@ -10,6 +10,7 @@ require 'date'
 require 'json'
 require 'omniauth'
 require 'omniauth-google-oauth2'
+require 'pony'
 
 # Require all in lib directory
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
@@ -20,6 +21,7 @@ class VistazoApp < Sinatra::Application
   APP_CONFIG = YAML.load_file("#{root}/config/config.yml")[settings.environment.to_s]
 
   set :environment, ENV["RACK_ENV"] || "development"
+  set :send_from_email, APP_CONFIG["send_from_email"]
 
   use OmniAuth::Builder do
     provider :google_oauth2,
@@ -34,13 +36,18 @@ class VistazoApp < Sinatra::Application
   [:production, :staging].each do |env|
     configure env do
       setup_mongo_connection(ENV['MONGOLAB_URI'])
-      # what
     end
+  end
+
+  configure :staging do
+    enable :logging
   end
 
   configure :development do
     setup_mongo_connection('mongomapper://localhost:27017/vistazo-development')
     set :session_secret, "wj-Sf/sdf_P49usi#sn132_sdnfij3"
+    
+    enable :logging
   end
 
   configure :test do

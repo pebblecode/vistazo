@@ -46,10 +46,21 @@ Project was created with (shouldn't need to be done again, but here just for ref
     heroku create vistazo-sandbox --stack cedar --remote sandbox
     heroku config:add RACK_ENV=staging --app vistazo-sandbox
     heroku addons:add mongolab:starter --app vistazo-sandbox
+    heroku addons:add sendgrid:starter --app vistazo-sandbox
+    heroku config:add LOG_LEVEL=DEBUG --app vistazo-sandbox
+    heroku config:add GOOGLE_CLIENT_ID=[google client id] --app vistazo-sandbox
+    heroku config:add GOOGLE_SECRET=[google api secret] --app vistazo-sandbox
+
+Google client callback url:
+
+    http://vistazo-sandbox.herokuapp.com/auth/google_oauth2/callback
 
 To push
 
     git push sandbox [branch of code]:master
+    
+    # Or if there are conflicts, you may need to do a force push
+    git push sandbox [branch of code]:master --force
 
 ## Staging
 
@@ -60,6 +71,8 @@ Project was created with (shouldn't need to be done again, but here just for ref
     heroku create vistazo-staging --stack cedar --remote staging
     heroku config:add RACK_ENV=staging --app vistazo-staging
     heroku addons:add mongolab:starter --app vistazo-staging
+    heroku addons:add sendgrid:starter --app vistazo-staging
+    heroku config:add LOG_LEVEL=DEBUG --app vistazo-staging
     heroku config:add GOOGLE_CLIENT_ID=[google client id] --app vistazo
     heroku config:add GOOGLE_SECRET=[google api secret] --app vistazo
 
@@ -92,7 +105,7 @@ To push to the staging server
     rake deploy:staging
 
     # Or as a merge, push and deploy rake task
-    rake merge_push_deploy:staging
+    rake shipit:staging
 
 This is deployed at: http://vistazo-staging.herokuapp.com/
 
@@ -106,6 +119,8 @@ Project was created with (shouldn't need to be done again, but here just for ref
     heroku create vistazo --stack cedar --remote production
     heroku config:add RACK_ENV=production --app vistazo
     heroku addons:add mongolab:starter --app vistazo
+    heroku addons:add sendgrid:starter --app vistazo
+    heroku config:add LOG_LEVEL=DEBUG --app vistazo
     heroku config:add GOOGLE_CLIENT_ID=[google client id] --app vistazo
     heroku config:add GOOGLE_SECRET=[google api secret] --app vistazo
     
@@ -138,7 +153,7 @@ To push to the production server
     rake deploy:production
     
     # Or as a merge, push and deploy rake task
-    rake merge_push_deploy:production
+    rake shipit:production
     
 This is deployed at: http://vistazo.herokuapp.com/
 

@@ -4,7 +4,10 @@ require 'sinatra/flash'
 module Sinatra
   module  BasicAuthentication
     def current_user
-      @current_user ||= User.find_by_uid(session['uid'])
+      unless session['uid'].nil?
+        # NOTE: Do not allow nil through, as it'll find users with user.uid == nil
+        @current_user ||= User.find_by_uid(session['uid'])
+      end
     end
     def current_user?
       current_user ? true : false
