@@ -22,12 +22,6 @@ class VistazoApp < Sinatra::Application
   set :environment, ENV["RACK_ENV"] || "development"
   set :send_from_email, APP_CONFIG["send_from_email"]
 
-  # May need to disable sessions in tests
-  # if (settings.environment == "test")
-  #   set :sessions, false
-  # else
-  #   set :sessions, true
-  # end
   enable :sessions
   
   use OmniAuth::Builder do
