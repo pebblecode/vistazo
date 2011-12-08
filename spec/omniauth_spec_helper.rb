@@ -50,10 +50,14 @@ module OmniauthSpecHelper
   
   def login!(session)
     get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:google_oauth2] }
-    session['uid'] = last_request.session['uid']
-  
+
+    session.merge!(last_request.session)
     # Logged in user should have the same uid as login credentials
     session['uid'].should == OmniAuth.config.mock_auth[:google_oauth2]['uid']
+    
+    # Should redirect to homepage
+    follow_redirect_with_session_login!(session)
+    last_request.path.should == "/"
   end
 
   # Based on Rack::Test::Session::follow_redirect!

@@ -47,22 +47,14 @@ describe "Authentication:" do
     it "should create a new account with the user's name" do
       User.count.should == 0
       
-      get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:google_oauth2] }
-      last_request.session[:flash][:success].should include("Welcome to Vistazo!")
-      
-      @session.merge!(last_request.session)
-      # Logged in user should have the same uid as login credentials
-      @session['uid'].should == OmniAuth.config.mock_auth[:google_oauth2]['uid']
+      login!(@session)
       
       # Should create new user
       User.count.should == 1
       
+      # Should create new user account with user name
       account = User.first.account
       account.name.should == "Tu Tak Tran's schedule"
-      
-      # Should redirect to homepage
-      follow_redirect_with_session_login!(@session)
-      last_request.path.should == "/"
       
       # Should redirect to account page
       follow_redirect_with_session_login!(@session)
