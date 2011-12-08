@@ -58,7 +58,6 @@ describe "Authentication:" do
       User.count.should == 1
       
       account = User.first.account
-      account.should_not == nil
       account.name.should == "Tu Tak Tran's schedule"
       
       # Should redirect to homepage
