@@ -42,11 +42,63 @@ describe "Authentication:" do
     clean_db!
   end
   
+  
+  class SessionData
+    def initialize(cookies)
+      @cookies = cookies
+      @data = cookies['rack.session']
+      if @data
+        @data = @data.unpack("m*").first
+        @data = Marshal.load(@data)
+      else
+        @data = {}
+      end
+    end
+    
+    def [](key)
+      @data[key]
+    end
+    
+    def []=(key, value)
+      @data[key] = value
+      session_data = Marshal.dump(@data)
+      session_data = [session_data].pack("m*")
+      @cookies.merge("rack.session=#{Rack::Utils.escape(session_data)}", URI.parse("//example.org//"))
+      raise "session variable not set" unless @cookies['rack.session'] == session_data
+    end
+  end
+  def session
+    SessionData.new(rack_test_session.instance_variable_get(:@rack_mock_session).cookie_jar)
+  end
+  
   describe "Logging in as a new user" do
     it "should create a new account with the user's name" do
-      login!
-      # get_with_login "/"
-      debugger
+      # login!
+      
+      User.count.should == 0
+      get '/auth/google_oauth2/callback', nil, {"omniauth.auth" => OmniAuth.config.mock_auth[:google_oauth2] }
+      
+      # session.merge(last_request.session) # TODO: Implement this
+      session['uid'] = last_request.session['uid']
+      session['flash'] = last_request.session['flash']
+      
+      User.count.should == 1
+      account = User.first.account
+      
+      get "/", nil, "rack.session" => {"uid" => session['uid']} # session uid is passed through correctly, but gets stuck on Sinatra::Base session
+      
+      # Redirect to homepage
+      last_request.path.should == "/"
+      
+      follow_redirect_with_login!
+      
+      last_request.path.should == "/#{account.id}"
+      
+      follow_redirect_with_login!
+      
+      # Redirect to current week
+      last_request.path.should == "/#{account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+      
       last_response.body.should include("Tu Tak Tran's schedule")
     end
   end

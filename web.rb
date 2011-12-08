@@ -57,22 +57,24 @@ class VistazoApp < Sinatra::Application
 
   ##############################################################################
 
-  helpers do
-    include Rack::Utils
-    alias_method :h, :escape_html
-    
-    # More methods in /helpers/*
-  end
-  
-  MONDAY = 1
-  TUESDAY = 2
-  WEDNESDAY = 3
-  THURSDAY = 4
-  FRIDAY = 5
-  START_YEAR = 2010
-  NUM_WEEKS_IN_A_YEAR = 52
-
 end
+
+helpers do
+  include Rack::Utils
+  alias_method :h, :escape_html
+  
+  # More methods in /helpers/*
+end
+
+# Constants
+
+MONDAY = 1
+TUESDAY = 2
+WEDNESDAY = 3
+THURSDAY = 4
+FRIDAY = 5
+START_YEAR = 2010
+NUM_WEEKS_IN_A_YEAR = 52
 
 require_relative 'models/init'
 require_relative 'helpers/init'
