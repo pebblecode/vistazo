@@ -10,7 +10,7 @@ module OmniauthSpecHelper
     }
   })
 
-  # Based on https://gist.github.com/375973 (from http://stackoverflow.com/a/3892401/111884)
+  # SessionData idea based on http://gist.github.com/375973 (from http://stackoverflow.com/a/3892401/111884)
   class SessionData
     def initialize(cookies)
       @cookies = cookies
@@ -42,6 +42,10 @@ module OmniauthSpecHelper
     def merge!(session_hash)
       @data.merge!(session_hash)
     end
+  end
+  
+  def init_omniauth_session
+    SessionData.new(rack_test_session.instance_variable_get(:@rack_mock_session).cookie_jar)
   end
   
   def login!(session)

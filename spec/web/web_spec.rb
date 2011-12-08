@@ -36,7 +36,7 @@ end
 describe "Authentication:" do
   before do
     http_authorization!
-    @session = SessionData.new(rack_test_session.instance_variable_get(:@rack_mock_session).cookie_jar)
+    @session = init_omniauth_session
   end
   
   after do
