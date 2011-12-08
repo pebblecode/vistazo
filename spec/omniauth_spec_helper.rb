@@ -2,7 +2,14 @@
 module OmniauthSpecHelper
   # Omniauth settings
   OmniAuth.config.test_mode = true
-  OmniAuth.config.add_mock(:google_oauth2, {
+  OmniAuth.config.add_mock(:normal_user, {
+    :uid => '113782480773906051024',
+    :info => {
+      :email => "vistazo.test@gmail.com",
+      :name => 'Vistazo Test'
+    }
+  })
+  OmniAuth.config.add_mock(:super_admin, {
     :uid => '111965288093828509275',
     :info => {
       :email => "ttt@pebblecode.com",
@@ -48,18 +55,19 @@ module OmniauthSpecHelper
     SessionData.new(rack_test_session.instance_variable_get(:@rack_mock_session).cookie_jar)
   end
   
-  def login!(session)
-    get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:google_oauth2] }
+  def login!(omniauth_mock_user_key, session)
+    get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[omniauth_mock_user_key] }
 
     session.merge!(last_request.session)
     # Logged in user should have the same uid as login credentials
-    session['uid'].should == OmniAuth.config.mock_auth[:google_oauth2]['uid']
+    session['uid'].should == OmniAuth.config.mock_auth[omniauth_mock_user_key]['uid']
     
     # Should redirect to homepage
     follow_redirect_with_session_login!(session)
     last_request.path.should == "/"
     
-    account = User.first.account
+    # Find account by uid
+    account = User.find_by_uid(session['uid']).account
     
     # Should redirect to account page
     follow_redirect_with_session_login!(@session)

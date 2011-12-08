@@ -29,6 +29,12 @@ describe "Homepage" do
   
 end
 
+describe "Accounts:" do
+
+  pending "Can't have multiple people with the same email address"
+  
+end
+
 describe "Authentication:" do
   before do
     http_authorization!
@@ -44,23 +50,23 @@ describe "Authentication:" do
     it "should create a new account with the user's name" do
       User.count.should == 0
       
-      login!(@session)
+      login!(:normal_user, @session)
       
       # Should create new user
       User.count.should == 1
       
       # Should create new user account with user name
-      account = User.first.account
-      account.name.should == "Tu Tak Tran's schedule"
+      account = User.first.account # Only have 1 user, so find first works
+      account.name.should == "Vistazo Test's schedule"
       
-      last_response.body.should include("Tu Tak Tran's schedule")
+      last_response.body.should include("Vistazo Test's schedule")
       last_response.body.should include("Welcome to Vistazo")
     end
   end
   
   describe "Logging out" do
     it "should return to homepage" do
-      login!(@session)
+      login!(:normal_user, @session)
       
       get_with_session_login '/logout', @session
       last_request.session['uid'].should == nil
@@ -87,8 +93,15 @@ describe "Admin:" do
   
   describe "Logged in super admin" do
     it "should have 'is-super-admin' in the body class" do
-      login!(@session)
+      login!(:super_admin, @session)
       last_response.body.should include("<body class='is-super-admin'>")
+    end
+  end
+  
+  describe "Logged in normal user" do
+    it "should not have 'is-super-admin' in the body class" do
+      login!(:normal_user, @session)
+      last_response.body.should_not include("<body class='is-super-admin'>")
     end
   end
   
@@ -98,8 +111,38 @@ describe "Admin:" do
       last_response.body.should_not include('Reset database')
     end
     
-    it "should only show if ttt@pebblecode.com is logged in" do 
-      pending "check that ttt@pebblecode.com is logged in"
+    it "should only show if a user with the email ttt@pebblecode.com is logged in" do       
+      User.count.should == 0
+      login!(:super_admin, @session)
+      last_response.body.should include('Reset database')
+      User.count.should == 1
+      
+      # Change email
+      user = User.first
+      user.email.should == "ttt@pebblecode.com"
+      user.email = "fake.ttt@pebblecode.com"
+      user.save
+      user.should be_valid
+      
+      # Shouldn't see reset database anymore
+      user.email.should_not == "ttt@pebblecode.com"
+      login!(:super_admin, @session)
+      last_response.body.should_not include('Reset database')
+      
+      get '/logout'
+      
+      # Shouldn't see reset database as a normal user
+      login!(:normal_user, @session)
+      last_response.body.should_not include('Reset database')
+      
+      # But if the email changes, then you will see it
+      normal_user = User.find_by_email("vistazo.test@gmail.com")
+      normal_user.email = "ttt@pebblecode.com" # Can have multiple people with the same email! Yikes!
+      normal_user.save
+      normal_user.should be_valid
+      
+      login!(:normal_user, @session)
+      last_response.body.should include('Reset database')
     end
   end
 end
