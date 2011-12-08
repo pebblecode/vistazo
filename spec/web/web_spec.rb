@@ -45,7 +45,8 @@ describe "Authentication:" do
   describe "Logging in as a new user" do
     it "should create a new account with the user's name" do
       login!
-      # debugger
+      # get_with_login "/"
+      debugger
       last_response.body.should include("Tu Tak Tran's schedule")
     end
   end
