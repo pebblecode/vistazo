@@ -36,14 +36,11 @@ end
 describe "Authentication:" do
   before do
     http_authorization!
+    @session = SessionData.new(rack_test_session.instance_variable_get(:@rack_mock_session).cookie_jar)
   end
   
   after do
     clean_db!
-  end
-  
-  def session
-    SessionData.new(rack_test_session.instance_variable_get(:@rack_mock_session).cookie_jar)
   end
   
   describe "Logging in as a new user" do
@@ -51,12 +48,11 @@ describe "Authentication:" do
       User.count.should == 0
       
       get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:google_oauth2] }
-      
       last_request.session[:flash][:success].should include("Welcome to Vistazo!")
       
-      session['uid'] = last_request.session['uid']
+      @session.merge!(last_request.session)
       # Logged in user should have the same uid as login credentials
-      session['uid'].should == OmniAuth.config.mock_auth[:google_oauth2]['uid']
+      @session['uid'].should == OmniAuth.config.mock_auth[:google_oauth2]['uid']
       
       # Should create new user
       User.count.should == 1
@@ -65,30 +61,27 @@ describe "Authentication:" do
       account.should_not == nil
       account.name.should == "Tu Tak Tran's schedule"
       
-      get_with_session_login "/"
-      
-      # Redirect to homepage
+      # Should redirect to homepage
+      follow_redirect_with_session_login!(@session)
       last_request.path.should == "/"
       
-      follow_redirect_with_session_login!(session)
-      
-      # Redirect to account page
+      # Should redirect to account page
+      follow_redirect_with_session_login!(@session)
       last_request.path.should == "/#{account.id}"
       
-      follow_redirect_with_session_login!(session)
-      
-      # Redirect to current week
+      # Should redirect to current week
+      follow_redirect_with_session_login!(@session)
       last_request.path.should == "/#{account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
-      
       last_response.body.should include("Tu Tak Tran's schedule")
+      last_response.body.should include("Welcome to Vistazo")
     end
   end
   
   describe "Logging out" do
     it "should return to homepage" do
-      login!(session)
+      login!(@session)
       
-      get_with_session_login '/logout'
+      get_with_session_login '/logout', @session
       last_request.session['uid'].should == nil
       last_request.session[:flash][:success] == "Logged out successfully"
       

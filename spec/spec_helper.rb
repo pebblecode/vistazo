@@ -57,6 +57,14 @@ class SessionData
     @cookies.merge("rack.session=#{Rack::Utils.escape(session_data)}", URI.parse("//example.org//"))
     raise "session variable not set" unless @cookies['rack.session'] == session_data
   end
+  
+  def to_hash
+    @data
+  end
+  
+  def merge!(session_hash)
+    @data.merge!(session_hash)
+  end
 end
 
 def login!(session)
@@ -73,10 +81,13 @@ def follow_redirect_with_session_login!(session)
     raise Error.new("Last response was not a redirect. Cannot follow_redirect!")
   end
 
-  get(last_response["Location"], {}, { "HTTP_REFERER" => last_request.url, "rack.session" => {"uid" => session['uid']} })
+  get(last_response["Location"], {}, { "HTTP_REFERER" => last_request.url, "rack.session" => session.to_hash })
+  
+  # Merge last session data
+  session.merge!(last_request.session)
 end
 
-def get_with_session_login(path)
+def get_with_session_login(path, session)
   get path, nil, {"rack.session" => {"uid" => session['uid']}}
 end
 
