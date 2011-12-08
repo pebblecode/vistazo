@@ -58,6 +58,16 @@ module OmniauthSpecHelper
     # Should redirect to homepage
     follow_redirect_with_session_login!(session)
     last_request.path.should == "/"
+    
+    account = User.first.account
+    
+    # Should redirect to account page
+    follow_redirect_with_session_login!(@session)
+    last_request.path.should == "/#{account.id}"
+    
+    # Should redirect to current week
+    follow_redirect_with_session_login!(@session)
+    last_request.path.should == "/#{account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
   end
 
   # Based on Rack::Test::Session::follow_redirect!
