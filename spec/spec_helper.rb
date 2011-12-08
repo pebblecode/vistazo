@@ -33,24 +33,43 @@ def http_authorization!
   authorize 'vistazo', 'vistazo'
 end
 
-# TODO: Get this working. See http://stackoverflow.com/q/8419286/111884
-def login!
-  # Disable sessions, and set manually
-  # app.send(:set, :sessions, false)
+# Based on https://gist.github.com/375973 (from http://stackoverflow.com/a/3892401/111884)
+class SessionData
+  def initialize(cookies)
+    @cookies = cookies
+    @data = cookies['rack.session']
+    if @data
+      @data = @data.unpack("m*").first
+      @data = Marshal.load(@data)
+    else
+      @data = {}
+    end
+  end
   
-  get '/auth/google_oauth2/callback', nil, {"omniauth.auth" => OmniAuth.config.mock_auth[:google_oauth2] }
-  # last_request.session => {"uid"=>"111965288093828509275", :flash=>{:success=>"Welcome to Vistazo! We're ready for you to add projects for yourself."}}
-  # last_response.body => ""
+  def [](key)
+    @data[key]
+  end
   
-  follow_redirect!
-  # last_request.session => {:flash=>{}}
-  # last_response.body => Html for the homepage, which is what I want  
-  # HERE lies the problem!
+  def []=(key, value)
+    @data[key] = value
+    session_data = Marshal.dump(@data)
+    session_data = [session_data].pack("m*")
+    @cookies.merge("rack.session=#{Rack::Utils.escape(session_data)}", URI.parse("//example.org//"))
+    raise "session variable not set" unless @cookies['rack.session'] == session_data
+  end
+end
+
+def login!(session)
+  get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:google_oauth2] }
+  session['uid'] = last_request.session['uid']
   
+  # Logged in user should same uid as login credentials
+  session['uid'].should == OmniAuth.config.mock_auth[:google_oauth2]['uid']
 end
 
 # Based on Rack::Test::Session::follow_redirect!
-def follow_redirect_with_session_login!
+# Note: this will add 
+def follow_redirect_with_session_login!(session)
   unless last_response.redirect?
     raise Error.new("Last response was not a redirect. Cannot follow_redirect!")
   end

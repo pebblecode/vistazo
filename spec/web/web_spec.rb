@@ -42,31 +42,6 @@ describe "Authentication:" do
     clean_db!
   end
   
-  
-  class SessionData
-    def initialize(cookies)
-      @cookies = cookies
-      @data = cookies['rack.session']
-      if @data
-        @data = @data.unpack("m*").first
-        @data = Marshal.load(@data)
-      else
-        @data = {}
-      end
-    end
-    
-    def [](key)
-      @data[key]
-    end
-    
-    def []=(key, value)
-      @data[key] = value
-      session_data = Marshal.dump(@data)
-      session_data = [session_data].pack("m*")
-      @cookies.merge("rack.session=#{Rack::Utils.escape(session_data)}", URI.parse("//example.org//"))
-      raise "session variable not set" unless @cookies['rack.session'] == session_data
-    end
-  end
   def session
     SessionData.new(rack_test_session.instance_variable_get(:@rack_mock_session).cookie_jar)
   end
@@ -79,8 +54,8 @@ describe "Authentication:" do
       
       last_request.session[:flash][:success].should include("Welcome to Vistazo!")
       
-      # Should have same uid as login credentials
       session['uid'] = last_request.session['uid']
+      # Logged in user should same uid as login credentials
       session['uid'].should == OmniAuth.config.mock_auth[:google_oauth2]['uid']
       
       # Should create new user
@@ -95,12 +70,12 @@ describe "Authentication:" do
       # Redirect to homepage
       last_request.path.should == "/"
       
-      follow_redirect_with_session_login!
+      follow_redirect_with_session_login!(session)
       
       # Redirect to account page
       last_request.path.should == "/#{account.id}"
       
-      follow_redirect_with_session_login!
+      follow_redirect_with_session_login!(session)
       
       # Redirect to current week
       last_request.path.should == "/#{account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
@@ -110,14 +85,15 @@ describe "Authentication:" do
   end
   
   describe "Logging out" do
-    pending "should return to homepage" do
-      get '/auth/google_oauth2/'
+    it "should return to homepage" do
+      login!(session)
       
-      get '/logout'
-      last_response.status.should == 302 # Follow redirect
+      get_with_session_login '/logout'
+      last_request.session['uid'].should == nil
+      last_request.session[:flash][:success] == "Logged out successfully"
+      
       follow_redirect!
       last_request.path.should == "/"
-      last_response.body.should include("Logged out successfully")
     end
   end
 end
