@@ -30,9 +30,21 @@ describe "Homepage" do
 end
 
 describe "Accounts:" do
-
   pending "Can't have multiple people with the same email address"
-  
+
+  pending "User going into the wrong account"
+end
+
+describe "Team members:" do
+  pending "Add team members"
+end
+
+describe "Projects:" do
+  pending "Colour settings"
+end
+
+describe "Users:" do
+  pending "Add users (email etc.)"
 end
 
 describe "Authentication:" do
@@ -63,6 +75,12 @@ describe "Authentication:" do
       last_response.body.should include("Welcome to Vistazo")
     end
   end
+  
+  pending "Login rejected workflow"
+  
+  pending "Logging in as an existing user"
+  
+  pending "Protect all pages with login redirect"
   
   describe "Logging out" do
     it "should return to homepage" do
