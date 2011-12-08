@@ -22,10 +22,6 @@ describe "Homepage" do
     http_authorization!
   end
   
-  after do
-    clean_db!
-  end
-  
   it "should return show welcome message" do
     get '/'
     last_response.body.should include('Welcome to the Vistazo prototype')
@@ -41,6 +37,7 @@ describe "Authentication:" do
   
   after do
     clean_db!
+    @session = nil
   end
   
   describe "Logging in as a new user" do
