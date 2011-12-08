@@ -63,12 +63,11 @@ def login!(session)
   get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:google_oauth2] }
   session['uid'] = last_request.session['uid']
   
-  # Logged in user should same uid as login credentials
+  # Logged in user should have the same uid as login credentials
   session['uid'].should == OmniAuth.config.mock_auth[:google_oauth2]['uid']
 end
 
 # Based on Rack::Test::Session::follow_redirect!
-# Note: this will add 
 def follow_redirect_with_session_login!(session)
   unless last_response.redirect?
     raise Error.new("Last response was not a redirect. Cannot follow_redirect!")

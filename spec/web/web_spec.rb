@@ -55,7 +55,7 @@ describe "Authentication:" do
       last_request.session[:flash][:success].should include("Welcome to Vistazo!")
       
       session['uid'] = last_request.session['uid']
-      # Logged in user should same uid as login credentials
+      # Logged in user should have the same uid as login credentials
       session['uid'].should == OmniAuth.config.mock_auth[:google_oauth2]['uid']
       
       # Should create new user
