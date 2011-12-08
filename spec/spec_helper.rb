@@ -50,7 +50,7 @@ def login!
 end
 
 # Based on Rack::Test::Session::follow_redirect!
-def follow_redirect_with_login!
+def follow_redirect_with_session_login!
   unless last_response.redirect?
     raise Error.new("Last response was not a redirect. Cannot follow_redirect!")
   end
@@ -58,12 +58,8 @@ def follow_redirect_with_login!
   get(last_response["Location"], {}, { "HTTP_REFERER" => last_request.url, "rack.session" => {"uid" => session['uid']} })
 end
 
-def get_with_login(path)
-  app.send(:set, :sessions, false)
-  get path, nil, {"rack.session" => {"uid" => OmniAuth.config.mock_auth[:google_oauth2]["uid"]}}
-  # get "/", nil, "rack.session" => {"uid" => '111965288093828509275'}
-  # last_request.session => {"uid"=>"111965288093828509275"}
-  # get "/", nil, "rack.session" => {"uid" => OmniAuth.config.mock_auth[:google_oauth2]["uid"]}
+def get_with_session_login(path)
+  get path, nil, {"rack.session" => {"uid" => session['uid']}}
 end
 
 def clean_db!

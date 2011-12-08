@@ -73,28 +73,34 @@ describe "Authentication:" do
   
   describe "Logging in as a new user" do
     it "should create a new account with the user's name" do
-      # login!
-      
       User.count.should == 0
-      get '/auth/google_oauth2/callback', nil, {"omniauth.auth" => OmniAuth.config.mock_auth[:google_oauth2] }
       
-      # session.merge(last_request.session) # TODO: Implement this
+      get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:google_oauth2] }
+      
+      last_request.session[:flash][:success].should include("Welcome to Vistazo!")
+      
+      # Should have same uid as login credentials
       session['uid'] = last_request.session['uid']
-      session['flash'] = last_request.session['flash']
+      session['uid'].should == OmniAuth.config.mock_auth[:google_oauth2]['uid']
       
+      # Should create new user
       User.count.should == 1
-      account = User.first.account
       
-      get "/", nil, "rack.session" => {"uid" => session['uid']} # session uid is passed through correctly, but gets stuck on Sinatra::Base session
+      account = User.first.account
+      account.should_not == nil
+      account.name.should == "Tu Tak Tran's schedule"
+      
+      get_with_session_login "/"
       
       # Redirect to homepage
       last_request.path.should == "/"
       
-      follow_redirect_with_login!
+      follow_redirect_with_session_login!
       
+      # Redirect to account page
       last_request.path.should == "/#{account.id}"
       
-      follow_redirect_with_login!
+      follow_redirect_with_session_login!
       
       # Redirect to current week
       last_request.path.should == "/#{account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
