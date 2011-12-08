@@ -12,6 +12,7 @@ require 'factory_girl'
 require 'ruby-debug'
 
 require 'omniauth_spec_helper'
+require 'mongodb_spec_helper'
 
 # Include Rack::Test in all rspec tests
 RSpec.configure do |conf|
@@ -19,16 +20,11 @@ RSpec.configure do |conf|
   conf.mock_with :rspec
   
   conf.include OmniauthSpecHelper
+  conf.include MongoDBSpecHelper
 end
 
 # Helper methods
 
 def http_authorization!
   authorize 'vistazo', 'vistazo'
-end
-
-def clean_db!
-  MongoMapper.database.collections.each do |coll|
-    coll.remove
-  end
 end
