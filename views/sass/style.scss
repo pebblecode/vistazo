@@ -10,6 +10,7 @@ $flash_blue: #339BB9;
 $flash_green: #57A957;
 $flash_black: #404040;
 $flash_yellow: #EEDC94;
+$vistazo_blue: #29ABE2;
 
 
 /* General styles
@@ -591,8 +592,122 @@ body {
 -----------------------------------------------------------------------------*/
 
 .homepage {
+  #top-nav{
+    margin-bottom: 60px;
+  }
+  h1 {
+    float: none;
+    text-align: center;
+    font-size: 4.5em;
+    margin: 15px 0 10px 0;
+  }
   #main {
+    width: 770px;
     padding: 10px;
+    min-height: 520px;
+    
+    #screenshot {
+      float: left;
+      background-image: url(../img/screenshot.png);
+      height: 210px;
+      width: 350px;
+      margin: 20px 15px 20px 20px ;
+      border-radius: 5px;
+      -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    #intro{
+      float: left;
+      margin: 20px 20px 20px 15px ;
+      width: 350px;
+      height: 200px;
+      color: #999;
+      
+      span{
+        color: $vistazo_blue;
+      }
+    }
+    #email-input{
+      width: 340px;
+      padding: 5px;
+      font-style: oblique;
+      color: #ddd;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+    }
+    #start-btn{
+      background-color: $vistazo_blue;
+      color: #fff;
+      border-radius: 5px;
+      height: 38px;
+      text-align: center;
+      font-family: 'MenschBold';
+      font-size: 2.2em;
+      letter-spacing: 0;
+      padding: 8px 0 1px 0;
+      text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+      border: 1px solid #259acb;
+      -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      
+      &:hover{
+        text-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25), 
+                    inset 0 3px 0 rgba(255, 255, 255, 0.15),
+                    inset 0 -3px 0 rgba(0, 0, 0, 0.05);
+      }
+      
+      &:active{
+        margin: 1px 0 -1px 0;
+        background-color: #28a6db;
+      }
+      
+      span{
+        font-size: 15px;
+      }
+    }
+    hr{
+      float: left;
+      width: 740px;
+      margin: 10px 20px;
+      border: 0;
+      border-top: 1px dotted #eee;
+    }
+    .www{
+      float: left;
+      margin: 20px 20px 10px 20px; 
+      width: 223px;
+      color: #bbb;
+      font-size: 0.9em;
+    }
+    .www2{
+      margin: 20px 20px 10px 10px; 
+    }
+    .www-icon{
+      float: left;
+      margin-right: 10px;
+    }
+    #existing-user{
+      margin: 20px 20px 10px 20px;
+      font-style: oblique;
+      font-size: 1.2em;
+      float: left;
+      color: #999;
+    }
+    #email-input-2{
+      font-size: 16px;
+      margin: -6px 0px 0 16px;
+      width: 330px;
+      float: right;
+      padding: 5px;
+      font-style: oblique;
+      color: #ddd;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+    }
     h1 {
       color: #999999;
       float: none;
