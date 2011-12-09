@@ -49,11 +49,11 @@ describe "Accounts:" do
       # Create user and account
       login_normal_user_with_session!(@session)
       logout_session!(@session)
-    
+      
       account = User.first.account
       get_with_session_login! "/#{account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}", @session
       follow_redirect_with_session_login!(@session)
-    
+      
       last_response.body.should include("You must be logged in")
       last_response.body.should include("Sign in")
     end
@@ -61,7 +61,39 @@ describe "Accounts:" do
   
   pending "Can't have multiple people with the same email address"
 
-  pending "User going into the wrong account"
+  describe "User going into the wrong account" do
+    it "should redirect them to their account week view and show an error message" do
+      # Create super admin user and account
+      login_super_admin_with_session!(@session)
+      super_admin = user_from_session(@session)
+      super_admin_account = super_admin.account
+      logout_session!(@session)
+      
+      # Create normal user account
+      login_normal_user_with_session!(@session)
+      normal_user = user_from_session(@session)
+      normal_user_account = normal_user.account
+      
+      # Try and log into super user account as normal user
+      get_with_session_login! "/#{super_admin_account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}", @session
+      follow_redirect_with_session_login!(@session)
+      
+      # Redirect to homepage
+      last_request.path.should == "/"
+      
+      # Redirect to normal user account page
+      follow_redirect_with_session_login!(@session)
+      last_request.path.should == "/#{normal_user_account.id}"
+      
+      # Redirect to normal user week view
+      follow_redirect_with_session_login!(@session)
+      last_request.path.should == "/#{normal_user_account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+      
+      last_response.body.should include("You're not authorized to view this page")
+      
+    end
+  end
+  
 end
 
 describe "Team members:" do

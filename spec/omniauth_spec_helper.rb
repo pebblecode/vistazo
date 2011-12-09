@@ -117,4 +117,8 @@ module OmniauthSpecHelper
     get_with_session_login(path, session)
     session.merge!(last_request.session)
   end
+  
+  def user_from_session(session)
+    session['uid'].nil? ? nil: User.find_by_uid(session['uid'])
+  end
 end
