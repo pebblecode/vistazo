@@ -32,7 +32,7 @@ describe "Homepage" do
   
   it "should return show welcome message" do
     get '/'
-    last_response.body.should include('Welcome to the Vistazo prototype')
+    last_response.body.should include('Enter your Google mail address to create your first team and start using Vistazo!')
   end
   
   it "should have sign in link" do
