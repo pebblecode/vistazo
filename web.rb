@@ -162,7 +162,7 @@ get '/' do
   if current_user?
     redirect "/#{current_user.account.url_slug}" if current_user.account
   end
-  erb :main
+  erb :homepage, :layout => false
 end
 
 # Vistazo weekly view - the crux of the app

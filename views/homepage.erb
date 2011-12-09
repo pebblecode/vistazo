@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>Vistazo</title>
+  
+  <link href='http://fonts.googleapis.com/css?family=Cabin:400,700,400italic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="/fonts/fonts.css" type="text/css" />
+  <link rel="stylesheet" href="/css/style.css" type="text/css" />
+  <% if @projects.present? %>
+    <style type="text/css">
+      <% for project in @projects %>
+        <%= ".#{project.css_class}" %> {
+          background-color: <%= "#{project.hex_colour}" %>;
+        }
+      <% end %>
+    </style>
+  <% end %>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+  <script src="/js/jquery.labelify.js" type="text/javascript"></script>
+  <script src="/js/script.js" type="text/javascript"></script>
+  
+  
+</head>
+<body class="homepage">
+  <div id="top-nav">
+    <h1><a href="/">VISTAZO</a></h1>
+  </div>
+  
+  <%= styled_flash %>
+  
+  <div id="main">
+    <h1>Welcome to the Vistazo prototype</h1>
+    <p><a class="project" href="/auth/google_oauth2/">Sign in</a> with your Google account</p>
+  </div>
+
+</body>
