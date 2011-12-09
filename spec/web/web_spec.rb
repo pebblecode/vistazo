@@ -150,7 +150,33 @@ describe "Authentication:" do
     end
   end
   
-  pending "Login rejected workflow"
+  describe "Logging in with wrong credentials:" do
+    describe "empty omniauth.auth hash" do
+      it "should redirect to homepage with error message" do
+        get_with_session_login! google_oauth2_callback_path, @session
+        follow_redirect_with_session_login!(@session)
+
+        last_request.path.should == "/"
+        last_response.body.should include("Invalid login.")
+      end
+    end
+    
+    describe "nil uid" do
+      it "should ..." do
+        OmniAuth.config.add_mock(:nil_user, {
+          :uid => '',
+          :info => {
+            :email => '',
+            :name => ''
+          }
+        })
+        get google_oauth2_callback_path, nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:nil_user] }
+        
+        
+        
+      end
+    end
+  end
   
   describe "Logging in as an existing user" do
     it "should redirect them to their account week view" do

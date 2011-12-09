@@ -1,8 +1,18 @@
 # Helper methods to navigate to paths in the application
 module PathSpecHelper
   
+  def homepage
+    '/'
+  end
+  
+  def google_oauth2_callback_path
+    '/auth/google_oauth2/callback'
+  end
+  
+  # Accounts/users
+  
   def account_path(account)
-  "/#{account.id}"
+    "/#{account.id}"
   end
   
   def account_current_week_path(account)
