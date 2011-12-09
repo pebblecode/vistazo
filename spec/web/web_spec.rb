@@ -147,7 +147,16 @@ describe "Authentication:" do
   
   pending "Login rejected workflow"
   
-  pending "Logging in as an existing user"
+  describe "Logging in as an existing user" do
+    it "should redirect them to their account week view" do
+      create_normal_user(@session)
+      
+      login_normal_user_with_session!(@session)
+      account = user_from_session(@session).account
+      last_request.path.should == "/#{account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+      last_response.body.should include("Vistazo Test's schedule")
+    end
+  end
   
   pending "Protect all pages with login redirect"
   

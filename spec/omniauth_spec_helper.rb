@@ -121,4 +121,10 @@ module OmniauthSpecHelper
   def user_from_session(session)
     session['uid'].nil? ? nil: User.find_by_uid(session['uid'])
   end
+  
+  def create_normal_user(session)
+    # Create a new login for normal user will create a new user and account
+    login_normal_user_with_session!(session)
+    logout_session!(session)
+  end
 end
