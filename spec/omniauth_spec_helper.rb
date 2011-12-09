@@ -55,6 +55,14 @@ module OmniauthSpecHelper
     SessionData.new(rack_test_session.instance_variable_get(:@rack_mock_session).cookie_jar)
   end
   
+  def login_normal_user_with_session!(session)
+    login!(:normal_user, session)
+  end
+  
+  def login_super_admin_with_session!(session)
+    login!(:super_admin, session)
+  end
+  
   def login!(omniauth_mock_user_key, session)
     get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[omniauth_mock_user_key] }
 
@@ -77,6 +85,15 @@ module OmniauthSpecHelper
     follow_redirect_with_session_login!(@session)
     last_request.path.should == "/#{account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
   end
+  
+  def logout_session!(session)
+    get_with_session_login! '/logout', session
+    
+    last_request.session['uid'].should == nil
+    last_request.session[:flash][:success] == "Logged out successfully"
+    
+    follow_redirect_with_session_login!(session)
+  end
 
   # Based on Rack::Test::Session::follow_redirect!
   def follow_redirect_with_session_login!(session)
@@ -90,7 +107,14 @@ module OmniauthSpecHelper
     session.merge!(last_request.session)
   end
 
+  # Get using session data. Does **not** merge session data after get request.
   def get_with_session_login(path, session)
     get path, nil, {"rack.session" => {"uid" => session['uid']}}
+  end
+  
+  # Get using session data. **Merges** session data after get request.
+  def get_with_session_login!(path, session)
+    get_with_session_login(path, session)
+    session.merge!(last_request.session)
   end
 end

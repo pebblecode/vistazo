@@ -58,12 +58,32 @@ describe "Authentication:" do
     clean_db!
     @session = nil
   end
+
+  describe "Mandatory log in" do
+    it "should be required on homepage" do
+      get '/'
+      last_response.body.should include("Sign in")
+    end
+    
+    it "should be required on an account's week page" do
+      # Create user and account
+      login_normal_user_with_session!(@session)
+      logout_session!(@session)
+      
+      account = User.first.account
+      get_with_session_login! "/#{account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}", @session
+      follow_redirect_with_session_login!(@session)
+      
+      last_response.body.should include("You must be logged in")
+      last_response.body.should include("Sign in")
+    end
+  end
   
   describe "Logging in as a new user" do
     it "should create a new account with the user's name" do
       User.count.should == 0
       
-      login!(:normal_user, @session)
+      login_normal_user_with_session!(@session)
       
       # Should create new user
       User.count.should == 1
@@ -85,13 +105,9 @@ describe "Authentication:" do
   
   describe "Logging out" do
     it "should return to homepage" do
-      login!(:normal_user, @session)
+      login_normal_user_with_session!(@session)
+      logout_session!(@session)
       
-      get_with_session_login '/logout', @session
-      last_request.session['uid'].should == nil
-      last_request.session[:flash][:success] == "Logged out successfully"
-      
-      follow_redirect!
       last_request.path.should == "/"
     end
   end
@@ -112,14 +128,14 @@ describe "Admin:" do
   
   describe "Logged in super admin" do
     it "should have 'is-super-admin' in the body class" do
-      login!(:super_admin, @session)
+      login_super_admin_with_session!(@session)
       last_response.body.should include("<body class='is-super-admin'>")
     end
   end
   
   describe "Logged in normal user" do
     it "should not have 'is-super-admin' in the body class" do
-      login!(:normal_user, @session)
+      login_normal_user_with_session!(@session)
       last_response.body.should_not include("<body class='is-super-admin'>")
     end
   end
@@ -132,7 +148,7 @@ describe "Admin:" do
     
     it "should only show if a user with the email ttt@pebblecode.com is logged in" do       
       User.count.should == 0
-      login!(:super_admin, @session)
+      login_super_admin_with_session!(@session)
       last_response.body.should include('Reset database')
       User.count.should == 1
       
@@ -145,13 +161,13 @@ describe "Admin:" do
       
       # Shouldn't see reset database anymore
       user.email.should_not == "ttt@pebblecode.com"
-      login!(:super_admin, @session)
+      login_super_admin_with_session!(@session)
       last_response.body.should_not include('Reset database')
       
-      get '/logout'
+      logout_session!(@session)
       
       # Shouldn't see reset database as a normal user
-      login!(:normal_user, @session)
+      login_normal_user_with_session!(@session)
       last_response.body.should_not include('Reset database')
       
       # But if the email changes, then you will see it
@@ -160,7 +176,7 @@ describe "Admin:" do
       normal_user.save
       normal_user.should be_valid
       
-      login!(:normal_user, @session)
+      login_normal_user_with_session!(@session)
       last_response.body.should include('Reset database')
     end
   end
