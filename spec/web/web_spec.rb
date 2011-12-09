@@ -41,6 +41,7 @@ end
 
 describe "Projects:" do
   pending "Colour settings"
+  pending "Move projects"
 end
 
 describe "Users:" do
