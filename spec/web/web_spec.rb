@@ -54,9 +54,7 @@ describe "Accounts:" do
   
   describe "Week view" do
     it "should be require login" do
-      # Create user and account
-      login_normal_user_with_session!(@session)
-      logout_session!(@session)
+      create_normal_user(@session)
       
       # Find added user
       account = User.first.account
@@ -79,8 +77,7 @@ describe "Accounts:" do
       
       # Create normal user account
       login_normal_user_with_session!(@session)
-      normal_user = user_from_session(@session)
-      normal_user_account = normal_user.account
+      normal_user_account = user_from_session(@session).account
       
       # Try and log into super user account as normal user
       get_with_session_login! account_current_week_path(super_admin_account), @session
