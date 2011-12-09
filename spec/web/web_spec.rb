@@ -199,6 +199,11 @@ describe "Authentication:" do
     end
   end
   
+  describe "User save failure" do
+    # Not sure how to test this
+    pending "Should show 'Could not retrieve user' message"
+  end
+  
   describe "Logging in as an existing user" do
     it "should redirect them to their account week view" do
       create_normal_user(@session)
