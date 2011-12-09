@@ -27,15 +27,45 @@ describe "Homepage" do
     last_response.body.should include('Welcome to the Vistazo prototype')
   end
   
+  it "should have sign in link" do
+    get '/'
+    last_response.body.should include("Sign in")
+  end
 end
 
 describe "Accounts:" do
+  before do
+    http_authorization!
+    @session = init_omniauth_session
+  end
+  
+  after do
+    clean_db!
+    @session = nil
+  end
+  
+  describe "Week view" do
+    it "should be require login" do
+      # Create user and account
+      login_normal_user_with_session!(@session)
+      logout_session!(@session)
+    
+      account = User.first.account
+      get_with_session_login! "/#{account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}", @session
+      follow_redirect_with_session_login!(@session)
+    
+      last_response.body.should include("You must be logged in")
+      last_response.body.should include("Sign in")
+    end
+  end
+  
   pending "Can't have multiple people with the same email address"
 
   pending "User going into the wrong account"
 end
 
 describe "Team members:" do
+  pending "Adding team members should require log in"
   pending "Add team members"
 end
 
@@ -60,22 +90,8 @@ describe "Authentication:" do
   end
 
   describe "Mandatory log in" do
-    it "should be required on homepage" do
-      get '/'
-      last_response.body.should include("Sign in")
-    end
-    
-    it "should be required on an account's week page" do
-      # Create user and account
-      login_normal_user_with_session!(@session)
-      logout_session!(@session)
-      
-      account = User.first.account
-      get_with_session_login! "/#{account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}", @session
-      follow_redirect_with_session_login!(@session)
-      
-      last_response.body.should include("You must be logged in")
-      last_response.body.should include("Sign in")
+    it "should be tested in feature tests" do
+      true.should == true
     end
   end
   
