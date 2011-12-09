@@ -13,6 +13,7 @@ require 'ruby-debug'
 
 require 'omniauth_spec_helper'
 require 'mongodb_spec_helper'
+require 'path_spec_helper'
 
 # Include Rack::Test in all rspec tests
 RSpec.configure do |conf|
@@ -21,6 +22,7 @@ RSpec.configure do |conf|
   
   conf.include OmniauthSpecHelper
   conf.include MongoDBSpecHelper
+  conf.include PathSpecHelper
 end
 
 # Helper methods

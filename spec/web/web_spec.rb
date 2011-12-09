@@ -50,8 +50,9 @@ describe "Accounts:" do
       login_normal_user_with_session!(@session)
       logout_session!(@session)
       
+      # Find added user
       account = User.first.account
-      get_with_session_login! "/#{account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}", @session
+      get_with_session_login! account_current_week_path(account), @session
       follow_redirect_with_session_login!(@session)
       
       last_response.body.should include("You must be logged in")
@@ -65,8 +66,7 @@ describe "Accounts:" do
     it "should redirect them to their account week view and show an error message" do
       # Create super admin user and account
       login_super_admin_with_session!(@session)
-      super_admin = user_from_session(@session)
-      super_admin_account = super_admin.account
+      super_admin_account = user_from_session(@session).account
       logout_session!(@session)
       
       # Create normal user account
@@ -75,7 +75,7 @@ describe "Accounts:" do
       normal_user_account = normal_user.account
       
       # Try and log into super user account as normal user
-      get_with_session_login! "/#{super_admin_account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}", @session
+      get_with_session_login! account_current_week_path(super_admin_account), @session
       follow_redirect_with_session_login!(@session)
       
       # Redirect to homepage
@@ -83,11 +83,11 @@ describe "Accounts:" do
       
       # Redirect to normal user account page
       follow_redirect_with_session_login!(@session)
-      last_request.path.should == "/#{normal_user_account.id}"
+      last_request.path.should == user_account_path(user_from_session(@session))
       
       # Redirect to normal user week view
       follow_redirect_with_session_login!(@session)
-      last_request.path.should == "/#{normal_user_account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+      last_request.path.should == user_account_current_week_path(user_from_session(@session))
       
       last_response.body.should include("You're not authorized to view this page")
       
@@ -152,8 +152,7 @@ describe "Authentication:" do
       create_normal_user(@session)
       
       login_normal_user_with_session!(@session)
-      account = user_from_session(@session).account
-      last_request.path.should == "/#{account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+      last_request.path.should == user_account_current_week_path(user_from_session(@session))
       last_response.body.should include("Vistazo Test's schedule")
     end
   end
