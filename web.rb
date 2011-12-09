@@ -91,8 +91,14 @@ require_relative 'helpers/init'
 
 get '/auth/:provider/callback' do
   hash = request.env['omniauth.auth'].to_hash if request.env['omniauth.auth'].present?
-
-  if hash.present?
+  
+  if not(hash.present?)
+    flash[:warning] = "Invalid login: No details."
+  elsif not(hash["uid"].present?)
+    flash[:warning] = "Invalid login: No user id."
+  elsif not(hash["info"]["email"].present?)
+    flash[:warning] = "Invalid login: No email."
+  else
     @user = User.find_by_uid(hash["uid"])
     unless @user.present?
       @user = User.find_by_email(hash["info"]["email"])
@@ -137,8 +143,6 @@ get '/auth/:provider/callback' do
     end
   
     session['uid'] = @user.uid
-  else
-    flash[:warning] = "Invalid login."
   end
   
   redirect '/'
