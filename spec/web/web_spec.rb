@@ -163,17 +163,16 @@ describe "Authentication:" do
     
     describe "nil uid" do
       it "should ..." do
-        OmniAuth.config.add_mock(:nil_user, {
-          :uid => '',
-          :info => {
-            :email => '',
-            :name => ''
+        empty_oa_credentials = OmniAuth.config.mock_auth[:default].merge({
+          "uid" => '',
+          "info" => {
+            "email" => '',
+            "name" => ''
           }
         })
-        get google_oauth2_callback_path, nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:nil_user] }
+        get google_oauth2_callback_path, nil, { "omniauth.auth" => empty_oa_credentials }
         
-        
-        
+        pending "check nil output"
       end
     end
   end
