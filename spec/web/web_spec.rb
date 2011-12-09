@@ -6,13 +6,21 @@ def app
 end
 
 describe "Http authentication" do
+  after do
+    clean_db!
+  end
+  
   it "should work on all pages" do
-    all_pages = ['/', '/pebble_code_web_dev', '/pebble_code_web_dev/2011/week/48']
     
-    all_pages.each do |page|
-      get page
-      last_response.status.should == 401
-    end
+    get "/"
+    last_response.status.should == 401
+    
+    user = Factory(:user) # Create a user using factory, so that session doesn't need to be set up
+    get user_account_path(user)
+    last_response.status.should == 401
+    
+    get user_account_current_week_path(user)
+    last_response.status.should == 401
   end
   
 end
