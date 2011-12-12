@@ -4,7 +4,7 @@ ENV['RACK_ENV'] = 'test'
 # Include web.rb file
 require_relative '../web'
 # Include factories.rb file
-require_relative '../test/factories.rb'
+require_relative '../spec/factories.rb'
 
 require 'rspec'
 require 'rack/test'
