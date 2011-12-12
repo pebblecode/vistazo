@@ -297,6 +297,7 @@ describe "Error handling:" do
     end
     pending "should show error page" do
       pending "figure out how to test error page"
+      get "/error"
       last_response.status.should == 500
       last_response.body.should include("An error occurred")
     end
