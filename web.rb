@@ -506,3 +506,7 @@ end
 error do
   'Sorry, there was an error with Vistazo: ' + env['sinatra.error'].name
 end
+
+error RuntimeError do
+  'Had a RuntimeError ' + env['sinatra.error'].message
+end
