@@ -13,6 +13,24 @@ $flash_yellow: #EEDC94;
 $vistazo_blue: #29ABE2;
 
 
+/* Mixins
+-----------------------------------------------------------------------------*/
+
+@mixin emboss-box-shadow {
+  -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25),
+              inset 0 3px 0 rgba(255, 255, 255, 0.15),
+              inset 0 -3px 0 rgba(0, 0, 0, 0.05);
+  -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25),
+              inset 0 3px 0 rgba(255, 255, 255, 0.15),
+              inset 0 -3px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25),
+              inset 0 3px 0 rgba(255, 255, 255, 0.15),
+              inset 0 -3px 0 rgba(0, 0, 0, 0.05);
+  -o-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25),
+              inset 0 3px 0 rgba(255, 255, 255, 0.15),
+              inset 0 -3px 0 rgba(0, 0, 0, 0.05);
+}
+
 /* General styles
 -----------------------------------------------------------------------------*/
 
@@ -612,15 +630,14 @@ body {
     min-height: 520px;
     
     #screenshot {
+      @include border-radius(5px);
+      @include box-shadow(0, 2px, 5px, rgba(0, 0, 0, 0.1));
+      
       float: left;
       background-image: url(../img/screenshot.png);
       height: 210px;
       width: 350px;
-      margin: 20px 15px 20px 20px ;
-      border-radius: 5px;
-      -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin: 20px 15px 20px 20px;
     }
     #intro{
       float: left;
@@ -634,17 +651,20 @@ body {
       }
     }
     #email-input{
+      @include border-radius(3px);
+      
       width: 340px;
       padding: 5px;
       font-style: oblique;
       color: #ddd;
       border: 1px solid #ddd;
-      border-radius: 3px;
     }
     #start-btn{
+      @include border-radius(5px);
+      @include box-shadow(0, 2px, 5px, rgba(0, 0, 0, 0.2));
+      
       background-color: $vistazo_blue;
       color: #fff;
-      border-radius: 5px;
       height: 38px;
       text-align: center;
       font-family: 'MenschBold';
@@ -653,16 +673,11 @@ body {
       padding: 8px 0 1px 0;
       text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
       border: 1px solid #259acb;
-      -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       cursor: pointer;
       
       &:hover{
         text-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25), 
-                    inset 0 3px 0 rgba(255, 255, 255, 0.15),
-                    inset 0 -3px 0 rgba(0, 0, 0, 0.05);
+        @include emboss-box-shadow;
       }
       
       &:active{
@@ -703,6 +718,8 @@ body {
       color: #999;
     }
     #email-input-2{
+      @include border-radius(3px);
+      
       font-size: 16px;
       margin: -6px 0px 0 16px;
       width: 330px;
@@ -711,7 +728,6 @@ body {
       font-style: oblique;
       color: #ddd;
       border: 1px solid #ddd;
-      border-radius: 3px;
     }
     h1 {
       color: #999999;
