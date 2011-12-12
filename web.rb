@@ -85,7 +85,7 @@ require_relative 'helpers/init'
 ##############################################################################
 
 get "/error" do
-  raise "ERRRRORRRRR!!!"
+  raise "Sample error"
 end
 
 # ----------------------------------------------------------------------------
@@ -504,9 +504,9 @@ end
 # ----------------------------------------------------------------------------
 
 error do
-  'Sorry, there was an error with Vistazo: ' + env['sinatra.error'].name
-end
-
-error RuntimeError do
-  'Had a RuntimeError ' + env['sinatra.error'].message
+  logger.error env['sinatra.error'].exception
+  env['sinatra.error'].backtrace.each { |e| logger.error "#{e}" }
+  
+  status 500
+  erb :error
 end

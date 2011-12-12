@@ -289,3 +289,16 @@ describe "Admin:" do
     end
   end
 end
+
+describe "Error handling:" do
+  describe "Error page" do
+    it "should raise RuntimeError" do
+      lambda { get "/error" }.should raise_error(RuntimeError, "Sample error")
+    end
+    pending "should show error page" do
+      pending "figure out how to test error page"
+      last_response.status.should == 500
+      last_response.body.should include("An error occurred")
+    end
+  end
+end
