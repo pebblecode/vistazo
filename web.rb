@@ -494,3 +494,11 @@ post '/reset' do
   flash[:success] = "Successfully cleared out the database and added seed data. Enjoy!"
   redirect '/'
 end
+
+# ----------------------------------------------------------------------------
+# Error handling
+# ----------------------------------------------------------------------------
+
+error do
+  'Sorry, there was an error with Vistazo: ' + env['sinatra.error'].name
+end
