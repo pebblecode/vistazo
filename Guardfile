@@ -15,6 +15,8 @@
 # Generated from http://github.com/guard/guard-rspec
 guard 'rspec', :cli => '--color', :version => 2 do
   watch('web.rb')
+  watch(%r{^models/(.+)\.rb$})
+  watch(%r{^views/(.+)\.erb$})
 
   watch(%r{^spec/.+_spec\.rb$})
   watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
