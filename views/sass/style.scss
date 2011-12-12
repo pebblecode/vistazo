@@ -628,7 +628,7 @@ body {
   #main {
     width: 770px;
     padding: 10px;
-    min-height: 520px;
+    min-height: 480px;
     
     #screenshot {
       @include border-radius(5px);
@@ -675,6 +675,9 @@ body {
       text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
       border: 1px solid #259acb;
       cursor: pointer;
+      
+      display: block;
+      text-decoration: none;
       
       &:hover{
         text-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
