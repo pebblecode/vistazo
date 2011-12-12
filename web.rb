@@ -84,6 +84,10 @@ require_relative 'helpers/init'
 # To be moved once I figure out how to (http://stackoverflow.com/q/8356750/111884)
 ##############################################################################
 
+get "/error" do
+  raise "ERRRRORRRRR!!!"
+end
+
 # ----------------------------------------------------------------------------
 # Authentication
 # NOTE: This must be loaded first
