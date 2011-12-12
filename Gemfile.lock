@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/geronime/sinatra-enotify.git
+  revision: be8135355d93b341f155ff84a9a5b1ace6c11679
+  specs:
+    sinatra-enotify (0.0.4)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -163,6 +169,7 @@ DEPENDENCIES
   sass
   shotgun
   sinatra
+  sinatra-enotify!
   sinatra-flash
   thin
   tux

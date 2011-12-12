@@ -22,6 +22,9 @@ gem 'omniauth-google-oauth2'
 # Email
 gem 'pony'
 
+# Exception notification
+gem 'sinatra-enotify', :git => "git://github.com/geronime/sinatra-enotify.git"
+
 group :development, :test do
   # Servers
   gem 'shotgun'
