@@ -507,7 +507,44 @@ end
 # Error handling
 # ----------------------------------------------------------------------------
 
-# All other errors
+# All errors
 error do
+  send_error_email(env['sinatra.error'])
+  
   erb :error
+end
+
+# Use gmail so that it does not clog up normal emails
+def send_error_email(exception)
+  send_to_email = "dev@pebblecode.com"
+  send_from_email = settings.send_from_email
+  subject = "[#{ENV["RACK_ENV"]}] Vistazo: an error occurred"
+  
+  email_params = {
+    :address => "smtp.gmail.com",
+    :domain => "vistazoapp.com",
+    :port => '587',
+    :enable_starttls_auto => true,
+    :username => "vistazoapp",
+    :password => "5gZ*pBirc"
+  }
+  
+  @url = APP_CONFIG["base_url"]
+  @backtrace = ""
+  exception.backtrace.each { |e| @backtrace += "#{e}\n" }
+  @exception = "#{exception.class}: #{exception.message}"
+  
+  if ENV['RACK_ENV'] == "development"
+    puts "DEVELOPMENT MODE: email not actually sent, but this is what it'd look like..."
+    puts "send_from_email: #{send_from_email}"
+    puts "send_to_email: #{send_to_email}"
+    puts "params: #{email_params}"
+    puts "subject: #{subject}"
+            
+    puts erb(:error_email, :layout => false)
+  elsif (ENV['RACK_ENV'] != "test")
+    puts erb(:error_email, :layout => false)
+    
+    send_email(send_from_email, send_to_email, subject, :error_email, email_params)
+  end
 end
