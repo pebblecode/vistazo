@@ -290,6 +290,7 @@ body {
       .box {
         padding-bottom: 30px;
         cursor: pointer;
+        position: relative;
         
         &:hover {
           background: transparent url("/img/new-project.png") no-repeat center bottom;
@@ -802,12 +803,69 @@ body {
 -----------------------------------------------------------------------------*/
 
 .help-on {
-  #top-nav {
-    background-color: black;
+  #help-bg{
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('/img/hatch1.gif');
+    opacity: 0.7;
   }
+  
+  #help-nav{
+    position: absolute;
+    z-index: 110;
+    top: 0;
+    right: 0;
+    height: 197px;
+    width: 888px;
+    background: url('/img/help-nav.png');
+  }
+  
+  #help-week{
+    position: absolute;
+    top: 50px;
+    left: -175px;
+    z-index: 110;
+    height: 244px;
+    width: 307px;
+    background: url('/img/help-week.png');
+  }
+  
+  #help-new{
+    position: absolute;
+    top: 10px;
+    left: 135px;
+    z-index: 110;
+    height: 57px;
+    width: 315px;
+    background: url('/img/help-new.png');
+  }
+  
+  #help-project{
+    position: absolute;
+    z-index: 110;
+    bottom: -205px;
+    right: -275px;
+    height: 235px;
+    width: 447px;
+    background: url('/img/help-project.png');
+  }
+  
+  #help-close{
+    position: absolute;
+    z-index: 110;
+    bottom: 50px;
+    right: 50px;
+    height: 78px;
+    width: 293px;
+    background: url('/img/help-close.png');
+  }
+  
 }
-
-
+ 
 /* Super admin
 -----------------------------------------------------------------------------*/
 
