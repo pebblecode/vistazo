@@ -135,9 +135,27 @@ body {
         text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
         text-decoration: none;
         
+        &:hover{
+          text-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
+        }
+        &:active{
+          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+          line-height: 20px;
+        }
+        
         &.help {
           font-family: 'MenschBold' ;
           text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+          font-size: 17px;
+          line-height: 19px;
+          
+          &:hover{
+            text-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
+          }
+          &:active{
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+            line-height: 20px;
+          }
         }
       } // a
       
@@ -368,9 +386,18 @@ body {
   .arrows {
     font-family: 'WebSymbolsRegular';
     float: right;
-    color: rgba(41, 171, 226, 1);
+    color: $vistazo_blue;
     margin: 0px 6px 20px 6px;
     text-decoration: none;
+    
+    &:hover{
+      color: #4EC9FC;
+      text-shadow: 0 2px 0 #ddd;
+    }
+    &:active{
+      margin: 1px 6px 19px 6px;
+      text-shadow: 0 1px 0 #ddd;
+    }
   }
 
   .day {
