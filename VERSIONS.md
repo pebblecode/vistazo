@@ -1,3 +1,10 @@
+# 0.4.0
+
+* Sign up workflow
+* Invite user functionality
+* Testing framework with authentication tests
+* New homepage
+
 # 0.3.0
 
 * Design and code clean up
