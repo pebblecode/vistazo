@@ -30,14 +30,9 @@ describe "Homepage" do
     http_authorization!
   end
   
-  it "should return show welcome message" do
+  it "should have 'Start using Vistazo'" do
     get '/'
-    last_response.body.should include('Enter your Google mail address to create your first team and start using Vistazo!')
-  end
-  
-  it "should have sign in link" do
-    get '/'
-    last_response.body.should include("Sign in")
+    last_response.body.should include("Start using Vistazo")
   end
 end
 
@@ -62,7 +57,7 @@ describe "Accounts:" do
       follow_redirect_with_session_login!(@session)
       
       last_response.body.should include("You must be logged in")
-      last_response.body.should include("Sign in")
+      last_response.body.should include("Start using Vistazo")
     end
   end
   
