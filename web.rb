@@ -16,7 +16,6 @@ require 'pony'
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
 
 class VistazoApp < Sinatra::Application
-  register Sinatra::ENotify
 
   APP_CONFIG = YAML.load_file("#{root}/config/config.yml")[settings.environment.to_s]
 
@@ -494,12 +493,4 @@ post '/reset' do
 
   flash[:success] = "Successfully cleared out the database and added seed data. Enjoy!"
   redirect '/'
-end
-
-# ----------------------------------------------------------------------------
-# Error handling
-# ----------------------------------------------------------------------------
-
-error do
-  'Sorry there was a nasty error - ' + env['sinatra.error'].name
 end
