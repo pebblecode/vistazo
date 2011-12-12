@@ -20,6 +20,11 @@ $(function () {
   // Labelify new object text boxes
   $(".new-object-text-box").labelify({ labelledClass: "new-object-text-box-label" });
   
+  // Add help body class
+  $("#top-nav .action-bar .help").click(function() {
+    $("body").toggleClass("help-on");
+  });
+  
   // Project dialog
   {
     $("#new-project-dialog").hide(); // Hide by default
