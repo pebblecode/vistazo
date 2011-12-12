@@ -88,6 +88,10 @@ get "/error" do
   raise "Sample error"
 end
 
+get "/error2" do
+  1/0
+end
+
 # ----------------------------------------------------------------------------
 # Authentication
 # NOTE: This must be loaded first
@@ -503,10 +507,7 @@ end
 # Error handling
 # ----------------------------------------------------------------------------
 
+# All other errors
 error do
-  logger.error env['sinatra.error'].exception
-  env['sinatra.error'].backtrace.each { |e| logger.error "#{e}" }
-  
-  status 500
   erb :error
 end
