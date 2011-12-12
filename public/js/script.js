@@ -25,6 +25,11 @@ $(function () {
     $("body").toggleClass("help-on");
   });
   
+  //remove help body class
+  $("#help-bg, #help-nav, #help-week, #help-new, #help-close").click(function() {
+    $("body").removeClass("help-on");
+  });
+  
   // Project dialog
   {
     $("#new-project-dialog").hide(); // Hide by default
