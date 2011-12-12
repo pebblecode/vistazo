@@ -525,7 +525,7 @@ def send_error_email(exception)
     :domain => "vistazoapp.com",
     :port => '587',
     :enable_starttls_auto => true,
-    :username => "vistazoapp",
+    :user_name => "vistazoapp",
     :password => "5gZ*pBirc"
   }
   
