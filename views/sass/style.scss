@@ -368,9 +368,18 @@ body {
   .arrows {
     font-family: 'WebSymbolsRegular';
     float: right;
-    color: rgba(41, 171, 226, 1);
+    color: $vistazo_blue;
     margin: 0px 6px 20px 6px;
     text-decoration: none;
+    
+    &:hover{
+      color: #4EC9FC;
+      text-shadow: 0 2px 0 #ddd;
+    }
+    &:active{
+      margin: 1px 6px 19px 6px;
+      text-shadow: 0 1px 0 #ddd;
+    }
   }
 
   .day {
