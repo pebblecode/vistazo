@@ -518,7 +518,7 @@ end
 def send_error_email(exception)
   send_to_email = "dev@pebblecode.com"
   send_from_email = settings.send_from_email
-  subject = "[#{ENV["RACK_ENV"]}] Vistazo: an error occurred"
+  subject = "[#{settings.env}] Vistazo: an error occurred"
   
   email_params = {
     :address => "smtp.gmail.com",
