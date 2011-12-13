@@ -1,6 +1,14 @@
 <% if @account %>
   <div id="account-users-dialog">
-    <h4>Existing users</h4>
+    <h4 class="add-new-user-title">Add new user (NOTE: needs to be a Google email address)</h4>
+    <form id="invite-user-form" action="/<%= @account.url_slug %>/new-user" method="post">
+      <fieldset class="new-object-fieldset" title="Invite new user">
+        <label for="new_user_email">Invite new user</label>
+        <input type="text"name="new_user_email" title="New user email" class="new-object-text-box" /> <button type="submit" name="new_user" value="true" class="submit-button">+</button>
+      </fieldset> <!-- Invite new user -->
+    </form>
+  
+    <h4>Current users</h4>
     <% if @active_users %>
       <ul class="listing active">
         <% for user in @active_users %>
@@ -10,7 +18,7 @@
     <% end %>
     
     <% if @pending_users.present? %>
-    <h4 class="pending-users-title">Pending users (awaiting confirmation)</h4>
+    <h4 class="pending-users-title">Users awaiting registration</h4>
     <ul class="listing pending">
       <% for user in @pending_users %>
         <li><div class="list-bullet"></div><%= h user.email %><a class="resend" href="/<%= @account.url_slug %>/new-user/<%= user.id %>/resend">resend</a></li>
@@ -18,12 +26,5 @@
     </ul>
     <% end %>
     
-    <h4 class="add-new-user-title">Add new user (NOTE: needs to be a Google email address)</h4>
-    <form id="invite-user-form" action="/<%= @account.url_slug %>/new-user" method="post">
-      <fieldset class="new-object-fieldset" title="Invite new user">
-        <label for="new_user_email">Invite new user</label>
-        <input type="text"name="new_user_email" title="New user email" class="new-object-text-box" /> <button type="submit" name="new_user" value="true" class="submit-button">+</button>
-      </fieldset> <!-- Invite new user -->
-    </form>
   </div>
 <% end %>
