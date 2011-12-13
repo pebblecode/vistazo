@@ -844,14 +844,18 @@ body {
     background: url('/img/help-new.png');
   }
   
-  #help-project{
-    position: absolute;
-    z-index: 110;
-    bottom: -205px;
-    right: -275px;
-    height: 235px;
-    width: 447px;
-    background: url('/img/help-project.png');
+  #help-project-container {
+    position: relative;
+    
+    #help-project{
+      position: absolute;
+      z-index: 110;
+      bottom: -240px;
+      right: -275px;
+      height: 235px;
+      width: 447px;
+      background: url('/img/help-project.png');
+    }
   }
   
   #help-close{
