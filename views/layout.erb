@@ -25,6 +25,9 @@
   
 </head>
 <body <%= is_super_admin? ? "class='is-super-admin'" : "" %>>
+  <div id="help-bg"></div>
+  <div id="help-nav"></div>
+  <div id="help-close"></div>
   <div id="top-nav">
     <h1><a href="/">VISTAZO</a></h1> <div class="top-spacer">
     </div> 
@@ -51,9 +54,10 @@
     <ul class="action-bar">
       <% if logged_in? %>
         <li><a href="/logout" title="Log out">X</a></li>
-        <li class="logged-in-as">Logged in as: <%= current_user.name %></li>
+        <li><a href="/settings" title="User settings">U</a></li>
+        <li><a class="help" title="Coming soon" href="#">?</a></li>
+        <li class="logged-in-as"><%= current_user.name %></li>
       <% end %>
-      <li><a class="help" title="Coming soon" href="#">?</a></li>
     </ul>
     <!-- <p class="invite-user"><a href="#account-users">Invite people to view this schedule</a></p> -->
   </div>

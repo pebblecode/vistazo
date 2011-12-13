@@ -3,7 +3,7 @@
     <tr>
       <th class="first-row col1"> 
         <% if @prev_week_url.present? %>
-          <a href="<%= @prev_week_url %>" class="arrows" title="Previous week">(</a>
+          <div id="help-week"></div><a href="<%= @prev_week_url %>" class="arrows" title="Previous week">(</a>
         <% end %>
       </th>
     
@@ -61,6 +61,9 @@
                 </form>
               </div>
             <% end %>
+            <% if (work_day == THURSDAY) and (tm_index == 0) %>
+              <div id="help-project"></div>
+            <% end %>
           </td>
         <% end %>
         <td class="<%= "#{row_class} col7" %>"></td>
@@ -79,6 +82,7 @@
         <fieldset class="new-object-fieldset" title="New team member">
           <label for="new_team_member_name">Add new</label>
           <input type="text"name="new_team_member_name" title="Add member" class="new-object-text-box" /> <button type="submit" name="new_team_member" value="true" class="submit-button">+</button>
+          <div id="help-new"></div>
         </fieldset> <!-- New team member -->
       </form>
     </td>
