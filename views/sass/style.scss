@@ -308,10 +308,14 @@ body {
         color: #808080;
         border: 1px solid #cccccc;
         padding-right: 2px;
-        
         position: relative;
-        
         cursor: default;
+        
+        &:hover {
+          border: 1px solid #aaa;
+          @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+        }
+      
         
         .project-title{
           float: left;
