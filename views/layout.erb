@@ -31,7 +31,9 @@
     <h1><a href="/">VISTAZO</a></h1> <div class="top-spacer">
     </div> 
     <% if @account.present? %>
-      <h2><a href="/<%= @account.url_slug %>"><%= @account.name %></a></h2>
+      <div id="account-name">
+        <h2><a href="/<%= @account.url_slug %>"><%= @account.name %></a></h2>
+      </div>
     <% end %>
     
     <% if is_super_admin? %>

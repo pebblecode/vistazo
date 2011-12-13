@@ -15,7 +15,6 @@
 # Generated from http://github.com/guard/guard-rspec
 guard 'rspec', :cli => '--color', :version => 2 do
   watch(%r{^models/(.+)\.rb$})
-  watch(%r{^views/(.+)\.erb$})
 
   watch(%r{^spec/.+_spec\.rb$})
   watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
@@ -32,6 +31,7 @@ guard 'rspec', :cli => '--color', :version => 2 do
   watch('web.rb')  { "spec/web" }
   
   # Capybara integration specs
-  watch(%r{^views/(.+)/.*\.(erb|haml)$})          { |m| "spec/integration/#{m[1]}_spec.rb" }
+  # watch(%r{^views/(.+)/.*\.(erb|haml)$})          { |m| "spec/integration/#{m[1]}_spec.rb" }
+  watch(%r{^views/(.+)\.erb$})                    { |m| "spec/integration" }
 end
 

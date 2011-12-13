@@ -18,7 +18,10 @@ module OmniauthSpecHelper
       "name" => 'Tu Tak Tran'
     }
   })
-
+  
+  # Default for google_oauth2 is :normal_user - used in capybara integration tests
+  OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth.config.mock_auth[:normal_user]
+  
   # SessionData idea based on http://gist.github.com/375973 (from http://stackoverflow.com/a/3892401/111884)
   class SessionData
     def initialize(cookies)

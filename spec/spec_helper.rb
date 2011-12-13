@@ -31,3 +31,9 @@ end
 def http_authorization!
   authorize 'vistazo', 'vistazo'
 end
+
+def http_authorization_capybara!
+  auth_string = ActiveSupport::Base64.encode64("vistazo:vistazo").gsub(/ /, '')
+  driver = Capybara.current_session.driver
+  driver.header "Authorization", "Basic #{auth_string}"
+end
