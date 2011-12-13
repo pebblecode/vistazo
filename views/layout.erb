@@ -28,7 +28,7 @@
   <div id="help-bg"></div>
   <div id="help-nav"></div>
   <div id="top-nav">
-    <h1><a href="/">VISTAZO</a></h1> <div class="top-spacer">
+    <h1 id="logo"><a href="/">VISTAZO</a></h1> <div class="top-spacer">
     </div> 
     <% if @account.present? %>
       <div id="account-name">
@@ -65,7 +65,7 @@
       <% if logged_in? %>
         <li><a href="/logout" title="Log out">X</a></li>
         <li><a href="/settings" title="User settings">U</a></li>
-        <li><a class="help" title="Coming soon" href="#">?</a></li>
+        <li><a class="help" title="Help" href="#">?</a></li>
         <li class="logged-in-as"><%= current_user.name %></li>
       <% end %>
     </ul>

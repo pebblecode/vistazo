@@ -99,6 +99,10 @@ body {
   }
 } // .new-object-fieldset
 
+textarea:focus, input:focus{
+  outline: none;
+}
+
 
 /* Top nav
 -----------------------------------------------------------------------------*/
@@ -112,6 +116,16 @@ body {
   float: left;
   background-color: rgba(41, 171, 226, 1);
   margin-bottom: 100px;
+  
+  #logo{
+    &:hover{
+      text-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
+    }
+    &:active{
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+      margin: 6px 12px 1px 5px;
+    }
+  }
 
   .top-spacer {
     width: 1px;
@@ -718,7 +732,7 @@ body {
   #main {
     width: 770px;
     padding: 10px;
-    min-height: 480px;
+    min-height: 450px;
     
     #screenshot {
       @include border-radius(5px);
@@ -740,15 +754,6 @@ body {
       span{
         color: $vistazo_blue;
       }
-    }
-    #email-input{
-      @include border-radius(3px);
-      
-      width: 340px;
-      padding: 5px;
-      font-style: oblique;
-      color: #ddd;
-      border: 1px solid #ddd;
     }
     #start-btn{
       @include border-radius(5px);
@@ -804,25 +809,6 @@ body {
       float: left;
       margin-right: 10px;
     }
-    #existing-user{
-      margin: 20px 20px 10px 20px;
-      font-style: oblique;
-      font-size: 1.2em;
-      float: left;
-      color: #999;
-    }
-    #email-input-2{
-      @include border-radius(3px);
-      
-      font-size: 16px;
-      margin: -6px 0px 0 16px;
-      width: 330px;
-      float: right;
-      padding: 5px;
-      font-style: oblique;
-      color: #ddd;
-      border: 1px solid #ddd;
-    }
     h1 {
       color: #999999;
       float: none;
@@ -844,13 +830,55 @@ body {
 -----------------------------------------------------------------------------*/
 
 #registration-page {
+  text-align: center;
   padding: 10px;
   h1 {
-    color: #999999;
+    color: #aaa;
+    text-shadow: none;
     float: none;
     margin-bottom: 20px;
     margin-left: 0;
+    
+    span{
+      color: $vistazo_blue;
+      text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+    }
   }
+  
+  p{
+    color: #808080;
+  }
+  
+  a {
+    @include border-radius(5px);
+    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+    
+    display: inline-block;
+    height: 20px;
+    background: rgba(41, 171, 226, 1);
+    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    margin: -5px 10px 10px 10px;
+    border: 1px solid #259acb;
+    padding: 6px 10px 0 10px;
+    
+    &:hover{
+      -webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2),
+                          inset 0 2px 0 rgba(255, 255, 255, 0.2),
+                          inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+      text-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
+    }
+    
+    &:active{
+      background-color: #28a6db;
+      margin: -4px 10px 9px 10px;
+    }
+    
+  }
+  
   ul {
     list-style: disc;
     margin: 10px 0 0 30px;
