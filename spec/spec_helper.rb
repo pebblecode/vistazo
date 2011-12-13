@@ -26,6 +26,8 @@ RSpec.configure do |conf|
   conf.include PathSpecHelper
 end
 
+Capybara.save_and_open_page_path = "./tmp"
+
 # Helper methods
 
 def http_authorization!
