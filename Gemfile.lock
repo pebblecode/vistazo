@@ -13,6 +13,15 @@ GEM
     bson (1.5.1)
     bson_ext (1.5.1)
     builder (3.0.0)
+    capybara (1.1.1)
+      mime-types (>= 1.16)
+      nokogiri (>= 1.3.3)
+      rack (>= 1.0.0)
+      rack-test (>= 0.5.4)
+      selenium-webdriver (~> 2.0)
+      xpath (~> 0.1.4)
+    childprocess (0.2.2)
+      ffi (~> 1.0.6)
     columnize (0.3.4)
     daemons (1.1.4)
     diff-lcs (1.1.3)
@@ -39,6 +48,7 @@ GEM
       term-ansicolor (~> 1.0.5)
     i18n (0.6.0)
     json (1.6.3)
+    json_pure (1.6.1)
     launchy (2.0.5)
       addressable (~> 2.2.6)
     linecache19 (0.5.12)
@@ -56,6 +66,7 @@ GEM
       plucky (~> 0.4.0)
     multi_json (1.0.4)
     multipart-post (1.1.4)
+    nokogiri (1.5.0)
     oauth2 (0.5.1)
       faraday (~> 0.7.4)
       multi_json (~> 1.0.3)
@@ -114,6 +125,11 @@ GEM
       archive-tar-minitar (>= 0.5.2)
     rubyzip (0.9.5)
     sass (3.1.11)
+    selenium-webdriver (2.8.0)
+      childprocess (>= 0.2.1)
+      ffi (>= 1.0.7)
+      json_pure
+      rubyzip
     shotgun (0.9)
       rack (>= 1.0)
     sinatra (1.3.1)
@@ -137,12 +153,15 @@ GEM
       ripl-multi_line (>= 0.2.4)
       ripl-rack (>= 0.2.0)
       sinatra (>= 1.2.1)
+    xpath (0.1.4)
+      nokogiri (~> 1.3)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   bson_ext
+  capybara
   factory_girl (~> 2.1.0)
   foreman
   guard

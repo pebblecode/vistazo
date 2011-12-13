@@ -10,6 +10,7 @@ require 'rspec'
 require 'rack/test'
 require 'factory_girl'
 require 'ruby-debug'
+require 'capybara/rspec'
 
 require 'omniauth_spec_helper'
 require 'mongodb_spec_helper'
