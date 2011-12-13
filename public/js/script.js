@@ -19,24 +19,19 @@ $(function () {
   
   // Edit account name
   {
-    
     $("#account-name h2").click(function(event) {
-      console.log("h2");
       $("#account-name #account-name-form").show();
       
       event.stopPropagation(); // Prevent click from hiding form
       return false;
     });
     
-    
     // Hide if clicking outside #account-name-form
     $('html').click(function() {
-      console.log("html");
       $("#account-name #account-name-form").hide();
     });
     
     $("#account-name #account-name-form").click(function(event) {
-      console.log("account-name-form");
       event.stopPropagation(); // Prevent clicking on form from hiding the form
     });
   }
