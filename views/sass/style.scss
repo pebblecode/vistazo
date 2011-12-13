@@ -550,6 +550,10 @@ textarea:focus, input:focus{
 /* Dialogs
 -----------------------------------------------------------------------------*/
 
+.ui-widget-overlay {
+  @include overlay;
+}
+
 .new-object-dialog {
   @include border-radius(8px);
   @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
@@ -673,7 +677,6 @@ textarea:focus, input:focus{
   margin: 120px auto 0;
   
   .listing {
-    
     &.pending li .list-bullet {
       background: url('/img/hatch1.gif');
       width: 9px;

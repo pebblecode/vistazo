@@ -54,8 +54,18 @@ $(function () {
   // User settings dialog
   {
     $("#top-nav .action-bar .user-settings").click(function() {
-      $("#account-users-dialog").show();
-      $("body").addClass("account-user-dialog-on");
+      $( "#account-users-dialog" ).dialog({
+        modal: true,
+        closeOnEscape: true,
+        minWidth: 500
+      });
+    });
+    
+    $(".ui-widget-overlay").click(function(){
+      // TODO: This doesn't get logged, for some reason
+      console.log("close");
+      
+      $(".ui-dialog-titlebar-close").trigger('click');
     });
   }
   
