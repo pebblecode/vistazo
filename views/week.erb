@@ -38,7 +38,7 @@
         data-team-member-id: Used for update to know the team member moving to
       %>
       <tr class="team-member <%= row_num.odd? ? "odd" : "even" %>" data-team-member-id="<%= tm.id %>">
-        <td class="<%= row_class %> col1"> <div class="person"><hr / class="highlight"><%= h tm.name %></div></td>
+        <td class="<%= row_class %> col1" title="<%= h tm.name %>"> <div class="person"><hr / class="highlight"><%= h truncate(tm.name, :length => 12) %></div></td>
 
         <% prev_cols = 1 %>
         <% (MONDAY..FRIDAY).each do |work_day| %>
