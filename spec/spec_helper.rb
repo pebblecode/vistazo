@@ -4,7 +4,7 @@ ENV['RACK_ENV'] = 'test'
 # Include web.rb file
 require_relative '../web'
 # Include factories.rb file
-require_relative '../spec/factories.rb'
+require_relative 'support/factories.rb'
 
 require 'rspec'
 require 'rack/test'
@@ -12,9 +12,9 @@ require 'factory_girl'
 require 'ruby-debug'
 require 'capybara/rspec'
 
-require 'omniauth_spec_helper'
-require 'mongodb_spec_helper'
-require 'path_spec_helper'
+require 'support/omniauth'
+require 'support/mongodb'
+require 'support/path'
 
 # Include Rack::Test in all rspec tests
 RSpec.configure do |conf|
