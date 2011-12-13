@@ -39,6 +39,7 @@ group :development, :test do
   gem 'rspec'
   gem 'rack-test'
   gem "factory_girl", "~> 2.1.0"
+  gem 'capybara'
 
   # Tux, console like
   gem 'tux'

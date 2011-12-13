@@ -17,6 +17,26 @@ $(function () {
     });
   }
   
+  // Edit account name
+  {
+    $("#account-name h2").click(function(event) {
+      $("#account-name #account-name-form").show();
+      
+      event.stopPropagation(); // Prevent click from hiding form
+      return false;
+    });
+    
+    // Hide if clicking outside #account-name-form
+    $('html').click(function() {
+      $("#account-name #account-name-form").hide();
+    });
+    
+    $("#account-name #account-name-form").click(function(event) {
+      event.stopPropagation(); // Prevent clicking on form from hiding the form
+    });
+  }
+
+  
   // Labelify new object text boxes
   $(".new-object-text-box").labelify({ labelledClass: "new-object-text-box-label" });
   
