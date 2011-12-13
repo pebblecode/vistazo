@@ -14,14 +14,6 @@ h1{
   float: left;
   margin: 5px 12px 2px 5px;
   
-  &:hover{
-    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
-  }
-  &:active{
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
-    margin: 6px 12px 1px 5px;
-  }
-  
   a {
     color: #fff;
     text-decoration: none;
