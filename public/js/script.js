@@ -21,6 +21,7 @@ $(function () {
   {
     $("#account-name h2").click(function(event) {
       $("#account-name #account-name-form").show();
+      $("#account-name #account-name-form input:first").focus();
       
       event.stopPropagation(); // Prevent click from hiding form
       return false;
