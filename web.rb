@@ -322,7 +322,25 @@ get '/:account_id/new-user/:user_id/resend' do
   redirect back
 end
 
-private
+post '/:account_id/update' do
+  protected!
+  require_account_user!(params[:account_id])
+    
+  @account = Account.find(params[:account_id])
+  if @account.present?
+    account_name = params[:account_name]
+    if account_name.present?
+      @account.name = account_name
+      @account.save
+      
+      flash[:success] = "Updated account name."
+    else
+      
+    end
+  end
+  
+  redirect back
+end
 
 
 def send_registration_email_to(send_to_email)

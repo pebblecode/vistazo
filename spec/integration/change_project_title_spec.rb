@@ -26,14 +26,14 @@ feature "Project title" do
     click_link "start-btn"
     page.should have_content("Cat's schedule")
     
-    pending "change title text boxes"
-    within("#account-name") do
-      fill_in 'Name', :with => 'Pebblezzz schedule'
+    within_fieldset("Account name") do
+      fill_in 'account_name', :with => 'Pebblez schedule'
     end
-    click_button 'Update'
+    click_button 'update'
+    page.should have_content("Updated account name.")
     
-    within("#account-name") do
-      page.should have_content 'Pebblezzz schedule'
+    within("#account-name h2") do
+      page.should have_content 'Pebblez schedule'
     end
   end
 end 
