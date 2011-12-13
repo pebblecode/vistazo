@@ -31,6 +31,18 @@ $vistazo_blue: #29ABE2;
               inset 0 -3px 0 rgba(0, 0, 0, 0.05);
 }
 
+@mixin overlay {
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/img/hatch1.gif');
+  opacity: 0.7;
+}
+
+
 /* General styles
 -----------------------------------------------------------------------------*/
 
@@ -656,8 +668,9 @@ textarea:focus, input:focus{
 
 #account-users-dialog {
   @extend .new-object-dialog;
+  display: none;
   width: 500px;
-  margin: 0 auto;
+  margin: 120px auto 0;
   
   .listing {
     
@@ -707,8 +720,24 @@ textarea:focus, input:focus{
     }
   } // .new-object-fieldset
   
-} // #account-users
+} // #account-users-dialog
 
+/* Show account users dialog when body has account-user-dialog-on class */
+.account-user-dialog-on {
+  #account-users-dialog {
+    display: block;
+  }
+  
+  #account-users-dialog-container {
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  } // #account-users-dialog-container
+  
+} // .account-user-dialog-on
 
 /* Homepage
 -----------------------------------------------------------------------------*/
@@ -848,17 +877,6 @@ textarea:focus, input:focus{
 -----------------------------------------------------------------------------*/
 
 .help-on {
-  #help-bg{
-    position: absolute;
-    z-index: 100;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('/img/hatch1.gif');
-    opacity: 0.7;
-  }
-  
   #help-nav{
     position: absolute;
     z-index: 110;
@@ -930,6 +948,12 @@ textarea:focus, input:focus{
 
 /* Misc
 -----------------------------------------------------------------------------*/
+
+.help-on, .account-user-dialog-on {
+  #overlay-bg{
+    @include overlay;
+  }
+}
 
 /* For debugging - to seed/reset db */
 #modify-data {

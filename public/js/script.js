@@ -47,9 +47,17 @@ $(function () {
   });
   
   //remove help body class
-  $("#help-bg, #help-nav, #help-week, #help-new, #help-close").click(function() {
+  $("#overlay-bg, #help-nav, #help-week, #help-new, #help-close").click(function() {
     $("body").removeClass("help-on");
   });
+  
+  // User settings dialog
+  {
+    $("#top-nav .action-bar .user-settings").click(function() {
+      $("#account-users-dialog").show();
+      $("body").addClass("account-user-dialog-on");
+    });
+  }
   
   // Project dialog
   {
