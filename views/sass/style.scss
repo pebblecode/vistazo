@@ -829,64 +829,19 @@ textarea:focus, input:focus{
 /* Registration page
 -----------------------------------------------------------------------------*/
 
-#registration-page {
-  text-align: center;
-  padding: 10px;
-  h1 {
-    color: #aaa;
-    text-shadow: none;
-    float: none;
-    margin-bottom: 20px;
-    margin-left: 0;
-    
-    span{
-      color: $vistazo_blue;
-      text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-    }
-  }
+#reg-name{
+  color: #999;
+  margin: 20px;
   
-  p{
-    color: #808080;
+  span{
+    font-family: 'MenschBold';
+    font-size: 1.2em;
+    color: $vistazo_blue;
   }
-  
-  a {
-    @include border-radius(5px);
-    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-    
-    display: inline-block;
-    height: 20px;
-    background: rgba(41, 171, 226, 1);
-    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-    color: #fff;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: bold;
-    margin: -5px 10px 10px 10px;
-    border: 1px solid #259acb;
-    padding: 6px 10px 0 10px;
-    
-    &:hover{
-      -webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2),
-                          inset 0 2px 0 rgba(255, 255, 255, 0.2),
-                          inset 0 -2px 0 rgba(0, 0, 0, 0.1);
-      text-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
-    }
-    
-    &:active{
-      background-color: #28a6db;
-      margin: -4px 10px 9px 10px;
-    }
-    
-  }
-  
-  ul {
-    list-style: disc;
-    margin: 10px 0 0 30px;
-    
-    li {
-      margin-bottom: 5px;
-    }
-  }
+}
+
+.reg-main{
+  min-height: 330px !important;
 }
 
 /* Help text

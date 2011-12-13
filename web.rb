@@ -291,7 +291,7 @@ get '/:account_id/new-user/register' do
   
   @account = Account.find(params[:account_id])
   if @account.present?
-    erb :new_user_registration
+    erb :new_user_registration, :layout => false
   else
     flash[:warning] = "Invalid account"
     redirect '/'
