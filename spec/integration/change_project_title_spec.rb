@@ -1,6 +1,6 @@
 require_relative '../spec_helper'
 
-feature "Project title" do
+feature "Account name" do
   include Rack::Test::Methods
   
   def app
@@ -16,8 +16,12 @@ feature "Project title" do
     get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:normal_user] }
     
   end
-
-  scenario "Changing project title" do
+  
+  after do
+    clean_db!
+  end
+  
+  scenario "Updating to a new name" do
     account = Account.first
     account.name = "Cat's schedule"
     account.save
@@ -30,10 +34,21 @@ feature "Project title" do
       fill_in 'account_name', :with => 'Pebblez schedule'
     end
     click_button 'update'
-    page.should have_content("Updated account name.")
+    page.should have_content("Updated account name successfully.")
     
     within("#account-name h2") do
       page.should have_content 'Pebblez schedule'
     end
+  end
+  
+  scenario "Updating to an empty name" do
+    visit "/"
+    click_link "start-btn"
+    
+    within_fieldset("Account name") do
+      fill_in 'account_name', :with => ''
+    end
+    click_button 'update'
+    page.should have_content("Updated account name failed. Account name was empty.")
   end
 end 

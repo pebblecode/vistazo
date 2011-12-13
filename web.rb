@@ -333,9 +333,9 @@ post '/:account_id/update' do
       @account.name = account_name
       @account.save
       
-      flash[:success] = "Updated account name."
+      flash[:success] = "Updated account name successfully."
     else
-      
+      flash[:warning] = "Updated account name failed. Account name was empty."
     end
   end
   
