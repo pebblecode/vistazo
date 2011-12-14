@@ -1012,6 +1012,7 @@ textarea:focus, input:focus{
       height: 235px;
       width: 447px;
       background: url('/img/help-project.png');
+      pointer-events: none;
     }
   }
 }

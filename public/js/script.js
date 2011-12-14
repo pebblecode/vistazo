@@ -83,7 +83,7 @@ $(function () {
   });
   
   //remove help body class
-  $("#overlay-bg, #help-nav, #help-week, #help-new, #help-close").click(function() {
+  $("#overlay-bg, #help-nav, #help-week, #help-new, #help-close, #help-project").click(function() {
     $("body").removeClass("help-on");
   });
   
