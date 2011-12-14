@@ -48,6 +48,18 @@ $(function () {
     }
   }
   
+  // Team member
+  {
+    // Hijack submit button if nothing is in textbox (either empty or labelified value)
+    $("#new-person-form .submit-button").click(function() {
+      if (($("#new-person-form .new-object-text-box").val() == "") ||
+           $("#new-person-form .new-object-text-box").val() == $("#new-person-form .new-object-text-box").attr("title")) {
+
+        $("#new-person-form .new-object-text-box").focus();
+        return false;
+      }
+    });
+  }
   
   // Delete button - only show on hover
   {
