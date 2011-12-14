@@ -12,9 +12,10 @@ $(function () {
     $("#account-name-dialog").dialog({
       modal: true,
       closeOnEscape: true,
-      minWidth: 480,
+      minWidth: 470,
+      minHeight: 65,
       autoOpen: false,
-	  closeText: "'"
+      closeText: "'"
     });
     $("#account-name h2").click(function(event) {
       $("#account-name-dialog").dialog('open');
@@ -30,7 +31,7 @@ $(function () {
       closeOnEscape: true,
       minWidth: 480,
       autoOpen: false,
-	  closeText: "'"
+      closeText: "'"
     });
     $("#top-nav .action-bar .user-settings").click(function() {
       $( "#account-users-dialog" ).dialog('open');

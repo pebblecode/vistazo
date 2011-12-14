@@ -756,13 +756,9 @@ textarea:focus, input:focus{
 
 #account-name-dialog {
   display: none; /* Don't display by default */
-  @extend .new-object-dialog;
-  display: none;
-  width: 500px;
-  margin: 120px auto 0;
-  padding: 20px;
-  @include box-shadow(0, 5px, 20px, rgba(0, 0, 0, 0.2));
-	  
+  margin-top: 20px;
+  position: relative;
+  
   #account-name-form {
       
     legend, label {
@@ -774,7 +770,7 @@ textarea:focus, input:focus{
       @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
       
       height: 24px;
-      width: 370px;
+      width: 380px;
       
       background-color: #fff;
     }
@@ -789,7 +785,7 @@ textarea:focus, input:focus{
         
       border: none;
       margin-left: 6px;
-      width: 325px;
+      width: 370px;
     }
   
     button {
@@ -802,9 +798,10 @@ textarea:focus, input:focus{
       font-size: 14px;
       line-height: 14px;
       height: 24px;
+      
       position: absolute;
-      top: 21px;
-      left: 410px;
+      top: 0px;
+      left: 400px;
       
       background-color: #fff;
       border-radius: 5px;
@@ -816,7 +813,7 @@ textarea:focus, input:focus{
         @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.3));
       }
       &:active{
-        top: 22px;
+        top: 1px;
         background-color: #ddd;
       }
       
