@@ -19,6 +19,8 @@ $(function () {
       $("#account-name-dialog").dialog('open');
       $("#account-name #account-name-form input:first").focus();
       overlayCloseOnClick();
+      
+      return false;
     });
     
     // User settings
@@ -31,6 +33,8 @@ $(function () {
     $("#top-nav .action-bar .user-settings").click(function() {
       $( "#account-users-dialog" ).dialog('open');
       overlayCloseOnClick();
+      
+      return false;
     });
     
     // Overlays - close dialogs when clicking (Note: need to run this after dialogs are created)
@@ -59,6 +63,8 @@ $(function () {
   // Add help body class
   $("#top-nav .action-bar .help").click(function() {
     $("body").toggleClass("help-on");
+    
+    return false;
   });
   
   //remove help body class
