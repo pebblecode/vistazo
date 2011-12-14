@@ -1,0 +1,10 @@
+<div id="account-name-dialog">
+  <form id="account-name-form" action="/<%= @account.url_slug %>/update" method="post">
+    <fieldset class="update-object-fieldset">
+      <legend>Account name</legend>
+      <label for="account_name">Account name</label>
+      <input type="text"name="account_name" title="Account name" class="update-object-text-box" value="<%= @account.name %>"/>
+      <button type="submit" name="update_account_name" value="true" class="submit-button">update</button>
+    </fieldset>
+  </form>
+</div>

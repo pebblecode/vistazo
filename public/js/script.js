@@ -20,21 +20,15 @@ $(function () {
   // Edit account name
   {
     $("#account-name h2").click(function(event) {
-      $("#account-name #account-name-form").show();
+      // $("#account-name #account-name-form").show();
+      $("#account-name-dialog").dialog({
+        modal: true,
+        closeOnEscape: true,
+        minWidth: 500
+      });
       $("#account-name #account-name-form input:first").focus();
-      
-      event.stopPropagation(); // Prevent click from hiding form
-      return false;
     });
-    
-    // Hide if clicking outside #account-name-form
-    $('html').click(function() {
-      $("#account-name #account-name-form").hide();
-    });
-    
-    $("#account-name #account-name-form").click(function(event) {
-      event.stopPropagation(); // Prevent clicking on form from hiding the form
-    });
+    // TODO: Figure out how to close on clicking overlay
   }
 
   
