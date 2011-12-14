@@ -12,8 +12,9 @@ $(function () {
     $("#account-name-dialog").dialog({
       modal: true,
       closeOnEscape: true,
-      minWidth: 500,
-      autoOpen: false
+      minWidth: 480,
+      autoOpen: false,
+	  closeText: "'"
     });
     $("#account-name h2").click(function(event) {
       $("#account-name-dialog").dialog('open');
@@ -27,8 +28,9 @@ $(function () {
     $( "#account-users-dialog" ).dialog({
       modal: true,
       closeOnEscape: true,
-      minWidth: 500,
-      autoOpen: false
+      minWidth: 480,
+      autoOpen: false,
+	  closeText: "'"
     });
     $("#top-nav .action-bar .user-settings").click(function() {
       $( "#account-users-dialog" ).dialog('open');
