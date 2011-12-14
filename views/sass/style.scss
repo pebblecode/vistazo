@@ -855,6 +855,17 @@ textarea:focus, input:focus{
       height: 200px;
       color: #999;
       
+      #vistazo-is{
+        font-size: 1.2em;
+        line-height: 1.1em;
+        font-weight: 700;
+        color: #aaa;
+      }
+      
+      #to-start{
+        margin: 25px 0 10px 0;
+      }
+      
       span{
         color: $vistazo_blue;
       }
