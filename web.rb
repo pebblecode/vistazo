@@ -374,8 +374,6 @@ def send_registration_email_to(send_to_email)
       
       puts erb(:new_user_email, :layout => false)
     end
-  
-    puts erb(:new_user_email, :layout => false)
     
     send_email(send_from_email, send_to_email, subject, :new_user_email, email_params)
   end
