@@ -342,7 +342,6 @@ post '/:account_id/update' do
   redirect back
 end
 
-
 def send_registration_email_to(send_to_email)
   @signup_link = "#{APP_CONFIG['base_url']}/#{params[:account_id]}/new-user/register"
   
@@ -350,10 +349,13 @@ def send_registration_email_to(send_to_email)
   subject = "You are invited to Vistazo"
   
   email_params = {
-    :email_service_address => "smtp.sendgrid.net",
-    :email_service_username => ENV['SENDGRID_USERNAME'] || APP_CONFIG['email_service_username'],
-    :email_service_password => ENV['SENDGRID_PASSWORD'] || APP_CONFIG['email_service_password'],
-    :email_sevice_domain => APP_CONFIG['email_service_domain']
+    :address => "smtp.sendgrid.net",
+    :user_name => ENV['SENDGRID_USERNAME'] || APP_CONFIG['email_service_username'],
+    :password => ENV['SENDGRID_PASSWORD'] || APP_CONFIG['email_service_password'],
+    :domain => APP_CONFIG['email_service_domain'],
+    :port => '587',
+    :authentication => :plain,
+    :enable_starttls_auto => true
   }
   
   if ENV['RACK_ENV'] == "development"
