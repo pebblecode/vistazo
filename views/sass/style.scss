@@ -1019,7 +1019,8 @@ textarea:focus, input:focus{
 -----------------------------------------------------------------------------*/
 
 footer{
-  margin: 100px auto 0 auto;
+  margin: 0 auto;
+  padding-top: 100px; /* Use padding instead of margin, so that dialog positions don't screw up */
   width: 600px;
   color: #ccc;
   ul{
