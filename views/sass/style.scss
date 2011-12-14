@@ -675,6 +675,14 @@ textarea:focus, input:focus{
   display: none;
   width: 500px;
   margin: 120px auto 0;
+  padding: 5px;
+  @include box-shadow(0, 5px, 20px, rgba(0, 0, 0, 0.2));
+  
+  .user-settings-title{
+    font-size: 1.4em;
+    margin-top: 5px;
+    margin-bottom: 20px;
+  }
   
   .listing {
     &.pending li .list-bullet {
@@ -705,11 +713,7 @@ textarea:focus, input:focus{
     } // li
   } // .listing
   
-  .pending-users-title {
-    margin-top: 20px;
-  }
-  
-  .add-new-user-title {
+  .pending-users-title, .add-new-user-title, .current-users-title {
     margin-top: 20px;
   }
   
