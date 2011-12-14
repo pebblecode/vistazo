@@ -35,8 +35,8 @@ $(function () {
     
     // Overlays - close dialogs when clicking (Note: need to run this after dialogs are created)
     function overlayCloseOnClick() {
-      $(".ui-widget-overlay").click(function(){
-        $(".ui-dialog-titlebar-close").trigger('click');
+      $(".ui-widget-overlay").live('click', function(){
+         $(".ui-dialog-titlebar-close").trigger('click');
       });
     }
   }
