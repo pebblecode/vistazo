@@ -55,7 +55,7 @@
                 data-date: Used for update to know the date of the team member project
               %>
               <div class="project" data-team-member-id="<%= tm.id %>" data-team-member-project-id="<%= tm_project.id %>" data-date="<%= tm_project.date %>"> 
-                <div class="handle-container"><div class="handle <%= tm_project.css_class %>"></div></div> <p class="project-title" title="<%= h tm_project.project_name %>"><%= h truncate(tm_project.project_name, :length => 12) %></p>
+                <div class="handle-container"><div class="handle <%= tm_project.css_class %>"><p class="project-title" title="<%= h tm_project.project_name %>"><%= h truncate(tm_project.project_name, :length => 12) %></p></div></div> 
                 <form class="delete-tm-project-form" action="/team-member/<%= tm.id %>/project/<%= tm_project.id %>/delete" method="post">
                   <button name="delete_project" type="submit" value="true">×</button>
                 </form>
