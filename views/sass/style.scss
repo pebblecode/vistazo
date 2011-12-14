@@ -754,13 +754,6 @@ textarea:focus, input:focus{
   
 } // #account-users-dialog
 
-/* Show account users dialog when body has account-user-dialog-on class */
-.account-user-dialog-on {
-  #account-users-dialog {
-    display: block;
-  }
-} // .account-user-dialog-on
-
 #account-name-dialog {
   display: none; /* Don't display by default */
   @extend .new-object-dialog;
@@ -1074,7 +1067,7 @@ footer{
 /* Misc
 -----------------------------------------------------------------------------*/
 
-.help-on, .account-user-dialog-on {
+.help-on {
   #overlay-bg{
     @include overlay;
   }
