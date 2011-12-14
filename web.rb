@@ -353,7 +353,7 @@ def send_registration_email_to(send_to_email)
     :email_service_address => "smtp.sendgrid.net",
     :email_service_username => ENV['SENDGRID_USERNAME'] || APP_CONFIG['email_service_username'],
     :email_service_password => ENV['SENDGRID_PASSWORD'] || APP_CONFIG['email_service_password'],
-    :email_sevice_domain => ENV['SENDGRID_DOMAIN'] || APP_CONFIG['email_service_domain']
+    :email_sevice_domain => APP_CONFIG['email_service_domain']
   }
   
   if ENV['RACK_ENV'] == "development"
