@@ -139,7 +139,6 @@ $(function () {
   // Drag and drop for projects
   $('table .box').sortable({
       connectWith: '.box',
-      handle: '.handle',
       cursor: 'move',
       placeholder: 'placeholder',
       forcePlaceholderSize: true,
