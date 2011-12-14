@@ -6,7 +6,7 @@ $(function () {
     });
   }
   
-  // Declase dialogs (but don't open by default)
+  // Declare dialogs (but don't open by default)
   {
     // Account name
     $("#account-name-dialog").dialog({
@@ -48,6 +48,18 @@ $(function () {
     }
   }
   
+  // Team member
+  {
+    // Hijack submit button if nothing is in textbox (either empty or labelified value)
+    $("#new-team-member-form .submit-button").click(function() {
+      if (($("#new-team-member-form .new-object-text-box").val() == "") ||
+           $("#new-team-member-form .new-object-text-box").val() == $("#new-team-member-form .new-object-text-box").attr("title")) {
+
+        $("#new-team-member-form .new-object-text-box").focus();
+        return false;
+      }
+    });
+  }
   
   // Delete button - only show on hover
   {

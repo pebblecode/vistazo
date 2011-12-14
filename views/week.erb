@@ -38,7 +38,7 @@
         data-team-member-id: Used for update to know the team member moving to
       %>
       <tr class="team-member <%= row_num.odd? ? "odd" : "even" %>" data-team-member-id="<%= tm.id %>">
-        <td class="<%= row_class %> col1" title="<%= h tm.name %>"> <div class="person"><hr / class="highlight"><%= h truncate(tm.name, :length => 12) %></div></td>
+        <td class="<%= row_class %> col1" title="<%= h tm.name %>"> <div class="team-member-name"><hr / class="highlight"><%= h truncate(tm.name, :length => 12) %></div></td>
 
         <% prev_cols = 1 %>
         <% (MONDAY..FRIDAY).each do |work_day| %>
@@ -80,7 +80,7 @@
   
   <tr>
     <td colspan="7" class="last-row col1">
-      <form id="new-person-form" action="/<%= @account.url_slug %>/team-member/add" method="post">
+      <form id="new-team-member-form" action="/<%= @account.url_slug %>/team-member/add" method="post">
         <fieldset class="new-object-fieldset" title="New team member">
           <label for="new_team_member_name">Add new</label>
           <input type="text"name="new_team_member_name" title="Add member" class="new-object-text-box" /> <button type="submit" name="new_team_member" value="true" class="submit-button">+</button>
