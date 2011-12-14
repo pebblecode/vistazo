@@ -6,7 +6,7 @@ $(function () {
     });
   }
   
-  // Declase dialogs (but don't open by default)
+  // Declare dialogs (but don't open by default)
   {
     // Account name
     $("#account-name-dialog").dialog({
