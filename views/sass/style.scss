@@ -997,6 +997,25 @@ textarea:focus, input:focus{
   }
 }
 
+/* Footer
+-----------------------------------------------------------------------------*/
+
+footer{
+  margin: 0 auto;
+  width: 570px;
+  
+  ul{
+    position: absolute;
+    bottom: 10px;
+    li{
+      float: left;
+      margin: 10px;
+      font-size: 0.8em;
+      opacity: 0.4;
+    }
+  }
+}
+
 /* Error page
 -----------------------------------------------------------------------------*/
 
