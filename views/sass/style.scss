@@ -103,7 +103,7 @@ body {
     padding: 0;
     
     color: #D7D7D7;
-    font: 12px 'WebSymbolsRegular';
+    font: 12px $web_symbols_font_family;
     line-height: 14px;
     cursor: pointer;
     background: none;
@@ -165,7 +165,7 @@ textarea:focus, input:focus{
       
       a {
         color: #fff;
-        font-family: 'WebSymbolsRegular';
+        font-family: $web_symbols_font_family;
         text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
         text-decoration: none;
         
@@ -389,7 +389,7 @@ textarea:focus, input:focus{
             background: none;
             border: none;
             
-            font-family: 'WebSymbolsRegular';
+            font-family: $web_symbols_font_family;
             font-size: 12px;
             line-height: 12px;
             vertical-align: center;
@@ -423,7 +423,7 @@ textarea:focus, input:focus{
   }
 
   .arrows {
-    font-family: 'WebSymbolsRegular';
+    font-family: $web_symbols_font_family;
     float: right;
     color: $vistazo_blue;
     margin: 0px 6px 20px 6px;
@@ -481,7 +481,7 @@ textarea:focus, input:focus{
   }
 
   #plus {
-    font-family: 'WebSymbolsRegular';
+    font-family: $web_symbols_font_family;
     float: right;
     font-size: 10px;
     margin-top: 3px;
@@ -500,12 +500,16 @@ textarea:focus, input:focus{
 /* Dialogs
 -----------------------------------------------------------------------------*/
 
-.ui-widget-overlay {
-  @include overlay;
-}
+/* Generic jquery-ui styles */
+.ui-dialog {
+  .ui-widget-overlay {
+    @include overlay;
+  }
 
-.ui-dialog-titlebar {
-  display: none;
+  .ui-dialog-titlebar {
+    
+  }
+	
 }
 
 .new-object-dialog {
@@ -596,7 +600,7 @@ textarea:focus, input:focus{
     right: 5px;
     outline: none;
     color: #ffffff;
-    font: 10px 'WebSymbolsRegular';
+    font: 10px $web_symbols_font_family;
     text-decoration: none;
   }
 }
@@ -621,7 +625,7 @@ textarea:focus, input:focus{
   
   button {
     color: #d7d7d7;
-    font: 10px 'WebSymbolsRegular';
+    font: 10px $web_symbols_font_family;
     text-shadow: none;
   }
 } // #new-project-form
