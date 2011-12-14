@@ -557,6 +557,8 @@ textarea:focus, input:focus{
 } // .new-object-dialog
 
 #new-project-dialog {
+  display: none; /* Hide by default */
+  
   @extend .new-object-dialog;
   position: absolute;
   z-index: 50;
