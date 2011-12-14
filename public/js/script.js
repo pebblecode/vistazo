@@ -6,6 +6,42 @@ $(function () {
     });
   }
   
+  // Declase dialogs (but don't open by default)
+  {
+    // Account name
+    $("#account-name-dialog").dialog({
+      modal: true,
+      closeOnEscape: true,
+      minWidth: 500,
+      autoOpen: false
+    });
+    $("#account-name h2").click(function(event) {
+      $("#account-name-dialog").dialog('open');
+      $("#account-name #account-name-form input:first").focus();
+      overlayCloseOnClick();
+    });
+    
+    // User settings
+    $( "#account-users-dialog" ).dialog({
+      modal: true,
+      closeOnEscape: true,
+      minWidth: 500,
+      autoOpen: false
+    });
+    $("#top-nav .action-bar .user-settings").click(function() {
+      $( "#account-users-dialog" ).dialog('open');
+      overlayCloseOnClick();
+    });
+    
+    // Overlays - close dialogs when clicking (Note: need to run this after dialogs are created)
+    function overlayCloseOnClick() {
+      $(".ui-widget-overlay").click(function(){
+        $(".ui-dialog-titlebar-close").trigger('click');
+      });
+    }
+  }
+  
+  
   // Delete button - only show on hover
   {
     $(".delete-tm-project-form button").hide();
@@ -16,21 +52,6 @@ $(function () {
       $(this).find(".delete-tm-project-form button").fadeOut(100);
     });
   }
-  
-  // Edit account name
-  {
-    $("#account-name h2").click(function(event) {
-      // $("#account-name #account-name-form").show();
-      $("#account-name-dialog").dialog({
-        modal: true,
-        closeOnEscape: true,
-        minWidth: 500
-      });
-      $("#account-name #account-name-form input:first").focus();
-    });
-    // TODO: Figure out how to close on clicking overlay
-  }
-
   
   // Labelify new object text boxes
   $(".new-object-text-box").labelify({ labelledClass: "new-object-text-box-label" });
@@ -44,24 +65,6 @@ $(function () {
   $("#overlay-bg, #help-nav, #help-week, #help-new, #help-close").click(function() {
     $("body").removeClass("help-on");
   });
-  
-  // User settings dialog
-  {
-    $("#top-nav .action-bar .user-settings").click(function() {
-      $( "#account-users-dialog" ).dialog({
-        modal: true,
-        closeOnEscape: true,
-        minWidth: 500
-      });
-    });
-    
-    $(".ui-widget-overlay").click(function(){
-      // TODO: This doesn't get logged, for some reason
-      console.log("close");
-      
-      $(".ui-dialog-titlebar-close").trigger('click');
-    });
-  }
   
   // Project dialog
   {
