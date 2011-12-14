@@ -42,6 +42,23 @@ $vistazo_blue: #29ABE2;
   opacity: 0.7;
 }
 
+@mixin dialog-heading {
+  color: #FFFFFF;
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: bold;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+    
+  margin: 5px 0 10px 0;
+}
+
+
+@mixin close-button {
+  outline: none;
+  color: #ffffff;
+  font: 10px $web_symbols_font_family;
+  text-decoration: none;
+}
 
 /* General styles
 -----------------------------------------------------------------------------*/
@@ -65,7 +82,7 @@ body {
   @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
   
   background: #ffffff;
-  margin: 20px 5px 5px 5px;
+  margin: 20px 0 0 0;
   display: block;
   position: relative;
   
@@ -103,7 +120,7 @@ body {
     padding: 0;
     
     color: #D7D7D7;
-    font: 12px 'WebSymbolsRegular';
+    font: 12px $web_symbols_font_family;
     line-height: 14px;
     cursor: pointer;
     background: none;
@@ -165,7 +182,7 @@ textarea:focus, input:focus{
       
       a {
         color: #fff;
-        font-family: 'WebSymbolsRegular';
+        font-family: $web_symbols_font_family;
         text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
         text-decoration: none;
         
@@ -389,7 +406,7 @@ textarea:focus, input:focus{
             background: none;
             border: none;
             
-            font-family: 'WebSymbolsRegular';
+            font-family: $web_symbols_font_family;
             font-size: 12px;
             line-height: 12px;
             vertical-align: center;
@@ -423,7 +440,7 @@ textarea:focus, input:focus{
   }
 
   .arrows {
-    font-family: 'WebSymbolsRegular';
+    font-family: $web_symbols_font_family;
     float: right;
     color: $vistazo_blue;
     margin: 0px 6px 20px 6px;
@@ -481,7 +498,7 @@ textarea:focus, input:focus{
   }
 
   #plus {
-    font-family: 'WebSymbolsRegular';
+    font-family: $web_symbols_font_family;
     float: right;
     font-size: 10px;
     margin-top: 3px;
@@ -500,12 +517,37 @@ textarea:focus, input:focus{
 /* Dialogs
 -----------------------------------------------------------------------------*/
 
+/* Generic jquery-ui styles */
+.ui-dialog {
+  @extend .new-object-dialog;
+  @include box-shadow(0, 5px, 20px, rgba(0, 0, 0, 0.2));
+  
+  margin-top: 95px;
+  
+  .ui-dialog-titlebar {
+    .ui-dialog-title {
+      @include dialog-heading;
+      
+      font-size: 1.4em;
+      margin-bottom: 20px;
+      margin-top: 5px;
+    }
+    
+    .ui-dialog-titlebar-close {
+      text-decoration: none;
+      float: right;
+      margin: 0 0 0 0;
+      
+      .ui-icon {
+        @include close-button;
+        font-size: 14px;
+      }
+    }
+  } // .ui-dialog-titlebar
+} // .ui-dialog
+
 .ui-widget-overlay {
   @include overlay;
-}
-
-.ui-dialog-titlebar {
-  display: none;
 }
 
 .new-object-dialog {
@@ -517,17 +559,11 @@ textarea:focus, input:focus{
   font-weight: bold;
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
   background-color: rgba(41, 171, 226, 1);
-  margin: 5px;
+  padding: 10px;
   border: 1px solid #259acb;
   
   h4 {
-    color: #FFFFFF;
-    font-size: 14px;
-    line-height: 16px;
-    font-weight: bold;
-    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-    
-    margin: 5px 0 10px 7px;
+    @include dialog-heading;
   }
   
   .listing {
@@ -545,7 +581,7 @@ textarea:focus, input:focus{
       background-color: #fff;
       
       height: 20px;
-      margin: 5px;
+      margin: 5px 0;
       border: 1px solid #a1a1a1;
     }
   } // .listing
@@ -562,8 +598,14 @@ textarea:focus, input:focus{
   @extend .new-object-dialog;
   position: absolute;
   z-index: 50;
-  width: 200px;
-
+  width: 190px;
+  padding: 5px !important;
+  
+  h4 {
+    margin-left: 3px;
+    margin-top: 0;
+  }
+  
   .listing {
     li {
       .handle {
@@ -591,13 +633,11 @@ textarea:focus, input:focus{
   } // .listing
   
   .close {
+    @include close-button;
+    
     position: absolute;
-    top: 8px;
+    top: 7px;
     right: 5px;
-    outline: none;
-    color: #ffffff;
-    font: 10px 'WebSymbolsRegular';
-    text-decoration: none;
   }
 }
 
@@ -621,25 +661,13 @@ textarea:focus, input:focus{
   
   button {
     color: #d7d7d7;
-    font: 10px 'WebSymbolsRegular';
+    font: 10px $web_symbols_font_family;
     text-shadow: none;
   }
 } // #new-project-form
 
 #account-users-dialog {
-  @extend .new-object-dialog;
-  display: none;
-  width: 500px;
-  margin: 120px auto 0;
-  padding: 5px;
-  @include box-shadow(0, 5px, 20px, rgba(0, 0, 0, 0.2));
-  
-  .user-settings-title{
-    font-size: 1.4em;
-    margin-top: 5px;
-    margin-bottom: 20px;
-  }
-
+  display: none; /* Hide by default */
   .listing {
       &.pending li .list-bullet {
       height: 5px;
@@ -716,7 +744,7 @@ textarea:focus, input:focus{
     
     .submit-button{
       right: 2px;
-      bottom: 4px;
+      bottom: 3px;
     }
     
     .new-object-text-box {
@@ -726,32 +754,11 @@ textarea:focus, input:focus{
   
 } // #account-users-dialog
 
-/* Show account users dialog when body has account-user-dialog-on class */
-.account-user-dialog-on {
-  #account-users-dialog {
-    display: block;
-  }
-  
-  #account-users-dialog-container {
-    position: absolute;
-    z-index: 100;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  } // #account-users-dialog-container
-  
-} // .account-user-dialog-on
-
 #account-name-dialog {
   display: none; /* Don't display by default */
-  @extend .new-object-dialog;
-  display: none;
-  width: 500px;
-  margin: 120px auto 0;
-  padding: 20px;
-  @include box-shadow(0, 5px, 20px, rgba(0, 0, 0, 0.2));
-	  
+  margin-top: 20px;
+  position: relative;
+  
   #account-name-form {
       
     legend, label {
@@ -763,7 +770,7 @@ textarea:focus, input:focus{
       @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
       
       height: 24px;
-      width: 370px;
+      width: 380px;
       
       background-color: #fff;
     }
@@ -778,7 +785,7 @@ textarea:focus, input:focus{
         
       border: none;
       margin-left: 6px;
-      width: 325px;
+      width: 370px;
     }
   
     button {
@@ -791,9 +798,10 @@ textarea:focus, input:focus{
       font-size: 14px;
       line-height: 14px;
       height: 24px;
+      
       position: absolute;
-      top: 21px;
-      left: 410px;
+      top: 0px;
+      left: 400px;
       
       background-color: #fff;
       border-radius: 5px;
@@ -805,7 +813,7 @@ textarea:focus, input:focus{
         @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.3));
       }
       &:active{
-        top: 22px;
+        top: 1px;
         background-color: #ddd;
       }
       
@@ -1012,7 +1020,8 @@ textarea:focus, input:focus{
 -----------------------------------------------------------------------------*/
 
 footer{
-  margin: 100px auto 0 auto;
+  margin: 0 auto;
+  padding-top: 100px; /* Use padding instead of margin, so that dialog positions don't screw up */
   width: 600px;
   color: #ccc;
   ul{
@@ -1066,7 +1075,7 @@ footer{
 /* Misc
 -----------------------------------------------------------------------------*/
 
-.help-on, .account-user-dialog-on {
+.help-on {
   #overlay-bg{
     @include overlay;
   }
