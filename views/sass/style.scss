@@ -763,11 +763,14 @@ textarea:focus, input:focus{
 
 #account-name-dialog {
   display: none; /* Don't display by default */
+  @extend .new-object-dialog;
+  display: none;
+  width: 500px;
+  margin: 120px auto 0;
+  padding: 20px;
+  @include box-shadow(0, 5px, 20px, rgba(0, 0, 0, 0.2));
 	  
   #account-name-form {
-    position: absolute;
-    left: 115px;
-    top: -4px;
       
     legend, label {
       display: none;
@@ -776,21 +779,20 @@ textarea:focus, input:focus{
     .update-object-fieldset {
       @include border-radius(5px);
       @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-
-      margin: 10px 0 0 10px;
+      
       height: 24px;
-      width: 400px;
-    
-      color: #808080;
+      width: 370px;
+      
       background-color: #fff;
-      border: 1px solid #a1a1a1;
     }
   
     input {
       font-family: $default_font_family;
-      font-size: 16px;
+      font-size: 14px;
       line-height: 20px;
       font-weight: normal;
+      color: #808080;
+      padding-top: 3px;
         
       border: none;
       margin-left: 6px;
@@ -799,17 +801,32 @@ textarea:focus, input:focus{
   
     button {
       border: none;
-      background-color: #DDDDDD;
       color: #808080;
       display: block;
       padding: 0 3px 1px 5px;
       text-decoration: none;
       cursor: pointer;
-        
       font-size: 14px;
       line-height: 14px;
       height: 24px;
-      float: right;
+      position: absolute;
+      top: 21px;
+      left: 410px;
+      
+      background-color: #fff;
+      border-radius: 5px;
+      @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+      
+      &:hover{
+        background-color: #eee;
+        color: #464646;
+        @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.3));
+      }
+      &:active{
+        top: 22px;
+        background-color: #ddd;
+      }
+      
     }
   } // #account-name-form
 } // #account-name-dialog
@@ -994,6 +1011,37 @@ textarea:focus, input:focus{
       height: 235px;
       width: 447px;
       background: url('/img/help-project.png');
+    }
+  }
+}
+
+/* Footer
+-----------------------------------------------------------------------------*/
+
+footer{
+  margin: 100px auto 0 auto;
+  width: 600px;
+  color: #ccc;
+  ul{
+    
+    li{
+      float: left;
+      margin: 10px;
+      font-size: 0.8em;
+      
+      span{
+        color: $vistazo_blue;
+      }
+      
+      a{
+        text-decoration: none;
+        color: #B4DBF3;
+        
+        &:hover{
+          text-decoration: underline;
+          color: $vistazo_blue;
+        }
+      }
     }
   }
 }
