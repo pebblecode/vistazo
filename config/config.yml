@@ -5,17 +5,21 @@ base: &base
   google_secret: nBlfJxFwHbyOKN_PKSgTJtbt
   email_service_username:
   email_service_password:
-  email_service_domain: localhost
+  email_service_domain:
   send_from_email: info@vistazoapp.com
 development:
+  email_service_domain: localhost
   base_url: http://localhost:6100
   <<: *base
 production:
+  email_service_domain: heroku.com
   base_url: http://vistazo.herokuapp.com
   <<: *base
 staging:
+  email_service_domain: heroku.com
   base_url: http://vistazo-staging.herokuapp.com
   <<: *base
 test:
+  email_service_domain: localhost
   base_url: http://vistazo-testing.pebbleit.com
   <<: *base  

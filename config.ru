@@ -2,6 +2,9 @@
 Encoding.default_external = Encoding::UTF_8
 Encoding.default_internal = Encoding::UTF_8
 
+# Enable logging: http://devcenter.heroku.com/articles/ruby#logging
+$stdout.sync = true
+
 root = ::File.dirname(__FILE__)
 require ::File.join( root, 'web' )
 run VistazoApp.new
