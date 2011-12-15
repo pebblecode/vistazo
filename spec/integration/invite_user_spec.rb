@@ -45,7 +45,7 @@ feature "Invite user" do
     page.should have_content("Email is not valid")
   end
   
-  pending "with an existing acccount should give you an error" do
+  scenario "with an existing acccount should give you an error" do
     # Create super admin
     get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:super_admin] }
     

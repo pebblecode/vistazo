@@ -266,12 +266,16 @@ post '/:account_id/new-user' do
   
   @account = Account.find(params[:account_id])
   if @account.present?
-    @user = User.new(:email => email, :account => @account)
-    
-    if @user.save
-      send_registration_email_for_params(@user, params)
+    @user = User.find_by_email(email)
+    if @user.present?
+      flash[:warning] = "Sorry, user already has an account. Multiple accounts for a user is an upcoming feature we're working. Please check back again."
     else
-      flash[:warning] = "Email is not valid"
+      @user = User.new(:email => email, :account => @account)
+      if @user.save
+        send_registration_email_for_params(@user, params)
+      else
+        flash[:warning] = "Email is not valid"
+      end
     end
   else
     flash[:warning] = "Account is not valid"
