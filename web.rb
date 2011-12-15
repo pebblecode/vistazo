@@ -268,7 +268,15 @@ post '/:account_id/new-user' do
   if @account.present?
     @user = User.find_by_email(email)
     if @user.present?
-      flash[:warning] = "Sorry, user already has an account. Multiple accounts for a user is an upcoming feature we're working. Please check back again."
+      if @user.account == @account
+        if @user.is_pending?
+          flash[:warning] = "User has already been sent an invitation email. To resend, click on the button next to their email address."
+        else
+          flash[:warning] = "User is already registered to this account."
+        end
+      else
+        flash[:warning] = "Sorry, user already has an account. Multiple accounts for a user is an upcoming feature we're working. Please check back again."
+      end
     else
       @user = User.new(:email => email, :account => @account)
       if @user.save

@@ -45,7 +45,7 @@ feature "Invite user" do
     page.should have_content("Email is not valid")
   end
   
-  scenario "with an existing acccount should give you an error" do
+  scenario "with an existing acccount elsewhere should give you an error" do
     # Create super admin
     get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:super_admin] }
     
@@ -58,6 +58,36 @@ feature "Invite user" do
     click_button 'new_user'
     
     page.should have_content("Sorry, user already has an account. Multiple accounts for a user is an upcoming feature we're working. Please check back again.")
+  end
+  
+  scenario "who has already been invited and is awaiting registration should give you an error" do
+    visit "/"
+    click_link "start-btn"
+    
+    within_fieldset("Invite new user") do
+      fill_in 'new_user_email', :with => "now.now@gmail.com"
+    end
+    click_button 'new_user'
+    page.should have_content("Invitation email has been sent")
+    
+    within_fieldset("Invite new user") do
+      fill_in 'new_user_email', :with => "now.now@gmail.com"
+    end
+    click_button 'new_user'
+
+    page.should have_content("User has already been sent an invitation email.")
+  end
+  
+  scenario "who is already registered to the account should give you an error" do
+    visit "/"
+    click_link "start-btn"
+    
+    within_fieldset("Invite new user") do
+      fill_in 'new_user_email', :with => OmniAuth.config.mock_auth[:normal_user]["info"]["email"]
+    end    
+    click_button 'new_user'
+
+    page.should have_content("User is already registered to this account.")
   end
   
   scenario "resend email should send invitation email" do
