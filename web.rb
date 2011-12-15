@@ -301,14 +301,14 @@ end
 
 get '/:account_id/new-user/:user_id/resend' do
   protected!
-
+  
   @account = Account.find(params[:account_id])
   if @account.present?
     begin
       @user = User.find(params[:user_id])
       if @user.present?
         send_registration_email_to @user.email
-        flash[:success] = "Invitation email has been resent to #{@user.email}"
+        flash[:success] = "Invitation email has been sent to #{@user.email}"
       else
         flash[:warning] = "Invalid user to resend email to."
       end
