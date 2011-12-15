@@ -5,7 +5,7 @@ def app
   Sinatra::Application
 end
 
-describe "Send email" do
+describe "send_email.rb:" do
   before do
     Pony.stub!(:deliver)
   end
@@ -40,7 +40,9 @@ describe "Send email" do
     end
   end
   
-  pending "Invalid parameters"
+  describe "Invalid parameters" do
+    pending "(don't check parameters at the moment)"
+  end
   
   describe "Default parameters" do
     it "should contain :port and :authentication" do
