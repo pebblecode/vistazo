@@ -267,16 +267,9 @@ post '/:account_id/new-user' do
   @account = Account.find(params[:account_id])
   if @account.present?
     @user = User.new(:email => email, :account => @account)
+    
     if @user.save
-      
-      # Send registration email
-      begin
-        send_registration_email_to @user.email
-        flash[:success] = "Invitation email has been sent to #{@user.email}"
-      rescue Exception => e
-        puts "Email error: #{e}"
-        flash[:warning] = "It looks like something went wrong while attempting to send your email. Please try again another time. Error: #{e}"
-      end
+      send_registration_email_for_params(@user, params)
     else
       flash[:warning] = "Email is not valid"
     end
@@ -304,23 +297,27 @@ get '/:account_id/new-user/:user_id/resend' do
   
   @account = Account.find(params[:account_id])
   if @account.present?
-    begin
-      @user = User.find(params[:user_id])
-      if @user.present?
-        send_registration_email_to @user.email
-        flash[:success] = "Invitation email has been sent to #{@user.email}"
-      else
-        flash[:warning] = "Invalid user to resend email to."
-      end
-    rescue Exception => e
-      puts "Email error: #{e}"
-      flash[:warning] = "It looks like something went wrong while attempting to send your email. Please try again another time. Error: #{e}"
-    end
+    @user = User.find(params[:user_id])
+    send_registration_email_for_params(@user, params)
   else
     flash[:warning] = "Invalid account"
   end
   
   redirect back
+end
+
+def send_registration_email_for_params(user, params)
+  begin
+    if user.present?
+      send_registration_email_to user.email
+      flash[:success] = "Invitation email has been sent to #{user.email}"
+    else
+      flash[:warning] = "Invalid user to send email to."
+    end
+  rescue Exception => e
+    puts "Email error: #{e}"
+    flash[:warning] = "It looks like something went wrong while attempting to send your email. Please try again another time. Error: #{e}"
+  end
 end
 
 post '/:account_id/update' do
