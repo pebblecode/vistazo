@@ -5,11 +5,11 @@
 # subject
 # email_erb_view
 # 
-# params:
-# => email_service_address
-# => email_service_username
-# => email_service_password
-# => email_sevice_domain
+# required params:
+# => address
+# => user_name
+# => password
+# => domain
 def send_email(from_email, to_email, subject, email_erb_view, params)
   default_options = {
     :port           => "25",
