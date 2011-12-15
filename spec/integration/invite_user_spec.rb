@@ -13,7 +13,7 @@ feature "Invite user" do
     clean_db!
   end
   
-  scenario "from account users form should send an invitation email" do
+  scenario "should send an invitation email" do
     visit "/"
     click_link "start-btn"
       
@@ -30,4 +30,18 @@ feature "Invite user" do
     }
     click_button 'new_user'
   end
+  
+  scenario "should display an error message if there is no email specified" do
+    visit "/"
+    click_link "start-btn"
+      
+    within_fieldset("Invite new user") do
+      fill_in 'new_user_email', :with => ''
+    end
+    click_button 'new_user'
+    
+    page.should have_content("Email is not valid")
+  end
+  
+  pending "with an existing acccount"
 end
