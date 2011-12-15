@@ -518,7 +518,7 @@ post '/reset' do
   Account.delete_all()
   User.delete_all()
 
-  flash[:success] = "Successfully cleared out the database and added seed data. Enjoy!"
+  flash[:success] = "Successfully cleared out the database. All nice and clean now."
   redirect '/'
 end
 
