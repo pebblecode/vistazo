@@ -159,6 +159,8 @@ This is deployed at: http://vistazo.herokuapp.com/
 
 ## Mongo
 
+### Add new team member
+
 To an a new team member in the mongo backend interface on staging or production:
 
 1. Log into heroku
@@ -171,3 +173,16 @@ Add > Copy the following code (making sure oid is unique):
       "team_member_projects" : [] }
     ```
 1. Click on create
+
+### Searches
+
+Pending users
+
+    {
+        "uid": {
+            "$exists": false
+        },
+        "email": {
+            "$exists": true
+        }
+    }
