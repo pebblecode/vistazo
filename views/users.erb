@@ -2,9 +2,11 @@
   <div id="account-users-dialog" title="User settings">
     <h4 class="add-new-user-title">Enter a Google mail account to send an invite for your team.</h4>
     <form id="invite-user-form" action="/<%= @account.url_slug %>/new-user" method="post">
-      <fieldset class="new-object-fieldset" title="Invite new user">
+      <fieldset class="new-object-fieldset">
+        <legend>Invite new user</legend>
         <label for="new_user_email">Invite new user</label>
-        <input type="text"name="new_user_email" title="New user email" class="new-object-text-box" /> <button type="submit" name="new_user" value="true" class="submit-button">+</button>
+        <input type="text" name="new_user_email" title="New user email" class="new-object-text-box" />
+        <button type="submit" name="new_user" value="new_user" class="submit-button">+</button>
       </fieldset> <!-- Invite new user -->
     </form>
   

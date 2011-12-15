@@ -366,7 +366,7 @@ def send_registration_email_to(send_to_email)
     puts "subject: #{subject}"
             
     puts erb(:new_user_email, :layout => false)
-  elsif (ENV['RACK_ENV'] != "test")
+  else
     if ENV['RACK_ENV'] == "staging"
       puts "STAGING MODE: this email should be sent:"
       puts "send_from_email: #{send_from_email}"

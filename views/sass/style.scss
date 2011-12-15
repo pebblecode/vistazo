@@ -665,6 +665,11 @@ textarea:focus, input:focus{
 
 #account-users-dialog {
   display: none; /* Hide by default */
+  
+  legend {
+    display: none;
+  }
+  
   .listing {
       &.pending li .list-bullet {
       height: 5px;
