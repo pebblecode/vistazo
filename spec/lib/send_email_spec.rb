@@ -39,5 +39,23 @@ describe "Send email" do
                  params)
     end
   end
+  
   pending "Invalid parameters"
+  
+  describe "Default parameters" do
+    it "should contain :port and :authentication" do
+      Pony.should_receive(:build_mail).with(hash_including({
+        :via_options => {
+          :port           => "25",
+          :authentication => :plain
+        }
+      }))
+      send_email("", 
+                 "", 
+                 "", 
+                 "", 
+                 {})
+    end
+  end
+  
 end
