@@ -177,6 +177,13 @@ function updateTeamMemberProject(proj) {
       // Update team member project info in data attributes
       $(proj).attr("data-team-member-id", toTeamMemberId);
       $(proj).attr("data-date", toDate);
+      
+      // Update delete link
+      var delete_url = $(proj).find(".delete-tm-project-form").attr("action");
+      // Should be in the form /team-member/[team member id]/project/[team member project id]/delete
+      var old_team_member_id = delete_url.split("/")[2];
+      var new_delete_url = delete_url.replace(old_team_member_id, toTeamMemberId);
+      $(proj).find(".delete-tm-project-form").attr("action", new_delete_url);
     })
     .error(function(response) {
       // Move team member project back
