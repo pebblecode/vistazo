@@ -22,6 +22,9 @@ gem 'omniauth-google-oauth2'
 # Email
 gem 'pony'
 
+# New relic
+gem 'newrelic_rpm'
+
 group :development, :test do
   # Servers
   gem 'shotgun'

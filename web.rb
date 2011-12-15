@@ -11,6 +11,7 @@ require 'json'
 require 'omniauth'
 require 'omniauth-google-oauth2'
 require 'pony'
+require "newrelic_rpm"
 
 # Require all in lib directory
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }

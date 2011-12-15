@@ -69,6 +69,7 @@ GEM
       plucky (~> 0.4.0)
     multi_json (1.0.4)
     multipart-post (1.1.4)
+    newrelic_rpm (3.2.0)
     nokogiri (1.5.0)
     oauth2 (0.5.1)
       faraday (~> 0.7.4)
@@ -173,6 +174,7 @@ DEPENDENCIES
   heroku
   json
   mongo_mapper
+  newrelic_rpm
   omniauth
   omniauth-google-oauth2
   pony
