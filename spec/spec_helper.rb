@@ -11,6 +11,7 @@ require 'rack/test'
 require 'factory_girl'
 require 'ruby-debug'
 require 'capybara/rspec'
+require 'email_spec'
 
 require 'support/omniauth'
 require 'support/mongodb'
@@ -20,6 +21,9 @@ require 'support/path'
 RSpec.configure do |conf|
   conf.include Rack::Test::Methods
   conf.mock_with :rspec
+  
+  conf.include(EmailSpec::Helpers)
+  conf.include(EmailSpec::Matchers)
   
   conf.include OmniauthSpecHelper
   conf.include MongoDBSpecHelper

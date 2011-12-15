@@ -377,7 +377,7 @@ def send_registration_email_to(send_to_email)
       puts erb(:new_user_email, :layout => false)
     end
     
-    send_email(send_from_email, send_to_email, subject, :new_user_email, email_params)
+    send_email(send_from_email, send_to_email, subject, erb(:new_user_email, :layout => false), email_params)
   end
 end
 
@@ -563,6 +563,6 @@ def send_error_email(exception)
   elsif (ENV['RACK_ENV'] != "test")
     puts erb(:error_email, :layout => false)
     
-    send_email(send_from_email, send_to_email, subject, :error_email, email_params)
+    send_email(send_from_email, send_to_email, subject, erb(:error_email, :layout => false), email_params)
   end
 end

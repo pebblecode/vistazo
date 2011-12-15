@@ -37,6 +37,7 @@ group :development, :test do
   # gem 'guard-minitest'
   # gem 'minitest'
   gem 'rspec'
+  gem 'email_spec'
   gem 'rack-test'
   gem "factory_girl", "~> 2.1.0"
   gem 'capybara'
