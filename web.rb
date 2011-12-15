@@ -560,9 +560,7 @@ def send_error_email(exception)
     puts "subject: #{subject}"
             
     puts erb(:error_email, :layout => false)
-  elsif (ENV['RACK_ENV'] != "test")
-    puts erb(:error_email, :layout => false)
-    
+  else
     send_email(send_from_email, send_to_email, subject, erb(:error_email, :layout => false), email_params)
   end
 end
