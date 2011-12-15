@@ -841,7 +841,7 @@ textarea:focus, input:focus{
   #main {
     width: 770px;
     padding: 10px;
-    min-height: 450px;
+    min-height: 510px;
     
     #screenshot {
       @include border-radius(5px);
@@ -853,6 +853,11 @@ textarea:focus, input:focus{
       width: 350px;
       margin: 20px 15px 20px 20px;
     }
+    
+    p{
+      line-height: 1.2em;
+    }
+    
     #intro{
       float: left;
       margin: 20px 20px 20px 15px ;
@@ -868,7 +873,7 @@ textarea:focus, input:focus{
       }
       
       #to-start{
-        margin: 25px 0 10px 0;
+        margin: 20px 0 10px 0;
       }
       
       span{
@@ -917,17 +922,16 @@ textarea:focus, input:focus{
     }
     .www{
       float: left;
-      margin: 20px 20px 10px 20px; 
       width: 223px;
       color: #bbb;
       font-size: 0.9em;
+      width: 180px;
+      margin-top: 15px;
     }
-    .www2{
-      margin: 20px 20px 10px 10px; 
-    }
+    
     .www-icon{
       float: left;
-      margin-right: 10px;
+      margin: 20px;
     }
     h1 {
       color: #999999;
