@@ -1,10 +1,5 @@
 require_relative '../spec_helper'
 
-# Define application for all spec files
-def app
-  Sinatra::Application
-end
-
 describe "Http authentication" do
   after do
     clean_db!

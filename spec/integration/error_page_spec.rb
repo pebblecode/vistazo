@@ -1,14 +1,7 @@
 require_relative '../spec_helper'
 
 feature "Error page" do
-  include Rack::Test::Methods
-  
-  def app
-    Sinatra::Application
-  end
-  
   background do
-    Capybara.app = VistazoApp
     http_authorization_capybara!
   end
   

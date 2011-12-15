@@ -43,3 +43,9 @@ def http_authorization_capybara!
   driver = Capybara.current_session.driver
   driver.header "Authorization", "Basic #{auth_string}"
 end
+
+# Define application for all spec files
+def app
+  Sinatra::Application
+end
+Capybara.app = VistazoApp

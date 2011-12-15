@@ -1,10 +1,5 @@
 require_relative '../spec_helper'
 
-# Define application for all spec files
-def app
-  Sinatra::Application
-end
-
 describe "send_email.rb:" do
   before do
     Pony.stub!(:deliver)
