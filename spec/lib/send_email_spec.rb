@@ -1,10 +1,6 @@
 require_relative '../spec_helper'
 
 describe "send_email.rb:" do
-  before do
-    Pony.stub!(:deliver)
-  end
-  
   describe "Valid parameters" do
     it "should send an email" do
       params = {

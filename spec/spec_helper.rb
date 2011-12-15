@@ -17,7 +17,7 @@ require 'support/omniauth'
 require 'support/mongodb'
 require 'support/path'
 
-# Include Rack::Test in all rspec tests
+# Include in all rspec tests
 RSpec.configure do |conf|
   conf.include Rack::Test::Methods
   conf.mock_with :rspec
@@ -28,6 +28,10 @@ RSpec.configure do |conf|
   conf.include OmniauthSpecHelper
   conf.include MongoDBSpecHelper
   conf.include PathSpecHelper
+  
+  conf.before(:each) do
+    do_not_send_email
+  end
 end
 
 Capybara.save_and_open_page_path = "./tmp"
@@ -42,6 +46,10 @@ def http_authorization_capybara!
   auth_string = ActiveSupport::Base64.encode64("vistazo:vistazo").gsub(/ /, '')
   driver = Capybara.current_session.driver
   driver.header "Authorization", "Basic #{auth_string}"
+end
+
+def do_not_send_email
+  Pony.stub!(:deliver)  # Hijack deliver method to not send email
 end
 
 # Define application for all spec files
