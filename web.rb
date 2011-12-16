@@ -304,7 +304,7 @@ get '/:account_id/new-user/register' do
   end
 end
 
-get '/:account_id/new-user/:user_id/resend' do
+post '/:account_id/new-user/:user_id/resend' do
   protected!
   
   @account = Account.find(params[:account_id])

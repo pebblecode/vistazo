@@ -717,6 +717,13 @@ textarea:focus, input:focus{
         color: #808080;
         text-decoration: none;
         
+        border: none;
+        font-size: 14px;
+        font-family: $default_font_family;
+        line-height: 20px;
+        cursor: pointer;
+        text-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+        
         &:hover{
           background-color: #eee;
           color: #464646;

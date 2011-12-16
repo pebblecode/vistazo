@@ -108,7 +108,7 @@ feature "Invite user" do
       params[:body].should include("You've been invited to Vistazo")
       params[:body].should include("/#{@account_id}/new-user/register")
     }
-    click_link 'resend'
+    click_button 'resend'
     
     page.should have_content("Invitation email has been sent")
   end
