@@ -1,4 +1,19 @@
+/*
+ * Preload images jQuery plugin
+ * http://stackoverflow.com/questions/476679/preloading-images-with-jquery
+ *
+ */
+$.fn.preload = function() {
+  this.each(function(){
+    $('<img/>')[0].src = this;
+  });
+}
+
 $(function () {
+
+  // Preload AJAX spinner
+  $(['/img/loading.gif']).preload();
+  
   // Flash the flash message
   if ($("#flash").length > 0) {
     $("#flash").hide(0, function() {
