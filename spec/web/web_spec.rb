@@ -91,11 +91,6 @@ describe "Accounts:" do
   
 end
 
-describe "Team members:" do
-  pending "Adding team members should require log in"
-  pending "Add team members"
-end
-
 describe "Projects:" do
   pending "Colour settings"
   pending "Move projects"

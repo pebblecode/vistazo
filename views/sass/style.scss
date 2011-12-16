@@ -318,6 +318,9 @@ textarea:focus, input:focus{
       
       #new-team-member-form {
         margin-left: 5px;
+        legend {
+          display: none;
+        }
         .new-object-fieldset {
           width: 127px;
           

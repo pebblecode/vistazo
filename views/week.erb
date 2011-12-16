@@ -82,8 +82,10 @@
     <td colspan="7" class="last-row col1">
       <form id="new-team-member-form" action="/<%= @account.url_slug %>/team-member/add" method="post">
         <fieldset class="new-object-fieldset" title="New team member">
+          <legend>New team member</legend>
           <label for="new_team_member_name">Add new</label>
-          <input type="text"name="new_team_member_name" title="Add member" class="new-object-text-box" /> <button type="submit" name="new_team_member" value="true" class="submit-button">+</button>
+          <input type="text"name="new_team_member_name" title="Add member" class="new-object-text-box" /> 
+          <button type="submit" name="new_team_member" value="new_team_member" class="submit-button">+</button>
           <div id="help-new"></div>
         </fieldset> <!-- New team member -->
       </form>
