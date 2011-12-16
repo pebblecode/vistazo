@@ -96,10 +96,6 @@ describe "Projects:" do
   pending "Move projects"
 end
 
-describe "Users:" do
-  pending "Add users (email etc.)"
-end
-
 describe "Authentication:" do
   before do
     http_authorization!
