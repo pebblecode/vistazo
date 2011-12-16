@@ -126,9 +126,12 @@ Project was created with (shouldn't need to be done again, but here just for ref
     heroku config:add GOOGLE_CLIENT_ID=[google client id] --app vistazo
     heroku config:add GOOGLE_SECRET=[google api secret] --app vistazo
     
-    heroku addons:add custom_domains
-    heroku domains:add www.vistazoapp.com
-    heroku domains:add vistazoapp.com
+    heroku addons:add custom_domains --app vistazo
+    heroku domains:add www.vistazoapp.com --app vistazo
+    heroku domains:add vistazoapp.com --app vistazo
+    
+    # For redirects (http://github.com/cwninja/rack-force_domain)
+    heroku config:add DOMAIN="vistazoapp.com" --app vistazo
     
 To find the google api client id/secret go to [google api console](https://code.google.com/apis/console/b/0/#project:139948808699:access)
 

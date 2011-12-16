@@ -89,6 +89,7 @@ GEM
     pony (1.3)
       mail (> 2.0)
     rack (1.3.5)
+    rack-force_domain (0.2.0)
     rack-protection (1.1.4)
       rack
     rack-test (0.6.1)
@@ -178,6 +179,7 @@ DEPENDENCIES
   omniauth
   omniauth-google-oauth2
   pony
+  rack-force_domain
   rack-test
   rake
   rb-fchange

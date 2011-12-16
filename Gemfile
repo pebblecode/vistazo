@@ -25,6 +25,9 @@ gem 'pony'
 # New relic
 gem 'newrelic_rpm'
 
+# Redirect domains
+gem "rack-force_domain"
+
 group :development, :test do
   # Servers
   gem 'shotgun'

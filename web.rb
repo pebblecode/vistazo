@@ -12,18 +12,23 @@ require 'omniauth'
 require 'omniauth-google-oauth2'
 require 'pony'
 require "newrelic_rpm"
+require 'rack-force_domain'
 
 # Require all in lib directory
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
 
+
 class VistazoApp < Sinatra::Application
-
+  
   APP_CONFIG = YAML.load_file("#{root}/config/config.yml")[settings.environment.to_s]
-
+  
   set :environment, ENV["RACK_ENV"] || "development"
   set :send_from_email, APP_CONFIG["send_from_email"]
-
+  
   enable :sessions
+  
+  # Redirect all urls on production (http://github.com/cwninja/rack-force_domain)
+  use Rack::ForceDomain, ENV["DOMAIN"]  
   
   use OmniAuth::Builder do
     provider :google_oauth2,
