@@ -76,7 +76,7 @@ $(function () {
         modal: true,
         closeOnEscape: true,
         minWidth: 470,
-        minHeight: 65,
+        minHeight: 85,
         autoOpen: false,
         position: 'top',
         closeText: "'"
