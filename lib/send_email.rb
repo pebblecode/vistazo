@@ -13,8 +13,7 @@
 def send_email(from_email, to_email, subject, body, params)
   default_options = {
     :port           => "25",
-    :authentication => :plain,
-    :charset => 'utf-8'
+    :authentication => :plain
   }
   
   extra_options = default_options.merge(params)
@@ -23,6 +22,7 @@ def send_email(from_email, to_email, subject, body, params)
             :from => from_email,
             :subject => subject,
             :body => body,
+	    :charset => 'utf-8',
             :via => :smtp,
             :via_options => extra_options
 
