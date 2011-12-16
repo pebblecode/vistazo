@@ -95,6 +95,23 @@ describe "Projects:" do
   before do
     http_authorization!
     @session = init_omniauth_session
+    
+    create_normal_user(@session)
+    login_normal_user_with_session!(@session)
+      
+    User.count.should == 1
+    @account = User.first.account
+      
+    TeamMember.count.should == 1
+    @team_member = TeamMember.first
+
+    @valid_params = {
+        "new_project_name" => "Business time",
+        "account_id" => @account.id,
+        "team_member_id" => @team_member.id,
+        "date" => "2011-12-16",
+        "new_project" => "true"
+      }
   end
   
   after do
@@ -106,29 +123,31 @@ describe "Projects:" do
   
   describe "Create new project" do
     it "should show success message if passing valid parameters" do
-      create_normal_user(@session)
-      login_normal_user_with_session!(@session)
-      
-      User.count.should == 1
-      account = User.first.account
-      
-      TeamMember.count.should == 1
-      team_member = TeamMember.first
-      
-      params = {
-        "new_project_name" => "Business time",
-        "account_id" => account.id,
-        "team_member_id" => team_member.id,
-        "date" => "2011-12-16",
-        "new_project" => "true"
-      }
-      
-      post "/#{account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
-      flash_message = last_request.session[:flash][:success]
-      flash_message.should include("Successfully added '<em>Business time</em>' project for #{team_member.name} on 2011-12-16.")
+      params = @valid_params
+      post "/#{@account.id}/team-member-project/add", @valid_params, { "rack.session" => {"uid" => @session['uid']} }
+      flash_message = last_request.session[:flash]
+      flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
     end
     
-    pending "should show error message if new project name is not present or empty"
+    it "should show error message if new project name is not present or empty" do
+      params = @valid_params.merge({ "new_project_name" => "" })
+      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      flash_message = last_request.session[:flash]
+      flash_message[:warning].should include("Please specify a project name.")
+      Project.count.should == 0
+      
+      params = @valid_params.merge({ "new_project_name" => nil })
+      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      flash_message = last_request.session[:flash]
+      flash_message[:warning].should include("Please specify a project name.")
+      Project.count.should == 0
+        
+      params = @valid_params.reject { |k,v| k == "new_project_name" }
+      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      flash_message = last_request.session[:flash]
+      flash_message[:warning].should include("Please specify a project name.")
+      Project.count.should == 0
+    end
   end
   
   pending "Add existing project"
