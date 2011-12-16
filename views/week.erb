@@ -39,11 +39,11 @@
       %>
       <tr class="team-member <%= row_num.odd? ? "odd" : "even" %>" data-team-member-id="<%= tm.id %>">
         <td class="<%= row_class %> col1" title="<%= h tm.name %>">
-          <div class="team-member-name"><hr / class="highlight">
+          <a href="#edit-tm-<%= tm.id %>" class="team-member-name">
             <%= h truncate(tm.name, :length => 12) %>
-          </div>
+          </a>
           
-          <div class="edit-team-member-dialog">
+          <div id="edit-tm-<%= tm.id %>" class="edit-team-member-dialog" title="Edit team member name">
             <form action="/team-member/<%= tm.id %>/edit" method="post">
               <fieldset class="update-object-fieldset" title="Edit team member">
                 <legend>Edit team member</legend>

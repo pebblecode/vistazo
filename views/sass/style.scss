@@ -547,10 +547,19 @@ textarea:focus, input:focus{
     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
     color: #fff;
     font-size: 14px;
+    line-height: 20px;
     font-weight: bold;
     margin: 5px;
     border: 1px solid #259acb;
     padding: 0px 5px;
+    
+    display: block;
+    text-decoration: none;
+    outline: none;
+    
+    &:active {
+      /* Active styles? */
+    }
   }
 
   .highlight {

@@ -54,6 +54,27 @@ $(function () {
       return false;
     });
     
+    // Team member edit
+    $( ".edit-team-member-dialog" ).each(function() {
+      // Create dialog with id instead of class
+      $(this).dialog({
+        modal: true,
+        closeOnEscape: true,
+        minWidth: 470,
+        minHeight: 65,
+        autoOpen: false,
+        position: 'top',
+        closeText: "'"
+      })
+    });
+    $("#main .team-member-name").click(function() {
+      var dialog_id = $(this).attr("href");
+      $(dialog_id).dialog('open');
+      overlayCloseOnClick();
+      
+      return false;
+    });
+    
     // Overlays - close dialogs when clicking (Note: need to run this after dialogs are created)
     function overlayCloseOnClick() {
       $(".ui-widget-overlay").live('click', function(){
