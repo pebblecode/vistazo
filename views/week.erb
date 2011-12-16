@@ -42,14 +42,17 @@
           <div class="team-member-name"><hr / class="highlight">
             <%= h truncate(tm.name, :length => 12) %>
           </div>
-          <form action="/team-member/<%= tm.id %>/edit" method="post">
-            <fieldset class="new-object-fieldset" title="Edit team member">
-              <legend>Edit team member</legend>
-              <label for="name">Name</label>
-              <input type="text" name="name" class="new-object-text-box" value="<%= tm.name %>"/>
-              <button type="submit" class="submit-button">update</button>
-            </fieldset> <!-- New team member -->
-          </form>
+          
+          <div class="edit-team-member-dialog">
+            <form action="/team-member/<%= tm.id %>/edit" method="post">
+              <fieldset class="update-object-fieldset" title="Edit team member">
+                <legend>Edit team member</legend>
+                <label for="name">Name</label>
+                <input type="text" name="name" class="new-object-text-box" value="<%= tm.name %>"/>
+                <button type="submit" class="submit-button">update</button>
+              </fieldset> <!-- New team member -->
+            </form>
+          </div> <!-- .edit-team-member-dialog -->
         </td>
         
         <% prev_cols = 1 %>
