@@ -13,7 +13,7 @@ development:
   <<: *base
 production:
   email_service_domain: heroku.com
-  base_url: http://vistazo.herokuapp.com
+  base_url: http://vistazoapp.com
   <<: *base
 staging:
   email_service_domain: heroku.com
