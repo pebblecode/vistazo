@@ -15,6 +15,7 @@ $(function () {
       minWidth: 470,
       minHeight: 65,
       autoOpen: false,
+      position: 'top',
       closeText: "'"
     });
     $("#account-name h2").click(function(event) {
@@ -30,6 +31,7 @@ $(function () {
       modal: true,
       closeOnEscape: true,
       minWidth: 480,
+      position: 'top',
       autoOpen: false,
       closeText: "'"
     });
