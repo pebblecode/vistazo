@@ -347,6 +347,9 @@ textarea:focus, input:focus{
         &:hover {
           background: transparent url("/img/new-project.png") no-repeat center bottom;
         }
+        &.remove-add-img {
+          background: none;
+        }
       } // .box
       
       .project {
@@ -713,6 +716,13 @@ textarea:focus, input:focus{
         background-color: #fff;
         color: #808080;
         text-decoration: none;
+        
+        border: none;
+        font-size: 14px;
+        font-family: $default_font_family;
+        line-height: 20px;
+        cursor: pointer;
+        text-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
         
         &:hover{
           background-color: #eee;

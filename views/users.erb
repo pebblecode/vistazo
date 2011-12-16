@@ -23,7 +23,12 @@
     <h4 class="pending-users-title">Users awaiting registration</h4>
     <ul class="listing pending">
       <% for user in @pending_users %>
-        <li><div class="list-bullet"></div><p class="pending-user-email"><%= h user.email %></p><a class="resend" href="/<%= @account.url_slug %>/new-user/<%= user.id %>/resend">resend</a></li>
+        <li>
+          <div class="list-bullet"></div><p class="pending-user-email"><%= h user.email %></p>
+          <form id="invite-user-form" action="/<%= @account.url_slug %>/new-user/<%= user.id %>/resend" method="post">
+            <button class="resend" type="submit" name="resend" value="resend" class="submit-button">resend</button>
+          </form>
+        </li>
       <% end %>
     </ul>
     <% end %>
