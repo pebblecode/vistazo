@@ -347,6 +347,9 @@ textarea:focus, input:focus{
         &:hover {
           background: transparent url("/img/new-project.png") no-repeat center bottom;
         }
+        &.remove-add-img {
+          background: none;
+        }
       } // .box
       
       .project {

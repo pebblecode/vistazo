@@ -6,6 +6,18 @@ $(function () {
     });
   }
   
+  // Hide project add button on .project hover
+  {
+    $(".project").hover(
+      function() {
+        $(this).parents(".box").addClass("remove-add-img")
+      },
+      function() {
+        $(this).parents(".box").removeClass("remove-add-img")
+      }
+    );
+  }
+  
   // Declare dialogs (but don't open by default)
   {
     // Account name
