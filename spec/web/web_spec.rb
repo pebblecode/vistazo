@@ -152,8 +152,33 @@ describe "Projects:" do
     end
   end
   
-  pending "Add existing project" do
+  describe "Add existing project" do
+    before do
+      params = {
+          "new_project_name" => "Business time",
+          "account_id" => @account.id,
+          "team_member_id" => @team_member.id,
+          "date" => "2011-12-16",
+          "new_project" => "true"
+        }
+      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      flash_message = last_request.session[:flash]
+      flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
+    end
     
+    it "should show success message if passing valid parameters" do
+      Project.count.should == 1
+      project = Project.first
+      params = {
+        "project_id" => project.id,
+        "account_id" => @account.id,
+        "team_member_id" => @team_member.id,
+        "date" => "2012-01-15"
+      }
+      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      flash_message = last_request.session[:flash]
+      flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2012-01-15.")
+    end
   end
   
   describe "Update with json call" do
