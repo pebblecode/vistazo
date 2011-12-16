@@ -1,3 +1,19 @@
+# 0.5.0
+
+* Update homepage
+* Update registration page
+* Error page
+* Hover states
+* Favicon
+* Help overlay
+* Footer
+* Delete team member
+* Edit team member name
+* Edit account name
+* Domain redirects
+* Tests
+* Clean up
+
 # 0.4.0
 
 * Sign up workflow
