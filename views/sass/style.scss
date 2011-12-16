@@ -703,6 +703,9 @@ textarea:focus, input:focus{
         float: left;
       }
       .resend {
+        @include border-radius(5px);
+        @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+        
         float: left;
         padding: 0 3px 0 5px;
         margin-left: 10px;
@@ -710,8 +713,6 @@ textarea:focus, input:focus{
         background-color: #fff;
         color: #808080;
         text-decoration: none;
-        border-radius: 5px;
-        @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
         
         &:hover{
           background-color: #eee;
@@ -791,6 +792,9 @@ textarea:focus, input:focus{
     }
   
     button {
+      @include border-radius(5px);
+      @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+      
       border: none;
       color: #808080;
       display: block;
@@ -806,8 +810,6 @@ textarea:focus, input:focus{
       left: 400px;
       
       background-color: #fff;
-      border-radius: 5px;
-      @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
       
       &:hover{
         background-color: #eee;
