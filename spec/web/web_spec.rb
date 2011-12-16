@@ -92,8 +92,117 @@ describe "Accounts:" do
 end
 
 describe "Projects:" do
+  before do
+    http_authorization!
+    @session = init_omniauth_session
+    
+    create_normal_user(@session)
+    login_normal_user_with_session!(@session)
+      
+    User.count.should == 1
+    @account = User.first.account
+      
+    TeamMember.count.should == 1
+    @team_member = TeamMember.first
+  end
+  
+  after do
+    clean_db!
+    @session = nil
+  end
+  
   pending "Colour settings"
-  pending "Move projects"
+  
+  describe "Create new project" do
+    before do
+      @valid_params = {
+          "new_project_name" => "Business time",
+          "account_id" => @account.id,
+          "team_member_id" => @team_member.id,
+          "date" => "2011-12-16",
+          "new_project" => "true"
+        }
+    end
+    
+    it "should show success message if passing valid parameters" do
+      params = @valid_params
+      post "/#{@account.id}/team-member-project/add", @valid_params, { "rack.session" => {"uid" => @session['uid']} }
+      flash_message = last_request.session[:flash]
+      flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
+    end
+    
+    it "should show error message if new project name is not present or empty" do
+      params = @valid_params.merge({ "new_project_name" => "" })
+      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      flash_message = last_request.session[:flash]
+      flash_message[:warning].should include("Please specify a project name.")
+      Project.count.should == 0
+      
+      params = @valid_params.merge({ "new_project_name" => nil })
+      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      flash_message = last_request.session[:flash]
+      flash_message[:warning].should include("Please specify a project name.")
+      Project.count.should == 0
+        
+      params = @valid_params.reject { |k,v| k == "new_project_name" }
+      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      flash_message = last_request.session[:flash]
+      flash_message[:warning].should include("Please specify a project name.")
+      Project.count.should == 0
+    end
+  end
+  
+  describe "Add existing project" do
+    before do
+      params = {
+          "new_project_name" => "Business time",
+          "account_id" => @account.id,
+          "team_member_id" => @team_member.id,
+          "date" => "2011-12-16",
+          "new_project" => "true"
+        }
+      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      flash_message = last_request.session[:flash]
+      flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
+    end
+    
+    it "should show success message if passing valid parameters" do
+      Project.count.should == 1
+      project = Project.first
+      params = {
+        "project_id" => project.id,
+        "account_id" => @account.id,
+        "team_member_id" => @team_member.id,
+        "date" => "2012-01-15"
+      }
+      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      flash_message = last_request.session[:flash]
+      flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2012-01-15.")
+    end
+  end
+  
+  describe "Update with json call" do
+    it "should return 200 status with message if successful" do
+      create_normal_user(@session)
+      login_normal_user_with_session!(@session)
+      
+      User.count.should == 1
+      account = User.first.account
+      
+      # params[:from_team_member_id]
+      # params[:to_team_member_id]
+      # params[:tm_project_id]
+      # params[:to_date]
+      # post '/team-member-project/:tm_project_id/update.json'
+      
+      # post account_current_week_path(account), nil, { "rack.session" => {"uid" => @session['uid']} }
+      pending "post json call"
+    end
+    
+    pending "should return 400 error with message if there are incorrect parameters"
+    
+    pending "should return 500 error with message if there is an internal error"
+  end
 end
 
 describe "Authentication:" do
