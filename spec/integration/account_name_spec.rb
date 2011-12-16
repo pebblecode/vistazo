@@ -24,8 +24,9 @@ feature "Account name" do
     
     within_fieldset("Account name") do
       fill_in 'account_name', :with => 'Pebblez schedule'
+      click_button 'update'
     end
-    click_button 'update'
+    
     page.should have_content("Updated account name successfully.")
     
     within("#account-name h2") do
@@ -39,8 +40,9 @@ feature "Account name" do
     
     within_fieldset("Account name") do
       fill_in 'account_name', :with => ''
+      click_button 'update'
     end
-    click_button 'update'
+    
     page.should have_content("Updated account name failed. Account name was empty.")
   end
 end 

@@ -19,16 +19,16 @@ feature "Invite user" do
       
     within_fieldset("Invite new user") do
       fill_in 'new_user_email', :with => 'franz@gmail.com'
-    end
       
-    Pony.should_receive(:mail) { |params|
-      params[:to].should == "franz@gmail.com"
-      params[:subject].should include("You are invited to Vistazo")
+      Pony.should_receive(:mail) { |params|
+        params[:to].should == "franz@gmail.com"
+        params[:subject].should include("You are invited to Vistazo")
         
-      params[:body].should include("You've been invited to Vistazo")
-      params[:body].should include("/#{@account_id}/new-user/register")
-    }
-    click_button 'new_user'
+        params[:body].should include("You've been invited to Vistazo")
+        params[:body].should include("/#{@account_id}/new-user/register")
+      }
+      click_button 'new_user'
+    end
     
     page.should have_content("Invitation email has been sent")
   end
@@ -39,8 +39,8 @@ feature "Invite user" do
       
     within_fieldset("Invite new user") do
       fill_in 'new_user_email', :with => ''
+      click_button 'new_user'
     end
-    click_button 'new_user'
     
     page.should have_content("Email is not valid")
   end
@@ -54,8 +54,8 @@ feature "Invite user" do
     
     within_fieldset("Invite new user") do
       fill_in 'new_user_email', :with => OmniAuth.config.mock_auth[:super_admin]["info"]["email"]
+      click_button 'new_user'
     end
-    click_button 'new_user'
     
     page.should have_content("Sorry, user already has an account. Multiple accounts for a user is an upcoming feature we're working. Please check back again.")
   end
@@ -66,8 +66,9 @@ feature "Invite user" do
     
     within_fieldset("Invite new user") do
       fill_in 'new_user_email', :with => "now.now@gmail.com"
+      click_button 'new_user'
     end
-    click_button 'new_user'
+    
     page.should have_content("Invitation email has been sent")
     
     within_fieldset("Invite new user") do
@@ -84,8 +85,8 @@ feature "Invite user" do
     
     within_fieldset("Invite new user") do
       fill_in 'new_user_email', :with => OmniAuth.config.mock_auth[:normal_user]["info"]["email"]
-    end    
-    click_button 'new_user'
+      click_button 'new_user'
+    end
 
     page.should have_content("User is already registered to this account.")
   end
@@ -96,8 +97,8 @@ feature "Invite user" do
       
     within_fieldset("Invite new user") do
       fill_in 'new_user_email', :with => 'franz@gmail.com'
+      click_button 'new_user'
     end
-    click_button 'new_user'
     
     page.should have_content("Invitation email has been sent")
     

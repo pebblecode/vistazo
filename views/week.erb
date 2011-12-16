@@ -38,8 +38,20 @@
         data-team-member-id: Used for update to know the team member moving to
       %>
       <tr class="team-member <%= row_num.odd? ? "odd" : "even" %>" data-team-member-id="<%= tm.id %>">
-        <td class="<%= row_class %> col1" title="<%= h tm.name %>"> <div class="team-member-name"><hr / class="highlight"><%= h truncate(tm.name, :length => 12) %></div></td>
-
+        <td class="<%= row_class %> col1" title="<%= h tm.name %>">
+          <div class="team-member-name"><hr / class="highlight">
+            <%= h truncate(tm.name, :length => 12) %>
+          </div>
+          <form action="/team-member/<%= tm.id %>/edit" method="post">
+            <fieldset class="new-object-fieldset" title="Edit team member">
+              <legend>Edit team member</legend>
+              <label for="name">Name</label>
+              <input type="text" name="name" class="new-object-text-box" value="<%= tm.name %>"/>
+              <button type="submit" value="name" class="submit-button">update</button>
+            </fieldset> <!-- New team member -->
+          </form>
+        </td>
+        
         <% prev_cols = 1 %>
         <% (MONDAY..FRIDAY).each do |work_day| %>
           <%#
@@ -84,7 +96,7 @@
         <fieldset class="new-object-fieldset" title="New team member">
           <legend>New team member</legend>
           <label for="new_team_member_name">Add new</label>
-          <input type="text"name="new_team_member_name" title="Add member" class="new-object-text-box" /> 
+          <input type="text" name="new_team_member_name" title="Add member" class="new-object-text-box" /> 
           <button type="submit" name="new_team_member" value="new_team_member" class="submit-button">+</button>
           <div id="help-new"></div>
         </fieldset> <!-- New team member -->

@@ -25,4 +25,24 @@ feature "Team member" do
     page.should have_content("Successfully added 'Hobo with a shotgun'")
   end
   
+  scenario "name can be edited" do
+    visit "/"
+    click_link "start-btn"
+    
+    # Create team member
+    within_fieldset("New team member") do
+      fill_in 'new_team_member_name', :with => 'Hobo with a shotgun'
+    end
+    click_button 'new_team_member'
+    page.should have_content("Successfully added 'Hobo with a shotgun'")
+    
+    # Edit team member
+    within_fieldset("Edit team member") do
+      fill_in 'name', :with => 'Hobo with gouda'
+      click_button 'update'
+    end
+    
+    page.should have_content("Successfully update team name.")
+  end
+  
 end
