@@ -104,14 +104,6 @@ describe "Projects:" do
       
     TeamMember.count.should == 1
     @team_member = TeamMember.first
-
-    @valid_params = {
-        "new_project_name" => "Business time",
-        "account_id" => @account.id,
-        "team_member_id" => @team_member.id,
-        "date" => "2011-12-16",
-        "new_project" => "true"
-      }
   end
   
   after do
@@ -122,6 +114,16 @@ describe "Projects:" do
   pending "Colour settings"
   
   describe "Create new project" do
+    before do
+      @valid_params = {
+          "new_project_name" => "Business time",
+          "account_id" => @account.id,
+          "team_member_id" => @team_member.id,
+          "date" => "2011-12-16",
+          "new_project" => "true"
+        }
+    end
+    
     it "should show success message if passing valid parameters" do
       params = @valid_params
       post "/#{@account.id}/team-member-project/add", @valid_params, { "rack.session" => {"uid" => @session['uid']} }
@@ -150,7 +152,9 @@ describe "Projects:" do
     end
   end
   
-  pending "Add existing project"
+  pending "Add existing project" do
+    
+  end
   
   describe "Update with json call" do
     it "should return 200 status with message if successful" do
