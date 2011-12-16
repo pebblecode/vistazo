@@ -79,7 +79,7 @@ feature "Team member" do
     
     # Delete team member
     within_fieldset("Delete team member") do
-      page.should have_content("Warning! All projects associated with 'Hobo with a shotgun' will be deleted as well.")
+      page.should have_content("All projects associated with 'Hobo with a shotgun' will also be deleted.")
       click_button 'delete'
     end
     
