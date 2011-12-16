@@ -525,13 +525,13 @@ post '/team-member/:team_member_id/edit' do
       if team_member.save
         flash[:success] = "Successfully updated team name."
       else
-        # flash[:warning] = "Something went wrong with saving team member name. Please try again another time."
+        flash[:warning] = "Something went wrong with saving team member name. Please try again another time."
       end
     else
-      # flash[:warning] = "Please specify a team member name."
+      flash[:warning] = "Please specify a team member name."
     end
   else
-    # todo
+    flash[:warning] = "Invalid team member."
   end
   
   redirect back
