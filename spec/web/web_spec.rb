@@ -43,7 +43,7 @@ describe "Accounts:" do
   end
   
   describe "Week view" do
-    it "should be require login" do
+    it "should require login" do
       create_normal_user(@session)
       
       # Find added user
