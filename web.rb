@@ -513,6 +513,30 @@ post '/:account_id/team-member/add' do
   redirect back
 end
 
+post '/team-member/:team_member_id/edit' do
+  protected!
+  
+  team_member = TeamMember.find(params[:team_member_id])
+  if team_member.present?
+    new_name = params[:name]
+    if new_name.present?
+      team_member.name = new_name
+        
+      if team_member.save
+        flash[:success] = "Successfully updated team name."
+      else
+        # flash[:warning] = "Something went wrong with saving team member name. Please try again another time."
+      end
+    else
+      # flash[:warning] = "Please specify a team member name."
+    end
+  else
+    # todo
+  end
+  
+  redirect back
+end
+
 # ----------------------------------------------------------------------------
 # Admin testing
 # ----------------------------------------------------------------------------

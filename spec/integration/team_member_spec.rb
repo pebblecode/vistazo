@@ -42,7 +42,7 @@ feature "Team member" do
       click_button 'update'
     end
     
-    page.should have_content("Successfully update team name.")
+    page.should have_content("Successfully updated team name.")
   end
   
 end
