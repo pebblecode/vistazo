@@ -26,6 +26,8 @@ To run
     foreman start dev
     # open http://localhost:6100/
 
+To ensure the Google OAuth callback is correct ensure you run the site from http://localhost:6100
+
 ### Testing
 
 To run tests manually
