@@ -56,7 +56,7 @@
             <form action="/team-member/<%= tm.id %>/delete" method="post">
               <fieldset class="delete-object-fieldset" title="Delete team member">
                 <legend>Delete team member</legend>
-                <p class="warning">Warning! All projects associated with '<%= tm.name %>' will be deleted as well.</p>
+                <p class="warning-icon">W</p><p class="warning">All projects associated with '<%= tm.name %>' will also be deleted.</p>
                 <button type="submit" class="submit-button">delete</button>
               </fieldset> <!-- Edit team member -->
             </form>
