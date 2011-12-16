@@ -19,8 +19,8 @@ feature "Team member" do
       
     within_fieldset("New team member") do
       fill_in 'new_team_member_name', :with => 'Hobo with a shotgun'
+      click_button 'new_team_member'
     end
-    click_button 'new_team_member'
     
     page.should have_content("Successfully added 'Hobo with a shotgun'")
   end
@@ -32,8 +32,9 @@ feature "Team member" do
     # Create team member
     within_fieldset("New team member") do
       fill_in 'new_team_member_name', :with => 'Hobo with a shotgun'
+      click_button 'new_team_member'
     end
-    click_button 'new_team_member'
+    
     page.should have_content("Successfully added 'Hobo with a shotgun'")
     
     # Edit team member
@@ -52,8 +53,8 @@ feature "Team member" do
     # Create team member
     within_fieldset("New team member") do
       fill_in 'new_team_member_name', :with => 'Hobo with a shotgun'
+      click_button 'new_team_member'
     end
-    click_button 'new_team_member'
     page.should have_content("Successfully added 'Hobo with a shotgun'")
     
     # Edit team member
@@ -64,6 +65,24 @@ feature "Team member" do
     
     page.should have_content("Please specify a team member name.")
   end
-
   
+  scenario "can be deleted" do
+    visit "/"
+    click_link "start-btn"
+    
+    # Create team member
+    within_fieldset("New team member") do
+      fill_in 'new_team_member_name', :with => 'Hobo with a shotgun'
+      click_button 'new_team_member'
+    end
+    page.should have_content("Successfully added 'Hobo with a shotgun'")
+    
+    # Delete team member
+    within_fieldset("Delete team member") do
+      page.should have_content("Warning! All projects associated with 'Hobo with a shotgun' will be deleted as well.")
+      click_button 'delete'
+    end
+    
+    page.should have_content("Successfully deleted 'Hobo with a shotgun'")
+  end
 end

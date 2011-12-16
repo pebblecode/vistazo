@@ -52,6 +52,14 @@
                 <button type="submit" class="submit-button">update</button>
               </fieldset> <!-- Edit team member -->
             </form>
+            
+            <form action="/team-member/<%= tm.id %>/delete" method="post">
+              <fieldset class="delete-object-fieldset" title="Delete team member">
+                <legend>Delete team member</legend>
+                <p class="warning">Warning! All projects associated with '<%= tm.name %>' will be deleted as well.</p>
+                <button type="submit" class="submit-button">delete</button>
+              </fieldset> <!-- Edit team member -->
+            </form>
           </div> <!-- .edit-team-member-dialog -->
         </td>
         

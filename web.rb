@@ -537,6 +537,21 @@ post '/team-member/:team_member_id/edit' do
   redirect back
 end
 
+post '/team-member/:team_member_id/delete' do
+  protected!
+  
+  team_member = TeamMember.find(params[:team_member_id])
+  if team_member.present?
+    name = team_member.name
+    team_member.delete
+    flash[:success] = "Successfully deleted '#{name}'."
+  else
+    flash[:warning] = "Invalid team member."
+  end
+  
+  redirect back
+end
+
 # ----------------------------------------------------------------------------
 # Admin testing
 # ----------------------------------------------------------------------------
