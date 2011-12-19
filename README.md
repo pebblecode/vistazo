@@ -38,6 +38,15 @@ To run tests automatically with [guard](https://github.com/guard/guard)
 
     bundle exec guard
 
+### UX testing
+
+For UX testing, there is a [ux-sandbox-testing](http://github.com/pebblecode/vistazo/tree/ux-sandbox-testing) branch that allows for modifications to be made to the code that can be deployed specifically for ux testing. Currently, we are deploying to http://vistazo-sandbox.herokuapp.com.
+
+To push code to the sandbox, checkout the branch and run:
+
+    git push sandbox ux-sandbox-testing:master
+
+
 ## Sandbox
 
 For playing around with things, where you don't want to break staging or production. 
