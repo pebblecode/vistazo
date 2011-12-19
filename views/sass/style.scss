@@ -1132,6 +1132,16 @@ textarea:focus, input:focus{
     background: url('/img/help-new.png');
   }
   
+  #help-team{
+    position: absolute;
+    z-index: 110;
+    top: 25px;
+    left: 40px;
+    height: 112px;
+    width: 206px;
+    background: url('/img/help-team.png');
+  }
+  
   #help-project-container {
     position: relative;
     
