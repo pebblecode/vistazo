@@ -250,7 +250,8 @@ describe "Projects:" do
       
       # Shouldn't of created a new team member project
       @team_member.reload.team_member_projects.count.should == 1
-
+      
+      last_response.status.should == 200
       last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{@team_member.name} on #{new_date}.")
     end
     
@@ -262,6 +263,7 @@ describe "Projects:" do
       )
       post_params! update_project_path(@account, @tm_project), params, @session
       
+      last_response.status.should == 200
       last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{another_team_member.name} on #{@project_params["date"]}.")
     end
 
@@ -274,6 +276,7 @@ describe "Projects:" do
       )
       post_params! update_project_path(@account, @tm_project), params, @session
       
+      last_response.status.should == 200
       last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{another_team_member.name} on #{new_date}.")
     end
     
@@ -284,6 +287,7 @@ describe "Projects:" do
       )
       post_params! update_project_path(@account, @tm_project), params, @session
       
+      last_response.status.should == 400
       last_response.body.should include("Something went wrong with the input when updating team member project.")
     end
     
