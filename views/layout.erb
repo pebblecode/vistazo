@@ -39,7 +39,8 @@
         <h2><%= @account.name %></h2>
       </div>
     <% end %>
-    
+  
+    <!-- <%= "#{request.env['SERVER_NAME']}, #{request.base_url}" %> -->
     <% if is_super_admin? or is_on_sandbox_site? %>
       <ul id="modify-data" style="<%= (settings.environment == "production") or is_on_sandbox_site? ? "display: none" : "" %>">
         <li>
