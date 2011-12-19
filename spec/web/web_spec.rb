@@ -129,6 +129,8 @@ describe "Projects:" do
       post "/#{@account.id}/team-member-project/add", @valid_params, { "rack.session" => {"uid" => @session['uid']} }
       flash_message = last_request.session[:flash]
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
+      Project.count.should == 1
+      @team_member.reload.team_member_projects.count.should == 1
     end
     
     it "should show error message if new project name is not present or empty" do
@@ -137,18 +139,21 @@ describe "Projects:" do
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("Please specify a project name.")
       Project.count.should == 0
+      @team_member.reload.team_member_projects.count.should == 0
       
       params = @valid_params.merge({ "new_project_name" => nil })
       post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("Please specify a project name.")
       Project.count.should == 0
-        
+      @team_member.reload.team_member_projects.count.should == 0
+      
       params = @valid_params.reject { |k,v| k == "new_project_name" }
       post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("Please specify a project name.")
       Project.count.should == 0
+      @team_member.reload.team_member_projects.count.should == 0
     end
   end
   
@@ -164,6 +169,8 @@ describe "Projects:" do
       post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
       flash_message = last_request.session[:flash]
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
+      Project.count.should == 1
+      @team_member.reload.team_member_projects.count.should == 1
     end
     
     it "should show success message if passing valid parameters" do
@@ -178,6 +185,8 @@ describe "Projects:" do
       post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
       flash_message = last_request.session[:flash]
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2012-01-15.")
+      Project.count.should == 1
+      @team_member.reload.team_member_projects.count.should == 2   # Added another project
     end
   end
   
