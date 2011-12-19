@@ -43,6 +43,10 @@ module Sinatra
       end
       return false
     end
+    
+    def is_on_sandbox_site?
+      request.env["SERVER_NAME"] == "http://vistazo-staging.herokuapp.com"
+    end
   end
   helpers BasicAuthentication
 end

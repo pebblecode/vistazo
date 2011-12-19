@@ -400,7 +400,7 @@ describe "Admin:" do
       last_response.body.should_not include('Reset database')
     end
     
-    it "should only show if a user with the email ttt@pebblecode.com is logged in" do       
+    it "should show if a user with the email ttt@pebblecode.com is logged in" do       
       User.count.should == 0
       login_super_admin_with_session!(@session)
       last_response.body.should include('Reset database')
@@ -431,6 +431,21 @@ describe "Admin:" do
       normal_user.should be_valid
       
       login_normal_user_with_session!(@session)
+      last_response.body.should include('Reset database')
+    end
+    
+    it "should show if on http://vistazo-sandbox.herokuapp.com" do
+      User.count.should == 0
+      login_super_admin_with_session!(@session)
+      last_response.body.should include('Reset database')
+      User.count.should == 1
+      
+      login_normal_user_with_session!(@session)
+      last_response.body.should_not include('Reset database')
+      
+      pending "Get sandbox test working"
+      get "/", nil, {"SERVER_NAME" => "vistazo-sandbox.herokuapp.com", "HTTP_HOST" => "vistazo-sandbox.herokuapp.com" }
+      get(last_response["Location"], {}, { "HTTP_REFERER" => last_request.url, "SERVER_NAME" => "vistazo-sandbox.herokuapp.com", "HTTP_HOST" => "vistazo-sandbox.herokuapp.com" })
       last_response.body.should include('Reset database')
     end
   end

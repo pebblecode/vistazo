@@ -40,8 +40,8 @@
       </div>
     <% end %>
     
-    <% if is_super_admin? %>
-      <ul id="modify-data" style="<%= (settings.environment == "production") ? "display: none" : "" %>">
+    <% if is_super_admin? or is_on_sandbox_site? %>
+      <ul id="modify-data" style="<%= (settings.environment == "production") or is_on_sandbox_site? ? "display: none" : "" %>">
         <li>
           <form action="/reset" method="post">
             <button name="reset_database" type="submit" value="submit">Reset database</button>
