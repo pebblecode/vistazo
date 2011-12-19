@@ -291,8 +291,36 @@ describe "Projects:" do
       last_response.body.should include("Something went wrong with the input when updating team member project.")
     end
     
-    it "should return 400 error with message if it is a team member from another account" do
+    it "should return 400 error with message if it is moved to a team member in another account" do
+      another_account = Factory(:account)
+      tm_in_another_account = Factory(:team_member, :account => another_account)
+      params = @valid_params.merge(
+        "to_team_member_id" => tm_in_another_account.id
+      )
+      post_params! update_project_path(@account, @tm_project), params, @session
       
+      last_response.status.should == 400
+      last_response.body.should include("Invalid account.")
+    end
+    
+    pending "should return 400 error with message if it is moved from a team member in another account" do
+      another_account = Factory(:account)
+      tm_in_another_account = Factory(:team_member, :account => another_account)
+      params = @valid_params.merge(
+        "from_team_member_id" => tm_in_another_account.id
+      )
+      post_params! update_project_path(@account, @tm_project), params, @session
+      
+      last_response.status.should == 400
+      last_response.body.should include("Invalid account.")
+    end
+    
+    pending "should return 400 error with message if it is moved in an invalid account" do
+      params = @valid_params
+      post_params! update_project_with_account_id_path("invalid_account_id", @tm_project), params, @session
+      
+      last_response.status.should == 400
+      last_response.body.should include("Invalid account.")
     end
     
     pending "should return 500 error with message if there is an internal error"

@@ -41,4 +41,9 @@ module PathSpecHelper
     "/#{account.id}/team-member-project/#{team_member_project.id}/update.json"
   end
   
+  def update_project_with_account_id_path(account_id, team_member_project)
+    "/#{account_id}/team-member-project/#{team_member_project.id}/update.json"
+  end
+
+  
 end

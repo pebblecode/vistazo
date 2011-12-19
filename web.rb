@@ -443,29 +443,41 @@ post '/:account_id/team-member-project/:tm_project_id/update.json' do
   protected!
   require_account_user!(params[:account_id])
   
-  from_team_member = TeamMember.find(params[:from_team_member_id])
-  to_team_member = TeamMember.find(params[:to_team_member_id])
-  team_member_project = from_team_member.team_member_projects.find(params[:tm_project_id]) if from_team_member
-  to_date = Date.parse(params[:to_date]) if params[:to_date]
-
-  logger.info "Update team member project params: #{params}"
-  
   output = ""
-  if (from_team_member.present? and to_team_member.present? and team_member_project.present? and to_date.present?)
-    successful_move = from_team_member.move_project(team_member_project, to_team_member, to_date)
+  current_user_account = Account.find(params[:account_id])
+  if current_user_account.present?
+    from_team_member = TeamMember.find(params[:from_team_member_id])
+    to_team_member = TeamMember.find(params[:to_team_member_id])
+    team_member_project = from_team_member.team_member_projects.find(params[:tm_project_id]) if from_team_member
+    to_date = Date.parse(params[:to_date]) if params[:to_date]
+    
+    logger.info "Update team member project params: #{params}"
+    
+    
+    if (from_team_member.present? and to_team_member.present? and team_member_project.present? and to_date.present?)
+      if ((from_team_member.account == current_user_account) and (to_team_member.account == current_user_account))
+        successful_move = from_team_member.move_project(team_member_project, to_team_member, to_date)
   
-    if successful_move
-      status 200
-      output = { :message => "Successfully moved '<em>#{team_member_project.project_name}</em>' project to #{to_team_member.name} on #{to_date}." }
+        if successful_move
+          status 200
+          output = { :message => "Successfully moved '<em>#{team_member_project.project_name}</em>' project to #{to_team_member.name} on #{to_date}." }
+        else
+          status 500
+          output = { :message => "Something went wrong with saving the changes when updating team member project. Please refresh and try again later." }
+        end
+      else
+        status 400
+        output = { :message => "Invalid account." }
+      end
     else
-      status 500
-      output = { :message => "Something went wrong with saving the changes when updating team member project. Please refresh and try again later." }
+      status 400
+      output = { :message => "Something went wrong with the input when updating team member project. Please refresh and try again later." }
     end
   else
     status 400
-    output = { :message => "Something went wrong with the input when updating team member project. Please refresh and try again later." }
+    output = { :message => "Invalid account." }
   end
-
+  
   content_type :json 
   output.to_json
 end
