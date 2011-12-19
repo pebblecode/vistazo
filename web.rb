@@ -127,7 +127,7 @@ get '/auth/:provider/callback' do
           flash[:success] = "Welcome to Vistazo! You've successfully registered."
         else
           flash[:warning] = "Could not register user."
-          puts @user.errors
+          logger.warn @user.errors
           @user = nil
           redirect '/'
         end
@@ -147,8 +147,8 @@ get '/auth/:provider/callback' do
         else
           flash[:warning] = "Could not retrieve user."
           
-          puts "Error creating user:"
-          @user.errors.each { |e| puts "#{e}: #{@user.errors[e]}" }
+          logger.warn "Error creating user:"
+          @user.errors.each { |e| logger.warn "#{e}: #{@user.errors[e]}" }
           
           @user = nil
           redirect '/'
@@ -266,7 +266,7 @@ get '/:account_id' do
 end
 
 post '/:account_id/new-user' do
-  puts "New user: #{params}"
+  logger.info "New user: #{params}"
   email = params[:new_user_email]
   
   @account = Account.find(params[:account_id])
@@ -332,7 +332,7 @@ def send_registration_email_for_params(user, params)
       flash[:warning] = "Invalid user to send email to."
     end
   rescue Exception => e
-    puts "Email error: #{e}"
+    logger.warn "Email error: #{e}"
     flash[:warning] = "It looks like something went wrong while attempting to send your email. Please try again another time. Error: #{e}"
   end
 end
@@ -374,22 +374,22 @@ def send_registration_email_to(send_to_email)
   }
   
   if ENV['RACK_ENV'] == "development"
-    puts "DEVELOPMENT MODE: email not actually sent, but this is what it'd look like..."
-    puts "send_from_email: #{send_from_email}"
-    puts "send_to_email: #{send_to_email}"
-    puts "params: #{email_params}"
-    puts "subject: #{subject}"
+    logger.info "DEVELOPMENT MODE: email not actually sent, but this is what it'd look like..."
+    logger.info "send_from_email: #{send_from_email}"
+    logger.info "send_to_email: #{send_to_email}"
+    logger.info "params: #{email_params}"
+    logger.info "subject: #{subject}"
             
-    puts erb(:new_user_email, :layout => false)
+    logger.info erb(:new_user_email, :layout => false)
   else
     if ENV['RACK_ENV'] == "staging"
-      puts "STAGING MODE: this email should be sent:"
-      puts "send_from_email: #{send_from_email}"
-      puts "send_to_email: #{send_to_email}"
-      puts "params: #{email_params}"
-      puts "subject: #{subject}"
+      logger.info "STAGING MODE: this email should be sent:"
+      logger.info "send_from_email: #{send_from_email}"
+      logger.info "send_to_email: #{send_to_email}"
+      logger.info "params: #{email_params}"
+      logger.info "subject: #{subject}"
       
-      puts erb(:new_user_email, :layout => false)
+      logger.info erb(:new_user_email, :layout => false)
     end
     
     send_email(send_from_email, send_to_email, subject, erb(:new_user_email, :layout => false), email_params)
@@ -407,7 +407,7 @@ post '/:account_id/team-member-project/add' do
   team_member = TeamMember.find(params[:team_member_id])
   date = Date.parse(params[:date])
 
-  puts "Add team member project: #{params}"
+  logger.info "Add team member project: #{params}"
 
   if params[:new_project].present?
     project_name = params[:new_project_name]
@@ -440,14 +440,14 @@ end
 
 post '/team-member-project/:tm_project_id/update.json' do
   protected!
-
+  
   from_team_member = TeamMember.find(params[:from_team_member_id])
   to_team_member = TeamMember.find(params[:to_team_member_id])
   team_member_project = from_team_member.team_member_projects.find(params[:tm_project_id]) if from_team_member
-  to_date = Date.parse(params[:to_date])
+  to_date = Date.parse(params[:to_date]) if params[:to_date]
 
-  puts "Update team member project params: #{params}"
-
+  logger.info "Update team member project params: #{params}"
+  
   output = ""
   if (from_team_member.present? and to_team_member.present? and team_member_project.present? and to_date.present?)
     successful_move = from_team_member.move_project(team_member_project, to_team_member, to_date)
@@ -498,7 +498,7 @@ post '/:account_id/team-member/add' do
 
   account = Account.find(params[:account_id])
 
-  puts "Add team member: #{params}"
+  logger.info "Add team member: #{params}"
 
   if account.present?
     team_member_name = params[:new_team_member_name]
@@ -607,13 +607,13 @@ def send_error_email(exception)
   @exception = "#{exception.class}: #{exception.message}"
   
   if ENV['RACK_ENV'] == "development"
-    puts "DEVELOPMENT MODE: email not actually sent, but this is what it'd look like..."
-    puts "send_from_email: #{send_from_email}"
-    puts "send_to_email: #{send_to_email}"
-    puts "params: #{email_params}"
-    puts "subject: #{subject}"
+    logger.info "DEVELOPMENT MODE: email not actually sent, but this is what it'd look like..."
+    logger.info "send_from_email: #{send_from_email}"
+    logger.info "send_to_email: #{send_to_email}"
+    logger.info "params: #{email_params}"
+    logger.info "subject: #{subject}"
             
-    puts erb(:error_email, :layout => false)
+    logger.info erb(:error_email, :layout => false)
   else
     send_email(send_from_email, send_to_email, subject, erb(:error_email, :layout => false), email_params)
   end
