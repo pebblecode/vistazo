@@ -101,26 +101,29 @@ $(function () {
   // Add user email checking
   {
     $("#invite-user-form").submit(function() {
+      var error_form_classname = "errors-on-form";
+      var error_field_msg_classname = "error-field-msg";
       var email = $(this).find(".new-object-text-box").val();
       
       // Regex from http://www.regular-expressions.info/email.html
       var valid_email = email.match(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/i);
       if (!valid_email) {
         // Set invalid class and append message
-        $(this).addClass("invalid");
-        if ($(this).find(".invalid-email").length <= 0) {
-          $(this).append("<p class='invalid-email'>Invalid email address</p>")
+        $(this).addClass(error_form_classname);
+        if ($(this).find("." + error_field_msg_classname).length <= 0) {
+          $(this).append("<p class='" + error_field_msg_classname + "'>Invalid email address</p>")
         }
         
         // Flash the error message
-        $(this).find(".invalid-email").hide(0, function() {
+        $(this).find("." + error_field_msg_classname).hide(0, function() {
           $(this).fadeIn(500);
         });
         
         // Don't send the form
         return false;
       } else {
-        $(this).find(".invalid-email").remove();
+        $(this).find("." + error_field_msg_classname).remove();
+        $(this).removeClass(error_form_classname);
       }
     });
   }

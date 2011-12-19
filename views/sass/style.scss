@@ -12,6 +12,7 @@ $flash_black: #404040;
 $flash_yellow: #EEDC94;
 $vistazo_blue: #29ABE2;
 
+$warning_bg_color: #EEDC94;
 $warning_color: #000000;
 
 /* Mixins
@@ -267,6 +268,26 @@ body {
 textarea:focus, input:focus{
   outline: none;
 }
+
+/* Error styles */
+.errors-on-form {
+  .new-object-fieldset {
+    background-color: $warning_bg_color;
+    input {
+      color: $warning_color;
+      background-color: $warning_bg_color;
+    }
+    .submit-button {
+      color: #666;
+    }
+  }
+    
+  .error-field-msg {
+    margin-top: 5px;
+    color: $warning_bg_color;
+    text-shadow: none;
+  } // .error-field
+} // .errors
 
 
 /* Top nav
@@ -1109,16 +1130,6 @@ textarea:focus, input:focus{
     height: 57px;
     width: 315px;
     background: url('/img/help-new.png');
-  }
-  
-  #help-team{
-    position: absolute;
-    z-index: 110;
-    top: 25px;
-    left: 40px;
-    height: 112px;
-    width: 206px;
-    background: url('/img/help-team.png');
   }
   
   #help-project-container {
