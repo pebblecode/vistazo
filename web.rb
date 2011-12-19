@@ -402,7 +402,8 @@ end
 
 post '/:account_id/team-member-project/add' do
   protected!
-
+  require_account_user!(params[:account_id])
+  
   account = Account.find(params[:account_id])
   team_member = TeamMember.find(params[:team_member_id])
   date = Date.parse(params[:date])

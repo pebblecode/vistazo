@@ -124,6 +124,14 @@ describe "Projects:" do
         }
     end
     
+    it "should require login" do
+      params = @valid_params
+      post "/#{@account.id}/team-member-project/add", @valid_params
+      
+      flash_message = last_request.session[:flash]
+      flash_message[:warning].should include("You must be logged in.")
+    end
+    
     it "should show success message if passing valid parameters" do
       params = @valid_params
       post_params! "/#{@account.id}/team-member-project/add", @valid_params, @session
