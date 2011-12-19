@@ -248,12 +248,13 @@ $(function () {
 
 // Update team member project
 function updateTeamMemberProject(proj) {
+  var accountId = window.location.pathname.split('/')[1]; // From the first path of url
   var fromTeamMemberId = $(proj).attr("data-team-member-id");
   var toTeamMemberId = $(proj).parents('.team-member').first().attr("data-team-member-id");
   var teamMemberProjectId = $(proj).attr("data-team-member-project-id");
   var toDate = $(proj).parents('.box').first().attr("data-date");
     
-  var url = "/team-member-project/" + teamMemberProjectId + "/update.json";
+  var url = "/" + accountId + "/team-member-project/" + teamMemberProjectId + "/update.json";
   $(proj).addClass('is_loading');
   $.post(url, { from_team_member_id: fromTeamMemberId, to_team_member_id: toTeamMemberId, to_date: toDate })
     .success(function(response) {

@@ -439,8 +439,9 @@ post '/:account_id/team-member-project/add' do
   redirect back
 end
 
-post '/team-member-project/:tm_project_id/update.json' do
+post '/:account_id/team-member-project/:tm_project_id/update.json' do
   protected!
+  require_account_user!(params[:account_id])
   
   from_team_member = TeamMember.find(params[:from_team_member_id])
   to_team_member = TeamMember.find(params[:to_team_member_id])

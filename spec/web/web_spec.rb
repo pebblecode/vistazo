@@ -233,8 +233,8 @@ describe "Projects:" do
       }
     end
     
-    pending "should require login" do
-      post update_project_path(@tm_project), @valid_params
+    it "should require login" do
+      post update_project_path(@account, @tm_project), @valid_params
       
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("You must be logged in.")
@@ -243,7 +243,7 @@ describe "Projects:" do
     it "should return 200 status with message if successfully moved to another date" do
       new_date = "2011-12-15"
       params = @valid_params.merge("to_date" => new_date)
-      post_params! update_project_path(@tm_project), params, @session
+      post_params! update_project_path(@account, @tm_project), params, @session
       
       # Shouldn't of created a new project
       Project.count.should == 1
@@ -260,7 +260,7 @@ describe "Projects:" do
         "to_team_member_id" => another_team_member.id,
         "to_date" => @project_params["date"]
       )
-      post_params! update_project_path(@tm_project), params, @session
+      post_params! update_project_path(@account, @tm_project), params, @session
       
       last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{another_team_member.name} on #{@project_params["date"]}.")
     end
@@ -272,7 +272,7 @@ describe "Projects:" do
         "to_team_member_id" => another_team_member.id,
         "to_date" => new_date
       )
-      post_params! update_project_path(@tm_project), params, @session
+      post_params! update_project_path(@account, @tm_project), params, @session
       
       last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{another_team_member.name} on #{new_date}.")
     end
@@ -282,7 +282,7 @@ describe "Projects:" do
       params = @valid_params.merge(
         "to_team_member_id" => error_team_member_id
       )
-      post_params! update_project_path(@tm_project), params, @session
+      post_params! update_project_path(@account, @tm_project), params, @session
       
       last_response.body.should include("Something went wrong with the input when updating team member project.")
     end
