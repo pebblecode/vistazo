@@ -223,18 +223,26 @@ describe "Projects:" do
       @project = Project.first
       @team_member.reload.team_member_projects.count.should == 1
       @tm_project = @team_member.team_member_projects.first
-    end
-    
-    it "should require login"
-    
-    it "should return 200 status with message if successfully moved to another date" do
+      
       new_date = "2011-12-13"
-      params = {
+      @valid_params = {
         "from_team_member_id" => @team_member.id,
         "to_team_member_id" => @team_member.id,
         "tm_project_id" => @tm_project.id,
         "to_date" => new_date
       }
+    end
+    
+    pending "should require login" do
+      post update_project_path(@tm_project), @valid_params
+      
+      flash_message = last_request.session[:flash]
+      flash_message[:warning].should include("You must be logged in.")
+    end
+    
+    it "should return 200 status with message if successfully moved to another date" do
+      new_date = "2011-12-15"
+      params = @valid_params.merge("to_date" => new_date)
       post_params! update_project_path(@tm_project), params, @session
       
       # Shouldn't of created a new project
@@ -248,12 +256,10 @@ describe "Projects:" do
     
     it "should return 200 status with message if successfully moved to another team member" do
       another_team_member = Factory(:team_member, :account => @account)
-      params = {
-        "from_team_member_id" => @team_member.id,
+      params = @valid_params.merge(
         "to_team_member_id" => another_team_member.id,
-        "tm_project_id" => @tm_project.id,
         "to_date" => @project_params["date"]
-      }
+      )
       post_params! update_project_path(@tm_project), params, @session
       
       last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{another_team_member.name} on #{@project_params["date"]}.")
@@ -261,13 +267,11 @@ describe "Projects:" do
 
     it "should return 200 status with message if successfully moved to another person and another date" do
       another_team_member = Factory(:team_member, :account => @account)
-      new_date = "2011-12-13"
-      params = {
-        "from_team_member_id" => @team_member.id,
+      new_date = "2011-12-18"
+      params = @valid_params.merge(
         "to_team_member_id" => another_team_member.id,
-        "tm_project_id" => @tm_project.id,
         "to_date" => new_date
-      }
+      )
       post_params! update_project_path(@tm_project), params, @session
       
       last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{another_team_member.name} on #{new_date}.")
@@ -275,12 +279,9 @@ describe "Projects:" do
     
     it "should return 400 error with message if moving to an invalid user" do
       error_team_member_id = "not_an_id"
-      params = {
-        "from_team_member_id" => @team_member.id,
-        "to_team_member_id" => error_team_member_id,
-        "tm_project_id" => @tm_project.id,
-        "to_date" => @project_params["date"]
-      }
+      params = @valid_params.merge(
+        "to_team_member_id" => error_team_member_id
+      )
       post_params! update_project_path(@tm_project), params, @session
       
       last_response.body.should include("Something went wrong with the input when updating team member project.")
