@@ -178,21 +178,30 @@ describe "Projects:" do
       flash_message = last_request.session[:flash]
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
       Project.count.should == 1
+      @project = Project.first
       @team_member.reload.team_member_projects.count.should == 1
+      
+      @date_to_add = "2012-01-15"
+      @existing_project_params_to_add = {
+        "project_id" => @project.id,
+        "account_id" => @account.id,
+        "team_member_id" => @team_member.id,
+        "date" => @date_to_add
+      }
+    end
+    
+    it "should require login" do
+      post add_project_path(@account), @existing_project_params_to_add
+      
+      flash_message = last_request.session[:flash]
+      flash_message[:warning].should include("You must be logged in.")
     end
     
     it "should show success message if passing valid parameters" do
-      Project.count.should == 1
-      project = Project.first
-      params = {
-        "project_id" => project.id,
-        "account_id" => @account.id,
-        "team_member_id" => @team_member.id,
-        "date" => "2012-01-15"
-      }
-      post_params! add_project_path(@account), params, @session
+      post_params! add_project_path(@account), @existing_project_params_to_add, @session
+      
       flash_message = last_request.session[:flash]
-      flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2012-01-15.")
+      flash_message[:success].should include("Successfully added '<em>#{@project.name}</em>' project for #{@team_member.name} on #{@date_to_add}.")
       Project.count.should == 1
       @team_member.reload.team_member_projects.count.should == 2   # Added another project
     end
@@ -215,6 +224,8 @@ describe "Projects:" do
       @team_member.reload.team_member_projects.count.should == 1
       @tm_project = @team_member.team_member_projects.first
     end
+    
+    it "should require login"
     
     it "should return 200 status with message if successfully moved to another date" do
       new_date = "2011-12-13"
