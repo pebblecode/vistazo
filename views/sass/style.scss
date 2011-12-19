@@ -327,6 +327,18 @@ textarea:focus, input:focus{
   #account-name {
     width: 400px;
     
+    #team-icon{
+      background: url(../img/team.png) no-repeat left top #29ABE2;
+      float: left;
+      margin: 7px 0 0 10px;
+      width: 41px;
+      height: 27px;  
+      
+      &:hover{
+        background: url(../img/team.png) no-repeat left -27px #29ABE2;
+      }    
+    }
+    
     h2 {
       cursor: pointer;
     }
