@@ -528,7 +528,7 @@ post '/team-member/:team_member_id/edit' do
       team_member.name = new_name
         
       if team_member.save
-        flash[:success] = "Successfully updated team name."
+        flash[:success] = "Successfully updated team member name."
       else
         flash[:warning] = "Something went wrong with saving team member name. Please try again another time."
       end
