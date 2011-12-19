@@ -45,7 +45,7 @@ module Sinatra
     end
     
     def is_on_sandbox_site?
-      request.env["SERVER_NAME"] == "http://vistazo-staging.herokuapp.com"
+      request.env["SERVER_NAME"] == "vistazo-sandbox.herokuapp.com"
     end
   end
   helpers BasicAuthentication
