@@ -694,26 +694,26 @@ textarea:focus, input:focus{
 /* Dialogs
 -----------------------------------------------------------------------------*/
 
-#new-tm-project-form {
-  label {
-    display: block;
-    margin-top: -30px;
-    padding-bottom: 13px;
+#new-project-dialog {
+  legend {
+    margin: 0;
+    padding: 0 0 15px 3px;
     
-    font-size: 14px;
     line-height: 16px;
+    font-size: 14px;
+    
     font-family: $default-font-family;
     color: #ffffff;
     font-weight: bold;
     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
   }
   
+  #existing-projects-listing {
+    margin-bottom: 15px;
+  }
+  
   .new-object-fieldset {
-    margin-top: 40px;
-    
-    .new-object-text-box {
-      margin-top: 3px;
-    }
+    margin-top: 0;
   } // .new-object-fieldset
 } // #new-tm-project-form
 
