@@ -193,6 +193,9 @@ $(function () {
       $("#new-project-dialog").show().offset({ top: event.pageY + new_project_dialog_top_offset, left: event.pageX + new_project_dialog_left_offset });
       $("#new-project-dialog").show();
       
+      // Focus on new project text box
+      $("#new-project-dialog .new-object-text-box").focus();
+      
       event.stopPropagation(); // Prevent click from hiding form
       return false;
     });
