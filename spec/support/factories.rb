@@ -9,3 +9,9 @@ Factory.define :user do |f|
   f.sequence(:email) { |n| "user_#{n}@example.com" }
   f.association :account
 end
+
+Factory.define :team_member do |f|
+  f.sequence(:name) { |n| "User #{n}" }
+  f.association :account
+end
+

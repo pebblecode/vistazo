@@ -203,14 +203,12 @@ describe "Projects:" do
       flash_message = last_request.session[:flash]
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")  
       Project.count.should == 1
+      @project = Project.first
       @team_member.reload.team_member_projects.count.should == 1
+      @tm_project = @team_member.team_member_projects.first
     end
     
     it "should return 200 status with message if successfully moved to another date" do
-      Project.count.should == 1
-      @team_member.reload.team_member_projects.count.should == 1
-      @tm_project = @team_member.team_member_projects.first
-      project = Project.first
       new_date = "2011-12-13"
       params = {
         "from_team_member_id" => @team_member.id,
@@ -229,28 +227,53 @@ describe "Projects:" do
       last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{@team_member.name} on #{new_date}.")
     end
     
-    pending "should return 200 status with message if successfully moved to another person" do
-      Project.count.should == 1
-      project = Project.first
+    it "should return 200 status with message if successfully moved to another team member" do
+      another_team_member = Factory(:team_member, :account => @account)
       params = {
-        "project_id" => project.id,
-        "account_id" => @account.id,
-        "team_member_id" => @team_member.id,
-        "date" => "2012-01-15"
+        "from_team_member_id" => @team_member.id,
+        "to_team_member_id" => another_team_member.id,
+        "tm_project_id" => @tm_project.id,
+        "to_date" => @project_params["date"]
+
       }
 
-      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
-      flash_message = last_request.session[:flash]
-      flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2012-01-15.")
-
-      pending "post json call"
+      post "/team-member-project/#{@tm_project.id}/update.json", params, { "rack.session" => {"uid" => @session['uid']} }
+      
+      last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{another_team_member.name} on #{@project_params["date"]}.")
     end
 
-    pending "should return 200 status with message if successfully moved to another person and another date" do
+    it "should return 200 status with message if successfully moved to another person and another date" do
+      another_team_member = Factory(:team_member, :account => @account)
+      new_date = "2011-12-13"
+      params = {
+        "from_team_member_id" => @team_member.id,
+        "to_team_member_id" => another_team_member.id,
+        "tm_project_id" => @tm_project.id,
+        "to_date" => new_date
+      }
+
+      post "/team-member-project/#{@tm_project.id}/update.json", params, { "rack.session" => {"uid" => @session['uid']} }
       
+      last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{another_team_member.name} on #{new_date}.")
     end
     
-    pending "should return 400 error with message if there are incorrect parameters"
+    it "should return 400 error with message if moving to an invalid user" do
+      error_team_member_id = "not_an_id"
+      params = {
+        "from_team_member_id" => @team_member.id,
+        "to_team_member_id" => error_team_member_id,
+        "tm_project_id" => @tm_project.id,
+        "to_date" => @project_params["date"]
+      }
+      
+      post "/team-member-project/#{@tm_project.id}/update.json", params, { "rack.session" => {"uid" => @session['uid']} }
+      
+      last_response.body.should include("Something went wrong with the input when updating team member project.")
+    end
+    
+    it "should return 400 error with message if it is a team member from another account" do
+      
+    end
     
     pending "should return 500 error with message if there is an internal error"
   end
