@@ -694,6 +694,29 @@ textarea:focus, input:focus{
 /* Dialogs
 -----------------------------------------------------------------------------*/
 
+#new-tm-project-form {
+  label {
+    display: block;
+    margin-top: -30px;
+    padding-bottom: 13px;
+    
+    font-size: 14px;
+    line-height: 16px;
+    font-family: $default-font-family;
+    color: #ffffff;
+    font-weight: bold;
+    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+  }
+  
+  .new-object-fieldset {
+    margin-top: 40px;
+    
+    .new-object-text-box {
+      margin-top: 3px;
+    }
+  } // .new-object-fieldset
+} // #new-tm-project-form
+
 /* Generic jquery-ui styles */
 .ui-dialog {
   @extend .new-object-dialog;
