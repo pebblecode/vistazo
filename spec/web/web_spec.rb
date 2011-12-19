@@ -126,7 +126,7 @@ describe "Projects:" do
     
     it "should show success message if passing valid parameters" do
       params = @valid_params
-      post "/#{@account.id}/team-member-project/add", @valid_params, { "rack.session" => {"uid" => @session['uid']} }
+      post_params! "/#{@account.id}/team-member-project/add", @valid_params, @session
       flash_message = last_request.session[:flash]
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
       Project.count.should == 1
@@ -135,21 +135,21 @@ describe "Projects:" do
     
     it "should show error message if new project name is not present or empty" do
       params = @valid_params.merge({ "new_project_name" => "" })
-      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      post_params! "/#{@account.id}/team-member-project/add", params, @session
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("Please specify a project name.")
       Project.count.should == 0
       @team_member.reload.team_member_projects.count.should == 0
       
       params = @valid_params.merge({ "new_project_name" => nil })
-      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      post_params! "/#{@account.id}/team-member-project/add", params, @session
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("Please specify a project name.")
       Project.count.should == 0
       @team_member.reload.team_member_projects.count.should == 0
       
       params = @valid_params.reject { |k,v| k == "new_project_name" }
-      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      post_params! "/#{@account.id}/team-member-project/add", params, @session
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("Please specify a project name.")
       Project.count.should == 0
@@ -166,7 +166,7 @@ describe "Projects:" do
           "date" => "2011-12-16",
           "new_project" => "true"
         }
-      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      post_params! "/#{@account.id}/team-member-project/add", params, @session
       flash_message = last_request.session[:flash]
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
       Project.count.should == 1
@@ -182,7 +182,7 @@ describe "Projects:" do
         "team_member_id" => @team_member.id,
         "date" => "2012-01-15"
       }
-      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      post_params! "/#{@account.id}/team-member-project/add", params, @session
       flash_message = last_request.session[:flash]
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2012-01-15.")
       Project.count.should == 1
@@ -199,7 +199,7 @@ describe "Projects:" do
           "date" => "2011-12-16",
           "new_project" => "true"
         }
-      post "/#{@account.id}/team-member-project/add", @project_params, { "rack.session" => {"uid" => @session['uid']} }
+      post_params! "/#{@account.id}/team-member-project/add", @project_params, @session
       flash_message = last_request.session[:flash]
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")  
       Project.count.should == 1
@@ -216,7 +216,7 @@ describe "Projects:" do
         "tm_project_id" => @tm_project.id,
         "to_date" => new_date
       }
-      post "/team-member-project/#{@tm_project.id}/update.json", params, { "rack.session" => {"uid" => @session['uid']} }
+      post_params! "/team-member-project/#{@tm_project.id}/update.json", params, @session
       
       # Shouldn't of created a new project
       Project.count.should == 1
@@ -234,10 +234,8 @@ describe "Projects:" do
         "to_team_member_id" => another_team_member.id,
         "tm_project_id" => @tm_project.id,
         "to_date" => @project_params["date"]
-
       }
-
-      post "/team-member-project/#{@tm_project.id}/update.json", params, { "rack.session" => {"uid" => @session['uid']} }
+      post_params! "/team-member-project/#{@tm_project.id}/update.json", params, @session
       
       last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{another_team_member.name} on #{@project_params["date"]}.")
     end
@@ -251,8 +249,7 @@ describe "Projects:" do
         "tm_project_id" => @tm_project.id,
         "to_date" => new_date
       }
-
-      post "/team-member-project/#{@tm_project.id}/update.json", params, { "rack.session" => {"uid" => @session['uid']} }
+      post_params! "/team-member-project/#{@tm_project.id}/update.json", params, @session
       
       last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{another_team_member.name} on #{new_date}.")
     end
@@ -265,8 +262,7 @@ describe "Projects:" do
         "tm_project_id" => @tm_project.id,
         "to_date" => @project_params["date"]
       }
-      
-      post "/team-member-project/#{@tm_project.id}/update.json", params, { "rack.session" => {"uid" => @session['uid']} }
+      post_params! "/team-member-project/#{@tm_project.id}/update.json", params, @session
       
       last_response.body.should include("Something went wrong with the input when updating team member project.")
     end

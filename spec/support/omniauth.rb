@@ -112,16 +112,28 @@ module OmniauthSpecHelper
     session.merge!(last_request.session)
   end
 
-  # Get using session data. Does **not** merge session data after get request.
+  # GET using session data. Does **not** merge session data after get request.
   def get_with_session_login(path, session)
     get path, nil, {"rack.session" => {"uid" => session['uid']}}
   end
   
-  # Get using session data. **Merges** session data after get request.
+  # GET using session data. **Merges** session data after get request.
   def get_with_session_login!(path, session)
     get_with_session_login(path, session)
     session.merge!(last_request.session)
   end
+  
+  # POST using session data. Does **not** merge session data after POST request.
+  def post_params(path, params, session)
+    post path, params, {"rack.session" => {"uid" => session['uid']}}
+  end
+  
+  # POST using session data. **Merges** session data after POST request.
+  def post_params!(path, params, session)
+    post_params(path, params, session)
+    session.merge!(last_request.session)
+  end
+
   
   def user_from_session(session)
     session['uid'].nil? ? nil: User.find_by_uid(session['uid'])
