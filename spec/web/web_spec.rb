@@ -126,7 +126,7 @@ describe "Projects:" do
     
     it "should require login" do
       params = @valid_params
-      post "/#{@account.id}/team-member-project/add", @valid_params
+      post add_project_path(@account), @valid_params
       
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("You must be logged in.")
@@ -134,7 +134,7 @@ describe "Projects:" do
     
     it "should show success message if passing valid parameters" do
       params = @valid_params
-      post_params! "/#{@account.id}/team-member-project/add", @valid_params, @session
+      post_params! add_project_path(@account), @valid_params, @session
       flash_message = last_request.session[:flash]
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
       Project.count.should == 1
@@ -143,21 +143,21 @@ describe "Projects:" do
     
     it "should show error message if new project name is not present or empty" do
       params = @valid_params.merge({ "new_project_name" => "" })
-      post_params! "/#{@account.id}/team-member-project/add", params, @session
+      post_params! add_project_path(@account), params, @session
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("Please specify a project name.")
       Project.count.should == 0
       @team_member.reload.team_member_projects.count.should == 0
       
       params = @valid_params.merge({ "new_project_name" => nil })
-      post_params! "/#{@account.id}/team-member-project/add", params, @session
+      post_params! add_project_path(@account), params, @session
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("Please specify a project name.")
       Project.count.should == 0
       @team_member.reload.team_member_projects.count.should == 0
       
       params = @valid_params.reject { |k,v| k == "new_project_name" }
-      post_params! "/#{@account.id}/team-member-project/add", params, @session
+      post_params! add_project_path(@account), params, @session
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("Please specify a project name.")
       Project.count.should == 0
@@ -174,7 +174,7 @@ describe "Projects:" do
           "date" => "2011-12-16",
           "new_project" => "true"
         }
-      post_params! "/#{@account.id}/team-member-project/add", params, @session
+      post_params! add_project_path(@account), params, @session
       flash_message = last_request.session[:flash]
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
       Project.count.should == 1
@@ -190,7 +190,7 @@ describe "Projects:" do
         "team_member_id" => @team_member.id,
         "date" => "2012-01-15"
       }
-      post_params! "/#{@account.id}/team-member-project/add", params, @session
+      post_params! add_project_path(@account), params, @session
       flash_message = last_request.session[:flash]
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2012-01-15.")
       Project.count.should == 1
@@ -207,7 +207,7 @@ describe "Projects:" do
           "date" => "2011-12-16",
           "new_project" => "true"
         }
-      post_params! "/#{@account.id}/team-member-project/add", @project_params, @session
+      post_params! add_project_path(@account), @project_params, @session
       flash_message = last_request.session[:flash]
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")  
       Project.count.should == 1
