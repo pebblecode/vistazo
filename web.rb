@@ -440,14 +440,14 @@ end
 
 post '/team-member-project/:tm_project_id/update.json' do
   protected!
-
+  
   from_team_member = TeamMember.find(params[:from_team_member_id])
   to_team_member = TeamMember.find(params[:to_team_member_id])
   team_member_project = from_team_member.team_member_projects.find(params[:tm_project_id]) if from_team_member
-  to_date = Date.parse(params[:to_date])
+  to_date = Date.parse(params[:to_date]) if params[:to_date]
 
   logger.info "Update team member project params: #{params}"
-
+  
   output = ""
   if (from_team_member.present? and to_team_member.present? and team_member_project.present? and to_date.present?)
     successful_move = from_team_member.move_project(team_member_project, to_team_member, to_date)
