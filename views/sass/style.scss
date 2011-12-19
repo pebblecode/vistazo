@@ -107,7 +107,7 @@ body {
   font-size: 14px;
   height: 20px;
   background-color: #fff;
-  color: #808080;
+  color: #6cff14;
   border: 1px solid #a1a1a1;
   text-shadow: none;
   
@@ -270,24 +270,24 @@ textarea:focus, input:focus{
 }
 
 /* Error styles */
-.errors-on-form {
-  .new-object-fieldset {
-    background-color: $warning_bg_color;
-    input {
-      color: $warning_color;
-      background-color: $warning_bg_color;
+
+#account-users-dialog{
+  .errors-on-form {
+    .new-object-fieldset {
+      padding: 0;
+      border: 1px solid red;
+      input {
+      }
+      .submit-button {
+        color: #666;
+      }
     }
-    .submit-button {
-      color: #666;
-    }
-  }
-    
-  .error-field-msg {
-    margin-top: 5px;
-    color: $warning_bg_color;
-    text-shadow: none;
-  } // .error-field
-} // .errors
+      
+    .error-field-msg {
+      margin-top: 5px;
+    } // .error-field
+  } // .errors
+}
 
 
 /* Top nav
