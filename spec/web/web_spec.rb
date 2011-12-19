@@ -224,7 +224,7 @@ describe "Projects:" do
         "tm_project_id" => @tm_project.id,
         "to_date" => new_date
       }
-      post_params! "/team-member-project/#{@tm_project.id}/update.json", params, @session
+      post_params! update_project_path(@tm_project), params, @session
       
       # Shouldn't of created a new project
       Project.count.should == 1
@@ -243,7 +243,7 @@ describe "Projects:" do
         "tm_project_id" => @tm_project.id,
         "to_date" => @project_params["date"]
       }
-      post_params! "/team-member-project/#{@tm_project.id}/update.json", params, @session
+      post_params! update_project_path(@tm_project), params, @session
       
       last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{another_team_member.name} on #{@project_params["date"]}.")
     end
@@ -257,7 +257,7 @@ describe "Projects:" do
         "tm_project_id" => @tm_project.id,
         "to_date" => new_date
       }
-      post_params! "/team-member-project/#{@tm_project.id}/update.json", params, @session
+      post_params! update_project_path(@tm_project), params, @session
       
       last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{another_team_member.name} on #{new_date}.")
     end
@@ -270,7 +270,7 @@ describe "Projects:" do
         "tm_project_id" => @tm_project.id,
         "to_date" => @project_params["date"]
       }
-      post_params! "/team-member-project/#{@tm_project.id}/update.json", params, @session
+      post_params! update_project_path(@tm_project), params, @session
       
       last_response.body.should include("Something went wrong with the input when updating team member project.")
     end
