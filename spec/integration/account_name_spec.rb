@@ -1,6 +1,6 @@
 require_relative '../spec_helper'
 
-feature "Account name" do
+feature "Team name" do
   background do
     http_authorization_capybara!
     
@@ -22,14 +22,14 @@ feature "Account name" do
     click_link "start-btn"
     page.should have_content("Cat's schedule")
     
-    within_fieldset("Account name") do
-      fill_in 'account_name', :with => 'Pebblez schedule'
+    within_fieldset("Team name") do
+      fill_in 'team_name', :with => 'Pebblez schedule'
       click_button 'update'
     end
     
-    page.should have_content("Updated account name successfully.")
+    page.should have_content("Updated team name successfully.")
     
-    within("#account-name h2") do
+    within("#team-name h2") do
       page.should have_content 'Pebblez schedule'
     end
   end
@@ -38,11 +38,11 @@ feature "Account name" do
     visit "/"
     click_link "start-btn"
     
-    within_fieldset("Account name") do
-      fill_in 'account_name', :with => ''
+    within_fieldset("Team name") do
+      fill_in 'team_name', :with => ''
       click_button 'update'
     end
     
-    page.should have_content("Updated account name failed. Account name was empty.")
+    page.should have_content("Updated team name failed. Team name was empty.")
   end
 end 

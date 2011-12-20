@@ -343,14 +343,14 @@ post '/:account_id/update' do
     
   @account = Account.find(params[:account_id])
   if @account.present?
-    account_name = params[:account_name]
-    if account_name.present?
-      @account.name = account_name
+    team_name = params[:team_name]
+    if team_name.present?
+      @account.name = team_name
       @account.save
       
-      flash[:success] = "Updated account name successfully."
+      flash[:success] = "Updated team name successfully."
     else
-      flash[:warning] = "Updated account name failed. Account name was empty."
+      flash[:warning] = "Updated team name failed. Team name was empty."
     end
   end
   

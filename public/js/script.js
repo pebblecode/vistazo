@@ -35,8 +35,8 @@ $(function () {
   
   // Declare dialogs (but don't open by default)
   {
-    // Account name
-    $("#account-name-dialog").dialog({
+    // Team name
+    $("#team-name-dialog").dialog({
       modal: true,
       closeOnEscape: true,
       minWidth: 470,
@@ -45,9 +45,9 @@ $(function () {
       position: 'top',
       closeText: "'"
     });
-    $("#account-name h2").click(function(event) {
-      $("#account-name-dialog").dialog('open');
-      $("#account-name #account-name-form input:first").focus();
+    $("#team-name h2").click(function(event) {
+      $("#team-name-dialog").dialog('open');
+      $("#team-name #team-name-form input:first").focus();
       overlayCloseOnClick();
       
       return false;

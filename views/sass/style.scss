@@ -280,8 +280,8 @@ textarea:focus, input:focus{
       }
       .submit-button {
         color: #666;
-		bottom: 1px;
-		right: 1px;
+        bottom: 1px;
+        right: 1px;
       }
     }
       
@@ -324,7 +324,7 @@ textarea:focus, input:focus{
     border-right: 1px solid rgba(255, 255, 255, .15);
   }
   
-  #account-name {
+  #team-name {
     width: 400px;
     
     #team-icon{
@@ -342,7 +342,7 @@ textarea:focus, input:focus{
     h2 {
       cursor: pointer;
     }
-  } // #account-name
+  } // #team-name
   
   .action-bar {
     li {
@@ -878,7 +878,7 @@ textarea:focus, input:focus{
   }
 } // #new-project-form
 
-#account-users-dialog {
+#team-users-dialog {
   display: none; /* Hide by default */
   
   legend {
@@ -977,13 +977,13 @@ textarea:focus, input:focus{
     }
   } // .new-object-fieldset
   
-} // #account-users-dialog
+} // #team-users-dialog
 
-#account-name-dialog, .edit-team-member-dialog {
+#team-name-dialog, .edit-team-member-dialog {
   display: none; /* Don't display by default */
   margin-top: 20px;
   position: relative;
-} // #account-name-dialog
+} // #team-name-dialog
 
 
 /* Homepage

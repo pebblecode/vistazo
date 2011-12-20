@@ -35,7 +35,7 @@
     <h1 id="logo"><a href="/">VISTAZO</a></h1> <div class="top-spacer">
     </div> 
     <% if @account.present? %>
-      <div id="account-name">
+      <div id="team-name">
         <h2><%= @account.name %></h2>
         <div id="team-icon"></div>
       </div>
@@ -77,7 +77,7 @@
   <% if @show_users %>
     <%= erb :users %>
   <% end %>
-  <%= erb :account_name_dialog %>
+  <%= erb :team_name_dialog %>
   
   <footer>
     <ul>
