@@ -22,7 +22,7 @@ module Sinatra
 
     def require_user!
       unless current_user?
-        flash[:warning] = "You must be logged in"
+        flash[:warning] = "You must be logged in."
         redirect "/"
       end
     end

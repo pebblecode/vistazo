@@ -35,7 +35,7 @@
     <h1 id="logo"><a href="/">VISTAZO</a></h1> <div class="top-spacer">
     </div> 
     <% if @account.present? %>
-      <div id="account-name">
+      <div id="team-name">
         <h2><%= @account.name %></h2>
       </div>
     <% end %>
@@ -64,7 +64,7 @@
         <li class="logged-in-as"><%= current_user.name %></li>
       <% end %>
     </ul>
-    <!-- <p class="invite-user"><a href="#account-users">Invite people to view this schedule</a></p> -->
+    <!-- <p class="invite-user"><a href="#account-users">Invite people to view this team</a></p> -->
   </div>
   
   <%= styled_flash %>
@@ -76,7 +76,7 @@
   <% if @show_users %>
     <%= erb :users %>
   <% end %>
-  <%= erb :account_name_dialog %>
+  <%= erb :team_name_dialog %>
   
   <footer>
     <ul>

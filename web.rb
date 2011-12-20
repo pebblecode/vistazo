@@ -172,7 +172,7 @@ get '/logout' do
 end
 
 def create_account
-  @user.account = Account.create(:name => "#{@user.name}'s schedule")
+  @user.account = Account.create(:name => "#{@user.name}'s team")
   @user.save
   return @user.account
 end
@@ -343,14 +343,14 @@ post '/:account_id/update' do
     
   @account = Account.find(params[:account_id])
   if @account.present?
-    account_name = params[:account_name]
-    if account_name.present?
-      @account.name = account_name
+    team_name = params[:team_name]
+    if team_name.present?
+      @account.name = team_name
       @account.save
       
-      flash[:success] = "Updated account name successfully."
+      flash[:success] = "Updated team name successfully."
     else
-      flash[:warning] = "Updated account name failed. Account name was empty."
+      flash[:warning] = "Updated team name failed. Team name was empty."
     end
   end
   
@@ -402,7 +402,8 @@ end
 
 post '/:account_id/team-member-project/add' do
   protected!
-
+  require_account_user!(params[:account_id])
+  
   account = Account.find(params[:account_id])
   team_member = TeamMember.find(params[:team_member_id])
   date = Date.parse(params[:date])
@@ -438,32 +439,45 @@ post '/:account_id/team-member-project/add' do
   redirect back
 end
 
-post '/team-member-project/:tm_project_id/update.json' do
+post '/:account_id/team-member-project/:tm_project_id/update.json' do
   protected!
-  
-  from_team_member = TeamMember.find(params[:from_team_member_id])
-  to_team_member = TeamMember.find(params[:to_team_member_id])
-  team_member_project = from_team_member.team_member_projects.find(params[:tm_project_id]) if from_team_member
-  to_date = Date.parse(params[:to_date]) if params[:to_date]
-
-  logger.info "Update team member project params: #{params}"
+  require_account_user!(params[:account_id])
   
   output = ""
-  if (from_team_member.present? and to_team_member.present? and team_member_project.present? and to_date.present?)
-    successful_move = from_team_member.move_project(team_member_project, to_team_member, to_date)
+  current_user_account = Account.find(params[:account_id])
+  if current_user_account.present?
+    from_team_member = TeamMember.find(params[:from_team_member_id])
+    to_team_member = TeamMember.find(params[:to_team_member_id])
+    team_member_project = from_team_member.team_member_projects.find(params[:tm_project_id]) if from_team_member
+    to_date = Date.parse(params[:to_date]) if params[:to_date]
+    
+    logger.info "Update team member project params: #{params}"
+    
+    
+    if (from_team_member.present? and to_team_member.present? and team_member_project.present? and to_date.present?)
+      if ((from_team_member.account == current_user_account) and (to_team_member.account == current_user_account))
+        successful_move = from_team_member.move_project(team_member_project, to_team_member, to_date)
   
-    if successful_move
-      status 200
-      output = { :message => "Successfully moved '<em>#{team_member_project.project_name}</em>' project to #{to_team_member.name} on #{to_date}." }
+        if successful_move
+          status 200
+          output = { :message => "Successfully moved '<em>#{team_member_project.project_name}</em>' project to #{to_team_member.name} on #{to_date}." }
+        else
+          status 500
+          output = { :message => "Something went wrong with saving the changes when updating team member project. Please refresh and try again later." }
+        end
+      else
+        status 400
+        output = { :message => "Invalid account." }
+      end
     else
-      status 500
-      output = { :message => "Something went wrong with saving the changes when updating team member project. Please refresh and try again later." }
+      status 400
+      output = { :message => "Something went wrong with the input when updating team member project. Please refresh and try again later." }
     end
   else
     status 400
-    output = { :message => "Something went wrong with the input when updating team member project. Please refresh and try again later." }
+    output = { :message => "Invalid account." }
   end
-
+  
   content_type :json 
   output.to_json
 end

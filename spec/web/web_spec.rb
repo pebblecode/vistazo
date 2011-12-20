@@ -124,9 +124,17 @@ describe "Projects:" do
         }
     end
     
+    it "should require login" do
+      params = @valid_params
+      post add_project_path(@account), @valid_params
+      
+      flash_message = last_request.session[:flash]
+      flash_message[:warning].should include("You must be logged in.")
+    end
+    
     it "should show success message if passing valid parameters" do
       params = @valid_params
-      post "/#{@account.id}/team-member-project/add", @valid_params, { "rack.session" => {"uid" => @session['uid']} }
+      post_params! add_project_path(@account), @valid_params, @session
       flash_message = last_request.session[:flash]
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
       Project.count.should == 1
@@ -135,21 +143,21 @@ describe "Projects:" do
     
     it "should show error message if new project name is not present or empty" do
       params = @valid_params.merge({ "new_project_name" => "" })
-      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      post_params! add_project_path(@account), params, @session
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("Please specify a project name.")
       Project.count.should == 0
       @team_member.reload.team_member_projects.count.should == 0
       
       params = @valid_params.merge({ "new_project_name" => nil })
-      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      post_params! add_project_path(@account), params, @session
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("Please specify a project name.")
       Project.count.should == 0
       @team_member.reload.team_member_projects.count.should == 0
       
       params = @valid_params.reject { |k,v| k == "new_project_name" }
-      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      post_params! add_project_path(@account), params, @session
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("Please specify a project name.")
       Project.count.should == 0
@@ -166,25 +174,34 @@ describe "Projects:" do
           "date" => "2011-12-16",
           "new_project" => "true"
         }
-      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      post_params! add_project_path(@account), params, @session
       flash_message = last_request.session[:flash]
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
       Project.count.should == 1
+      @project = Project.first
       @team_member.reload.team_member_projects.count.should == 1
+      
+      @date_to_add = "2012-01-15"
+      @existing_project_params_to_add = {
+        "project_id" => @project.id,
+        "account_id" => @account.id,
+        "team_member_id" => @team_member.id,
+        "date" => @date_to_add
+      }
+    end
+    
+    it "should require login" do
+      post add_project_path(@account), @existing_project_params_to_add
+      
+      flash_message = last_request.session[:flash]
+      flash_message[:warning].should include("You must be logged in.")
     end
     
     it "should show success message if passing valid parameters" do
-      Project.count.should == 1
-      project = Project.first
-      params = {
-        "project_id" => project.id,
-        "account_id" => @account.id,
-        "team_member_id" => @team_member.id,
-        "date" => "2012-01-15"
-      }
-      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
+      post_params! add_project_path(@account), @existing_project_params_to_add, @session
+      
       flash_message = last_request.session[:flash]
-      flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2012-01-15.")
+      flash_message[:success].should include("Successfully added '<em>#{@project.name}</em>' project for #{@team_member.name} on #{@date_to_add}.")
       Project.count.should == 1
       @team_member.reload.team_member_projects.count.should == 2   # Added another project
     end
@@ -199,58 +216,112 @@ describe "Projects:" do
           "date" => "2011-12-16",
           "new_project" => "true"
         }
-      post "/#{@account.id}/team-member-project/add", @project_params, { "rack.session" => {"uid" => @session['uid']} }
+      post_params! add_project_path(@account), @project_params, @session
       flash_message = last_request.session[:flash]
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")  
       Project.count.should == 1
-      @team_member.reload.team_member_projects.count.should == 1
-    end
-    
-    it "should return 200 status with message if successfully moved to another date" do
-      Project.count.should == 1
+      @project = Project.first
       @team_member.reload.team_member_projects.count.should == 1
       @tm_project = @team_member.team_member_projects.first
-      project = Project.first
+      
       new_date = "2011-12-13"
-      params = {
+      @valid_params = {
         "from_team_member_id" => @team_member.id,
         "to_team_member_id" => @team_member.id,
         "tm_project_id" => @tm_project.id,
         "to_date" => new_date
       }
-      post "/team-member-project/#{@tm_project.id}/update.json", params, { "rack.session" => {"uid" => @session['uid']} }
+    end
+    
+    it "should require login" do
+      post update_project_path(@account, @tm_project), @valid_params
+      
+      flash_message = last_request.session[:flash]
+      flash_message[:warning].should include("You must be logged in.")
+    end
+    
+    it "should return 200 status with message if successfully moved to another date" do
+      new_date = "2011-12-15"
+      params = @valid_params.merge("to_date" => new_date)
+      post_params! update_project_path(@account, @tm_project), params, @session
       
       # Shouldn't of created a new project
       Project.count.should == 1
       
       # Shouldn't of created a new team member project
       @team_member.reload.team_member_projects.count.should == 1
-
+      
+      last_response.status.should == 200
       last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{@team_member.name} on #{new_date}.")
     end
     
-    pending "should return 200 status with message if successfully moved to another person" do
-      Project.count.should == 1
-      project = Project.first
-      params = {
-        "project_id" => project.id,
-        "account_id" => @account.id,
-        "team_member_id" => @team_member.id,
-        "date" => "2012-01-15"
-      }
-
-      post "/#{@account.id}/team-member-project/add", params, { "rack.session" => {"uid" => @session['uid']} }
-      flash_message = last_request.session[:flash]
-      flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2012-01-15.")
-
-      pending "post json call"
+    it "should return 200 status with message if successfully moved to another team member" do
+      another_team_member = Factory(:team_member, :account => @account)
+      params = @valid_params.merge(
+        "to_team_member_id" => another_team_member.id,
+        "to_date" => @project_params["date"]
+      )
+      post_params! update_project_path(@account, @tm_project), params, @session
+      
+      last_response.status.should == 200
+      last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{another_team_member.name} on #{@project_params["date"]}.")
     end
 
-    pending "should return 200 status with message if successfully moved to another person and another date" do
+    it "should return 200 status with message if successfully moved to another person and another date" do
+      another_team_member = Factory(:team_member, :account => @account)
+      new_date = "2011-12-18"
+      params = @valid_params.merge(
+        "to_team_member_id" => another_team_member.id,
+        "to_date" => new_date
+      )
+      post_params! update_project_path(@account, @tm_project), params, @session
       
+      last_response.status.should == 200
+      last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{another_team_member.name} on #{new_date}.")
     end
     
-    pending "should return 400 error with message if there are incorrect parameters"
+    it "should return 400 error with message if moving to an invalid user" do
+      error_team_member_id = "not_an_id"
+      params = @valid_params.merge(
+        "to_team_member_id" => error_team_member_id
+      )
+      post_params! update_project_path(@account, @tm_project), params, @session
+      
+      last_response.status.should == 400
+      last_response.body.should include("Something went wrong with the input when updating team member project.")
+    end
+    
+    it "should return 400 error with message if it is moved to a team member in another account" do
+      another_account = Factory(:account)
+      tm_in_another_account = Factory(:team_member, :account => another_account)
+      params = @valid_params.merge(
+        "to_team_member_id" => tm_in_another_account.id
+      )
+      post_params! update_project_path(@account, @tm_project), params, @session
+      
+      last_response.status.should == 400
+      last_response.body.should include("Invalid account.")
+    end
+    
+    pending "should return 400 error with message if it is moved from a team member in another account" do
+      another_account = Factory(:account)
+      tm_in_another_account = Factory(:team_member, :account => another_account)
+      params = @valid_params.merge(
+        "from_team_member_id" => tm_in_another_account.id
+      )
+      post_params! update_project_path(@account, @tm_project), params, @session
+      
+      last_response.status.should == 400
+      last_response.body.should include("Invalid account.")
+    end
+    
+    pending "should return 400 error with message if it is moved in an invalid account" do
+      params = @valid_params
+      post_params! update_project_with_account_id_path("invalid_account_id", @tm_project), params, @session
+      
+      last_response.status.should == 400
+      last_response.body.should include("Invalid account.")
+    end
     
     pending "should return 500 error with message if there is an internal error"
   end
@@ -284,9 +355,9 @@ describe "Authentication:" do
       
       # Should create new user account with user name
       account = User.first.account # Only have 1 user, so find first works
-      account.name.should == "Vistazo Test's schedule"
+      account.name.should == "Vistazo Test's team"
       
-      last_response.body.should include("Vistazo Test's schedule")
+      last_response.body.should include("Vistazo Test's team")
       last_response.body.should include("Welcome to Vistazo")
     end
   end
@@ -351,7 +422,7 @@ describe "Authentication:" do
       
       login_normal_user_with_session!(@session)
       last_request.path.should == user_account_current_week_path(user_from_session(@session))
-      last_response.body.should include("Vistazo Test's schedule")
+      last_response.body.should include("Vistazo Test's team")
     end
   end
   

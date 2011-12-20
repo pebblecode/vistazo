@@ -9,7 +9,9 @@ module PathSpecHelper
     '/auth/google_oauth2/callback'
   end
   
+  ############################################################################
   # Accounts/users
+  ############################################################################
   
   def account_path(account)
     "/#{account.id}"
@@ -26,5 +28,22 @@ module PathSpecHelper
   def user_account_path(user)
     account_path(user.account)
   end
+  
+  ############################################################################
+  # Projects
+  ############################################################################
+  
+  def add_project_path(account)
+    "/#{account.id}/team-member-project/add"
+  end
+  
+  def update_project_path(account, team_member_project)
+    "/#{account.id}/team-member-project/#{team_member_project.id}/update.json"
+  end
+  
+  def update_project_with_account_id_path(account_id, team_member_project)
+    "/#{account_id}/team-member-project/#{team_member_project.id}/update.json"
+  end
+
   
 end

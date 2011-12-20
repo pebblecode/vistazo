@@ -35,8 +35,8 @@ $(function () {
   
   // Declare dialogs (but don't open by default)
   {
-    // Account name
-    $("#account-name-dialog").dialog({
+    // Team name
+    $("#team-name-dialog").dialog({
       modal: true,
       closeOnEscape: true,
       minWidth: 470,
@@ -45,9 +45,9 @@ $(function () {
       position: 'top',
       closeText: "'"
     });
-    $("#account-name h2").click(function(event) {
-      $("#account-name-dialog").dialog('open');
-      $("#account-name #account-name-form input:first").focus();
+    $("#team-name h2").click(function(event) {
+      $("#team-name-dialog").dialog('open');
+      $("#team-name #team-name-form input:first").focus();
       overlayCloseOnClick();
       
       return false;
@@ -248,12 +248,13 @@ $(function () {
 
 // Update team member project
 function updateTeamMemberProject(proj) {
+  var accountId = window.location.pathname.split('/')[1]; // From the first path of url
   var fromTeamMemberId = $(proj).attr("data-team-member-id");
   var toTeamMemberId = $(proj).parents('.team-member').first().attr("data-team-member-id");
   var teamMemberProjectId = $(proj).attr("data-team-member-project-id");
   var toDate = $(proj).parents('.box').first().attr("data-date");
     
-  var url = "/team-member-project/" + teamMemberProjectId + "/update.json";
+  var url = "/" + accountId + "/team-member-project/" + teamMemberProjectId + "/update.json";
   $(proj).addClass('is_loading');
   $.post(url, { from_team_member_id: fromTeamMemberId, to_team_member_id: toTeamMemberId, to_date: toDate })
     .success(function(response) {
