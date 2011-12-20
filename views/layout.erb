@@ -32,14 +32,14 @@
   <div id="help-team"></div>
   <div id="top-nav">
   
-    <h1 id="logo"><a href="/">VISTAZO</a></h1> <div class="top-spacer">
-    </div> 
+    <h1 id="logo"><a href="/">VISTAZO</a></h1> 
+    <div class="top-spacer"></div>
     <% if @account.present? %>
       <div id="team-name">
         <h2><%= @account.name %></h2>
       </div>
     <% end %>
-    
+    <div class="top-spacer"></div>
     <% if is_super_admin? %>
       <ul id="modify-data" style="<%= (settings.environment == "production") ? "display: none" : "" %>">
         <li>

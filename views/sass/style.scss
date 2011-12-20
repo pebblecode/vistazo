@@ -317,15 +317,17 @@ textarea:focus, input:focus{
 
   .top-spacer {
     width: 1px;
-    height: 22px;
-    background-color: rgba(0, 0, 0, 0.05);
-    margin-top: 8px;
+    height: 35px;
+    background-color: rgba(0, 0, 0, .1);
+    margin-top: 1px;
     float: left;
-    border-right: 1px solid rgba(255, 255, 255, .15);
+    border-right: 1px solid rgba(255, 255, 255, .3);
   }
 
   #team-name {
     width: 400px;
+    float: left;
+    background-color: #27A5DA;
     
     h2 {
       cursor: pointer;
@@ -335,13 +337,9 @@ textarea:focus, input:focus{
       margin: 7px 0 0 0;
       padding: 3px 50px 0 10px;
       float: left;
-      background-image: url(../img/team.png);
-      background-repeat: no-repeat;
-      background-position: right 0 ;
-      
+          
       &:hover{
         text-shadow: 0 2px 2px rgba(0, 0, 0, 0.30);
-        background-position: right -27px ;
       }
       &:active{
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.30);
