@@ -13,24 +13,32 @@ feature "Team name" do
     clean_db!
   end
   
+  it "Default account name, should be called \"User name's team\"" do
+    visit "/"
+    click_link "start-btn"
+    
+    default_normal_user_name = OmniAuth.config.mock_auth[:normal_user]["info"]["name"]
+    page.should have_content("#{default_normal_user_name}'s team")
+  end
+  
   scenario "Updating to a new name" do
     account = Account.first
-    account.name = "Cat's schedule"
+    account.name = "Cat's team"
     account.save
     
     visit "/"
     click_link "start-btn"
-    page.should have_content("Cat's schedule")
+    page.should have_content("Cat's team")
     
     within_fieldset("Team name") do
-      fill_in 'team_name', :with => 'Pebblez schedule'
+      fill_in 'team_name', :with => 'Pebblez team'
       click_button 'update'
     end
     
     page.should have_content("Updated team name successfully.")
     
     within("#team-name h2") do
-      page.should have_content 'Pebblez schedule'
+      page.should have_content 'Pebblez team'
     end
   end
   

@@ -355,9 +355,9 @@ describe "Authentication:" do
       
       # Should create new user account with user name
       account = User.first.account # Only have 1 user, so find first works
-      account.name.should == "Vistazo Test's schedule"
+      account.name.should == "Vistazo Test's team"
       
-      last_response.body.should include("Vistazo Test's schedule")
+      last_response.body.should include("Vistazo Test's team")
       last_response.body.should include("Welcome to Vistazo")
     end
   end
@@ -422,7 +422,7 @@ describe "Authentication:" do
       
       login_normal_user_with_session!(@session)
       last_request.path.should == user_account_current_week_path(user_from_session(@session))
-      last_response.body.should include("Vistazo Test's schedule")
+      last_response.body.should include("Vistazo Test's team")
     end
   end
   

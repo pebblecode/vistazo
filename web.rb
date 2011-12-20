@@ -172,7 +172,7 @@ get '/logout' do
 end
 
 def create_account
-  @user.account = Account.create(:name => "#{@user.name}'s schedule")
+  @user.account = Account.create(:name => "#{@user.name}'s team")
   @user.save
   return @user.account
 end
