@@ -42,6 +42,19 @@ describe "Teams:" do
     @session = nil
   end
   
+  describe "Teams page" do
+    it "should redirect to the home page and show an error if it is an invalid team" do
+      create_normal_user(@session)
+      
+      # Find added user
+      get_with_session_login! team_id_path("invalid_id"), @session
+      follow_redirect_with_session_login!(@session)
+      
+      last_request.path.should == "/"
+      last_response.body.should include("Invalid team.")
+    end
+  end
+  
   describe "Week view" do
     it "should require login" do
       create_normal_user(@session)

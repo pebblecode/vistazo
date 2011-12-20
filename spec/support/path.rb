@@ -13,8 +13,12 @@ module PathSpecHelper
   # Teams/users
   ############################################################################
   
+  def team_id_path(team_id)
+    "/#{team_id}"
+  end
+  
   def team_path(team)
-    "/#{team.id}"
+    team_id_path(team.id)
   end
   
   def team_current_week_path(team)
