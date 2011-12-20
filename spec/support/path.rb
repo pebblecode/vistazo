@@ -21,6 +21,10 @@ module PathSpecHelper
     "/#{team.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
   end
   
+  def team_id_current_week_path(team_id)
+    "/#{team_id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+  end
+  
   def user_team_current_week_path(user)
     team_current_week_path(user.team)
   end

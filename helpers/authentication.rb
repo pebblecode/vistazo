@@ -29,6 +29,12 @@ module Sinatra
     def require_team_user!(team_id)
       require_user!
       team = Team.find(team_id)
+      
+      unless team.present?
+        flash[:warning] = "You're not authorized to view this page."
+        redirect "/"
+      end
+      
       unless current_user.team == team
         flash[:warning] = "You're not authorized to view this page."
         redirect "/"
