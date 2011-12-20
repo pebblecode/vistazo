@@ -138,7 +138,7 @@ describe "Projects:" do
       flash_message = last_request.session[:flash]
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
       Project.count.should == 1
-      @team_member.reload.team_member_projects.count.should == 1
+      @team_member.reload.timetable_items.count.should == 1
     end
     
     it "should show error message if new project name is not present or empty" do
@@ -147,21 +147,21 @@ describe "Projects:" do
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("Please specify a project name.")
       Project.count.should == 0
-      @team_member.reload.team_member_projects.count.should == 0
+      @team_member.reload.timetable_items.count.should == 0
       
       params = @valid_params.merge({ "new_project_name" => nil })
       post_params! add_project_path(@team), params, @session
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("Please specify a project name.")
       Project.count.should == 0
-      @team_member.reload.team_member_projects.count.should == 0
+      @team_member.reload.timetable_items.count.should == 0
       
       params = @valid_params.reject { |k,v| k == "new_project_name" }
       post_params! add_project_path(@team), params, @session
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("Please specify a project name.")
       Project.count.should == 0
-      @team_member.reload.team_member_projects.count.should == 0
+      @team_member.reload.timetable_items.count.should == 0
     end
   end
   
@@ -179,7 +179,7 @@ describe "Projects:" do
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
       Project.count.should == 1
       @project = Project.first
-      @team_member.reload.team_member_projects.count.should == 1
+      @team_member.reload.timetable_items.count.should == 1
       
       @date_to_add = "2012-01-15"
       @existing_project_params_to_add = {
@@ -203,7 +203,7 @@ describe "Projects:" do
       flash_message = last_request.session[:flash]
       flash_message[:success].should include("Successfully added '<em>#{@project.name}</em>' project for #{@team_member.name} on #{@date_to_add}.")
       Project.count.should == 1
-      @team_member.reload.team_member_projects.count.should == 2   # Added another project
+      @team_member.reload.timetable_items.count.should == 2   # Added another project
     end
   end
   
@@ -221,8 +221,8 @@ describe "Projects:" do
       flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")  
       Project.count.should == 1
       @project = Project.first
-      @team_member.reload.team_member_projects.count.should == 1
-      @tm_project = @team_member.team_member_projects.first
+      @team_member.reload.timetable_items.count.should == 1
+      @tm_project = @team_member.timetable_items.first
       
       new_date = "2011-12-13"
       @valid_params = {
@@ -249,7 +249,7 @@ describe "Projects:" do
       Project.count.should == 1
       
       # Shouldn't of created a new team member project
-      @team_member.reload.team_member_projects.count.should == 1
+      @team_member.reload.timetable_items.count.should == 1
       
       last_response.status.should == 200
       last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{@team_member.name} on #{new_date}.")

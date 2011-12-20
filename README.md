@@ -188,7 +188,7 @@ Add > Copy the following code (making sure oid is unique):
     ```
     { "_id" : {"$oid": "4ecf82c6b01a520547000011"},
       "name" : "Satish S",
-      "team_member_projects" : [] }
+      "timetable_items" : [] }
     ```
 1. Click on create
 

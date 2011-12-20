@@ -235,7 +235,7 @@ $(function () {
         var containerDate = $(project).parents(".box").first().attr("data-date");
         
         if ((projectTeamMemberId != containerTeamMemberId) || (projectDate != containerDate)) {
-          updateTeamMemberProject(project);
+          updateTimetableItem(project);
         }
         
         // Hide new dialog in case a click gets triggered and shows it
@@ -247,14 +247,14 @@ $(function () {
 });
 
 // Update team member project
-function updateTeamMemberProject(proj) {
+function updateTimetableItem(proj) {
   var teamId = window.location.pathname.split('/')[1]; // From the first path of url
   var fromTeamMemberId = $(proj).attr("data-team-member-id");
   var toTeamMemberId = $(proj).parents('.team-member').first().attr("data-team-member-id");
-  var teamMemberProjectId = $(proj).attr("data-team-member-project-id");
+  var timetableItemId = $(proj).attr("data-team-member-project-id");
   var toDate = $(proj).parents('.box').first().attr("data-date");
     
-  var url = "/" + teamId + "/team-member-project/" + teamMemberProjectId + "/update.json";
+  var url = "/" + teamId + "/team-member-project/" + timetableItemId + "/update.json";
   $(proj).addClass('is_loading');
   $.post(url, { from_team_member_id: fromTeamMemberId, to_team_member_id: toTeamMemberId, to_date: toDate })
     .success(function(response) {

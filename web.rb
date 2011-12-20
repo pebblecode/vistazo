@@ -223,12 +223,12 @@ get '/:team_id/:year/week/:week_num' do
       @team_members = TeamMember.where(:team_id => @team.id).sort(:name)
 
       # Assume it's the right week of dates
-      @team_member_projects_on_day = {}
+      @timetable_items_on_day = {}
       for tm in @team_members do
-        @team_member_projects_on_day[tm] = {}
+        @timetable_items_on_day[tm] = {}
 
         (MONDAY..FRIDAY).each do |work_day|
-          @team_member_projects_on_day[tm][work_day] = tm.team_member_projects.select { |proj| 
+          @timetable_items_on_day[tm][work_day] = tm.timetable_items.select { |proj| 
             (proj.date.wday == work_day) and (proj.date >= @monday_date) and (proj.date <= @friday_date)
           }
         end
@@ -448,19 +448,19 @@ post '/:team_id/team-member-project/:tm_project_id/update.json' do
   if current_user_team.present?
     from_team_member = TeamMember.find(params[:from_team_member_id])
     to_team_member = TeamMember.find(params[:to_team_member_id])
-    team_member_project = from_team_member.team_member_projects.find(params[:tm_project_id]) if from_team_member
+    timetable_item = from_team_member.timetable_items.find(params[:tm_project_id]) if from_team_member
     to_date = Date.parse(params[:to_date]) if params[:to_date]
     
     logger.info "Update team member project params: #{params}"
     
     
-    if (from_team_member.present? and to_team_member.present? and team_member_project.present? and to_date.present?)
+    if (from_team_member.present? and to_team_member.present? and timetable_item.present? and to_date.present?)
       if ((from_team_member.team == current_user_team) and (to_team_member.team == current_user_team))
-        successful_move = from_team_member.move_project(team_member_project, to_team_member, to_date)
+        successful_move = from_team_member.move_project(timetable_item, to_team_member, to_date)
   
         if successful_move
           status 200
-          output = { :message => "Successfully moved '<em>#{team_member_project.project_name}</em>' project to #{to_team_member.name} on #{to_date}." }
+          output = { :message => "Successfully moved '<em>#{timetable_item.project_name}</em>' project to #{to_team_member.name} on #{to_date}." }
         else
           status 500
           output = { :message => "Something went wrong with saving the changes when updating team member project. Please refresh and try again later." }
@@ -488,7 +488,7 @@ post '/team-member/:team_member_id/project/:tm_project_id/delete' do
   team_member = TeamMember.find(params[:team_member_id])
 
   if team_member.present?
-    did_delete = team_member.team_member_projects.reject! { |proj| proj.id.to_s == params[:tm_project_id] }
+    did_delete = team_member.timetable_items.reject! { |proj| proj.id.to_s == params[:tm_project_id] }
     team_member.save
 
     if did_delete

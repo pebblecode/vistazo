@@ -70,7 +70,7 @@
             data-team-member-id: Used for adding a new project to know the team member to add to
           %>
           <td class="box <%= "#{row_class} col#{work_day + prev_cols}" %>" data-date="<%= (@monday_date - 1.day) + work_day.day %>" data-team-member-id="<%= tm.id %>">
-            <% tm_projects = @team_member_projects_on_day[tm][work_day] %>
+            <% tm_projects = @timetable_items_on_day[tm][work_day] %>
             <% for tm_project in tm_projects %>
               <%#
                 data-team-member-id: Used for update to know the team member moving from

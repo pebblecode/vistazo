@@ -1,4 +1,4 @@
-class TeamMemberProject
+class TimetableItem
   include MongoMapper::EmbeddedDocument
   plugin MongoMapper::Plugins::Timestamps
   
