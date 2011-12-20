@@ -1,17 +1,17 @@
 require 'factory_girl'
 
-Factory.define :account do |f|
+Factory.define :team do |f|
   f.sequence(:name) { |n| "Software shop #{n}" }
 end
 
 Factory.define :user do |f|
   f.sequence(:name) { |n| "User #{n}" }
   f.sequence(:email) { |n| "user_#{n}@example.com" }
-  f.association :account
+  f.association :team
 end
 
 Factory.define :team_member do |f|
   f.sequence(:name) { |n| "User #{n}" }
-  f.association :account
+  f.association :team
 end
 

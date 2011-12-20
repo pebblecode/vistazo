@@ -103,7 +103,7 @@
   
   <tr>
     <td colspan="7" class="last-row col1">
-      <form id="new-team-member-form" action="/<%= @account.url_slug %>/team-member/add" method="post">
+      <form id="new-team-member-form" action="/<%= @team.url_slug %>/team-member/add" method="post">
         <fieldset class="new-object-fieldset" title="New team member">
           <legend>New team member</legend>
           <label for="new_team_member_name">Add new</label>
@@ -118,7 +118,7 @@
 
 <div id="new-project-dialog">
   <a href="#" class="close">'</a>
-  <form id="new-tm-project-form" action="/<%= @account.url_slug %>/team-member-project/add" method="post">
+  <form id="new-tm-project-form" action="/<%= @team.url_slug %>/team-member-project/add" method="post">
     <input type="hidden" name="date" value=""/>
     <input type="hidden" name="team_member_id" value=""/>
     

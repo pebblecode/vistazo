@@ -13,7 +13,7 @@ feature "Team name" do
     clean_db!
   end
   
-  it "Default account name, should be called \"User name's team\"" do
+  it "Default team name, should be called \"User name's team\"" do
     visit "/"
     click_link "start-btn"
     
@@ -22,9 +22,9 @@ feature "Team name" do
   end
   
   scenario "Updating to a new name" do
-    account = Account.first
-    account.name = "Cat's team"
-    account.save
+    team = Team.first
+    team.name = "Cat's team"
+    team.save
     
     visit "/"
     click_link "start-btn"

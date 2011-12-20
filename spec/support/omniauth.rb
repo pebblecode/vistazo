@@ -79,16 +79,16 @@ module OmniauthSpecHelper
     follow_redirect_with_session_login!(session)
     last_request.path.should == "/"
     
-    # Find account by uid
-    account = User.find_by_uid(session['uid']).account
+    # Find team by uid
+    team = User.find_by_uid(session['uid']).team
     
-    # Should redirect to account page
+    # Should redirect to team page
     follow_redirect_with_session_login!(@session)
-    last_request.path.should == "/#{account.id}"
+    last_request.path.should == "/#{team.id}"
     
     # Should redirect to current week
     follow_redirect_with_session_login!(@session)
-    last_request.path.should == "/#{account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+    last_request.path.should == "/#{team.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
   end
   
   def logout_session!(session)
@@ -140,7 +140,7 @@ module OmniauthSpecHelper
   end
   
   def create_normal_user(session)
-    # Create a new login for normal user will create a new user and account
+    # Create a new login for normal user will create a new user and team
     login_normal_user_with_session!(session)
     logout_session!(session)
   end

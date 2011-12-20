@@ -6,7 +6,7 @@ feature "Invite user" do
     
     # Create new user
     get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:normal_user] }
-    @account_id = Account.first.id
+    @team_id = Team.first.id
   end
   
   after do
@@ -25,7 +25,7 @@ feature "Invite user" do
         params[:subject].should include("You are invited to Vistazo")
         
         params[:body].should include("You've been invited to Vistazo")
-        params[:body].should include("/#{@account_id}/new-user/register")
+        params[:body].should include("/#{@team_id}/new-user/register")
       }
       click_button 'new_user'
     end
@@ -57,7 +57,7 @@ feature "Invite user" do
       click_button 'new_user'
     end
     
-    page.should have_content("Sorry, user already has an account. Multiple accounts for a user is an upcoming feature we're working. Please check back again.")
+    page.should have_content("Sorry, user already is in a team. Multiple teams for a user is an upcoming feature we're working. Please check back again.")
   end
   
   scenario "who has already been invited and is awaiting registration should give you an error" do
@@ -79,7 +79,7 @@ feature "Invite user" do
     page.should have_content("User has already been sent an invitation email.")
   end
   
-  scenario "who is already registered to the account should give you an error" do
+  scenario "who is already registered to the team should give you an error" do
     visit "/"
     click_link "start-btn"
     
@@ -88,7 +88,7 @@ feature "Invite user" do
       click_button 'new_user'
     end
 
-    page.should have_content("User is already registered to this account.")
+    page.should have_content("User is already registered to this team.")
   end
   
   scenario "resend email should send invitation email" do
@@ -107,7 +107,7 @@ feature "Invite user" do
       params[:subject].should include("You are invited to Vistazo")
         
       params[:body].should include("You've been invited to Vistazo")
-      params[:body].should include("/#{@account_id}/new-user/register")
+      params[:body].should include("/#{@team_id}/new-user/register")
     }
     click_button 'resend'
     

@@ -10,39 +10,39 @@ module PathSpecHelper
   end
   
   ############################################################################
-  # Accounts/users
+  # Teams/users
   ############################################################################
   
-  def account_path(account)
-    "/#{account.id}"
+  def team_path(team)
+    "/#{team.id}"
   end
   
-  def account_current_week_path(account)
-    "/#{account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+  def team_current_week_path(team)
+    "/#{team.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
   end
   
-  def user_account_current_week_path(user)
-    account_current_week_path(user.account)
+  def user_team_current_week_path(user)
+    team_current_week_path(user.team)
   end
   
-  def user_account_path(user)
-    account_path(user.account)
+  def user_team_path(user)
+    team_path(user.team)
   end
   
   ############################################################################
   # Projects
   ############################################################################
   
-  def add_project_path(account)
-    "/#{account.id}/team-member-project/add"
+  def add_project_path(team)
+    "/#{team.id}/team-member-project/add"
   end
   
-  def update_project_path(account, team_member_project)
-    "/#{account.id}/team-member-project/#{team_member_project.id}/update.json"
+  def update_project_path(team, team_member_project)
+    "/#{team.id}/team-member-project/#{team_member_project.id}/update.json"
   end
   
-  def update_project_with_account_id_path(account_id, team_member_project)
-    "/#{account_id}/team-member-project/#{team_member_project.id}/update.json"
+  def update_project_with_team_id_path(team_id, team_member_project)
+    "/#{team_id}/team-member-project/#{team_member_project.id}/update.json"
   end
 
   

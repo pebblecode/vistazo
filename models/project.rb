@@ -16,7 +16,7 @@ class Project
   timestamps!
 
   # Relationships
-  one :account
+  one :team
 
   def css_class
     get_project_css_class(self.name)

@@ -1,4 +1,4 @@
-class Account
+class Team
   include MongoMapper::Document
 
   key :name, String, :required => true

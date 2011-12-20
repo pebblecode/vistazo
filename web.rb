@@ -138,10 +138,10 @@ get '/auth/:provider/callback' do
           :email => hash["info"]["email"]
         )
         if @user.valid?
-          @account = create_account
+          @team = create_team
 
           # Add the user as the first team member
-          @account.team_members << TeamMember.create(:name => @user.name)
+          @team.team_members << TeamMember.create(:name => @user.name)
 
           flash[:success] = "Welcome to Vistazo! We're ready for you to add projects for yourself."
         else
@@ -171,10 +171,10 @@ get '/logout' do
   log_out
 end
 
-def create_account
-  @user.account = Account.create(:name => "#{@user.name}'s team")
+def create_team
+  @user.team = Team.create(:name => "#{@user.name}'s team")
   @user.save
-  return @user.account
+  return @user.team
 end
 
 # ----------------------------------------------------------------------------
@@ -184,22 +184,22 @@ end
 get '/' do
   protected!
   if current_user?
-    redirect "/#{current_user.account.url_slug}" if current_user.account
+    redirect "/#{current_user.team.url_slug}" if current_user.team
   end
   erb :homepage, :layout => false
 end
 
 # Vistazo weekly view - the crux of the app
-get '/:account_id/:year/week/:week_num' do
+get '/:team_id/:year/week/:week_num' do
   protected!
-  require_account_user!(params[:account_id])
-  @account = Account.find(params[:account_id])
-  @active_users = @account.active_users
-  @pending_users = @account.pending_users
+  require_team_user!(params[:team_id])
+  @team = Team.find(params[:team_id])
+  @active_users = @team.active_users
+  @pending_users = @team.pending_users
   
   @show_users = true
   
-  if @account.present?
+  if @team.present?
     year = params[:year].to_i
     week_num = params[:week_num].to_i
 
@@ -207,11 +207,11 @@ get '/:account_id/:year/week/:week_num' do
       # Weeks start from 1
       prev_week_num = ((week_num - 1) <= 0) ? NUM_WEEKS_IN_A_YEAR : week_num - 1
       prev_week_year = ((week_num - 1) <= 0) ? year - 1 : year
-      @prev_week_url = (prev_week_year > START_YEAR) ? "/#{params[:account_id]}/#{prev_week_year}/week/#{prev_week_num}" : nil
+      @prev_week_url = (prev_week_year > START_YEAR) ? "/#{params[:team_id]}/#{prev_week_year}/week/#{prev_week_num}" : nil
 
       next_week_num = ((week_num + 1) > NUM_WEEKS_IN_A_YEAR) ? 1 : week_num + 1
       next_week_year = ((week_num + 1) > NUM_WEEKS_IN_A_YEAR) ? year + 1 : year
-      @next_week_url = "/#{params[:account_id]}/#{next_week_year}/week/#{next_week_num}"
+      @next_week_url = "/#{params[:team_id]}/#{next_week_year}/week/#{next_week_num}"
 
       @monday_date = Date.commercial(year, week_num, MONDAY)
       @tuesday_date = Date.commercial(year, week_num, TUESDAY)
@@ -219,8 +219,8 @@ get '/:account_id/:year/week/:week_num' do
       @thursday_date = Date.commercial(year, week_num, THURSDAY)
       @friday_date = Date.commercial(year, week_num, FRIDAY)
 
-      @projects = Project.where(:account_id => @account.id).sort(:name)
-      @team_members = TeamMember.where(:account_id => @account.id).sort(:name)
+      @projects = Project.where(:team_id => @team.id).sort(:name)
+      @team_members = TeamMember.where(:team_id => @team.id).sort(:name)
 
       # Assume it's the right week of dates
       @team_member_projects_on_day = {}
@@ -237,10 +237,10 @@ get '/:account_id/:year/week/:week_num' do
       erb :week
     else
       flash.next[:warning] = "Invalid week and year."
-      redirect "/#{params[:account_id]}"
+      redirect "/#{params[:team_id]}"
     end
   else
-    flash.next[:warning] = "Invalid account."
+    flash.next[:warning] = "Invalid team."
     redirect '/'
   end
 end
@@ -250,40 +250,40 @@ get '/css/style.css' do
 end
 
 # ----------------------------------------------------------------------------
-# Account
+# Team
 # ----------------------------------------------------------------------------
-get '/:account_id' do
+get '/:team_id' do
   protected!
 
-  @account = Account.find(params[:account_id])
+  @team = Team.find(params[:team_id])
 
-  if @account.present?
-    redirect "/#{params[:account_id]}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+  if @team.present?
+    redirect "/#{params[:team_id]}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
   else
-    flash.next[:warning] = "Invalid account."
+    flash.next[:warning] = "Invalid team."
     redirect '/'
   end
 end
 
-post '/:account_id/new-user' do
+post '/:team_id/new-user' do
   logger.info "New user: #{params}"
   email = params[:new_user_email]
   
-  @account = Account.find(params[:account_id])
-  if @account.present?
+  @team = Team.find(params[:team_id])
+  if @team.present?
     @user = User.find_by_email(email)
     if @user.present?
-      if @user.account == @account
+      if @user.team == @team
         if @user.is_pending?
           flash[:warning] = "User has already been sent an invitation email. To resend, open the user settings and click on the resend button next to their email address."
         else
-          flash[:warning] = "User is already registered to this account."
+          flash[:warning] = "User is already registered to this team."
         end
       else
-        flash[:warning] = "Sorry, user already has an account. Multiple accounts for a user is an upcoming feature we're working. Please check back again."
+        flash[:warning] = "Sorry, user already is in a team. Multiple teams for a user is an upcoming feature we're working. Please check back again."
       end
     else
-      @user = User.new(:email => email, :account => @account)
+      @user = User.new(:email => email, :team => @team)
       if @user.save
         send_registration_email_for_params(@user, params)
       else
@@ -291,33 +291,33 @@ post '/:account_id/new-user' do
       end
     end
   else
-    flash[:warning] = "Account is not valid"
+    flash[:warning] = "Team is not valid"
   end
   
   redirect '/'
 end
 
-get '/:account_id/new-user/register' do
+get '/:team_id/new-user/register' do
   protected!
   
-  @account = Account.find(params[:account_id])
-  if @account.present?
+  @team = Team.find(params[:team_id])
+  if @team.present?
     erb :new_user_registration, :layout => false
   else
-    flash[:warning] = "Invalid account"
+    flash[:warning] = "Invalid team"
     redirect '/'
   end
 end
 
-post '/:account_id/new-user/:user_id/resend' do
+post '/:team_id/new-user/:user_id/resend' do
   protected!
   
-  @account = Account.find(params[:account_id])
-  if @account.present?
+  @team = Team.find(params[:team_id])
+  if @team.present?
     @user = User.find(params[:user_id])
     send_registration_email_for_params(@user, params)
   else
-    flash[:warning] = "Invalid account"
+    flash[:warning] = "Invalid team"
   end
   
   redirect back
@@ -337,16 +337,16 @@ def send_registration_email_for_params(user, params)
   end
 end
 
-post '/:account_id/update' do
+post '/:team_id/update' do
   protected!
-  require_account_user!(params[:account_id])
+  require_team_user!(params[:team_id])
     
-  @account = Account.find(params[:account_id])
-  if @account.present?
+  @team = Team.find(params[:team_id])
+  if @team.present?
     team_name = params[:team_name]
     if team_name.present?
-      @account.name = team_name
-      @account.save
+      @team.name = team_name
+      @team.save
       
       flash[:success] = "Updated team name successfully."
     else
@@ -358,7 +358,7 @@ post '/:account_id/update' do
 end
 
 def send_registration_email_to(send_to_email)
-  @signup_link = "#{APP_CONFIG['base_url']}/#{params[:account_id]}/new-user/register"
+  @signup_link = "#{APP_CONFIG['base_url']}/#{params[:team_id]}/new-user/register"
   
   send_from_email = settings.send_from_email
   subject = "You are invited to Vistazo"
@@ -400,11 +400,11 @@ end
 # Project
 # ----------------------------------------------------------------------------
 
-post '/:account_id/team-member-project/add' do
+post '/:team_id/team-member-project/add' do
   protected!
-  require_account_user!(params[:account_id])
+  require_team_user!(params[:team_id])
   
-  account = Account.find(params[:account_id])
+  team = Team.find(params[:team_id])
   team_member = TeamMember.find(params[:team_member_id])
   date = Date.parse(params[:date])
 
@@ -414,13 +414,13 @@ post '/:account_id/team-member-project/add' do
     project_name = params[:new_project_name]
   
     if project_name.present?
-      if account.present?
-        project = Project.create(:name => project_name, :account_id => account.id)
+      if team.present?
+        project = Project.create(:name => project_name, :team_id => team.id)
         team_member.add_project_on_date(project, date)
     
         flash[:success] = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
       else
-        flash[:warning] = "Invalid account."
+        flash[:warning] = "Invalid team."
       end
     else
       flash[:warning] = "Please specify a project name."
@@ -439,13 +439,13 @@ post '/:account_id/team-member-project/add' do
   redirect back
 end
 
-post '/:account_id/team-member-project/:tm_project_id/update.json' do
+post '/:team_id/team-member-project/:tm_project_id/update.json' do
   protected!
-  require_account_user!(params[:account_id])
+  require_team_user!(params[:team_id])
   
   output = ""
-  current_user_account = Account.find(params[:account_id])
-  if current_user_account.present?
+  current_user_team = Team.find(params[:team_id])
+  if current_user_team.present?
     from_team_member = TeamMember.find(params[:from_team_member_id])
     to_team_member = TeamMember.find(params[:to_team_member_id])
     team_member_project = from_team_member.team_member_projects.find(params[:tm_project_id]) if from_team_member
@@ -455,7 +455,7 @@ post '/:account_id/team-member-project/:tm_project_id/update.json' do
     
     
     if (from_team_member.present? and to_team_member.present? and team_member_project.present? and to_date.present?)
-      if ((from_team_member.account == current_user_account) and (to_team_member.account == current_user_account))
+      if ((from_team_member.team == current_user_team) and (to_team_member.team == current_user_team))
         successful_move = from_team_member.move_project(team_member_project, to_team_member, to_date)
   
         if successful_move
@@ -467,7 +467,7 @@ post '/:account_id/team-member-project/:tm_project_id/update.json' do
         end
       else
         status 400
-        output = { :message => "Invalid account." }
+        output = { :message => "Invalid team." }
       end
     else
       status 400
@@ -475,7 +475,7 @@ post '/:account_id/team-member-project/:tm_project_id/update.json' do
     end
   else
     status 400
-    output = { :message => "Invalid account." }
+    output = { :message => "Invalid team." }
   end
   
   content_type :json 
@@ -507,18 +507,18 @@ end
 # Team member
 # ----------------------------------------------------------------------------
 
-post '/:account_id/team-member/add' do
+post '/:team_id/team-member/add' do
   protected!
 
-  account = Account.find(params[:account_id])
+  team = Team.find(params[:team_id])
 
   logger.info "Add team member: #{params}"
 
-  if account.present?
+  if team.present?
     team_member_name = params[:new_team_member_name]
   
     if team_member_name.present?
-      team_member = TeamMember.create(:name => team_member_name, :account_id => account.id)
+      team_member = TeamMember.create(:name => team_member_name, :team_id => team.id)
     
       flash[:success] = "Successfully added '<em>#{team_member.name}</em>'."
     else
@@ -526,7 +526,7 @@ post '/:account_id/team-member/add' do
     end
     
   else
-    flash[:warning] = "Invalid account"
+    flash[:warning] = "Invalid team"
   end
 
   redirect back
@@ -582,7 +582,7 @@ post '/reset' do
   TeamMember.delete_all()
   Project.delete_all()
   ColourSetting.delete_all()
-  Account.delete_all()
+  Team.delete_all()
   User.delete_all()
 
   flash[:success] = "Successfully cleared out the database. All nice and clean now."
