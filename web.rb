@@ -103,7 +103,7 @@ end
 # Admin testing
 # ----------------------------------------------------------------------------
 
-get '/reset' do
+post '/reset' do
   protected!
 
   # Delete everything
