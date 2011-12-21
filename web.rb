@@ -98,6 +98,26 @@ get "/error2" do
   1/0
 end
 
+
+# ----------------------------------------------------------------------------
+# Admin testing
+# ----------------------------------------------------------------------------
+
+post '/reset' do
+  protected!
+
+  # Delete everything
+  TeamMember.delete_all()
+  Project.delete_all()
+  ColourSetting.delete_all()
+  Account.delete_all()
+  User.delete_all()
+
+  flash[:success] = "Successfully cleared out the database. All nice and clean now."
+  redirect '/'
+end
+
+
 # ----------------------------------------------------------------------------
 # Authentication
 # NOTE: This must be loaded first
@@ -571,23 +591,6 @@ post '/team-member/:team_member_id/delete' do
   redirect back
 end
 
-# ----------------------------------------------------------------------------
-# Admin testing
-# ----------------------------------------------------------------------------
-
-post '/reset' do
-  protected!
-
-  # Delete everything
-  TeamMember.delete_all()
-  Project.delete_all()
-  ColourSetting.delete_all()
-  Account.delete_all()
-  User.delete_all()
-
-  flash[:success] = "Successfully cleared out the database. All nice and clean now."
-  redirect '/'
-end
 
 # ----------------------------------------------------------------------------
 # Error handling
