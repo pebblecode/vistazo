@@ -8,7 +8,7 @@ class User
   timestamps!
 
   # Relationships
-  belongs_to :team
+  many :teams
 
   # Validations
   validates_format_of :email, :with => /\b[a-zA-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i

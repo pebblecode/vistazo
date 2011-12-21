@@ -172,9 +172,14 @@ get '/logout' do
 end
 
 def create_team
-  @user.team = Team.create(:name => "#{@user.name}'s team")
+  new_user_team = Team.create(:name => "#{@user.name}'s team")
+  new_user_team.users << @user
+  new_user_team.save
+  
+  @user.teams << new_user_team 
   @user.save
-  return @user.team
+  
+  return new_user_team
 end
 
 # ----------------------------------------------------------------------------
@@ -184,7 +189,7 @@ end
 get '/' do
   protected!
   if current_user?
-    redirect "/#{current_user.team.url_slug}" if current_user.team
+    redirect "/#{current_user.teams.first.url_slug}" if current_user.teams.present?
   end
   erb :homepage, :layout => false
 end
@@ -273,17 +278,21 @@ post '/:team_id/new-user' do
   if @team.present?
     @user = User.find_by_email(email)
     if @user.present?
-      if @user.team == @team
+      if @user.teams.include? @team
         if @user.is_pending?
           flash[:warning] = "User has already been sent an invitation email. To resend, open the user settings and click on the resend button next to their email address."
         else
           flash[:warning] = "User is already registered to this team."
         end
       else
-        flash[:warning] = "Sorry, user already is in a team. Multiple teams for a user is an upcoming feature we're working. Please check back again."
+        # Add user to team
+        # TODO
+        
+        # flash[:success] = "Invitation email has been sent"
       end
     else
-      @user = User.new(:email => email, :team => @team)
+      @user = User.new(:email => email)
+      @user.teams << @team
       if @user.save
         send_registration_email_for_params(@user, params)
       else

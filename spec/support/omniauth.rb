@@ -79,8 +79,8 @@ module OmniauthSpecHelper
     follow_redirect_with_session_login!(session)
     last_request.path.should == "/"
     
-    # Find team by uid
-    team = User.find_by_uid(session['uid']).team
+    # Find team by uid - should be first team in team list
+    team = User.find_by_uid(session['uid']).teams.first
     
     # Should redirect to team page
     follow_redirect_with_session_login!(@session)

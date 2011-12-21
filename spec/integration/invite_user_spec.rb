@@ -45,19 +45,19 @@ feature "Invite user" do
     page.should have_content("Email is not valid")
   end
   
-  scenario "with an existing acccount elsewhere should give you an error" do
+  scenario "with an existing acccount elsewhere should work" do
     # Create super admin
     get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:super_admin] }
     
+    # Log in as normal user (default)
     visit "/"
-    click_link "start-btn" # Logs in as normal user by default
+    click_link "start-btn"
     
     within_fieldset("Invite new user") do
       fill_in 'new_user_email', :with => OmniAuth.config.mock_auth[:super_admin]["info"]["email"]
       click_button 'new_user'
     end
-    
-    page.should have_content("Sorry, user already is in a team. Multiple teams for a user is an upcoming feature we're working. Please check back again.")
+    page.should have_content("Invitation email has been sent")
   end
   
   scenario "who has already been invited and is awaiting registration should give you an error" do

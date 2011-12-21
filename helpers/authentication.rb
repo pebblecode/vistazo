@@ -35,7 +35,7 @@ module Sinatra
         redirect "/"
       end
       
-      unless current_user.team == team
+      unless current_user.teams.include? team
         flash[:warning] = "You're not authorized to view this page."
         redirect "/"
       end

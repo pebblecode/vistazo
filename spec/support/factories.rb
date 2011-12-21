@@ -7,7 +7,7 @@ end
 Factory.define :user do |f|
   f.sequence(:name) { |n| "User #{n}" }
   f.sequence(:email) { |n| "user_#{n}@example.com" }
-  f.association :team
+  # No teams by default
 end
 
 Factory.define :team_member do |f|

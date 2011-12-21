@@ -30,11 +30,11 @@ module PathSpecHelper
   end
   
   def user_team_current_week_path(user)
-    team_current_week_path(user.team)
+    team_current_week_path(user.teams.first)
   end
   
   def user_team_path(user)
-    team_path(user.team)
+    team_path(user.teams.first)
   end
   
   ############################################################################

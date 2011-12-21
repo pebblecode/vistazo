@@ -10,7 +10,7 @@ describe "Http authentication" do
     get "/"
     last_response.status.should == 401
     
-    user = Factory(:user) # Create a user using factory, so that session doesn't need to be set up
+    user = Factory(:user, :teams => [Factory(:team)]) # Create a user using factory, so that session doesn't need to be set up
     get user_team_path(user)
     last_response.status.should == 401
     
@@ -60,7 +60,7 @@ describe "Teams:" do
       create_normal_user(@session)
       
       # Find added user
-      team = User.first.team
+      team = User.first.teams.first
       get_with_session_login! team_current_week_path(team), @session
       follow_redirect_with_session_login!(@session)
       
@@ -75,12 +75,12 @@ describe "Teams:" do
     it "should redirect them to their team week view and show an error message" do
       # Create super admin user and team
       login_super_admin_with_session!(@session)
-      super_admin_team = user_from_session(@session).team
+      super_admin_team = user_from_session(@session).teams.first
       logout_session!(@session)
       
       # Create normal user team
       login_normal_user_with_session!(@session)
-      normal_user_team = user_from_session(@session).team
+      normal_user_team = user_from_session(@session).teams.first
       
       # Try and log into super user team as normal user
       get_with_session_login! team_current_week_path(super_admin_team), @session
@@ -113,7 +113,7 @@ describe "Projects:" do
     login_normal_user_with_session!(@session)
       
     User.count.should == 1
-    @team = User.first.team
+    @team = User.first.teams.first
       
     TeamMember.count.should == 1
     @team_member = TeamMember.first
@@ -367,7 +367,7 @@ describe "Authentication:" do
       User.count.should == 1
       
       # Should create new user team with user name
-      team = User.first.team # Only have 1 user, so find first works
+      team = User.first.teams.first # Only have 1 user, so find first works
       team.name.should == "Vistazo Test's team"
       
       last_response.body.should include("Vistazo Test's team")
