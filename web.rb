@@ -173,11 +173,7 @@ end
 
 def create_team
   new_user_team = Team.create(:name => "#{@user.name}'s team")
-  new_user_team.users << @user
-  new_user_team.save
-  
-  @user.teams << new_user_team 
-  @user.save
+  new_user_team.add_user_with_status(@user, :active)
   
   return new_user_team
 end
@@ -278,12 +274,10 @@ post '/:team_id/new-user' do
   if @team.present?
     @user = User.find_by_email(email)
     if @user.present?
-      if @user.teams.include? @team
-        if @user.is_pending?
-          flash[:warning] = "User has already been sent an invitation email. To resend, open the user settings and click on the resend button next to their email address."
-        else
-          flash[:warning] = "User is already registered to this team."
-        end
+      if @team.has_pending_user?(@user)
+        flash[:warning] = "User has already been sent an invitation email. To resend, open the user settings and click on the resend button next to their email address."
+      elsif @team.has_active_user?(@user)
+        flash[:warning] = "User is already registered to this team."
       else
         # Add user to team
         # TODO
@@ -292,8 +286,8 @@ post '/:team_id/new-user' do
       end
     else
       @user = User.new(:email => email)
-      @user.teams << @team
-      if @user.save
+      
+      if @team.add_user(@user)
         send_registration_email_for_params(@user, params)
       else
         flash[:warning] = "Email is not valid"
