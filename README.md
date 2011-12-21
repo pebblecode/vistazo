@@ -30,11 +30,18 @@ To ensure the Google OAuth callback is correct ensure you run the site from http
 
 ### Testing
 
-To run tests manually
+To run all specs manually
 
     bundle exec rake spec
 
-To run tests automatically with [guard](https://github.com/guard/guard)
+To run an individual spec
+
+    bundle exec ruby -S rspec --color [filename]
+    
+    # eg,
+    bundle exec ruby -S rspec --color spec/models/team_spec.rb
+
+To run specs automatically with [guard](https://github.com/guard/guard)
 
     bundle exec guard
 
