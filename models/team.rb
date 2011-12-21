@@ -3,6 +3,7 @@ class Team
 
   key :name, String, :required => true
   
+  # Cache of user objects
   key :active_users, Array
   key :pending_users, Array
   
@@ -16,26 +17,36 @@ class Team
   # Public methods
   #############################################################################
   
+  def self.create_for_user(user)
+    new_user_team = Team.create(:name => "#{user.name}'s team")
+    new_user_team.add_user_with_status(user, :active)
+    
+    user.teams << new_user_team
+    user.save
+    
+    return new_user_team
+  end
+  
   def add_user(user)
     add_user_with_status(user, :pending)
   end
   
   def add_user_with_status(user, status)
     if (status == :active)
-      self.active_users << user
+      self.active_users << user.cache_hash
     elsif (status == :pending)
-      self.pending_users << user
+      self.pending_users << user.cache_hash
     else
       return false
     end
   end
   
   def has_active_user?(user)
-    self.active_users.include? user
+    self.active_users.include? user.cache_hash
   end
     
   def has_pending_user?(user)
-    self.pending_users.include? user
+    self.pending_users.include? user.cache_hash
   end
   
   def url_slug

@@ -14,7 +14,7 @@
     <% if @active_users %>
       <ul class="listing active">
         <% for user in @active_users %>
-          <li><div class="list-bullet"></div><%= h user.name %> &lt;<span class="email"><%= h user.email %></span>&gt;</li>
+          <li><div class="list-bullet"></div><%= h user[:name] %> &lt;<span class="email"><%= h user[:email] %></span>&gt;</li>
         <% end %>
       </ul>
     <% end %>

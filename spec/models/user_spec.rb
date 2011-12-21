@@ -25,7 +25,9 @@ describe "User model" do
     end
   end
   
-  describe "status" do
-    
+  describe "cache hash" do
+    user = Factory(:user, :uid => "123", :name => "Mojojojo", :email => "mojojojo@gmail.com")
+    user_id = user.id.to_s
+    user.cache_hash.should == {:id => user_id, :uid => "123", :name => "Mojojojo", :email => "mojojojo@gmail.com"}
   end
 end

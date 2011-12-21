@@ -158,12 +158,15 @@ get '/auth/:provider/callback' do
           :email => hash["info"]["email"]
         )
         if @user.valid?
-          @team = create_team
-
+          @team = Team.create_for_user(@user)
+          
           # Add the user as the first team member
           @team.team_members << TeamMember.create(:name => @user.name)
-
-          flash[:success] = "Welcome to Vistazo! We're ready for you to add projects for yourself."
+          if @team.save
+            flash[:success] = "Welcome to Vistazo! We're ready for you to add projects for yourself."
+          else
+            flash[:warning] = "Something wrong happened. Please try again another time."
+          end
         else
           flash[:warning] = "Could not retrieve user."
           
@@ -189,13 +192,6 @@ end
 get '/logout' do
   flash[:success] = "Logged out successfully"
   log_out
-end
-
-def create_team
-  new_user_team = Team.create(:name => "#{@user.name}'s team")
-  new_user_team.add_user_with_status(@user, :active)
-  
-  return new_user_team
 end
 
 # ----------------------------------------------------------------------------
