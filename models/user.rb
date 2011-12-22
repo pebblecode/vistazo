@@ -20,6 +20,6 @@ class User
   #############################################################################
 
   def to_hash
-    { :id => self.id.to_s, :uid => self.uid, :name => self.name, :email => self.email }
+    { "id" => self.id.to_s, "uid" => self.uid, "name" => self.name, "email" => self.email }
   end
 end
