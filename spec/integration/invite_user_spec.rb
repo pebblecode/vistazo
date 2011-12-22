@@ -175,7 +175,7 @@ feature "After getting the invitation email, registration page" do
   scenario "should show welcome message and activation link" do
     visit registration_with_team_id_and_user_id_path(@team.id, @new_user.id)
     page.body.should include("You have been invited to join <span>#{@team.name}</span> on Vistazo")
-    page.body.should include("/#{@team.id}/user/#{@new_user.id}/activate")
+    page.body.should include(activation_with_team_id_and_user_id_path(@team.id, @new_user.id))
   end
   
   scenario "with an invalid user id should show error message" do
