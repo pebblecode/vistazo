@@ -345,7 +345,8 @@ get '/:team_id/user/:user_id/activate' do
     if @user.present?
       @team.activate_user(@user)
       
-      # Redirect to login?
+      # Login
+      redirect "/auth/google_oauth2/callback"
     else
       flash[:warning] = "Invalid user"
       redirect '/'

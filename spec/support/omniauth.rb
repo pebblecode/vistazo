@@ -144,4 +144,8 @@ module OmniauthSpecHelper
     login_normal_user_with_session!(session)
     logout_session!(session)
   end
+  
+  def should_be_logged_in_as_username(username)
+    find("#top-nav .action-bar .logged-in-as").text.should == username
+  end
 end
