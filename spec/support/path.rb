@@ -41,6 +41,7 @@ module PathSpecHelper
     team_path(user.teams.first)
   end
   
+  
   ############################################################################
   # Projects
   ############################################################################
@@ -56,6 +57,14 @@ module PathSpecHelper
   def update_project_with_team_id_path(team_id, timetable_item)
     "/#{team_id}/team-member-project/#{timetable_item.id}/update.json"
   end
-
+  
+  
+  ############################################################################
+  # Registration
+  ############################################################################
+  
+  def registration_with_team_id_and_user_id_path(team_id, user_id)
+    "/#{team_id}/user/#{user_id}/register"
+  end
   
 end

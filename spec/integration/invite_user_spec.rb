@@ -35,7 +35,7 @@ feature "Invite user" do
       # Can only check the registration link after user is created
       @new_user = User.find_by_email(@new_user_email)
       @new_user.present?.should == true
-      email_body.should include("/#{@team.id}/user/#{@new_user.id}/register")
+      email_body.should include(registration_with_team_id_and_user_id_path(@team.id, @new_user.id))
     end
     
     page.should have_content("Invitation email has been sent")
@@ -126,7 +126,7 @@ feature "Invite user" do
       email_body = params[:body]
     }
     click_button 'resend'
-    email_body.should include("/#{@team.id}/user/#{@new_user.id}/register")
+    email_body.should include(registration_with_team_id_and_user_id_path(@team.id, @new_user.id))
     
     page.should have_content("Invitation email has been sent")
   end
@@ -161,7 +161,7 @@ feature "After getting the invitation email, registration page" do
       # Can only check the registration link after user is created
       @new_user = User.find_by_email(@new_user_email)
       @new_user.present?.should == true
-      email_body.should include("/#{@team.id}/user/#{@new_user.id}/register")
+      email_body.should include(registration_with_team_id_and_user_id_path(@team.id, @new_user.id))
     end
     @team.reload
     
@@ -173,21 +173,21 @@ feature "After getting the invitation email, registration page" do
   end
   
   scenario "should show welcome message and activation link" do
-    visit "/#{@team.id}/user/#{@new_user.id}/register"
+    visit registration_with_team_id_and_user_id_path(@team.id, @new_user.id)
     page.body.should include("You have been invited to join <span>#{@team.name}</span> on Vistazo")
     page.body.should include("/#{@team.id}/user/#{@new_user.id}/activate")
   end
   
   scenario "with an invalid user id should show error message" do
     user_id = "wrong_id"
-    visit "/#{@team.id}/user/#{user_id}/register"
+    visit registration_with_team_id_and_user_id_path(@team.id, user_id)
     page.body.should include("Invalid user")
     page.current_path.should == "/"
   end
   
   scenario "with an invalid team id should show error message" do
     team_id = "wrong_id"
-    visit "/#{team_id}/user/#{@new_user.id}/register"
+    visit registration_with_team_id_and_user_id_path(team_id, @new_user.id)
     page.body.should include("Invalid team")
     page.current_path.should == "/"
   end
@@ -196,7 +196,7 @@ feature "After getting the invitation email, registration page" do
     @team.has_pending_user?(@new_user).should == true
     @team.has_active_user?(@new_user).should == false
     
-    visit "/#{@team.id}/user/#{@new_user.id}/register"
+    visit registration_with_team_id_and_user_id_path(@team.id, @new_user.id)
     
     # Should not activate user yet
     @team.reload
@@ -244,14 +244,14 @@ feature "After going on the registration page and clicking on the activation but
 
   pending "with an invalid user id should show error message" do
     user_id = "wrong_id"
-    visit "/#{@team.id}/user/#{user_id}/register"
+    visit registration_with_team_id_and_user_id_path(@team.id, user_id)
     page.body.should include("Invalid user")
     page.current_path.should == "/"
   end
   
   pending "with an invalid team id should show error message" do
     team_id = "wrong_id"
-    visit "/#{team_id}/user/#{@new_user.id}/register"
+    visit registration_with_team_id_and_user_id_path(team_id, @new_user.id)
     page.body.should include("Invalid team")
     page.current_path.should == "/"
   end
@@ -260,7 +260,7 @@ feature "After going on the registration page and clicking on the activation but
     @team.has_pending_user?(@new_user).should == true
     @team.has_active_user?(@new_user).should == false
     
-    visit "/#{@team.id}/user/#{@new_user.id}/register"
+    visit registration_with_team_id_and_user_id_path(@team.id, @new_user.id)
     click_link "start-btn"
     
     @team.reload
@@ -272,7 +272,7 @@ feature "After going on the registration page and clicking on the activation but
     # Change user
     OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth.config.mock_auth[:super_admin]
     
-    visit "/#{@team.id}/user/#{@new_user.id}/register"
+    visit registration_with_team_id_and_user_id_path(@team.id, @new_user.id)
     click_link "start-btn"
     
     @new_user.reload
