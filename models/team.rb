@@ -3,7 +3,7 @@ class Team
 
   key :name, String, :required => true
   
-  # Cache of user objects
+  # Cache of user objects, stored as user hash values
   key :active_users, Array
   key :pending_users, Array
   
@@ -33,20 +33,20 @@ class Team
   
   def add_user_with_status(user, status)
     if (status == :active)
-      self.active_users << user.cache_hash
+      self.active_users << user.to_hash
     elsif (status == :pending)
-      self.pending_users << user.cache_hash
+      self.pending_users << user.to_hash
     else
       return false
     end
   end
   
   def has_active_user?(user)
-    self.active_users.include? user.cache_hash
+    self.active_users.include? user.to_hash
   end
     
   def has_pending_user?(user)
-    self.pending_users.include? user.cache_hash
+    self.pending_users.include? user.to_hash
   end
   
   def url_slug

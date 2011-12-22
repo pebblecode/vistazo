@@ -19,7 +19,7 @@ class User
   # Public methods
   #############################################################################
 
-  def cache_hash
+  def to_hash
     { :id => self.id.to_s, :uid => self.uid, :name => self.name, :email => self.email }
   end
 end
