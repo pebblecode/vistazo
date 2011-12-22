@@ -48,11 +48,11 @@ class Team
   end
   
   def has_active_user?(user)
-    self.active_users.include? user.to_hash
+    self.active_users.select {|hash| hash["id"] == user.id.to_s}.count > 0
   end
     
   def has_pending_user?(user)
-    self.pending_users.include? user.to_hash
+    self.pending_users.select {|hash| hash["id"] == user.id.to_s}.count > 0
   end
   
   def url_slug

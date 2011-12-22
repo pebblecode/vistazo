@@ -5,6 +5,72 @@ describe "Team model" do
     clean_db!
   end
   
+  describe "has_active_users?" do
+    before do
+      @team = Factory(:team)
+      @user = Factory(:user)
+      @team.add_user_with_status(@user, :active)
+    end
+    
+    it "should match user added" do
+      Team.count.should == 1
+      Team.first.has_active_user?(@user).should == true
+    end
+    
+    it "should match user with changed uid" do
+      @user.uid = "1234"
+      Team.first.has_active_user?(@user).should == true
+    end
+    
+    it "should match user with changed email" do
+      @user.email = "wrong@wrong.com"
+      Team.first.has_active_user?(@user).should == true
+    end
+
+    it "should match user with changed name" do
+      @user.name = "nah-nah-ay"
+      Team.first.has_active_user?(@user).should == true
+    end
+    
+    it "should not match user with changed id" do
+      @new_user = @user.clone # clone creates a new id
+      Team.first.has_active_user?(@new_user).should == false
+    end
+  end
+  
+  describe "has_pending_users?" do
+    before do
+      @team = Factory(:team)
+      @user = Factory(:user)
+      @team.add_user_with_status(@user, :pending)
+    end
+    
+    it "should match user added" do
+      Team.count.should == 1
+      Team.first.has_pending_user?(@user).should == true
+    end
+    
+    it "should match user with changed uid" do
+      @user.uid = "1234"
+      Team.first.has_pending_user?(@user).should == true
+    end
+    
+    it "should match user with changed email" do
+      @user.email = "wrong@wrong.com"
+      Team.first.has_pending_user?(@user).should == true
+    end
+
+    it "should match user with changed name" do
+      @user.name = "nah-nah-ay"
+      Team.first.has_pending_user?(@user).should == true
+    end
+    
+    it "should not match user with changed id" do
+      @new_user = @user.clone # clone creates a new id
+      Team.first.has_pending_user?(@new_user).should == false
+    end
+  end
+  
   describe "add user" do
     before do
       @team = Factory(:team)
@@ -24,22 +90,6 @@ describe "Team model" do
       
       # Should be able to see team in user
       @user.teams.include?(@team).should == true
-    end
-    
-    describe "to active users" do
-      it "should contain hash of user in active_user array" do
-        @team.add_user_with_status(@user, :active)
-        Team.count.should == 1
-        Team.first.active_users.include?(@user.to_hash).should == true
-      end
-    end
-    
-    describe "to pending users" do
-      it "should contain hash of user in pending_user array" do
-        @team.add_user_with_status(@user, :pending)
-        Team.count.should == 1
-        Team.first.pending_users.include?(@user.to_hash).should == true
-      end
     end
     
     describe "with status" do
