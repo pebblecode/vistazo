@@ -172,9 +172,10 @@ feature "After getting the invitation email, registration page" do
     clean_db!
   end
   
-  scenario "should show welcome message" do
+  scenario "should show welcome message and activation link" do
     visit "/#{@team.id}/user/#{@new_user.id}/register"
     page.body.should include("You have been invited to join <span>#{@team.name}</span> on Vistazo")
+    page.body.should include("/#{@team.id}/user/#{@new_user.id}/activate")
   end
   
   scenario "with an invalid user id should show error message" do
@@ -191,11 +192,73 @@ feature "After getting the invitation email, registration page" do
     page.current_path.should == "/"
   end
   
-  scenario "should change new users from pending to active in team" do
+  scenario "should not activate user" do
     @team.has_pending_user?(@new_user).should == true
     @team.has_active_user?(@new_user).should == false
     
     visit "/#{@team.id}/user/#{@new_user.id}/register"
+    
+    # Should not activate user yet
+    @team.reload
+    @team.has_pending_user?(@new_user).should == true
+    @team.has_active_user?(@new_user).should == false
+  end
+end
+
+feature "After going on the registration page and clicking on the activation button" do
+  background do
+    http_authorization_capybara!
+    
+    # Create new user and team
+    get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:normal_user] }
+    @team = Team.first
+    
+    @new_user_email = OmniAuth.config.mock_auth[:super_admin]["info"]["email"]
+    
+    visit "/"
+    click_link "start-btn"
+      
+    within_fieldset("Invite new user") do
+      fill_in 'new_user_email', :with => @new_user_email
+      
+      email_body = ""
+      Pony.should_receive(:mail) { |params|
+        email_body = params[:body]
+      }
+      click_button 'new_user'
+      
+      # Can only check the registration link after user is created
+      @new_user = User.find_by_email(@new_user_email)
+    end
+    @team.reload
+    
+    visit logout_path
+  end
+  
+  after do
+    clean_db!
+  end
+  
+  pending "with an invalid user id should show error message" do
+    user_id = "wrong_id"
+    visit "/#{@team.id}/user/#{user_id}/register"
+    page.body.should include("Invalid user")
+    page.current_path.should == "/"
+  end
+  
+  pending "with an invalid team id should show error message" do
+    team_id = "wrong_id"
+    visit "/#{team_id}/user/#{@new_user.id}/register"
+    page.body.should include("Invalid team")
+    page.current_path.should == "/"
+  end
+  
+  scenario "should activate new user once they click the activate button (ie, change status from pending to active)" do
+    @team.has_pending_user?(@new_user).should == true
+    @team.has_active_user?(@new_user).should == false
+    
+    visit "/#{@team.id}/user/#{@new_user.id}/register"
+    click_link "start-btn"
     
     @team.reload
     @team.has_pending_user?(@new_user).should == false
@@ -203,5 +266,4 @@ feature "After getting the invitation email, registration page" do
   end
   
   pending "should change existing users from pending to active in team"
-  
 end

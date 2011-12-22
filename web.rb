@@ -324,8 +324,28 @@ get '/:team_id/user/:user_id/register' do
   if @team.present?
     @user = User.find(params[:user_id])
     if @user.present?
-      @team.activate_user(@user)
+      @activation_link = "#{APP_CONFIG['base_url']}/#{@team.id}/user/#{@user.id}/activate"
       erb :new_user_registration, :layout => false
+    else
+      flash[:warning] = "Invalid user"
+      redirect '/'
+    end
+  else
+    flash[:warning] = "Invalid team"
+    redirect '/'
+  end
+end
+
+get '/:team_id/user/:user_id/activate' do
+  protected!
+  
+  @team = Team.find(params[:team_id])
+  if @team.present?
+    @user = User.find(params[:user_id])
+    if @user.present?
+      @team.activate_user(@user)
+      
+      # Redirect to login?
     else
       flash[:warning] = "Invalid user"
       redirect '/'
