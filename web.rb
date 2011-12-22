@@ -200,7 +200,9 @@ end
 
 get '/' do
   protected!
+  
   if current_user?
+    logger.info "Homepage with user: #{current_user.name} with teams: #{current_user.teams}"
     redirect "/#{current_user.teams.first.url_slug}" if current_user.teams.present?
   end
   erb :homepage, :layout => false
@@ -271,9 +273,9 @@ end
 # ----------------------------------------------------------------------------
 get '/:team_id' do
   protected!
-
+  
   @team = Team.find(params[:team_id])
-
+  logger.info "Team page (#{@team}) with user: #{current_user}"
   if @team.present?
     redirect "/#{params[:team_id]}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
   else
@@ -295,10 +297,9 @@ post '/:team_id/new-user' do
       elsif @team.has_active_user?(@user)
         flash[:warning] = "User is already registered to this team."
       else
-        # Add user to team
-        # TODO
+        @team.add_user(@user)
         
-        # flash[:success] = "Invitation email has been sent"
+        flash[:success] = "Invitation email has been sent"
       end
     else
       @user = User.new(:email => email)
