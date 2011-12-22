@@ -346,7 +346,7 @@ end
 def send_registration_email_for_params(user, params)
   begin
     if user.present?
-      send_registration_email_to user.email
+      send_registration_email_to user
       flash[:success] = "Invitation email has been sent to #{user.email}"
     else
       flash[:warning] = "Invalid user to send email to."
@@ -377,8 +377,8 @@ post '/:team_id/update' do
   redirect back
 end
 
-def send_registration_email_to(send_to_email)
-  @signup_link = "#{APP_CONFIG['base_url']}/#{params[:team_id]}/new-user/register"
+def send_registration_email_to(user)
+  @signup_link = "#{APP_CONFIG['base_url']}/#{params[:team_id]}/user/#{user.id}/register"
   
   send_from_email = settings.send_from_email
   subject = "You are invited to Vistazo"
@@ -396,7 +396,7 @@ def send_registration_email_to(send_to_email)
   if ENV['RACK_ENV'] == "development"
     logger.info "DEVELOPMENT MODE: email not actually sent, but this is what it'd look like..."
     logger.info "send_from_email: #{send_from_email}"
-    logger.info "send_to_email: #{send_to_email}"
+    logger.info "send_to_email: #{user.email}"
     logger.info "params: #{email_params}"
     logger.info "subject: #{subject}"
             
@@ -405,14 +405,14 @@ def send_registration_email_to(send_to_email)
     if ENV['RACK_ENV'] == "staging"
       logger.info "STAGING MODE: this email should be sent:"
       logger.info "send_from_email: #{send_from_email}"
-      logger.info "send_to_email: #{send_to_email}"
+      logger.info "send_to_email: #{user.email}"
       logger.info "params: #{email_params}"
       logger.info "subject: #{subject}"
       
       logger.info erb(:new_user_email, :layout => false)
     end
     
-    send_email(send_from_email, send_to_email, subject, erb(:new_user_email, :layout => false), email_params)
+    send_email(send_from_email, user.email, subject, erb(:new_user_email, :layout => false), email_params)
   end
 end
 
