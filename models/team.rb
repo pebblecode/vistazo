@@ -34,10 +34,12 @@ class Team
   def add_user_with_status(user, status)
     if (status == :active)
       self.active_users << user.to_hash
+      self.save
       user.teams << self
       user.save
     elsif (status == :pending)
       self.pending_users << user.to_hash
+      self.save
       user.teams << self
       user.save
     else

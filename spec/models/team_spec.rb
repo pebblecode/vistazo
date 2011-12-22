@@ -26,6 +26,22 @@ describe "Team model" do
       @user.teams.include?(@team).should == true
     end
     
+    describe "to active users" do
+      it "should contain hash of user in active_user array" do
+        @team.add_user_with_status(@user, :active)
+        Team.count.should == 1
+        Team.first.active_users.include?(@user.to_hash).should == true
+      end
+    end
+    
+    describe "to pending users" do
+      it "should contain hash of user in pending_user array" do
+        @team.add_user_with_status(@user, :pending)
+        Team.count.should == 1
+        Team.first.pending_users.include?(@user.to_hash).should == true
+      end
+    end
+    
     describe "with status" do
       it "should add an active user" do
         @team.add_user_with_status(@user, :active)
