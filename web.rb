@@ -284,7 +284,7 @@ get '/:team_id' do
   end
 end
 
-post '/:team_id/new-user' do
+post '/:team_id/user/new' do
   logger.info "New user: #{params}"
   email = params[:new_user_email]
   
