@@ -317,12 +317,19 @@ post '/:team_id/new-user' do
   redirect '/'
 end
 
-get '/:team_id/new-user/register' do
+get '/:team_id/user/:user_id/register' do
   protected!
   
   @team = Team.find(params[:team_id])
   if @team.present?
-    erb :new_user_registration, :layout => false
+    @user = User.find(params[:user_id])
+    if @user.present?
+      @team.activate_user(@user)
+      erb :new_user_registration, :layout => false
+    else
+      flash[:warning] = "Invalid user"
+      redirect '/'
+    end
   else
     flash[:warning] = "Invalid team"
     redirect '/'

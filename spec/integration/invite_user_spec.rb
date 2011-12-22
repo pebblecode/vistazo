@@ -172,12 +172,32 @@ feature "After getting the invitation email, registration page" do
     clean_db!
   end
   
+  scenario "should show welcome message" do
+    visit "/#{@team.id}/user/#{@new_user.id}/register"
+    page.body.should include("You have been invited to join <span>#{@team.name}</span> on Vistazo")
+  end
+  
+  scenario "with an invalid user id should show error message" do
+    user_id = "wrong_id"
+    visit "/#{@team.id}/user/#{user_id}/register"
+    page.body.should include("Invalid user")
+    page.current_path.should == "/"
+  end
+  
+  scenario "with an invalid team id should show error message" do
+    team_id = "wrong_id"
+    visit "/#{team_id}/user/#{@new_user.id}/register"
+    page.body.should include("Invalid team")
+    page.current_path.should == "/"
+  end
+  
   scenario "should change new users from pending to active in team" do
     @team.has_pending_user?(@new_user).should == true
     @team.has_active_user?(@new_user).should == false
     
     visit "/#{@team.id}/user/#{@new_user.id}/register"
     
+    @team.reload
     @team.has_pending_user?(@new_user).should == false
     @team.has_active_user?(@new_user).should == true
   end

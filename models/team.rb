@@ -55,6 +55,12 @@ class Team
     self.pending_users.select {|hash| hash["id"] == user.id.to_s}.count > 0
   end
   
+  def activate_user(user)
+    self.pending_users.delete_if {|u| u["id"] == user.id.to_s}
+    self.active_users << user.to_hash
+    self.save
+  end
+  
   def url_slug
     self.id.to_s
   end
