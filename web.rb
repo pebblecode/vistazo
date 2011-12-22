@@ -336,7 +336,7 @@ get '/:team_id/user/:user_id/register' do
   end
 end
 
-post '/:team_id/new-user/:user_id/resend' do
+post '/:team_id/user/:user_id/resend' do
   protected!
   
   @team = Team.find(params[:team_id])

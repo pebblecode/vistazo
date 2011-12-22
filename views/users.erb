@@ -25,7 +25,7 @@
       <% for user_hash in @pending_users %>
         <li>
           <div class="list-bullet"></div><p class="pending-user-email"><%= h user_hash["email"] %></p>
-          <form id="invite-user-form" action="/<%= @team.url_slug %>/new-user/<%= user_hash["id"] %>/resend" method="post">
+          <form id="invite-user-form" action="/<%= @team.url_slug %>/user/<%= user_hash["id"] %>/resend" method="post">
             <button class="resend" type="submit" name="resend" value="resend" class="submit-button">resend</button>
           </form>
         </li>
