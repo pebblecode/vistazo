@@ -888,7 +888,7 @@ textarea:focus, input:focus{
   }
 } // #new-project-form
 
-#team-users-dialog {
+#account-users-dialog {
   display: none; /* Hide by default */
   
   legend {
@@ -987,7 +987,7 @@ textarea:focus, input:focus{
     }
   } // .new-object-fieldset
   
-} // #team-users-dialog
+} // #account-users-dialog
 
 #team-name-dialog, .edit-team-member-dialog {
   display: none; /* Don't display by default */
