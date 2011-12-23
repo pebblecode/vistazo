@@ -11,6 +11,13 @@ module OmniauthSpecHelper
       "name" => 'Vistazo Test'
     }
   })
+  OmniAuth.config.mock_auth[:karen_o] = OmniAuth.config.mock_auth[:default].merge({
+    "uid" => '100001',
+    "info" => {
+      "email" => "karen.o@gmail.com",
+      "name" => 'Karen O'
+    }
+  })
   OmniAuth.config.mock_auth[:super_admin] = OmniAuth.config.mock_auth[:default].merge({
     "uid" => '111965288093828509275',
     "info" => {
@@ -64,6 +71,24 @@ module OmniauthSpecHelper
     oauth_cred = OmniAuth.config.mock_auth[user_key]
     if oauth_cred
       OmniAuth.config.mock_auth[:google_oauth2] = oauth_cred
+    else
+      raise "Invalid oauth user"
+    end
+  end
+  
+  def omniauth_user_name(user_key)
+    oauth_cred = OmniAuth.config.mock_auth[user_key]
+    if oauth_cred
+      oauth_cred["info"]["name"]
+    else
+      raise "Invalid oauth user"
+    end
+  end
+  
+  def omniauth_email(user_key)
+    oauth_cred = OmniAuth.config.mock_auth[user_key]
+    if oauth_cred
+      oauth_cred["info"]["email"]
     else
       raise "Invalid oauth user"
     end

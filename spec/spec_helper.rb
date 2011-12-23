@@ -56,6 +56,10 @@ def should_be_on_team_name_page(team_name)
   find("#team-name").text.should include(team_name)
 end
 
+def should_not_be_on_team_name_page(team_name)
+  find("#team-name").text.should_not include(team_name)
+end
+
 # Define application for all spec files
 def app
   Sinatra::Application

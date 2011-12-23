@@ -283,5 +283,26 @@ feature "After going on the registration page and clicking on the activation but
     should_be_on_team_name_page(@team.name)
   end
   
-  pending "logged in as someone else"
+  scenario "should not log into team if logged in as someone else (should just go to the other person's team page)" do
+    switch_omniauth_user :karen_o
+    
+    visit registration_with_team_id_and_user_id_path(@team.id, @new_user.id)
+    click_link "start-btn"
+    
+    @new_user.reload
+    should_be_logged_in_as_username omniauth_user_name :karen_o
+    should_not_be_on_team_name_page(@team.name)
+    should_be_on_team_name_page("#{omniauth_user_name(:karen_o)}'s team")
+  end
+  
+  scenario "should not activate user for team if logged in as someone else" do
+    switch_omniauth_user :karen_o
+    
+    visit registration_with_team_id_and_user_id_path(@team.id, @new_user.id)
+    click_link "start-btn"
+    
+    @new_user.reload
+    @team.has_pending_user?(@new_user).should == true
+    @team.has_active_user?(@new_user).should == false
+  end
 end
