@@ -238,8 +238,8 @@ feature "After going on the registration page and clicking on the activation but
   after do
     clean_db!
     
-    # Make sure default user is normal_user
-    OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth.config.mock_auth[:normal_user]
+    # Make sure default user is back to normal_user
+    switch_omniauth_user :normal_user
   end
 
   scenario "with an invalid user id should show error message" do
@@ -273,8 +273,7 @@ feature "After going on the registration page and clicking on the activation but
   end
   
   scenario "should log in user into team page" do
-    # Change user
-    OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth.config.mock_auth[:super_admin]
+    switch_omniauth_user :super_admin
     
     visit registration_with_team_id_and_user_id_path(@team.id, @new_user.id)
     click_link "start-btn"

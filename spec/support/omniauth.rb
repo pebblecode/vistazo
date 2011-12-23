@@ -60,6 +60,15 @@ module OmniauthSpecHelper
     SessionData.new(rack_test_session.instance_variable_get(:@rack_mock_session).cookie_jar)
   end
   
+  def switch_omniauth_user(user_key)
+    oauth_cred = OmniAuth.config.mock_auth[user_key]
+    if oauth_cred
+      OmniAuth.config.mock_auth[:google_oauth2] = oauth_cred
+    else
+      raise "Invalid oauth user"
+    end
+  end
+  
   def login_normal_user_with_session!(session)
     login!(:normal_user, session)
   end
