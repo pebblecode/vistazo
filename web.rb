@@ -213,6 +213,13 @@ end
 get '/:account_id/:year/week/:week_num' do
   protected!
   require_account_user!(params[:account_id])
+  
+  if current_user.is_new
+    @first_signon = current_user.is_new
+    current_user.is_new = false
+    current_user.save
+  end
+    
   @account = Account.find(params[:account_id])
   @active_users = @account.active_users
   @pending_users = @account.pending_users

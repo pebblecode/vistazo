@@ -4,6 +4,7 @@ class User
   key :name, String
   key :uid, String
   key :email, String, :required => true
+  key :is_new, Boolean, :default => true
 
   timestamps!
 
