@@ -323,17 +323,17 @@ feature "After going on the registration page and clicking on the activation but
     
     @new_user.reload
     @team.reload
-    find("#team-users-dialog .listing.active").text.should include(@new_user.email)
-
+    find("#team-users-dialog .listing.active").text.scan(@new_user.email).count.should == 1
+    
     visit registration_with_team_id_and_user_id_path(@team.id, @new_user.id)
     click_link "start-btn"
     
     @new_user.reload
     @team.reload
-    pending "within active listing, should only see the user once"
+    find("#team-users-dialog .listing.active").text.scan(@new_user.email).count.should == 1
   end
   
-  pending "visiting registration page after registering should say that you have registered already" do
-    
+  it "visiting registration page after registering should say that you have registered already" do
+    pending "implement this"
   end
 end
