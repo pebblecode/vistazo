@@ -101,12 +101,58 @@ describe "Team model" do
         @user.teams.include?(@team).should == true
       end
       
+      it "should only add an active user once" do
+        @team.add_user_with_status(@user, :active)
+        @team.active_users.select {|hash| hash["id"] == @user.id.to_s}.count.should == 1
+
+        @team.add_user_with_status(@user, :active)
+        @team.active_users.select {|hash| hash["id"] == @user.id.to_s}.count.should == 1
+      end
+      
+      it "should update active user attributes for active_users cache" do
+        @team.add_user_with_status(@user, :active)
+        @team.active_users.select {|hash| hash["id"] == @user.id.to_s}.count.should == 1
+
+        @user.name = "Javis Cocker"
+        @user.email = "javis.cocker@gmail.com"
+        @user.uid = "55555"
+        @team.add_user_with_status(@user, :active)
+        
+        activate_user = @team.active_users.select {|hash| hash["id"] == @user.id.to_s}.first
+        activate_user["name"].should == "Javis Cocker"
+        activate_user["email"].should == "javis.cocker@gmail.com"
+        activate_user["uid"].should == "55555"
+      end
+      
       it "should add a pending user" do
         @team.add_user_with_status(@user, :pending)
         @team.has_pending_user?(@user).should == true
         
         # Should be able to see team in user
         @user.teams.include?(@team).should == true
+      end
+      
+      it "should only add an pending user once" do
+        @team.add_user_with_status(@user, :pending)
+        @team.pending_users.select {|hash| hash["id"] == @user.id.to_s}.count.should == 1
+
+        @team.add_user_with_status(@user, :pending)
+        @team.pending_users.select {|hash| hash["id"] == @user.id.to_s}.count.should == 1
+      end
+      
+      it "should update pending user attributes for active_users cache" do
+        @team.add_user_with_status(@user, :pending)
+        @team.pending_users.select {|hash| hash["id"] == @user.id.to_s}.count.should == 1
+
+        @user.name = "Javis Cocker"
+        @user.email = "javis.cocker@gmail.com"
+        @user.uid = "55555"
+        @team.add_user_with_status(@user, :pending)
+
+        pending_user = @team.pending_users.select {|hash| hash["id"] == @user.id.to_s}.first
+        pending_user["name"].should == "Javis Cocker"
+        pending_user["email"].should == "javis.cocker@gmail.com"
+        pending_user["uid"].should == "55555"
       end
       
       it "should not add unknown status users" do

@@ -33,11 +33,13 @@ class Team
   
   def add_user_with_status(user, status)
     if (status == :active)
+      self.active_users.delete_if {|u| u["id"] == user.id.to_s} # Delete it, so it can be re-added
       self.active_users << user.to_hash
       self.save
       user.teams << self
       user.save
     elsif (status == :pending)
+      self.pending_users.delete_if {|u| u["id"] == user.id.to_s} # Delete it, so it can be re-added
       self.pending_users << user.to_hash
       self.save
       user.teams << self
@@ -58,8 +60,7 @@ class Team
   def activate_user(user)
     self.pending_users.delete_if {|u| u["id"] == user.id.to_s}
     
-    # Delete it, so it can be re-added
-    self.active_users.delete_if {|u| u["id"] == user.id.to_s}
+    self.active_users.delete_if {|u| u["id"] == user.id.to_s} # Delete it, so it can be re-added
     self.active_users << user.to_hash
     
     self.save

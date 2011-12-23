@@ -310,4 +310,24 @@ feature "After going on the registration page and clicking on the activation but
     @team.has_pending_user?(@new_user).should == true
     @team.has_active_user?(@new_user).should == false
   end
+  
+  scenario "and visiting registration again, should not add the user twice" do
+    visit registration_with_team_id_and_user_id_path(@team.id, @new_user.id)
+    click_link "start-btn"
+    
+    @new_user.reload
+    @team.reload
+    
+    @team.active_users.select {|u| u["email"] == @new_user.email }.count.should == 1
+    visit registration_with_team_id_and_user_id_path(@team.id, @new_user.id)
+    click_link "start-btn"
+    
+    @new_user.reload
+    @team.reload
+    @team.active_users.select {|u| u["email"] == @new_user.email }.count.should == 1
+  end
+  
+  pending "visiting registration page after registering should say that you have registered already" do
+    
+  end
 end
