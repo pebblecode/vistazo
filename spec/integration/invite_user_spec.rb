@@ -279,7 +279,7 @@ feature "After going on the registration page and clicking on the activation but
     
   end
   
-  scenario "should log in user into team page" do
+  scenario "should log user into team page" do
     switch_omniauth_user :super_admin
     
     visit registration_with_team_id_and_user_id_path(@team.id, @new_user.id)

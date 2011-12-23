@@ -207,4 +207,57 @@ describe "Team model" do
       activated_user["uid"].should == "55555"
     end
   end
+  
+  describe "update_user_cache" do
+    before do
+      @team = Factory(:team)
+      @user = Factory(:user)
+    end
+    
+    describe "for pending user" do
+      before do
+        @team.add_user_with_status(@user, :pending)
+      end
+      
+      it "should update user cache" do
+        @user.name = "Javis Cocker"
+        @user.email = "javis.cocker@gmail.com"
+        @user.uid = "55555"
+        @team.update_user_cache(@user)
+      
+        updated_user = @team.pending_users.select {|hash| hash["id"] == @user.id.to_s}.first
+        updated_user["name"].should == "Javis Cocker"
+        updated_user["email"].should == "javis.cocker@gmail.com"
+        updated_user["uid"].should == "55555"
+      end
+      
+      it "should not update active user cache" do
+        @team.update_user_cache(@user)
+        @team.active_users.select {|hash| hash["id"] == @user.id.to_s}.present?.should == false
+      end
+    end
+    
+    describe "for active user" do
+      before do
+        @team.add_user_with_status(@user, :active)
+      end
+      
+      it "should update active user cache" do
+        @user.name = "Javis Cocker"
+        @user.email = "javis.cocker@gmail.com"
+        @user.uid = "55555"
+        @team.update_user_cache(@user)
+      
+        updated_user = @team.active_users.select {|hash| hash["id"] == @user.id.to_s}.first
+        updated_user["name"].should == "Javis Cocker"
+        updated_user["email"].should == "javis.cocker@gmail.com"
+        updated_user["uid"].should == "55555"
+      end
+      
+      it "should not update pending user cache" do
+        @team.update_user_cache(@user)
+        @team.pending_users.select {|hash| hash["id"] == @user.id.to_s}.present?.should == false
+      end
+    end
+  end
 end

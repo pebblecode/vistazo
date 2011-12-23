@@ -66,6 +66,20 @@ class Team
     self.save
   end
   
+  def update_user_cache(user)
+    if has_pending_user? user
+      self.pending_users.delete_if {|u| u["id"] == user.id.to_s} # Delete it, so it can be re-added
+      self.pending_users << user.to_hash
+    end
+    
+    if has_active_user? user
+      self.active_users.delete_if {|u| u["id"] == user.id.to_s} # Delete it, so it can be re-added
+      self.active_users << user.to_hash
+    end
+    
+    self.save
+  end
+  
   def url_slug
     self.id.to_s
   end
