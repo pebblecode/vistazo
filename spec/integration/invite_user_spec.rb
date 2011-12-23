@@ -242,6 +242,11 @@ feature "After going on the registration page and clicking on the activation but
     switch_omniauth_user :normal_user
   end
 
+  scenario "should show the user's email" do
+    visit registration_with_team_id_and_user_id_path(@team.id, @new_user.id)
+    page.body.should include(@new_user_email)
+  end
+
   scenario "with an invalid user id should show error message" do
     user_id = "wrong_id"
     visit registration_with_team_id_and_user_id_path(@team.id, user_id)

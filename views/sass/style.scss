@@ -1120,7 +1120,7 @@ textarea:focus, input:focus{
         margin-bottom: 5px;
       }
     }
-  }
+  } // #main
 }
 
 /* Registration page
@@ -1138,7 +1138,14 @@ textarea:focus, input:focus{
 }
 
 .reg-main{
-  min-height: 330px !important;
+  min-height: 425px !important;
+  
+  .help {
+    margin-top: 20px;
+    clear: both;
+    font-size: 14px;
+    line-height: 14px;
+  }
 }
 
 /* Help text

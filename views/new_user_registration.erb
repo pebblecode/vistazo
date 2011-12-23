@@ -41,8 +41,9 @@
       <p id="vistazo-is">Vistazo is a simple, lightweight tool for small teams to see <span>who</span> is working on <span>what</span>, <span>when</span>.</p>
       <br />
       <br />
-      <p id="to-start">To start, just sign in with your Google mail account with the button below:</p>
+      <p id="to-start">To start, just sign in with your Google mail account <span><%= @user.email %></span>*, with the button below:</p>
       <a href="<%= @activation_link %>" id="start-btn">Start using Vistazo<span> </span>!</a>
+      <p class="help">* If the email shown here is not a google account, then sorry! We don't currently support other forms of login. Please contact the person who invited you, and get them to re-invite you through a Google account.</p>
   </div>
   </div>
   <footer>
