@@ -243,8 +243,12 @@ feature "After going on the registration page and clicking on the activation but
   end
 
   scenario "should show the user's name and email in active users listing" do
+    switch_omniauth_user :super_admin
+    
     visit registration_with_team_id_and_user_id_path(@team.id, @new_user.id)
     click_link "start-btn"
+    
+    @new_user.reload
     find("#team-users-dialog .listing.active").text.should include(@new_user.name)
     find("#team-users-dialog .listing.active").text.should include(@new_user.email)
   end
