@@ -120,4 +120,45 @@ describe "Team model" do
       end
     end
   end
+  
+  describe "activate_user" do
+    before do
+      @team = Factory(:team)
+      @user = Factory(:user)
+      @team.add_user_with_status(@user, :pending)
+    end
+    
+    it "should remove the user from pending users" do
+      @team.activate_user(@user)
+      @team.pending_users.select {|hash| hash["id"] == @user.id.to_s}.present?.should == false
+    end
+    
+    it "should add the user to active_users" do
+      @team.activate_user(@user)
+      @team.active_users.select {|hash| hash["id"] == @user.id.to_s}.present?.should == true
+    end
+    
+    it "should not add the user to active_users more than once" do
+      @team.activate_user(@user)
+      @team.active_users.select {|hash| hash["id"] == @user.id.to_s}.count.should == 1
+      
+      @team.activate_user(@user)
+      @team.active_users.select {|hash| hash["id"] == @user.id.to_s}.count.should == 1
+    end
+    
+    it "should update user attributes in active_users cache" do
+      @team.activate_user(@user)
+      @team.active_users.select {|hash| hash["id"] == @user.id.to_s}.count.should == 1
+      
+      @user.name = "Javis Cocker"
+      @user.email = "javis.cocker@gmail.com"
+      @user.uid = "55555"
+      @team.activate_user(@user)
+      
+      activated_user = @team.active_users.select {|hash| hash["id"] == @user.id.to_s}.first
+      activated_user["name"].should == "Javis Cocker"
+      activated_user["email"].should == "javis.cocker@gmail.com"
+      activated_user["uid"].should == "55555"
+    end
+  end
 end

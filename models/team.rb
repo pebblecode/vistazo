@@ -57,7 +57,11 @@ class Team
   
   def activate_user(user)
     self.pending_users.delete_if {|u| u["id"] == user.id.to_s}
+    
+    # Delete it, so it can be re-added
+    self.active_users.delete_if {|u| u["id"] == user.id.to_s}
     self.active_users << user.to_hash
+    
     self.save
   end
   
