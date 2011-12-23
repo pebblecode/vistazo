@@ -268,7 +268,11 @@ feature "After going on the registration page and clicking on the activation but
     @team.has_active_user?(@new_user).should == true
   end
   
-  scenario "should log in user" do
+  pending "should activate existing user once they click the activate button (ie, change status from pending to active)" do
+    
+  end
+  
+  scenario "should log in user into team page" do
     # Change user
     OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth.config.mock_auth[:super_admin]
     
@@ -277,9 +281,8 @@ feature "After going on the registration page and clicking on the activation but
     
     @new_user.reload
     should_be_logged_in_as_username @new_user.name
+    should_be_on_team_name_page(@team.name)
   end
-  
-  pending "should change existing users from pending to active in team"
   
   pending "logged in as someone else"
 end

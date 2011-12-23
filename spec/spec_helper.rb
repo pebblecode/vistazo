@@ -52,6 +52,10 @@ def do_not_send_email
   Pony.stub!(:deliver)  # Hijack deliver method to not send email
 end
 
+def should_be_on_team_name_page(team_name)
+  find("#team-name").text.should include(team_name)
+end
+
 # Define application for all spec files
 def app
   Sinatra::Application
