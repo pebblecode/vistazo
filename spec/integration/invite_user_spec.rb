@@ -279,76 +279,58 @@ feature "After going on the registration page and clicking on the activation but
     @team.has_active_user?(@new_user).should == true
   end
   
-  scenario "for existing users, should activate them in the team (ie, change status from pending to active)" do
-    existing_user = User.find_by_email(omniauth_email(:normal_user))
-    existing_user.present?.should == true
-    
-    # Create new user and team
-    get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:karen_o] }
-    another_user_team = User.find_by_email(omniauth_email(:karen_o)).teams.first
-    another_user_team.present?.should == true
-    
-    another_user_team.has_pending_user?(existing_user).should == false
-    another_user_team.has_active_user?(existing_user).should == false
-    
-    switch_omniauth_user :karen_o
-    visit "/"
-    click_link "start-btn"
-    
-    within_fieldset("Invite new user") do
-      fill_in 'new_user_email', :with => existing_user.email
-      click_button 'new_user'
+  describe "for existing users" do
+    before do
+      @existing_user = User.find_by_email(omniauth_email(:normal_user))
+      @existing_user.present?.should == true
+
+      # Create new user and team
+      get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:karen_o] }
+      @another_user_team = User.find_by_email(omniauth_email(:karen_o)).teams.first
+      @another_user_team.present?.should == true
+      
+      @another_user_team.has_pending_user?(@existing_user).should == false
+      @another_user_team.has_active_user?(@existing_user).should == false
+
+      switch_omniauth_user :karen_o
+      visit "/"
+      click_link "start-btn"
+
+      within_fieldset("Invite new user") do
+        fill_in 'new_user_email', :with => @existing_user.email
+        click_button 'new_user'
+      end
+      @another_user_team.reload
+
+      @another_user_team.has_pending_user?(@existing_user).should == true
+      @another_user_team.has_active_user?(@existing_user).should == false
+
+      switch_omniauth_user :normal_user
+      visit registration_with_team_id_and_user_id_path(@another_user_team.id, @existing_user.id)
+      click_link "start-btn"
+
+      @another_user_team.reload
     end
-    another_user_team.reload
     
-    another_user_team.has_pending_user?(existing_user).should == true
-    another_user_team.has_active_user?(existing_user).should == false
-    
-    switch_omniauth_user :normal_user
-    visit registration_with_team_id_and_user_id_path(another_user_team.id, existing_user.id)
-    click_link "start-btn"
-    
-    another_user_team.reload
-    another_user_team.has_pending_user?(existing_user).should == false
-    another_user_team.has_active_user?(existing_user).should == true
-  end
-  
-  scenario "for existing users, should be able to switch teams" do
-    existing_user = User.find_by_email(omniauth_email(:normal_user))
-    existing_user.present?.should == true
-    
-    # Create new user and team
-    get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:karen_o] }
-    another_user_team = User.find_by_email(omniauth_email(:karen_o)).teams.first
-    another_user_team.present?.should == true
-    
-    switch_omniauth_user :karen_o
-    visit "/"
-    click_link "start-btn"
-    
-    within_fieldset("Invite new user") do
-      fill_in 'new_user_email', :with => existing_user.email
-      click_button 'new_user'
+    scenario "should activate them in the team (ie, change status from pending to active)" do
+      @another_user_team.has_pending_user?(@existing_user).should == false
+      @another_user_team.has_active_user?(@existing_user).should == true
     end
-    another_user_team.reload
     
-    switch_omniauth_user :normal_user
-    visit registration_with_team_id_and_user_id_path(another_user_team.id, existing_user.id)
-    click_link "start-btn"
-    
-    another_user_team.reload
-    find("#switch-teams").text.should include(@team.name)
-    find("#switch-teams").text.should include(another_user_team.name)
-    
-    within ("#switch-teams") do
-      click_link another_user_team.name
+    scenario "should be able to switch teams" do
+      find("#switch-teams").text.should include(@team.name)
+      find("#switch-teams").text.should include(@another_user_team.name)
+
+      within ("#switch-teams") do
+        click_link @another_user_team.name
+      end
+      should_be_on_team_name_page(@another_user_team.name)
+
+      within ("#switch-teams") do
+        click_link @team.name
+      end
+      should_be_on_team_name_page(@team.name)
     end
-    should_be_on_team_name_page(another_user_team.name)
-    
-    within ("#switch-teams") do
-      click_link @team.name
-    end
-    should_be_on_team_name_page(@team.name)
   end
   
   scenario "should log user into team page" do
