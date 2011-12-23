@@ -73,12 +73,46 @@ Google client callback url:
 
     http://vistazo-sandbox.herokuapp.com/auth/google_oauth2/callback
 
+Add remote url to local git
+
+    git remote add sandbox git@heroku.com:vistazo-sandbox.git
+
 To push
 
     git push sandbox [branch of code]:master
     
     # Or if there are conflicts, you may need to do a force push
     git push sandbox [branch of code]:master --force
+
+## Sandbox 2
+
+Another place for playing around with things, where you don't want to break staging or production. 
+Deployed on [heroku](http://www.heroku.com/).
+
+Project was created with (shouldn't need to be done again, but here just for reference)
+
+    heroku create vistazo-sandbox2 --stack cedar --remote sandbox
+    heroku config:add RACK_ENV=staging --app vistazo-sandbox2
+    heroku addons:add mongolab:starter --app vistazo-sandbox2
+    heroku addons:add sendgrid:starter --app vistazo-sandbox2
+    heroku config:add LOG_LEVEL=DEBUG --app vistazo-sandbox2
+    heroku config:add GOOGLE_CLIENT_ID=[google client id] --app vistazo-sandbox2
+    heroku config:add GOOGLE_SECRET=[google api secret] --app vistazo-sandbox2
+
+Google client callback url:
+
+    http://vistazo-sandbox2.herokuapp.com/auth/google_oauth2/callback
+
+Add remote url to local git
+
+    git remote add sandbox2 git@heroku.com:vistazo-sandbox2.git
+
+To push
+
+    git push sandbox2 [branch of code]:master
+    
+    # Or if there are conflicts, you may need to do a force push
+    git push sandbox2 [branch of code]:master --force
 
 ## Staging
 
