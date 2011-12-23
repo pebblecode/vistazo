@@ -1,14 +1,7 @@
 <% if @account %>
   <div id="account-users-dialog" title="User settings">
     <h4 class="add-new-user-title">Enter a Google mail account to invite someone to your Vistazo account.</h4>
-    <form id="invite-user-form" action="/<%= @account.url_slug %>/new-user" method="post">
-      <fieldset class="new-object-fieldset">
-        <legend>Invite new user</legend>
-        <label for="new_user_email">Invite new user</label>
-        <input type="text" name="new_user_email" title="New user email" class="new-object-text-box" />
-        <button type="submit" name="new_user" value="new_user" class="submit-button">+</button>
-      </fieldset> <!-- Invite new user -->
-    </form>
+    <%= erb :_invite_user_form %>
   
     <h4 class="current-users-title">Current users</h4>
     <% if @active_users %>

@@ -888,6 +888,12 @@ textarea:focus, input:focus{
   }
 } // #new-project-form
 
+#invite-user-form {
+  @extend #account-users-dialog;
+  display: block !important;
+
+}
+
 #account-users-dialog {
   display: none; /* Hide by default */
   
@@ -993,6 +999,12 @@ textarea:focus, input:focus{
   display: none; /* Don't display by default */
   margin-top: 20px;
   position: relative;
+  
+  .add-new-user-title {
+    margin-top: 15px;
+    font-size: 16px;
+    line-height: 16px;
+  }
 } // #team-name-dialog
 
 
