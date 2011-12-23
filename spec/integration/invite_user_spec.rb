@@ -242,14 +242,14 @@ feature "After going on the registration page and clicking on the activation but
     OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth.config.mock_auth[:normal_user]
   end
 
-  pending "with an invalid user id should show error message" do
+  scenario "with an invalid user id should show error message" do
     user_id = "wrong_id"
     visit registration_with_team_id_and_user_id_path(@team.id, user_id)
     page.body.should include("Invalid user")
     page.current_path.should == "/"
   end
   
-  pending "with an invalid team id should show error message" do
+  scenario "with an invalid team id should show error message" do
     team_id = "wrong_id"
     visit registration_with_team_id_and_user_id_path(team_id, @new_user.id)
     page.body.should include("Invalid team")
