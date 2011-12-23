@@ -8,5 +8,16 @@
         <button type="submit" name="update_team_name" value="true" class="submit-button">update</button>
       </fieldset>
     </form>
+    
+    <% if current_user.teams.count > 1 %>
+      <div id="switch-teams">
+        <h2>Switch teams</h2>
+        <ul>
+          <% current_user.teams.each do |team|%>
+            <li><div class="list-bullet"></div><a href="/<%= team.id %>"><%= team.name %></a></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end%>
   </div>
 <% end %>
