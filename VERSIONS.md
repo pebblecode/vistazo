@@ -1,3 +1,9 @@
+# 0.5.1
+
+* UX updates based on user testing
+* Clean up
+* Some more testing
+
 # 0.5.0
 
 * Update homepage

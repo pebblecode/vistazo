@@ -897,6 +897,12 @@ textarea:focus, input:focus{
   }
 } // #new-project-form
 
+#invite-user-form {
+  @extend #team-users-dialog;
+  display: block !important;
+
+}
+
 #team-users-dialog {
   display: none; /* Hide by default */
   
@@ -1018,6 +1024,12 @@ textarea:focus, input:focus{
       } // a
     } // ul
   } // #switch-teams
+  
+  .add-new-user-title {
+    margin-top: 15px;
+    font-size: 16px;
+    line-height: 16px;
+  }
 } // #team-name-dialog
 
 

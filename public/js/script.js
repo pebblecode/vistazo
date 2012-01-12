@@ -21,6 +21,14 @@ $(function () {
     });
   }
   
+  // First signed on
+  {
+    // Show help text
+    if ($("body").hasClass("first-signon")) {
+      $("body").addClass("help-on");
+    }
+  }
+  
   // Hide project add button on .project hover
   {
     $(".project").hover(

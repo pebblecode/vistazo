@@ -467,14 +467,14 @@ describe "Admin:" do
   describe "Logged in super admin" do
     it "should have 'is-super-admin' in the body class" do
       login_super_admin_with_session!(@session)
-      last_response.body.should include("<body class='is-super-admin'>")
+      last_response.body.should include("is-super-admin")
     end
   end
   
   describe "Logged in normal user" do
     it "should not have 'is-super-admin' in the body class" do
       login_normal_user_with_session!(@session)
-      last_response.body.should_not include("<body class='is-super-admin'>")
+      last_response.body.should_not include("is-super-admin")
     end
   end
   

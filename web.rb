@@ -215,6 +215,13 @@ end
 get '/:team_id/:year/week/:week_num' do
   protected!
   require_team_user!(params[:team_id])
+  
+  if current_user.is_new
+    @first_signon = current_user.is_new
+    current_user.is_new = false
+    current_user.save
+  end
+    
   @team = Team.find(params[:team_id])
   @active_users = @team.active_users
   @pending_users = @team.pending_users

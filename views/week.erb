@@ -53,6 +53,9 @@
               </fieldset> <!-- Edit team member -->
             </form>
             
+            <h4 class="add-new-user-title">Invite someone (note: needs to be a Google account)</h4>
+            <%= erb :_invite_user_form %>
+            
             <form action="/team-member/<%= tm.id %>/delete" method="post">
               <fieldset class="delete-object-fieldset" title="Delete team member">
                 <legend>Delete team member</legend>

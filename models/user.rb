@@ -5,6 +5,7 @@ class User
   key :uid, String
   key :email, String, :required => true
   key :team_ids, Array
+  key :is_new, Boolean, :default => true
 
   timestamps!
 
