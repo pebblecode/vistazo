@@ -308,6 +308,7 @@ post '/:team_id/user/new' do
         flash[:warning] = "User is already registered to this team."
       else
         @team.add_user(@user)
+        send_registration_email_for_params(@user, params)
         
         flash[:success] = "Invitation email has been sent"
       end

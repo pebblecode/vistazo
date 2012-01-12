@@ -56,13 +56,24 @@ feature "Invite user" do
   scenario "with an existing acccount elsewhere should work" do
     # Create super admin
     get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:super_admin] }
+    @existing_user_email = OmniAuth.config.mock_auth[:super_admin]["info"]["email"]
     
     # Log in as normal user (default)
     visit "/"
     click_link "start-btn"
     
     within_fieldset("Invite new user") do
-      fill_in 'new_user_email', :with => OmniAuth.config.mock_auth[:super_admin]["info"]["email"]
+      fill_in 'new_user_email', :with => @existing_user_email
+      
+      email_body = ""
+      Pony.should_receive(:mail) { |params|
+        params[:to].should == @existing_user_email
+        params[:subject].should include("You are invited to Vistazo")
+        
+        params[:body].should include("You've been invited to Vistazo")
+        email_body = params[:body]
+      }
+      
       click_button 'new_user'
     end
     page.should have_content("Invitation email has been sent")
@@ -220,14 +231,8 @@ feature "After going on the registration page and clicking on the activation but
       
     within_fieldset("Invite new user") do
       fill_in 'new_user_email', :with => @new_user_email
-      
-      email_body = ""
-      Pony.should_receive(:mail) { |params|
-        email_body = params[:body]
-      }
       click_button 'new_user'
       
-      # Can only check the registration link after user is created
       @new_user = User.find_by_email(@new_user_email)
     end
     @team.reload
