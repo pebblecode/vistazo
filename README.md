@@ -223,6 +223,34 @@ This is deployed at: http://vistazo.herokuapp.com/
 
 ## Mongo
 
+### Import/Export
+
+#### Sandbox 2 export
+
+    # Binary form
+    mongodump -h ds029267.mongolab.com:29267 -d heroku_app2178743 -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji -o sandbox2-export
+    
+    # JSON file for a particular collection
+    mongoexport -h ds029267.mongolab.com:29267 -d heroku_app2178743 -c <collection> -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji -o <output file>
+    
+    mongoexport -h ds029267.mongolab.com:29267 -d heroku_app2178743 -c users -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji -o vistazo-sandbox2-users.json
+    mongoexport -h ds029267.mongolab.com:29267 -d heroku_app2178743 -c teams -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji -o vistazo-sandbox2-teams.json
+    mongoexport -h ds029267.mongolab.com:29267 -d heroku_app2178743 -c team_members -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji -o vistazo-sandbox2-team_members.json
+    mongoexport -h ds029267.mongolab.com:29267 -d heroku_app2178743 -c projects -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji -o vistazo-sandbox2-projects.json
+
+#### Production export
+
+    # Binary form
+    mongodump -h dbh85.mongolab.com:27857 -d heroku_app1810392 -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production
+    
+    # JSON file for a particular collection
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c <collection> -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o <output file>
+    
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c users -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production-users.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c accounts -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production-accounts.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c team_members -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production-team_members.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c projects -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production-projects.json
+
 ### Add new team member
 
 To an a new team member in the mongo backend interface on staging or production:
