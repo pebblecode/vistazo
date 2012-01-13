@@ -106,12 +106,13 @@ end
 post '/reset' do
   protected!
 
-  # Delete everything
-  TeamMember.delete_all()
-  Project.delete_all()
-  ColourSetting.delete_all()
-  Team.delete_all()
-  User.delete_all()
+  # Delete everything except system collections
+  MongoMapper.database.collections.each do |coll|
+    unless coll.name.match /^system\..+/
+      logger.warn "Deleting #{coll.name}"
+      coll.drop
+    end
+  end
 
   flash[:success] = "Successfully cleared out the database. All nice and clean now."
   redirect '/'
