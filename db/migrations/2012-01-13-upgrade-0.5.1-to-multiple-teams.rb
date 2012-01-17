@@ -23,7 +23,7 @@ end
 # Team
 ##############################################################################
 
-# Renamed from accounts collection
+# Renamed 'accounts' to 'teams'
 if (MongoMapper.database.collection_names.include? "accounts")
   MongoMapper.database.rename_collection("accounts", "teams")
   puts "Rename to 'accounts' to 'team': Done."
@@ -32,16 +32,16 @@ else
 end
 
 @teams = MongoMapper.database.collection("teams")
+@users = MongoMapper.database.collection("users")
 @teams.find().each do |team|
   puts "Team: #{team["name"]} (_id: #{team["_id"]})"
-  @users = MongoMapper.database.collection("users").find(:account_id => team["_id"])
+  team_users = @users.find(:account_id => team["_id"])
   
-  team["pending_users"] = []
-  team["active_users"] = []
+  team["pending_users"] ||= []
+  team["active_users"] ||= []
   
-  # Add active_users
-  @users.find().each do |user|
-    # Adapted from: https://github.com/pebblecode/vistazo/blob/a095fe9c41418a810ee3dfd4edb02d83d36088bd/models/user.rb
+  team_users.find().each do |user|
+    # Add active/pending users (adapted from: https://github.com/pebblecode/vistazo/blob/a095fe9c41418a810ee3dfd4edb02d83d36088bd/models/user.rb)
     if (user["uid"] == nil) and (user["email"] != nil)     # Missing email
       team["pending_users"] << user_to_hash(user)
       puts "\tAdded '#{user["email"]}' hash to pending_users of '#{team["name"]}' team"
@@ -49,19 +49,33 @@ end
       team["active_users"] << user_to_hash(user)
       puts "\tAdded '#{user["email"]}' hash to active_users of '#{team["name"]}' team"
     end
+    
+    # Add team to user team_ids
+    user["team_ids"] ||= []
+    user["team_ids"] << team["_id"]
+    
+    @users.update({"_id" => user["_id"]}, user)
+    puts "DONE: updated user #{user}"
   end
   
   # Update db
-  # @teams.update({"_id" => BSON::ObjectId(team["_id"])}, team)
   @teams.update({"_id" => team["_id"]}, team)
   puts "\tDONE: Added pending_users: #{team["pending_users"]}"
   puts "\tDONE: Added active_users: #{team["active_users"]}"
 end
 
-# Change TeamMember.team_member_projects to TeamMember.timetable_items - not explicitly defined?
+##############################################################################
+# TeamMember.team_member_projects changed to TeamMember.timetable_items
+# But not explicitly defined anywhere, so nothing to do
+##############################################################################
 
+##############################################################################
 # User
-# + team_ids from User.account_id
-# - account_id
+##############################################################################
 
-# db.collection.update( criteria, objNew, upsert, multi )
+@users = MongoMapper.database.collection("users")
+@users.find().each do |user|
+  user.delete("account_id")
+  @users.update({"_id" => user["_id"]}, user)
+  puts "DONE: Removed account_id from user '#{user["email"]}'"
+end
