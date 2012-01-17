@@ -316,8 +316,8 @@ post '/:team_id/user/new' do
       end
     else
       @user = User.new(:email => email)
-      
-      if @team.add_user(@user)
+      if @user.save
+        @team.add_user(@user)
         send_registration_email_for_params(@user, params)
       else
         flash[:warning] = "Email is not valid"

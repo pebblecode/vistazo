@@ -77,19 +77,12 @@ describe "Team model" do
       @user = Factory(:user)
     end
     
-    it "should add user to the team" do
-      @team.add_user(@user).should_not == false
-      
-      # Should be able to see team in user
-      @user.teams.include?(@team).should == true
-    end
-    
     it "should add user with :pending status by default" do
       @team.add_user(@user)
       @team.has_pending_user?(@user).should == true
       
-      # Should be able to see team in user
-      @user.teams.include?(@team).should == true
+      # Should NOT be able to see team in user
+      @user.teams.include?(@team).should_not == true
     end
     
     describe "with status" do
@@ -124,12 +117,12 @@ describe "Team model" do
         activate_user["uid"].should == "55555"
       end
       
-      it "should add a pending user" do
+      it "should add a pending user to the team, but NOT add the user to the user teams" do
         @team.add_user_with_status(@user, :pending)
         @team.has_pending_user?(@user).should == true
         
-        # Should be able to see team in user
-        @user.teams.include?(@team).should == true
+        # Should NOT be able to see team in user
+        @user.teams.include?(@team).should_not == true
       end
       
       it "should only add an pending user once" do

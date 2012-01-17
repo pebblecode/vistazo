@@ -42,8 +42,8 @@ class Team
       self.pending_users.delete_if {|u| u["id"] == user.id.to_s} # Delete it, so it can be re-added
       self.pending_users << user.to_hash
       self.save
-      user.teams << self
-      user.save
+      
+      # Don't add team to user when they are pending
     else
       return false
     end
@@ -62,6 +62,9 @@ class Team
     
     self.active_users.delete_if {|u| u["id"] == user.id.to_s} # Delete it, so it can be re-added
     self.active_users << user.to_hash
+    
+    user.teams << self
+    user.save
     
     self.save
   end
