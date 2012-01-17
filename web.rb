@@ -19,6 +19,7 @@ Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
 
 
 class VistazoApp < Sinatra::Application
+  set :version_string, "0.6.0 release"
   
   APP_CONFIG = YAML.load_file("#{root}/config/config.yml")[settings.environment.to_s]
   
