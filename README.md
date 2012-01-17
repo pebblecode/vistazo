@@ -28,6 +28,11 @@ To run
 
 To ensure the Google OAuth callback is correct ensure you run the site from http://localhost:6100
 
+To turn on/off maintenance mode on heroku
+
+    heroku maintenance:on --app [app]
+    heroku maintenance:off --app [app]
+
 ### Testing
 
 To run all specs manually
