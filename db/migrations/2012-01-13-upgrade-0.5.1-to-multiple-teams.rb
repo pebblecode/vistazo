@@ -66,7 +66,7 @@ end
     user["team_ids"] << team["_id"]
     
     @users.update({"_id" => user["_id"]}, user)
-    puts "DONE: updated user #{user}"
+    puts "\tDONE: updated user #{user}"
   end
   
   # Update db
