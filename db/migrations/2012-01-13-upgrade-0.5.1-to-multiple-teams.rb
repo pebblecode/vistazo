@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 # Migration to upgrade v0.5.1 to allow for multiple teams
 # Only need to run it once.
 #
@@ -8,11 +10,20 @@
 require 'mongo_mapper'
 require_relative "../../lib/mongo_helper"
 
-
 # For testing
-setup_mongo_connection('mongomapper://localhost:27017/vistazo-development')
-# For heroku
-# setup_mongo_connection(ENV['MONGOLAB_URI'])
+ENV["RACK_ENV"] ||= "development"
+db_url = if ENV["RACK_ENV"] == "development"
+    'mongomapper://localhost:27017/vistazo-development'
+  elsif ENV["RACK_ENV"] == "production" or ENV["RACK_ENV"] == "staging"
+    # For heroku
+    ENV['MONGOLAB_URI']
+  else
+    puts "Unknown RACK_ENV: '#{ENV["RACK_ENV"]}'"
+    exit
+  end
+puts "Connecting to #{db_url}"
+setup_mongo_connection(db_url)
+
 
 # Adapted from User.to_hash (https://github.com/pebblecode/vistazo/blob/3a69818d2038cb1508910a3de85e59275b5172e2/models/user.rb)
 def user_to_hash(user)
