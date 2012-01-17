@@ -3,10 +3,17 @@
 # Migration to upgrade v0.5.1 to allow for multiple teams
 # Only need to run it once.
 #
-# To run it (from the project root directory):
+# To run it:
 #
-#     ruby db/migrations/2012-01-13-upgrade-0.5.1-to-multiple-teams.rb
+#   => ruby db/migrations/2012-01-13-upgrade-0.5.1-to-multiple-teams.rb  # For development (from the project root directory)
+#   => heroku run ruby db/migrations/2012-01-13-upgrade-0.5.1-to-multiple-teams.rb --app [heroku app] # For heroku server
 #
+# To seed old data:
+#
+#   For sandbox2 database (using export from mongodump):
+#   => mongorestore -h ds029267.mongolab.com:29267 -d heroku_app2178743 -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji vistazo-production/heroku_app1810392
+#
+
 require 'mongo_mapper'
 require_relative "../../lib/mongo_helper"
 
