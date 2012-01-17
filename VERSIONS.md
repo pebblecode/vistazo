@@ -1,3 +1,8 @@
+# 0.6.0
+
+* Multiple teams feature
+* Migration for multiple teams
+
 # 0.5.1
 
 * UX updates based on user testing
