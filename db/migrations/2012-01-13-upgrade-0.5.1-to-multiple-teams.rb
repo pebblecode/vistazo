@@ -83,9 +83,33 @@ end
 end
 
 ##############################################################################
-# TeamMember.team_member_projects changed to TeamMember.timetable_items
-# But not explicitly defined anywhere, so nothing to do
+# Project
 ##############################################################################
+
+@projects = MongoMapper.database.collection("projects")
+@projects.find().each do |project|
+  project["team_id"] = project["account_id"]
+  project.delete("account_id")
+  
+  @projects.update({"_id" => project["_id"]}, project)
+  puts "DONE: Changed account_id to team_id for project '#{project["name"]}'"
+end
+
+##############################################################################
+# TeamMember
+##############################################################################
+
+@team_members = MongoMapper.database.collection("team_members")
+@team_members.find().each do |tm|
+  tm["team_id"] = tm["account_id"]
+  tm.delete("account_id")
+  
+  tm["timetable_items"] = tm["team_member_projects"]
+  tm.delete("team_member_projects")
+  
+  @team_members.update({"_id" => tm["_id"]}, tm)
+  puts "DONE: Changed account_id to team_id and team_member_projects to timetable_items for team member '#{tm["name"]}'"
+end
 
 ##############################################################################
 # User
@@ -94,6 +118,7 @@ end
 @users = MongoMapper.database.collection("users")
 @users.find().each do |user|
   user.delete("account_id")
+  
   @users.update({"_id" => user["_id"]}, user)
   puts "DONE: Removed account_id from user '#{user["email"]}'"
 end
