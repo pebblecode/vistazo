@@ -216,6 +216,57 @@ feature "After getting the invitation email, registration page" do
   end
 end
 
+feature "After inviting Karen O (who already has an account) from normal user's account" do
+  background do
+    http_authorization_capybara!
+    
+    # Create new user and team
+    get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:normal_user] }
+    @team = Team.first
+    
+    # Create Karen O account
+    get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:karen_o] }
+    @karen_o_email = OmniAuth.config.mock_auth[:karen_o]["info"]["email"]
+    
+    visit "/"
+    click_link "start-btn"
+      
+    within_fieldset("Invite new user") do
+      fill_in 'new_user_email', :with => @karen_o_email
+      click_button 'new_user'
+      
+      @karen_o = User.find_by_email(@karen_o_email)
+    end
+    @team.reload
+    
+    visit logout_path
+  end
+  
+  after do
+    clean_db!
+    
+    # Make sure default user is back to normal_user
+    switch_omniauth_user :normal_user
+  end
+  
+  scenario "normal user should see Karen O as a pending user" do
+    # Log in as normal user
+    visit "/"
+    click_link "start-btn"
+    
+    find("#team-users-dialog .pending").text.should include(@karen_o_email)
+  end
+  
+  scenario "Karen O should not see the normal user's account if she has not registered yet" do
+    # Log in as Karen O
+    switch_omniauth_user :karen_o
+    visit "/"
+    click_link "start-btn"
+    
+    page.should_not have_content(@team.name)
+  end
+end
+
 feature "After going on the registration page and clicking on the activation button" do
   background do
     http_authorization_capybara!
