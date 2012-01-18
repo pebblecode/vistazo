@@ -1,3 +1,7 @@
+# 0.6.1
+
+* Fixed #151 - pending user showing up as switchable team
+
 # 0.6.0
 
 * Multiple teams feature
