@@ -283,6 +283,22 @@ end
 # ----------------------------------------------------------------------------
 # Team
 # ----------------------------------------------------------------------------
+post '/team/new' do
+  @team = Team.create_for_user(current_user)
+  
+  # Add the user as the first team member
+  @team.team_members << TeamMember.create(:name => current_user.name)
+  @team.name = params[:new_team_name]
+  if @team.save
+    flash[:success] = "Successfully created team."
+  else
+    flash[:warning] = "Something wrong happened. Please try again another time."
+  end
+  
+  # Check team
+  redirect "/#{@team.id}"
+end
+
 get '/:team_id' do
   protected!
   

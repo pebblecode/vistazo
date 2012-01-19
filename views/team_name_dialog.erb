@@ -19,5 +19,15 @@
         </ul>
       </div>
     <% end%>
+    
+    <div id="new-team">
+      <form id="new-team-form" action="/team/new" method="post">
+        <fieldset class="new-object-fieldset" title="New team">
+          <legend>New team</legend>
+          <input type="text" name="new_team_name" title="Add new team" class="new-object-text-box" /> 
+          <button id="new-team-button" type="submit" name="new_team" value="new_team" class="submit-button">+</button>
+        </fieldset>
+      </form>
+    </div>
   </div>
 <% end %>
