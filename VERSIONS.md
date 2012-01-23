@@ -1,3 +1,8 @@
+# 0.7.0
+
+* New teams
+* Bugs
+
 # 0.6.1
 
 * Fixed #151 - pending user showing up as switchable team

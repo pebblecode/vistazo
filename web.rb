@@ -17,7 +17,7 @@ require 'rack-force_domain'
 # Require all in lib directory
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
 
-set :version_string, "0.6.1 release"
+set :version_string, "0.7.0 release"
 
 class VistazoApp < Sinatra::Application
   
@@ -283,6 +283,22 @@ end
 # ----------------------------------------------------------------------------
 # Team
 # ----------------------------------------------------------------------------
+post '/team/new' do
+  @team = Team.create_for_user(current_user)
+  
+  # Add the user as the first team member
+  @team.team_members << TeamMember.create(:name => current_user.name)
+  @team.name = params[:new_team_name]
+  if @team.save
+    flash[:success] = "Successfully created team."
+  else
+    flash[:warning] = "Create team failed. Team name empty."
+  end
+  
+  # Redirect to new team
+  redirect "/#{@team.id}"
+end
+
 get '/:team_id' do
   protected!
   

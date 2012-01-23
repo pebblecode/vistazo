@@ -69,12 +69,17 @@ $warning_color: #000000;
   margin: 5px 0 10px 0;
 }
 
-
 @mixin close-button {
   outline: none;
   color: #ffffff;
   font: 10px $web_symbols_font_family;
   text-decoration: none;
+}
+
+@mixin dialog-title {
+  margin-top: 15px;
+  font-size: 16px;
+  line-height: 16px;
 }
 
 /* General styles
@@ -205,12 +210,11 @@ body {
 
 .delete-object-fieldset {
   legend {
+    @include dialog-title;
+    
     color: #FFFFFF;
-    font-size: 16px;
     font-weight: bold;
-    line-height: 16px;
     margin-bottom: 5px;
-    padding-top: 15px;
     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
   }
   
@@ -1055,9 +1059,22 @@ textarea:focus, input:focus{
   } // #switch-teams
   
   .add-new-user-title {
-    margin-top: 15px;
-    font-size: 16px;
-    line-height: 16px;
+    @include dialog-title;
+  }
+  
+  #new-team {
+    legend {
+      display: none;
+    }
+    
+    h4 {
+      color: #FFFFFF;
+      font-size: 1.4em;
+      font-weight: bold;
+      line-height: 16px;
+      margin: 20px 0 20px;
+      text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+    }
   }
 } // #team-name-dialog
 

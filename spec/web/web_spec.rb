@@ -368,9 +368,9 @@ describe "Authentication:" do
       
       # Should create new user team with user name
       team = User.first.teams.first # Only have 1 user, so find first works
-      team.name.should == "Vistazo Test's team"
+      team.name.should == DEFAULT_TEAM_NAME
       
-      last_response.body.should include("Vistazo Test's team")
+      last_response.body.should include(DEFAULT_TEAM_NAME)
       last_response.body.should include("Welcome to Vistazo")
     end
   end
@@ -435,7 +435,7 @@ describe "Authentication:" do
       
       login_normal_user_with_session!(@session)
       last_request.path.should == user_team_current_week_path(user_from_session(@session))
-      last_response.body.should include("Vistazo Test's team")
+      last_response.body.should include(DEFAULT_TEAM_NAME)
     end
   end
   

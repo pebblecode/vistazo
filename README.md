@@ -14,6 +14,21 @@ A light weight application to keep track of who's working on what, when.
     git remote add production git@heroku.com:vistazo.git
     ```
 
+### Data migrations
+
+Currently all migrations are manually run. We will look into automated migrations in #160. 
+
+The easiest approach for fixing data migration issues is to reset the database:
+
+    mongo vistazo-development
+    > db.dropDatabase()
+
+However, for reference, here is a listing of migrations that can be run (from the root directory):
+
+    ruby db/migrations/2012-01-13-upgrade-0.5.1-to-multiple-teams.rb
+    ruby db/migrations/2012-01-17-remove-pending-teams-from-user-team_ids.rb
+
+
 ## Development
 
 To set up
@@ -32,6 +47,12 @@ To turn on/off maintenance mode on heroku
 
     heroku maintenance:on --app [app]
     heroku maintenance:off --app [app]
+
+### Mongo db
+
+To get access to the mongo development database:
+
+    mongo vistazo-development
 
 ### Testing
 
