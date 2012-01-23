@@ -619,6 +619,26 @@ textarea:focus, input:focus{
   .col2, .col3, .col4, .col5, .col6 {
     width: 12.5%;
   }
+  
+  /* @group weekend styling */
+  
+  .col6, .col5{
+    background:url('/img/hatch2-desat.gif');
+    &.row4{
+      background:url('/img/hatch1-desat.gif');
+    }
+    &.row2{
+      background:url('/img/hatch1-desat.gif');
+    }
+    &.row6{
+      background:url('/img/hatch1-desat.gif');
+    }
+    &.first-row{
+      background: #fafafa;
+    }
+  
+  /* @end */
+  }
 
   .col7 {
     width: 2%;
@@ -631,7 +651,6 @@ textarea:focus, input:focus{
 		position: absolute;
 		top: 10px;
 		border-radius: 10px;
-		
 	}
 	
   .arrows {
@@ -822,7 +841,6 @@ textarea:focus, input:focus{
       color: #808080;
       background-color: #fff;
       
-      height: 20px;
       margin: 5px 0;
       border: 1px solid #a1a1a1;
     }
