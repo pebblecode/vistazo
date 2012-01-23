@@ -459,14 +459,15 @@ textarea:focus, input:focus{
   @include box-shadow(0, 5px, 20px, rgba(0, 0, 0, 0.1));
   
   position: relative;
-  width: 920px;
+  width: 96%;
   clear: both;
   margin: 0 auto;
-  padding: 20px;
+  padding: 1%;
   background-color: #fff;
   margin-top: 0 auto;
   
   #week-view {
+  	width: 100%;
     td, .first-row.col1, .first-row.col6 {
       border-right: 1px dashed #b3b3b3;
     }
@@ -540,13 +541,13 @@ textarea:focus, input:focus{
         @include border-radius(5px);
         @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.1));
         
-        height: 20px;
         background-color: #fff;
         margin: 5px 6px 0 8px;
         font-size: 14px;
         color: #808080;
         border: 1px solid #cccccc;
         padding-right: 2px;
+        padding-bottom: 3px;
         position: relative;
         
         cursor: move;
@@ -557,8 +558,8 @@ textarea:focus, input:focus{
         }
         
         .project-title{
-          float: left;
           margin-top: 3px;
+          
         }
         
         &.is_loading {
@@ -612,17 +613,17 @@ textarea:focus, input:focus{
   } // #week-view
 
   .col1 {
-    width: 140px;
+    width: 12.5%;
   }
 
   .col2, .col3, .col4, .col5, .col6 {
-    width: 150px;
+    width: 12.5%;
   }
 
   .col7 {
-    width: 30px;
+    width: 2%;
   }
-
+	
   .arrows {
     font-family: $web_symbols_font_family;
     float: right;
