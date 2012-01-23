@@ -1,3 +1,12 @@
+GIT
+  remote: http://github.com/pebblecode/mongomapper.git
+  revision: 76d6bd696d3eaf9ae2ed8f94cca77f19b145fc87
+  specs:
+    mongo_mapper (0.10.1)
+      activemodel (~> 3.0)
+      activesupport (~> 3.0)
+      plucky (~> 0.4.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -64,10 +73,6 @@ GEM
     mime-types (1.17.2)
     mongo (1.5.2)
       bson (= 1.5.2)
-    mongo_mapper (0.10.1)
-      activemodel (~> 3.0)
-      activesupport (~> 3.0)
-      plucky (~> 0.4.0)
     multi_json (1.0.4)
     multipart-post (1.1.4)
     newrelic_rpm (3.3.1)
@@ -174,7 +179,7 @@ DEPENDENCIES
   guard-rspec
   heroku
   json
-  mongo_mapper
+  mongo_mapper!
   newrelic_rpm
   omniauth
   omniauth-google-oauth2
