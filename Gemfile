@@ -3,7 +3,9 @@ gem 'sinatra'
 gem 'thin'
 gem 'sinatra-flash'
 gem 'json'
-gem 'rake'
+
+# Fix rack version for now because of #156
+gem 'rack', '1.3.5'
 
 # Views
 gem 'sass'
