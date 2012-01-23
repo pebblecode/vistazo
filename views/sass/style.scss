@@ -624,6 +624,16 @@ textarea:focus, input:focus{
     width: 2%;
   }
 	
+	.today{
+		background-image: url(../img/hatch3.png);
+		width: 16%;
+		height: 80%;
+		position: absolute;
+		top: 10px;
+		border-radius: 10px;
+		
+	}
+	
   .arrows {
     font-family: $web_symbols_font_family;
     float: right;
