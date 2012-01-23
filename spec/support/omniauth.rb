@@ -11,6 +11,7 @@ module OmniauthSpecHelper
       "name" => 'Vistazo Test'
     }
   })
+  DEFAULT_TEAM_NAME = "Vistazo Test's team"
   OmniAuth.config.mock_auth[:karen_o] = OmniAuth.config.mock_auth[:default].merge({
     "uid" => '100001',
     "info" => {

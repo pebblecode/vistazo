@@ -292,10 +292,10 @@ post '/team/new' do
   if @team.save
     flash[:success] = "Successfully created team."
   else
-    flash[:warning] = "Something wrong happened. Please try again another time."
+    flash[:warning] = "Create team failed. Team name empty."
   end
   
-  # Check team
+  # Redirect to new team
   redirect "/#{@team.id}"
 end
 
