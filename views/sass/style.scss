@@ -943,13 +943,24 @@ textarea:focus, input:focus{
   }
   
   .listing {
-      &.pending li .list-bullet {
-      height: 5px;
-      width: 5px;
-      margin: 9px 10px 5px 5px;
-      @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-      background-color: #d8eaf1;
+    &.pending li {
+      clear: both;
+      padding-bottom: 25px;
+      
+      .list-bullet {
+        height: 5px;
+        width: 5px;
+        margin: 9px 10px 5px 5px;
+        @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+        background-color: #d8eaf1;
+      }
+      
+      .pending-user-email{
+        float: left;
+        padding-right: 10px;
+      }
     }
+    
     li {
       background-color: transparent;
       border: none;
@@ -962,16 +973,13 @@ textarea:focus, input:focus{
         font-style: italic;
         font-weight: normal;
       } // .email
-      .pending-user-email{
-        float: left;
-      }
+      
       .resend {
         @include border-radius(5px);
         @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
         
         float: left;
         padding: 0 3px 0 5px;
-        margin-left: 10px;
         display: block;
         background-color: #fff;
         color: #808080;
