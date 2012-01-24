@@ -520,23 +520,20 @@ textarea:focus, input:focus{
 
     tr.team-member {
       padding-bottom: 20px;
-      .col7, .col8 {
-        background:url('/img/hatch1-desat.gif');
-      }
-      
       &.even {
-        background:url('/img/hatch1.gif');
-/*        .col7, .col8 {
-          background:url('/img/hatch1-desat.gif');
-        }*/
+        background: transparent url('/img/hatch1.gif') repeat 0 0;
+        .col7, .col8 {
+          background: transparent url('/img/hatch1-desat.gif') repeat 0 0;
+        }
       }
 
       &.odd {
-        background:url('/img/hatch2.gif');
-        
-/*        .col7, .col8 {
-          background:url('/img/hatch2-desat.gif');
-        }*/
+        background: transparent url('/img/hatch2.gif') repeat 0 0;
+        .col7, .col8 {
+          // Can't get hatch2 to work with transparent background for some reason
+/*           background: white url('/img/hatch2-desat.gif') repeat 0 0;*/
+          background: transparent url('/img/hatch1-desat.gif') repeat 0 0;
+        }
       }
       
       .box {
