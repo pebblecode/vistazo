@@ -471,11 +471,12 @@ textarea:focus, input:focus{
   margin-top: 0 auto;
   
   #week-view {
-  	width: 100%;
+    width: 100%;
     td, .first-row.col1, .first-row.col6 {
       border-right: 1px dashed #b3b3b3;
     }
-    .col7 {
+    .col-last {
+      border-left: 1px dashed #b3b3b3;
       border-right: none; /* Cancel out border on last column */
     }
     
@@ -492,7 +493,7 @@ textarea:focus, input:focus{
           background-color: #d2ecf6;
         }
       }
-    }
+    } // .row-divider
     
     .first-row {
       height: 50px;
@@ -515,17 +516,27 @@ textarea:focus, input:focus{
           }
         }
       }
-    }
+    } // .last-row
 
     tr.team-member {
       padding-bottom: 20px;
+      .col7, .col8 {
+        background:url('/img/hatch1-desat.gif');
+      }
       
       &.even {
         background:url('/img/hatch1.gif');
+/*        .col7, .col8 {
+          background:url('/img/hatch1-desat.gif');
+        }*/
       }
 
       &.odd {
         background:url('/img/hatch2.gif');
+        
+/*        .col7, .col8 {
+          background:url('/img/hatch2-desat.gif');
+        }*/
       }
       
       .box {
@@ -619,24 +630,15 @@ textarea:focus, input:focus{
   .col1 {
     width: 12.5%;
   }
-
-  .col2, .col3, .col4, .col5, .col6 {
+  
+  /* Day columns */
+  .col2, .col3, .col4, .col5, .col6, .col7, .col8 {
     width: 12.5%;
   }
   
   /* @group weekend styling */
   
-  .col6, .col5{
-    background:url('/img/hatch2-desat.gif');
-    &.row4{
-      background:url('/img/hatch1-desat.gif');
-    }
-    &.row2{
-      background:url('/img/hatch1-desat.gif');
-    }
-    &.row6{
-      background:url('/img/hatch1-desat.gif');
-    }
+  .col7, .col8{
     &.first-row{
       background: #fafafa;
     }
@@ -644,19 +646,19 @@ textarea:focus, input:focus{
   /* @end */
   }
 
-  .col7 {
+  .col-last {
     width: 2%;
   }
-	
-	.today{
-		background-image: url(../img/hatch3.png);
-		width: 16%;
-		height: 90%;
-		position: absolute;
-		top: 10px;
-		border-radius: 10px;
-	}
-	
+  
+  .today{
+    background-image: url(../img/hatch3.png);
+    width: 12%;
+    height: 90%;
+    position: absolute;
+    top: 10px;
+    border-radius: 10px;
+  }
+  
   .arrows {
     font-family: $web_symbols_font_family;
     float: right;

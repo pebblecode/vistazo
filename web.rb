@@ -80,6 +80,8 @@ TUESDAY = 2
 WEDNESDAY = 3
 THURSDAY = 4
 FRIDAY = 5
+SATURDAY = 6
+SUNDAY = 7
 START_YEAR = 2010
 NUM_WEEKS_IN_A_YEAR = 52
 
@@ -249,6 +251,8 @@ get '/:team_id/:year/week/:week_num' do
       @wednesday_date = Date.commercial(year, week_num, WEDNESDAY)
       @thursday_date = Date.commercial(year, week_num, THURSDAY)
       @friday_date = Date.commercial(year, week_num, FRIDAY)
+      @saturday_date = Date.commercial(year, week_num, SATURDAY)
+      @sunday_date = Date.commercial(year, week_num, SUNDAY)
 
       @projects = Project.where(:team_id => @team.id).sort(:name)
       @team_members = TeamMember.where(:team_id => @team.id).sort(:name)
@@ -258,9 +262,9 @@ get '/:team_id/:year/week/:week_num' do
       for tm in @team_members do
         @timetable_items_on_day[tm] = {}
 
-        (MONDAY..FRIDAY).each do |work_day|
-          @timetable_items_on_day[tm][work_day] = tm.timetable_items.select { |proj| 
-            (proj.date.wday == work_day) and (proj.date >= @monday_date) and (proj.date <= @friday_date)
+        (MONDAY..SUNDAY).each do |work_day|
+          @timetable_items_on_day[tm][work_day] = tm.timetable_items.select { |proj|
+            (proj.date.wday == work_day) and (proj.date >= @monday_date) and (proj.date <= @sunday_date)
           }
         end
       end

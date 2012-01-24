@@ -42,10 +42,25 @@
           <div class="today"></div>
         <% end %>
       </th>
-    
+      
       <th class="first-row col7">
+        <p class="day"><%= @saturday_date.strftime("%a") %></p> <p class="date"><%= @saturday_date.day.ordinalize %></p><p class="month"><%= @saturday_date.strftime("%b") %></p>
+        
+        <% if is_today?(@saturday_date) %>
+          <div class="today"></div>
+        <% end %>
+      </th>
+      
+      <th class="first-row col8">
+        <p class="day"><%= @sunday_date.strftime("%a") %></p> <p class="date"><%= @sunday_date.day.ordinalize %></p><p class="month"><%= @sunday_date.strftime("%b") %></p>
+        
+        <% if is_today?(@sunday_date) %>
+          <div class="today"></div>
+        <% end %>
+      </th>
+      
+      <th class="first-row col-last">
         <a href="<%= @next_week_url %>" class="arrows" title="Next week">)</a>
-        <div class="weekend"></div>
       </th>
     </tr>
   </thead>
@@ -88,7 +103,7 @@
         </td>
         
         <% prev_cols = 1 %>
-        <% (MONDAY..FRIDAY).each do |work_day| %>
+        <% (MONDAY..SUNDAY).each do |work_day| %>
           <%#
             data-date: Used for update to know the date moving to, and the date when adding a project
             data-team-member-id: Used for adding a new project to know the team member to add to
@@ -115,11 +130,11 @@
             <% end %>
           </td>
         <% end %>
-        <td class="<%= "#{row_class} col7" %>"></td>
+        <td class="<%= "#{row_class} col-last" %>"></td>
       </tr>
       <% unless tm == @team_members.last %>
         <tr class="row-divider">
-          <td colspan="7"><hr/></td>
+          <td colspan="9"><hr/></td>
         </tr>  <!--the divider-->
       <% end %>
     <% end %>
