@@ -9,19 +9,38 @@
     
       <th class="first-row col2">
         <p class="day"><%= @monday_date.strftime("%a") %></p> <p class="date"><%= @monday_date.day.ordinalize %></p><p class="month"><%= @monday_date.strftime("%b") %></p>
+        
+        <% if is_today?(@monday_date) %>
+          <div class="today"></div>
+        <% end %>
       </th>
       <th class="first-row col3">
         <p class="day"><%= @tuesday_date.strftime("%a") %></p> <p class="date"><%= @tuesday_date.day.ordinalize %></p><p class="month"><%= @tuesday_date.strftime("%b") %></p>
-        <div class="today"></div> <!--today highlight place holder-->
+        
+        <% if is_today?(@tuesday_date) %>
+          <div class="today"></div>
+        <% end %>
       </th>
       <th class="first-row col4">
         <p class="day"><%= @wednesday_date.strftime("%a") %></p> <p class="date"><%= @wednesday_date.day.ordinalize %></p><p class="month"><%= @wednesday_date.strftime("%b") %></p>
+        
+        <% if is_today?(@wednesday_date) %>
+          <div class="today"></div>
+        <% end %>
       </th>
       <th class="first-row col5">
         <p class="day"><%= @thursday_date.strftime("%a") %></p> <p class="date"><%= @thursday_date.day.ordinalize %></p><p class="month"><%= @thursday_date.strftime("%b") %></p>
+        
+        <% if is_today?(@thursday_date) %>
+          <div class="today"></div>
+        <% end %>
       </th>
       <th class="first-row col6">
         <p class="day"><%= @friday_date.strftime("%a") %></p> <p class="date"><%= @friday_date.day.ordinalize %></p><p class="month"><%= @friday_date.strftime("%b") %></p>
+        
+        <% if is_today?(@friday_date) %>
+          <div class="today"></div>
+        <% end %>
       </th>
     
       <th class="first-row col7">
