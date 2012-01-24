@@ -1,3 +1,8 @@
+# 0.7.1
+
+* Add weekends to week view
+* Highlight today column
+
 # 0.7.0
 
 * New teams
