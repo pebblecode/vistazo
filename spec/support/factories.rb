@@ -15,3 +15,7 @@ Factory.define :team_member do |f|
   f.association :team
 end
 
+Factory.define :project do |f|
+  f.sequence(:name) { |n| "Project #{n}" }
+  f.association :team
+end
