@@ -464,6 +464,7 @@ textarea:focus, input:focus{
   
   position: relative;
   width: 96%;
+  min-width: 1000px;
   clear: both;
   margin: 0 auto;
   padding: 1%;
@@ -504,12 +505,15 @@ textarea:focus, input:focus{
       border-right: none; /* Cancel out border on last column */
       
       #new-team-member-form {
-        margin-left: 5px;
+      	margin-left: 6px;
+        
         legend {
+        
           display: none;
         }
         .new-object-fieldset {
-          width: 127px;
+          width: 115px;
+          margin-bottom: 12px;
           
           .new-object-text-box {
             width: 103px;
@@ -522,17 +526,17 @@ textarea:focus, input:focus{
       padding-bottom: 20px;
       &.even {
         background: transparent url('/img/hatch1.gif') repeat 0 0;
-        .col7, .col8 {
+        .col7, .col8, .col-last{
           background: transparent url('/img/hatch1-desat.gif') repeat 0 0;
         }
       }
 
       &.odd {
         background: transparent url('/img/hatch2.gif') repeat 0 0;
-        .col7, .col8 {
+        .col7, .col8, .col-last{
           // Can't get hatch2 to work with transparent background for some reason
 /*           background: white url('/img/hatch2-desat.gif') repeat 0 0;*/
-          background: transparent url('/img/hatch1-desat.gif') repeat 0 0;
+          background: transparent url('/img/hatch2-desat.gif') repeat 0 0;
         }
       }
       
@@ -541,8 +545,17 @@ textarea:focus, input:focus{
         cursor: pointer;
         position: relative;
         
-        &:hover {
+        &:before {
+        	content: "";
+        }
+        
+        &:hover:before {
           background: transparent url("/img/new-project.png") no-repeat center bottom;
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          height: 25px;
+          z-index: 1;
         }
         &.remove-add-img {
           background: none;
@@ -624,20 +637,21 @@ textarea:focus, input:focus{
     } // tr.team-member
   } // #week-view
 
-  .col1 {
-    width: 12.5%;
+  .col1, .col2, .col3, .col4, .col5, .col6{
+    width: 13.33333%;
+    min-width: 125px;
   }
   
-  /* Day columns */
-  .col2, .col3, .col4, .col5, .col6, .col7, .col8 {
-    width: 12.5%;
-  }
+  .col7, .col8{
+  	width: 9%;
+  	min-width: 100px;
+  } 
   
   /* @group weekend styling */
   
   .col7, .col8{
     &.first-row{
-      background: #fafafa;
+      background: #fff;
     }
   
   /* @end */
@@ -649,7 +663,8 @@ textarea:focus, input:focus{
   
   .today{
     background-image: url(../img/hatch3.png);
-    width: 12%;
+    width: 13.3333%;
+    min-width: 125px;
     height: 90%;
     position: absolute;
     top: 10px;
