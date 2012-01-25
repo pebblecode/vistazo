@@ -37,7 +37,7 @@ gem "rack-force_domain"
 group :development, :test do
   # Servers
   gem 'shotgun'
-  gem 'ruby-debug19'
+  gem 'ruby-debug19', :require => 'ruby-debug'
 
   # Testing
   gem 'guard'
