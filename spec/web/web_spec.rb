@@ -121,6 +121,37 @@ describe "Delete project:" do
     flash_message = last_request.session[:flash]
     flash_message[:warning].should include("You must be logged in.")
   end
+  
+  describe "After login:" do
+    before do
+      login_normal_user_with_session!(@session)
+    end
+    
+    describe "from a different team" do
+      it "should give you an error message" do
+        @user = User.first
+        
+        @project = Project.create(:name => "Business time", :team_id => @team.id)
+        @other_team = Team.create(:name => "Monday-itis")
+        @other_team.add_user(@user)
+        @other_team.activate_user(@user)
+        
+        post_params! delete_project_path(@other_team, @project), nil, @session
+        
+        flash_message = last_request.session[:flash]
+        flash_message[:warning].should include("Invalid team.")
+      end
+    end
+    
+    describe "with an invalid project" do
+      it "should give you an error message" do
+        post_params! delete_project_path_with_project_id(@team, "1234"), nil, @session
+        
+        flash_message = last_request.session[:flash]
+        flash_message[:warning].should include("Invalid project.")
+      end
+    end
+  end
 end
 
 describe "Projects:" do

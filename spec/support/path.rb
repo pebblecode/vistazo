@@ -59,7 +59,11 @@ module PathSpecHelper
   end
   
   def delete_project_path(team, project)
-    "/#{team.id}/project/#{project.id}/delete"
+    delete_project_path_with_project_id(team, project.id)
+  end
+  
+  def delete_project_path_with_project_id(team, project_id)
+    "/#{team.id}/project/#{project_id}/delete"
   end
   
   ############################################################################

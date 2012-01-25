@@ -588,6 +588,26 @@ post "/:team_id/project/:project_id/delete" do
   protected!
   require_team_user!(params[:team_id])
   
+  project = Project.find(params[:project_id])
+  if project.present?
+    if project.team_id.to_s == params[:team_id]
+      logger.info "Deleting project #{project.id} and all team member timetable items"
+      project_name = project.name
+      TeamMember.all.each do |tm|
+        tm.timetable_items.delete_if { |ti| ti.project_id == project.id }
+        tm.save
+      end
+      Project.delete project.id
+      flash[:success] = "Successfully deleted project '#{project_name}'."
+    else
+      logger.warn "Deleting project failed, not in right team. Project: #{project.team_id}. Got #{params[:team_id]}"
+      flash[:warning] = "Invalid team."
+    end
+  else
+    logger.warn "Deleting project failed, project not valid: #{project}"
+    flash[:warning] = "Invalid project."
+  end
+  
   redirect back
 end
 
