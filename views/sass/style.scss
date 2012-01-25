@@ -208,6 +208,38 @@ body {
   } // button
 } // .update-object-fieldset
 
+#delete-project-dialog {
+  .warning {
+    width: 400px;
+  }
+  
+  .listing {
+    clear: both;
+    padding-top: 10px;
+    
+    li {
+      @include box-shadow(0, 0, 0, rgba(0, 0, 0, 0));
+      color: white;
+      background-color: transparent;
+      border: none;
+      text-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+      
+      .project {
+        float: left;
+      }
+      form {
+        fieldset {
+          button {
+            float: left;
+            margin-top: 0;
+            margin-left: 10px;
+          }
+        }
+      } // form
+    } // li
+  } // .listing
+} // #delete-project-dialog
+
 .delete-object-fieldset {
   legend {
     @include dialog-title;
@@ -216,25 +248,6 @@ body {
     font-weight: bold;
     margin-bottom: 5px;
     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-  }
-  
-  .warning {
-    width: 300px;
-    float: left;
-    color: #FFFFFF;
-    font-size: 16px;
-    font-weight: bold;
-    line-height: 16px;
-    margin-bottom: 5px;
-    padding-top: 12px;
-    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-  }
-  
-  .warning-icon{
-    float: left;
-    margin: 15px 10px 0 0;
-    font-family: $web_symbols_font_family;
-    font-size: 2em;
   }
   
   button {
@@ -268,6 +281,29 @@ body {
     }
   } // button
 } // .delete-object-fieldset
+
+.warning {
+  width: 300px;
+  float: left;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 16px;
+  margin-bottom: 5px;
+  padding-top: 12px;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+} // .warning
+
+.warning-icon{
+  float: left;
+  margin: 15px 10px 0 0;
+  font-family: $web_symbols_font_family;
+  font-size: 2em;
+} // .warning-icon
+
+.new-window-icon {
+  font-family: $web_symbols_font_family;
+}
 
 textarea:focus, input:focus{
   outline: none;
@@ -788,12 +824,20 @@ textarea:focus, input:focus{
   }
   
   #existing-projects-listing {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
   }
   
   .new-object-fieldset {
     margin-top: 0;
   } // .new-object-fieldset
+  
+  #manage-projects-link {
+    color: #333;
+    float: right;
+    text-decoration: none;
+    margin-bottom: 10px;
+    text-shadow: none;
+  }
 } // #new-tm-project-form
 
 /* Generic jquery-ui styles */

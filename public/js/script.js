@@ -98,6 +98,23 @@ $(function () {
       return false;
     });
     
+    // Delete project
+    $( "#delete-project-dialog" ).dialog({
+      modal: true,
+      closeOnEscape: true,
+      minWidth: 480,
+      position: 'top',
+      autoOpen: false,
+      closeText: "'"
+    });
+    $("#new-project-dialog #manage-projects-link").click(function() {
+      $( "#delete-project-dialog" ).dialog('open');
+      $("#new-project-dialog").hide();
+      overlayCloseOnClick();
+      
+      return false;
+    });
+    
     // Overlays - close dialogs when clicking (Note: need to run this after dialogs are created)
     function overlayCloseOnClick() {
       $(".ui-widget-overlay").live('click', function(){

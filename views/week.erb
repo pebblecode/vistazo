@@ -174,7 +174,7 @@
         </ul>
       </fieldset> <!-- Existing projects -->
     <% end %>
-    
+    <a id="manage-projects-link" href="#">Delete a project <span class="new-window-icon">D</span></a>
     <fieldset>
       <legend>Add new project</legend>
       <fieldset class="new-object-fieldset" title="New project">
@@ -188,16 +188,16 @@
 </div>
 
 <% if @projects.present? %>
-  <div id="delete-projects-dialog">
-    <a href="#" class="close">'</a>
-    <h4 class="pending-users-title">Delete a project</h4>
-    <p class="warning-icon">W</p><p class="warning">All projects added to team members will also be deleted.</p>
+  <div id="delete-project-dialog" title="Delete a project">
+    <p class="warning-icon">W</p><p class="warning">All items added to the weekly timetable will also be deleted.</p>
     <ul class="listing">
       <% for project in @projects %>
         <li>
           <div class="list-bullet"></div><p class="project"><%= h project.name %></p>
           <form action="/<%= @team.url_slug %>/project/<%= project.id %>/delete" method="post">
-            <button class="delete" type="submit" name="delete" value="delete" class="submit-button">delete</button>
+            <fieldset class="delete-object-fieldset" title="Delete project">
+              <button class="delete" type="submit" name="delete" value="delete" class="submit-button">delete</button>
+            </fieldset>
           </form>
         </li>
       <% end %>
