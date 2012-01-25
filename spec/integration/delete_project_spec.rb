@@ -22,7 +22,7 @@ feature "Delete project" do
   scenario "should delete a project from new projects list" do
     visit "/"
     click_link "start-btn"
-    within("#delete-projects-dialog") do
+    within("#delete-project-dialog") do
       click_button "delete"
     end
     
@@ -42,7 +42,7 @@ feature "Delete project" do
     
     page.should have_content("Business time")
     
-    within("#delete-projects-dialog") do
+    within("#delete-project-dialog") do
       click_button "delete"
     end
     
@@ -71,7 +71,7 @@ feature "Delete project" do
     end
     
     # Delete project
-    within("#delete-projects-dialog") do
+    within("#delete-project-dialog") do
       click_button "delete"
     end
     
