@@ -464,6 +464,7 @@ textarea:focus, input:focus{
   
   position: relative;
   width: 96%;
+  min-width: 1000px;
   clear: both;
   margin: 0 auto;
   padding: 1%;
@@ -626,17 +627,19 @@ textarea:focus, input:focus{
 
   .col1, .col2, .col3, .col4, .col5, .col6{
     width: 13.33333%;
+    min-width: 125px;
   }
   
   .col7, .col8{
   	width: 9%;
+  	min-width: 100px;
   } 
   
   /* @group weekend styling */
   
   .col7, .col8{
     &.first-row{
-      background: #fbfbfb;
+      background: #fff;
     }
   
   /* @end */
@@ -648,7 +651,8 @@ textarea:focus, input:focus{
   
   .today{
     background-image: url(../img/hatch3.png);
-    width: 12%;
+    width: 13.3333%;
+    min-width: 125px;
     height: 90%;
     position: absolute;
     top: 10px;
