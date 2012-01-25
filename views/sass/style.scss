@@ -1318,10 +1318,10 @@ textarea:focus, input:focus{
   #help-week{
     position: absolute;
     top: 50px;
-    left: -175px;
+    left: 15%;
     z-index: 110;
-    height: 244px;
-    width: 307px;
+    height: 171px;
+    width: 280px;
     background: url('/img/help-week.png');
   }
   
@@ -1351,10 +1351,10 @@ textarea:focus, input:focus{
     #help-project{
       position: absolute;
       z-index: 110;
-      bottom: -240px;
-      right: -275px;
-      height: 235px;
-      width: 447px;
+      left: 40%;
+      bottom: -242px;
+      height: 238px;
+      width: 316px;
       background: url('/img/help-project.png');
       pointer-events: none;
     }
