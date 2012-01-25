@@ -584,6 +584,13 @@ post '/team-member/:team_member_id/project/:tm_project_id/delete' do
   redirect back
 end
 
+post "/:team_id/project/:project_id/delete" do
+  protected!
+  require_team_user!(params[:team_id])
+  
+  redirect back
+end
+
 # ----------------------------------------------------------------------------
 # Team member
 # ----------------------------------------------------------------------------

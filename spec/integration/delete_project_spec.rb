@@ -25,15 +25,14 @@ feature "Delete project" do
     clean_db!
   end
   
-  pending "require login"
-  
   pending "should show warning message before delete"
   
   scenario "should delete a project from existing projects list" do
-    within_fieldset("Add a project") do
-      find_button("Business time")
+    within("#delete-projects-dialog") do
       click_button "delete"
     end
+    
+    page.should have_content("Successfully deleted project.")
     
     # Shouldn't be in add a project or in timetable
     page.should_not have_content("Business time")

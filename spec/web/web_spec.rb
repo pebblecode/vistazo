@@ -104,6 +104,25 @@ describe "Teams:" do
   
 end
 
+describe "Delete project:" do
+  before do
+    http_authorization!
+    @session = init_omniauth_session
+    
+    create_normal_user(@session)
+    @team = User.first.teams.first
+    @team_member = TeamMember.first
+  end
+  
+  it "should require login" do
+    @project = Project.create(:name => "New project", :team_id => @team.id)
+    post_params! delete_project_path(@team, @project), nil, @session
+    
+    flash_message = last_request.session[:flash]
+    flash_message[:warning].should include("You must be logged in.")
+  end
+end
+
 describe "Projects:" do
   before do
     http_authorization!
