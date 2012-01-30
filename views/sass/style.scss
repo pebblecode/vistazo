@@ -209,7 +209,7 @@ body {
 } // .update-object-fieldset
 
 #delete-project-dialog {
-  .warning {
+  .warning-msg {
     width: 400px;
   }
   
@@ -282,7 +282,7 @@ body {
   } // button
 } // .delete-object-fieldset
 
-.warning {
+.warning-msg {
   width: 300px;
   float: left;
   color: #FFFFFF;

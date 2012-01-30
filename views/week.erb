@@ -95,7 +95,7 @@
             <form action="/team-member/<%= tm.id %>/delete" method="post">
               <fieldset class="delete-object-fieldset" title="Delete team member">
                 <legend>Delete team member</legend>
-                <p class="warning-icon">W</p><p class="warning">All projects associated with '<%= tm.name %>' will also be deleted.</p>
+                <p class="warning-icon">W</p><p class="warning-msg">All projects associated with '<%= tm.name %>' will also be deleted.</p>
                 <button type="submit" class="submit-button">delete</button>
               </fieldset> <!-- Edit team member -->
             </form>
@@ -189,7 +189,7 @@
 
 <% if @projects.present? %>
   <div id="delete-project-dialog" title="Delete a project">
-    <p class="warning-icon">W</p><p class="warning">All items added to the weekly timetable will also be deleted.</p>
+    <p class="warning-icon">W</p><p class="warning-msg">All items added to the weekly timetable will also be deleted.</p>
     <ul class="listing">
       <% for project in @projects %>
         <li>
