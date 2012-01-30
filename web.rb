@@ -194,7 +194,7 @@ end
 
 get '/auth/failure' do
   flash[:warning] = "To access vistazo, you need to login with your Google account."
-  redirect "/"
+  redirect '/'
 end
 get '/logout' do
   flash[:success] = "Logged out successfully"
@@ -276,7 +276,7 @@ get '/:team_id/:year/week/:week_num' do
     end
   else
     flash.next[:warning] = "Invalid team."
-    redirect '/'
+    redirect back
   end
 end
 
