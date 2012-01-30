@@ -15,7 +15,7 @@ class TimetableItem
   one :project
   
   def css_class
-    get_project_css_class(self.project_name)
+    get_project_css_class(self.project_id.to_s)
   end
   
   private
