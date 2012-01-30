@@ -304,3 +304,30 @@ Pending users
             "$exists": true
         }
     }
+    
+## Troubleshooting
+
+## Problems with starting the server
+
+eg, 
+
+    16:19:46 web.1     | /Users/markdurrant/.rbenv/versions/1.9.2-p290/lib/ruby/gems/1.9.1/gems/eventmachine-0.12.10/lib/eventmachine.rb:572:in `start_tcp_server': no acceptor (RuntimeError)
+
+or
+
+    Errno::EPIPE: Broken pipe - <STDERR>
+
+Try killing it, and running it again. First find the process id:
+
+    ps aux | grep shotgun
+
+which outputs something like:
+
+    25:ttt      44616   0.1  0.8  2471192  32192 s000  S+   11:45am   0:02.94 ruby /Users/ttt/.rbenv/versions/1.9.2-p290/lib/ruby/gems/1.9.1/bin/shotgun --server=thin config.ru -p 6100
+    122:ttt      44653   0.0  0.0  2425700    264 s001  R+   11:46am   0:00.00 grep -n shotgun
+    
+The 2nd column is the process id, so to kill the shotgun server from the previous output, you would run
+
+    kill 44616
+    
+Then run the server again.
