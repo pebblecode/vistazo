@@ -264,7 +264,7 @@ get '/:team_id/:year/week/:week_num' do
 
         (MONDAY..SUNDAY).each do |work_day|
           @timetable_items_on_day[tm][work_day] = tm.timetable_items.select { |proj|
-            (proj.date.wday == work_day) and (proj.date >= @monday_date) and (proj.date <= @sunday_date)
+            (proj.date.cwday == work_day) and (proj.date >= @monday_date) and (proj.date <= @sunday_date)
           }
         end
       end
