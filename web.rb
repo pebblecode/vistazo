@@ -347,7 +347,7 @@ post '/:team_id/user/new' do
     flash[:warning] = "Team is not valid"
   end
   
-  redirect '/'
+  redirect back
 end
 
 get '/:team_id/user/:user_id/register' do
