@@ -214,7 +214,7 @@ $(function () {
     
     $(".project").click(function(event) {
       $("#new-project-dialog").hide();
-      event.stopPropagation(); // Prevent openning new project dialog
+      event.stopPropagation(); // Prevent opening new project dialog
     });
     $(".box").click(function (event) {
       $("#new-project-dialog form input[name=date]").val($(this).attr("data-date"));
@@ -326,7 +326,7 @@ function updateTimetableItem(proj) {
   
 }
 
-// Update team member project
+// Delete team member project
 function deleteTimetableItem(proj) {
   // var teamId = window.location.pathname.split('/')[1]; // From the first path of url
   var teamMemberId = $(proj).attr("data-team-member-id");
