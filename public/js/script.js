@@ -249,6 +249,71 @@ $(function () {
           return true;
        }
     }); // end of function
+    
+    // AJAX-ify add existing project
+    $("#new-project-dialog .listing li button").click(function() {
+      var teamId = window.location.pathname.split('/')[1]; // From the first path of url
+      var teamMemberId = $(this).parents('#new-tm-project-form').find("input[name=team_member_id]").val();
+      var projId = $(this).val();
+      var projDate = $(this).parents('#new-tm-project-form').find("input[name=date]").val();
+      var projName = $(this).attr("title");
+      var projHandleCssClass = $(this).parent().find(".handle").attr("class");
+      
+      // Add project object
+      var projectTemplate = _.template(
+        "<div class='project' data-team-member-id='<%= tmId %>' data-team-member-project-id='<%= tmProjId %>' data-date='<%= projDate %>'><div class='handle-container'><div class='<%= projHandleCssClass %>'></div></div><p class='project-title' title='<%= projName %>'><%= projName.substring(0, 40) %></p><form class='delete-tm-project-form' action='/team-member/<%= tmId %>/project/<%= tmProjId %>/delete' method='post'><button name='delete_project' type='submit' value='true'>×</button></form></div>"
+      );
+      var defaultProject = projectTemplate({
+        tmId: teamMemberId,
+        tmProjId: '',
+        projHandleCssClass: projHandleCssClass,
+        projDate: projDate,
+        projName: projName
+      });
+      var projContainer = $(".box[data-team-member-id=" + teamMemberId + "][data-date='" + projDate + "']");
+      $(projContainer).append(defaultProject);
+      var proj = $(projContainer).children().last(".project");
+      $(proj).addClass('is_loading');
+      
+      var url = "/" + teamId + "/team-member/" + teamMemberId + "/project/add.json";
+      $.post(url, { date: projDate, project_id: projId })
+        .success(function(response) {
+          var tmProjId = response["team_member_project_id"];
+          
+          // Regenerate project using template
+          submittedProj = projectTemplate({
+            tmId: teamMemberId,
+            tmProjId: tmProjId,
+            projHandleCssClass: projHandleCssClass,
+            projDate: projDate,
+            projName: projName
+          });
+          $(proj).replaceWith(submittedProj); // NOTE: proj is no longer available
+        })
+        .error(function(response) {
+          $(proj).remove();
+          $(proj).removeClass('is_loading');
+        })
+        .complete(function(data, status) {
+          var response = JSON.parse(data.responseText);
+          if (status == "success") {
+            updateFlash("success", response["message"]);
+          } else {
+            if (response) {
+              updateFlash("warning", response["message"]);
+            } else {
+              updateFlash("warning", "Something weird happened. Please contact support about it.");
+            }
+          }
+        });
+      
+      $("#new-project-dialog").hide();
+      
+      return false;
+    });
+    
+    // AJAX-ify add new project
+    
   }
   
   // Drag and drop for projects

@@ -9,10 +9,13 @@ class TeamMember
   many :timetable_items
   belongs_to :team
   
+  # Returns the timetable item added, or nil if it isn't saved properly
   def add_project_on_date(project, date)
     # TODO: Check that it gets saved! Mongo doesn't check by default
-    self.timetable_items << TimetableItem.new(:project_id => project.id, :date => date)
-    self.save
+    timetable_item = TimetableItem.new(:project_id => project.id, :date => date)
+    self.timetable_items << timetable_item
+    
+    self.save ? timetable_item : nil
   end
   
   def move_project(timetable_item, to_team_member, to_date)
