@@ -166,14 +166,21 @@ $(function () {
     });
   }
   
-  // Delete button - only show on hover
+  // Team member project delete button
   {
+    // Only show on hover
     $(".delete-tm-project-form button").hide();
     $(".project").hover(function() {
       $(this).find(".delete-tm-project-form button").fadeIn(200);
     },
     function() {
       $(this).find(".delete-tm-project-form button").fadeOut(100);
+    });
+    
+    // AJAX-ify delete
+    $(".delete-tm-project-form button").click(function(event) {
+      deleteTimetableItem($(this).first().parents(".project").first());
+      return false;
     });
   }
   
@@ -317,6 +324,39 @@ function updateTimetableItem(proj) {
       $(proj).removeClass('is_loading');
     });
   
+}
+
+// Update team member project
+function deleteTimetableItem(proj) {
+  // var teamId = window.location.pathname.split('/')[1]; // From the first path of url
+  var teamMemberId = $(proj).attr("data-team-member-id");
+  var timetableItemId = $(proj).attr("data-team-member-project-id");
+    
+  var url = "/team-member/" + teamMemberId + "/project/" + timetableItemId + "/delete.json";
+  $(proj).addClass('is_loading');
+  $.post(url)
+    .success(function(response) {
+      $(proj).fadeOut("slow", function() {
+        $(this).remove();
+      });
+    })
+    .error(function(response) {
+      // Do nothing
+    })
+    .complete(function(data, status) {
+      response = JSON.parse(data.responseText);
+      if (status == "success") {
+        updateFlash("success", response["message"]);
+      } else {
+        if (response) {
+          updateFlash("warning", response["message"]);
+        } else {
+          updateFlash("warning", "Something weird happened. Please contact support about it.");
+        }
+      }
+      
+      $(proj).removeClass('is_loading');
+    });
 }
 
 function updateFlash(flashType, msg) {

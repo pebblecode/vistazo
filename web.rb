@@ -563,11 +563,16 @@ post '/:team_id/team-member-project/:tm_project_id/update.json' do
   output.to_json
 end
 
+
+############################################
+# Delete team member project
+############################################
+
 post '/team-member/:team_member_id/project/:tm_project_id/delete' do
   protected!
 
   team_member = TeamMember.find(params[:team_member_id])
-
+  
   if team_member.present?
     did_delete = team_member.timetable_items.reject! { |proj| proj.id.to_s == params[:tm_project_id] }
     team_member.save
@@ -583,6 +588,36 @@ post '/team-member/:team_member_id/project/:tm_project_id/delete' do
 
   redirect back
 end
+
+post '/team-member/:team_member_id/project/:tm_project_id/delete.json' do
+  protected!
+
+  team_member = TeamMember.find(params[:team_member_id])
+  output = ""
+  if team_member.present?
+    did_delete = team_member.timetable_items.reject! { |proj| proj.id.to_s == params[:tm_project_id] }
+    team_member.save
+
+    if did_delete
+      status 200
+      output = { :message => "Successfully deleted team member project for #{team_member.name}." }
+    else
+      status 500
+      output = { :message => "Something went wrong when trying to delete a team member project for #{team_member.name}. Please try again later." }
+    end
+  else
+    status 500
+    output = { :message => "Something went wrong when trying to delete a team member project. Please refresh and try again later." }
+  end
+
+  content_type :json 
+  output.to_json
+end
+
+
+############################################
+# Delete project
+############################################
 
 post "/:team_id/project/:project_id/delete" do
   protected!
