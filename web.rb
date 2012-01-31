@@ -85,6 +85,10 @@ SUNDAY = 7
 START_YEAR = 2010
 NUM_WEEKS_IN_A_YEAR = 52
 
+HTTP_STATUS_OK = 200
+HTTP_STATUS_BAD_REQUEST = 400
+HTTP_STATUS_INTERNAL_SERVER_ERROR = 500
+
 require_relative 'models/init'
 require_relative 'helpers/init'
 
@@ -540,22 +544,22 @@ post '/:team_id/team-member-project/:tm_project_id/update.json' do
         successful_move = from_team_member.move_project(timetable_item, to_team_member, to_date)
   
         if successful_move
-          status 200
+          status HTTP_STATUS_OK
           output = { :message => "Successfully moved '<em>#{timetable_item.project_name}</em>' project to #{to_team_member.name} on #{to_date}." }
         else
-          status 500
+          status HTTP_STATUS_INTERNAL_SERVER_ERROR
           output = { :message => "Something went wrong with saving the changes when updating team member project. Please refresh and try again later." }
         end
       else
-        status 400
+        status HTTP_STATUS_BAD_REQUEST
         output = { :message => "Invalid team." }
       end
     else
-      status 400
+      status HTTP_STATUS_BAD_REQUEST
       output = { :message => "Something went wrong with the input when updating team member project. Please refresh and try again later." }
     end
   else
-    status 400
+    status HTTP_STATUS_BAD_REQUEST
     output = { :message => "Invalid team." }
   end
   
@@ -599,14 +603,14 @@ post '/team-member/:team_member_id/project/:tm_project_id/delete.json' do
     team_member.save
 
     if did_delete
-      status 200
+      status HTTP_STATUS_OK
       output = { :message => "Successfully deleted team member project for #{team_member.name}." }
     else
-      status 500
+      status HTTP_STATUS_INTERNAL_SERVER_ERROR
       output = { :message => "Something went wrong when trying to delete a team member project for #{team_member.name}. Please try again later." }
     end
   else
-    status 500
+    status HTTP_STATUS_BAD_REQUEST
     output = { :message => "Something went wrong when trying to delete a team member project. Please refresh and try again later." }
   end
 
