@@ -211,33 +211,18 @@ body {
 #delete-project-dialog {
   .warning-msg {
     width: 400px;
+    float: none;
   }
-  
-  .listing {
-    clear: both;
-    padding-top: 10px;
-    
-    li {
-      @include box-shadow(0, 0, 0, rgba(0, 0, 0, 0));
-      color: white;
-      background-color: transparent;
-      border: none;
-      text-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
-      
-      .project {
-        float: left;
+
+  form {
+    fieldset {
+      button {
+        float: right;
+        margin-top: 0;
+        margin-left: 10px;
       }
-      form {
-        fieldset {
-          button {
-            float: left;
-            margin-top: 0;
-            margin-left: 10px;
-          }
-        }
-      } // form
-    } // li
-  } // .listing
+    }
+  } // form
 } // #delete-project-dialog
 
 .delete-object-fieldset {
@@ -825,6 +810,36 @@ textarea:focus, input:focus{
   
   #existing-projects-listing {
     margin-bottom: 5px;
+
+    .listing {
+      li {
+        position: relative;
+
+        .delete {
+          font-family: $web_symbols_font_family;
+          color: #B0B0B0;
+          cursor: pointer;
+          float: right;
+          font-size: 12px;
+          line-height: 12px;
+          padding: 5px 0 0 0px;
+          height: 18px;
+          width: 15px;
+          text-decoration: none;
+
+          position: absolute;
+          right: 0;
+          top: 0;
+          z-index: 100;
+
+          display: none; // Hide by default
+        } // .delete
+
+        &:hover .delete {
+          display: block; // Show on hover
+        }
+      } // li
+    }
   }
   
   .new-object-fieldset {

@@ -169,11 +169,11 @@
             <li>
               <div class="handle <%= project.css_class %>"></div>
               <button name="project_id" type="submit" value="<%= project.id %>" title="<%= h project.name %>"><%= h truncate(project.name, :length => 40) %></button>
+              <a class="delete" title="Delete project" href="#">×</a>
             </li>
           <% end %>
         </ul>
       </fieldset> <!-- Existing projects -->
-      <a id="manage-projects-link" href="#">Delete a project <span class="new-window-icon">D</span></a>
     <% end %>
     <fieldset>
       <legend>Add new project</legend>
@@ -186,21 +186,3 @@
   
   <div id="dialog-arrow"></div>
 </div>
-
-<% if @projects.present? %>
-  <div id="delete-project-dialog" title="Delete a project">
-    <p class="warning-icon">W</p><p class="warning-msg">All items added to the weekly timetable will also be deleted.</p>
-    <ul class="listing">
-      <% for project in @projects %>
-        <li>
-          <div class="list-bullet"></div><p class="project"><%= h project.name %></p>
-          <form action="/<%= @team.url_slug %>/project/<%= project.id %>/delete" method="post">
-            <fieldset class="delete-object-fieldset" title="Delete project">
-              <button class="delete" type="submit" name="delete" value="delete" class="submit-button">delete</button>
-            </fieldset>
-          </form>
-        </li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>

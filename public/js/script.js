@@ -1,3 +1,5 @@
+var TEAM_ID = window.location.pathname.split('/')[1]; // From the first path of url
+
 /*
  * Preload images jQuery plugin
  * http://stackoverflow.com/questions/476679/preloading-images-with-jquery
@@ -99,21 +101,45 @@ $(function () {
     });
     
     // Delete project
-    $( "#delete-project-dialog" ).dialog({
-      modal: true,
-      closeOnEscape: true,
-      minWidth: 480,
-      position: 'top',
-      autoOpen: false,
-      closeText: "'"
-    });
-    $("#new-project-dialog #manage-projects-link").click(function() {
+    $("#new-project-dialog .delete").click(function() {
       $( "#delete-project-dialog" ).dialog('open');
       $("#new-project-dialog").hide();
       overlayCloseOnClick();
+
+      // Fill in form
+      var deleteProjectDialog = _.template("\
+      <div id='delete-project-dialog' title='Delete &ldquo;<%= projectName %>&rdquo; project'>\
+        <p class='warning-icon'>W</p><p class='warning-msg'>All items added to the weekly timetable will also be deleted.</p>\
+        <form method='post' action='/<%= teamId %>/project/<%= projectId %>/delete'>\
+          <fieldset class='delete-object-fieldset' title='Delete project'>\
+            <button class='delete' value='delete' name='delete' type='submit'>delete</button>\
+          </fieldset>\
+        </form>\
+      </div>");
+
+      $("#main").append(deleteProjectDialog({
+        teamId: TEAM_ID, 
+        projectId: $(this).parent().find("button[name=project_id]").val(),
+        projectName: $(this).parent().find("button[name=project_id]").text()
+      }));
+      $( "#delete-project-dialog" ).dialog({
+        modal: true,
+        closeOnEscape: true,
+        minWidth: 480,
+        minHeight: 70,
+        position: 'top',
+        autoOpen: true,
+        closeText: "'"
+      });
       
       return false;
     });
+    // Hide delete buttons by default and only show on 
+    // $("#new-project-dialog .listing li button").hover(function() {
+    //   $(this).parent().find(".delete").show();
+    // }, function() {
+    //   $(this).parent().find(".delete").hide();
+    // });
     
     // Overlays - close dialogs when clicking (Note: need to run this after dialogs are created)
     function overlayCloseOnClick() {
@@ -290,13 +316,12 @@ $(function () {
 
 // Update team member project
 function updateTimetableItem(proj) {
-  var teamId = window.location.pathname.split('/')[1]; // From the first path of url
   var fromTeamMemberId = $(proj).attr("data-team-member-id");
   var toTeamMemberId = $(proj).parents('.team-member').first().attr("data-team-member-id");
   var timetableItemId = $(proj).attr("data-team-member-project-id");
   var toDate = $(proj).parents('.box').first().attr("data-date");
     
-  var url = "/" + teamId + "/team-member-project/" + timetableItemId + "/update.json";
+  var url = "/" + TEAM_ID + "/team-member-project/" + timetableItemId + "/update.json";
   $(proj).addClass('is_loading');
   $.post(url, { from_team_member_id: fromTeamMemberId, to_team_member_id: toTeamMemberId, to_date: toDate })
     .success(function(response) {
@@ -338,7 +363,6 @@ function updateTimetableItem(proj) {
 
 // Delete team member project
 function deleteTimetableItem(proj) {
-  // var teamId = window.location.pathname.split('/')[1]; // From the first path of url
   var teamMemberId = $(proj).attr("data-team-member-id");
   var timetableItemId = $(proj).attr("data-team-member-project-id");
     
