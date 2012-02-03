@@ -220,8 +220,18 @@ $(function () {
       $("#new-project-dialog form input[name=date]").val($(this).attr("data-date"));
       $("#new-project-dialog form input[name=team_member_id]").val($(this).attr("data-team-member-id"));
       
+      // If clicked on weekend add class for weekend, and place dialog on the left
+      // Otherwise, place dialog on the right
+      $( "#new-project-dialog" ).removeClass("is-weekend");
       var new_project_dialog_top_offset = -46;
-      var new_project_dialog_left_offset = 20;
+      var new_project_dialog_left_offset = 0;
+      if ($(this).hasClass("col7") || $(this).hasClass("col8")) {
+        $( "#new-project-dialog" ).addClass("is-weekend");
+        new_project_dialog_left_offset = -220;
+      } else {
+        new_project_dialog_left_offset = 20;
+      }
+
       $("#new-project-dialog").show().offset({ top: event.pageY + new_project_dialog_top_offset, left: event.pageX + new_project_dialog_left_offset });
       $("#new-project-dialog").show();
       

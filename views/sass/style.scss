@@ -838,6 +838,26 @@ textarea:focus, input:focus{
     margin-bottom: 10px;
     text-shadow: none;
   }
+
+  #dialog-arrow {
+    display: block;
+    width: 20px;
+    height: 20px;
+
+    position: absolute;
+    top: 36px;
+    left: -15px;
+
+    background-image: url("/img/point-left.png");
+  }
+  &.is-weekend {
+    
+    #dialog-arrow {
+      left: 195px;
+
+      background-image: url("/img/point-right.png");
+    }
+  }
 } // #new-tm-project-form
 
 /* Generic jquery-ui styles */
@@ -961,12 +981,6 @@ textarea:focus, input:focus{
     top: 7px;
     right: 5px;
   }
-}
-
-#dialog-arrow {
-  position: absolute;
-  top: 36px;
-  left: -15px;
 }
 
 #new-project-form {
