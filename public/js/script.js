@@ -1,3 +1,99 @@
+var TEAM_ID = window.location.pathname.split('/')[1]; // From url
+
+/*
+ * Backbone.js definitions
+ */
+
+$(function () {
+  // var TeamMember = Backbone.Model.extend({
+  //   defaults: {
+  //     name : ""
+  //   },
+  //   url : function() {
+  //     return this.id ? "/" + TEAM_ID + '/team-members/' + this.id + ".json" : "/" + TEAM_ID + "/team-members.json";
+  //   } 
+  // });
+
+  var TeamMember = Backbone.Model.extend({
+    defaults: {
+      name : ""
+    }
+  });
+
+  var TeamMembers = Backbone.Collection.extend({
+    model: TeamMember,
+    url: "/" + TEAM_ID + "/team-members.json"
+  });
+
+  var teamMembers = new TeamMembers;
+
+  // // How to sync with the server
+  // Backbone.sync = function(method, model) {
+  //   console.log(method + ": " + JSON.stringify(model));
+  //   model.id = 1;
+  // };
+
+
+  // TODO prepopulate team members
+  // teamMembers.fetch();
+
+  var TeamMemberView = Backbone.View.extend({
+    events: { 
+      "click #new-team-member-form .submit-button" : "handleNewTeamMember" 
+    },
+    handleNewTeamMember: function(data) {
+      var inputField = $('input[name=new_team_member_name]');
+      console.log("Pre create");
+      
+      // This doesn't get sent to the server!!
+      var teamMember = teamMembers.create({name: inputField.val(), test: "ack face"});
+
+      console.log("Post create");
+
+      console.log("Saved team member:");
+      console.log(teamMember);
+      console.log(teamMember.name);
+
+      // TODO: reset this!!!
+      //inputField.val('');
+
+      return false; // Don't submit form
+    }, 
+    render: function() {
+      // var data = teamMembers.map(function(teamMember) { return teamMember.get('name')});
+      // var result = data.reduce(function(memo,str) { return memo + str }, '');
+      // Render team member
+      
+      // Replace #week-view
+      // $(this.el).html("<div id='test'>Testing testing</div>");
+      console.log("Render team member");
+
+      return this;
+    }
+  });
+
+  teamMembers.bind('add', function(teamMember) {
+    // console.log("Bind: team name = " + teamMember.get('name'));
+    teamMembers.fetch({
+      success: function() {
+        console.log("Success: teamMemberView");
+        console.log(teamMemberView);
+        teamMemberView.render();
+      },
+      error: function() {
+        console.log("Failed fetch in add");
+      }
+    }
+    );    
+  });
+
+  var teamMemberView = new TeamMemberView({el: $('#week-view')});
+
+  // setInterval(function(){
+  //   teamMembers.fetch({success: function(){view.render();}});
+  // },1000)
+});
+
 /*
  * Preload images jQuery plugin
  * http://stackoverflow.com/questions/476679/preloading-images-with-jquery
@@ -252,7 +348,6 @@ $(function () {
     
     // AJAX-ify add existing project
     $("#new-project-dialog .listing li button").click(function() {
-      var teamId = window.location.pathname.split('/')[1]; // From the first path of url
       var teamMemberId = $(this).parents('#new-tm-project-form').find("input[name=team_member_id]").val();
       var projId = $(this).val();
       var projDate = $(this).parents('#new-tm-project-form').find("input[name=date]").val();
@@ -275,7 +370,7 @@ $(function () {
       var proj = $(projContainer).children().last(".project");
       $(proj).addClass('is_loading');
       
-      var url = "/" + teamId + "/team-member/" + teamMemberId + "/project/add.json";
+      var url = "/" + TEAM_ID + "/team-member/" + teamMemberId + "/project/add.json";
       $.post(url, { date: projDate, project_id: projId })
         .success(function(response) {
           var tmProjId = response["team_member_project_id"];
@@ -345,13 +440,12 @@ $(function () {
 
 // Update team member project
 function updateTimetableItem(proj) {
-  var teamId = window.location.pathname.split('/')[1]; // From the first path of url
   var fromTeamMemberId = $(proj).attr("data-team-member-id");
   var toTeamMemberId = $(proj).parents('.team-member').first().attr("data-team-member-id");
   var timetableItemId = $(proj).attr("data-team-member-project-id");
   var toDate = $(proj).parents('.box').first().attr("data-date");
     
-  var url = "/" + teamId + "/team-member-project/" + timetableItemId + "/update.json";
+  var url = "/" + TEAM_ID + "/team-member-project/" + timetableItemId + "/update.json";
   $(proj).addClass('is_loading');
   $.post(url, { from_team_member_id: fromTeamMemberId, to_team_member_id: toTeamMemberId, to_date: toDate })
     .success(function(response) {
@@ -393,7 +487,6 @@ function updateTimetableItem(proj) {
 
 // Delete team member project
 function deleteTimetableItem(proj) {
-  // var teamId = window.location.pathname.split('/')[1]; // From the first path of url
   var teamMemberId = $(proj).attr("data-team-member-id");
   var timetableItemId = $(proj).attr("data-team-member-project-id");
     

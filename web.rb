@@ -740,29 +740,102 @@ end
 # Team member
 # ----------------------------------------------------------------------------
 
-post '/:team_id/team-member/add' do
+get '/:team_id/team-members.json' do
   protected!
+  require_team_user!(params[:team_id])
+
+  logger.info("Team members");
+  @team = Team.find(params[:team_id])
+  if @team.present?
+    @team_members = TeamMember.where(:team_id => @team.id)
+
+    status HTTP_STATUS_OK
+    content_type :json
+    @team_members.to_json
+  end
+end
+
+# Get individual team members
+get '/:team_id/team-members/:team_member_id.json' do
+  protected!
+  require_team_user!(params[:team_id])
+
+  @team = Team.find(params[:team_id])
+  if @team.present?
+    team_member = TeamMember.where(:id => params[:team_member_id], :team_id => @team.id)
+
+    status HTTP_STATUS_OK
+    content_type :json
+    output = team_member.to_json
+  else
+    outputMsg = "Invalid team"
+    status HTTP_STATUS_BAD_REQUEST
+    output = { :message => outputMsg }
+  end
+
+  output
+end
+
+# Add a team member
+# post '/:team_id/team-members.json' do
+#   protected!
+
+#   team = Team.find(params[:team_id])
+
+#   logger.info "Add team member: #{params}"
+
+#   if team.present?
+#     team_member_name = params[:new_team_member_name]
+  
+#     if team_member_name.present?
+#       team_member = TeamMember.create(:name => team_member_name, :team_id => team.id)
+    
+#       flash[:success] = "Successfully added '<em>#{team_member.name}</em>'."
+#     else
+#       flash[:warning] = "Please specify a team member name."
+#     end
+    
+#   else
+#     flash[:warning] = "Invalid team"
+#   end
+
+#   redirect back
+# end
+
+# Add new team member
+post '/:team_id/team-members.json' do
+  protected!
+  require_team_user!(params[:team_id])
 
   team = Team.find(params[:team_id])
+  
+  # Why are the params not being sent?!!? AFASDFASDF!!
+  logger.info("Add team member (json): #{params}")
 
-  logger.info "Add team member: #{params}"
-
+  output = ""
   if team.present?
-    team_member_name = params[:new_team_member_name]
+    team_member_name = params[:name]
   
     if team_member_name.present?
       team_member = TeamMember.create(:name => team_member_name, :team_id => team.id)
-    
-      flash[:success] = "Successfully added '<em>#{team_member.name}</em>'."
+      logger.info("team_member: #{team_member}")
+      status HTTP_STATUS_OK
+      output = { :message => "Successfully added '<em>#{team_member.name}</em>'.", :team_member => team_member.to_json }
+
     else
-      flash[:warning] = "Please specify a team member name."
+      logger.warn("team_member name not present")
+      status HTTP_STATUS_BAD_REQUEST
+      output = { :message => "Please specify a team member name." }
     end
     
   else
-    flash[:warning] = "Invalid team"
+    logger.warn("team not present")
+    status HTTP_STATUS_BAD_REQUEST
+    output = { :message => "Invalid team" }
   end
 
-  redirect back
+  content_type :json
+  output
 end
 
 post '/team-member/:team_member_id/edit' do
@@ -808,6 +881,10 @@ end
 # ----------------------------------------------------------------------------
 # Error handling
 # ----------------------------------------------------------------------------
+
+not_found do
+  logger.info "not_found: #{request.path_info}"
+end
 
 # All errors
 error do
