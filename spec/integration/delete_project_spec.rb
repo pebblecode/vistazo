@@ -20,71 +20,74 @@ feature "Delete project" do
   end
   
   scenario "should delete a project from new projects list" do
-    visit "/"
-    click_link "start-btn"
-    within("#delete-project-dialog") do
-      click_button "delete"
-    end
+    pending "Do js test"
+    # visit "/"
+    # click_link "start-btn"
+    # within("#delete-project-dialog") do
+    #   click_button "delete"
+    # end
     
-    page.should have_content("Successfully deleted project '#{@project.name}'")
+    # page.should have_content("Successfully deleted project '#{@project.name}'")
     
-    within("#new-project-dialog") do
-      page.should_not have_content("Business time")
-    end
+    # within("#new-project-dialog") do
+    #   page.should_not have_content("Business time")
+    # end
   end
   
   scenario "should delete all project timetable items in week view" do
-    @date = Time.now
-    @team_member.add_project_on_date(@project, @date)
+    pending "Do js test"
+    # @date = Time.now
+    # @team_member.add_project_on_date(@project, @date)
     
-    visit "/"
-    click_link "start-btn"
+    # visit "/"
+    # click_link "start-btn"
     
-    page.should have_content("Business time")
+    # page.should have_content("Business time")
     
-    within("#delete-project-dialog") do
-      click_button "delete"
-    end
+    # within("#delete-project-dialog") do
+    #   click_button "delete"
+    # end
     
-    within("#week-view") do
-      page.should_not have_content("Business time")
-    end
+    # within("#week-view") do
+    #   page.should_not have_content("Business time")
+    # end
   end
   
   scenario "should delete all project timetable items in multiple weeks" do
+    pending "Do js test"
     @date = Time.now
     
-    # Add project for this week and next
-    @team_member.add_project_on_date(@project, @date)
-    @team_member.add_project_on_date(@project, @date + 7.day)
+    # # Add project for this week and next
+    # @team_member.add_project_on_date(@project, @date)
+    # @team_member.add_project_on_date(@project, @date + 7.day)
     
-    # Check project was added
-    visit "/"
-    click_link "start-btn"
-    within("#week-view") do
-      page.should have_content("Business time")
-    end
+    # # Check project was added
+    # visit "/"
+    # click_link "start-btn"
+    # within("#week-view") do
+    #   page.should have_content("Business time")
+    # end
     
-    click_link "Next week"
-    within("#week-view") do
-      page.should have_content("Business time")
-    end
+    # click_link "Next week"
+    # within("#week-view") do
+    #   page.should have_content("Business time")
+    # end
     
-    # Delete project
-    within("#delete-project-dialog") do
-      click_button "delete"
-    end
+    # # Delete project
+    # within("#delete-project-dialog") do
+    #   click_button "delete"
+    # end
     
-    # Check project was deleted from week views
-    visit "/"
-    within("#week-view") do
-      page.should_not have_content("Business time")
-    end
+    # # Check project was deleted from week views
+    # visit "/"
+    # within("#week-view") do
+    #   page.should_not have_content("Business time")
+    # end
     
-    click_link "Next week"
-    within("#week-view") do
-      page.should_not have_content("Business time")
-    end
+    # click_link "Next week"
+    # within("#week-view") do
+    #   page.should_not have_content("Business time")
+    # end
     
   end
 end

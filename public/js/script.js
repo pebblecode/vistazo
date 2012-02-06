@@ -1,4 +1,4 @@
-var TEAM_ID = window.location.pathname.split('/')[1]; // From url
+var TEAM_ID = window.location.pathname.split('/')[1]; // From the first path of url
 
 /*
  * Backbone.js definitions
@@ -195,21 +195,45 @@ $(function () {
     });
     
     // Delete project
-    $( "#delete-project-dialog" ).dialog({
-      modal: true,
-      closeOnEscape: true,
-      minWidth: 480,
-      position: 'top',
-      autoOpen: false,
-      closeText: "'"
-    });
-    $("#new-project-dialog #manage-projects-link").click(function() {
+    $("#new-project-dialog .delete").click(function() {
       $( "#delete-project-dialog" ).dialog('open');
       $("#new-project-dialog").hide();
       overlayCloseOnClick();
+
+      // Fill in form
+      var deleteProjectDialog = _.template("\
+      <div id='delete-project-dialog' title='Delete &ldquo;<%= projectName %>&rdquo; project'>\
+        <p class='warning-icon'>W</p><p class='warning-msg'>All items added to the weekly timetable will also be deleted.</p>\
+        <form method='post' action='/<%= teamId %>/project/<%= projectId %>/delete'>\
+          <fieldset class='delete-object-fieldset' title='Delete project'>\
+            <button class='delete' value='delete' name='delete' type='submit'>delete</button>\
+          </fieldset>\
+        </form>\
+      </div>");
+
+      $("#main").append(deleteProjectDialog({
+        teamId: TEAM_ID, 
+        projectId: $(this).parent().find("button[name=project_id]").val(),
+        projectName: $(this).parent().find("button[name=project_id]").text()
+      }));
+      $( "#delete-project-dialog" ).dialog({
+        modal: true,
+        closeOnEscape: true,
+        minWidth: 480,
+        minHeight: 70,
+        position: 'top',
+        autoOpen: true,
+        closeText: "'"
+      });
       
       return false;
     });
+    // Hide delete buttons by default and only show on 
+    // $("#new-project-dialog .listing li button").hover(function() {
+    //   $(this).parent().find(".delete").show();
+    // }, function() {
+    //   $(this).parent().find(".delete").hide();
+    // });
     
     // Overlays - close dialogs when clicking (Note: need to run this after dialogs are created)
     function overlayCloseOnClick() {
@@ -316,8 +340,18 @@ $(function () {
       $("#new-project-dialog form input[name=date]").val($(this).attr("data-date"));
       $("#new-project-dialog form input[name=team_member_id]").val($(this).attr("data-team-member-id"));
       
+      // If clicked on weekend add class for weekend, and place dialog on the left
+      // Otherwise, place dialog on the right
+      $( "#new-project-dialog" ).removeClass("is-weekend");
       var new_project_dialog_top_offset = -46;
-      var new_project_dialog_left_offset = 20;
+      var new_project_dialog_left_offset = 0;
+      if ($(this).hasClass("col7") || $(this).hasClass("col8")) {
+        $( "#new-project-dialog" ).addClass("is-weekend");
+        new_project_dialog_left_offset = -220;
+      } else {
+        new_project_dialog_left_offset = 20;
+      }
+
       $("#new-project-dialog").show().offset({ top: event.pageY + new_project_dialog_top_offset, left: event.pageX + new_project_dialog_left_offset });
       $("#new-project-dialog").show();
       
