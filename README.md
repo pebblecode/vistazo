@@ -36,9 +36,9 @@ To set up
     gem install bundler
     bundle install
 
-To run (the development procfile)
+To run (using the development procfile)
 
-    foreman start -f Procfile_development
+    rake server
     # open http://localhost:6100/
 
 To ensure the Google OAuth callback is correct ensure you run the site from http://localhost:6100
