@@ -566,16 +566,8 @@ textarea:focus, input:focus{
         cursor: pointer;
         position: relative;
         
-        &:before {
-        	content: "";
-        }
-        
-        &:hover:before {
+        &:hover {
           background: transparent url("/img/new-project.png") no-repeat center bottom;
-          position: absolute;
-          bottom: 0;
-          width: 100%;
-          height: 25px;
           z-index: 1;
         }
         &.remove-add-img {
