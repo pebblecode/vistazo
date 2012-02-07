@@ -22,21 +22,33 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
   <script src="/js/jquery.labelify.js" type="text/javascript"></script>
+  <script src="/js/underscore-min.js" type="text/javascript"></script>
   <script src="/js/script.js" type="text/javascript"></script>
   
   
 </head>
-<body <%= is_super_admin? ? "class='is-super-admin'" : "" %>>
+<%
+  body_classes = []
+  body_classes << 'is-super-admin' if is_super_admin?
+  body_classes << 'first-signon' if @first_signon
+%>
+<body class='<%= body_classes.join(" ") %>'>
   <div id="overlay-bg"></div>
   <div id="help-nav"></div>
   <div id="help-team"></div>
   <div id="top-nav">
+<<<<<<< HEAD
   
     <h1 id="logo"><a href="/">VISTAZO</a></h1> 
     <div class="top-spacer"></div>
     <% if @account.present? %>
+=======
+    <h1 id="logo"><a href="/">VISTAZO</a></h1> <div class="top-spacer">
+    </div> 
+    <% if @team.present? %>
+>>>>>>> d89f0d1a99a840e7983a8d74698b6722394fdb7b
       <div id="team-name">
-        <h2><%= @account.name %></h2>
+        <h2><%= @team.name %></h2>
       </div>
     <% end %>
     <div class="top-spacer"></div>
@@ -64,7 +76,7 @@
         <li class="logged-in-as"><%= current_user.name %></li>
       <% end %>
     </ul>
-    <!-- <p class="invite-user"><a href="#account-users">Invite people to view this team</a></p> -->
+    <!-- <p class="invite-user"><a href="#team-users">Invite people to view this team</a></p> -->
   </div>
   
   <%= styled_flash %>
@@ -80,7 +92,7 @@
   
   <footer>
     <ul>
-      <li><span>Vistazo Alpha</span> 0.5.0</li>
+      <li><span>Vistazo Alpha</span> <%= settings.version_string %></li>
       <li>Created by <a href="http://pebblecode.com/">pebble {code}</a></li>
       <!--<li><a href="#">get satisfaction / UX testing link</a></li>-->
     </ul>

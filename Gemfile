@@ -3,7 +3,12 @@ gem 'sinatra'
 gem 'thin'
 gem 'sinatra-flash'
 gem 'json'
-gem 'rake'
+
+# Fix rack version for now because of #156
+gem 'rack', '1.3.5'
+# Living on the edge!
+# gem 'rack'
+
 
 # Views
 gem 'sass'
@@ -12,7 +17,8 @@ gem 'sass'
 gem 'heroku'
 
 # Mongo db
-gem 'mongo_mapper'
+# gem 'mongo_mapper'
+gem 'mongo_mapper', :git => 'http://github.com/pebblecode/mongomapper.git'
 gem 'bson_ext'
 
 # Authentication
@@ -31,7 +37,7 @@ gem "rack-force_domain"
 group :development, :test do
   # Servers
   gem 'shotgun'
-  gem 'ruby-debug19'
+  gem 'ruby-debug19', :require => 'ruby-debug'
 
   # Testing
   gem 'guard'

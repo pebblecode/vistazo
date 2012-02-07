@@ -43,13 +43,21 @@ def http_authorization!
 end
 
 def http_authorization_capybara!
-  auth_string = ActiveSupport::Base64.encode64("vistazo:vistazo").gsub(/ /, '')
+  auth_string = Base64.encode64("vistazo:vistazo").gsub(/ /, '')
   driver = Capybara.current_session.driver
   driver.header "Authorization", "Basic #{auth_string}"
 end
 
 def do_not_send_email
   Pony.stub!(:deliver)  # Hijack deliver method to not send email
+end
+
+def should_be_on_team_name_page(team_name)
+  find("#team-name").text.should include(team_name)
+end
+
+def should_not_be_on_team_name_page(team_name)
+  find("#team-name").text.should_not include(team_name)
 end
 
 # Define application for all spec files

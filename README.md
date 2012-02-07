@@ -14,6 +14,21 @@ A light weight application to keep track of who's working on what, when.
     git remote add production git@heroku.com:vistazo.git
     ```
 
+### Data migrations
+
+Currently all migrations are manually run. We will look into automated migrations in #160. 
+
+The easiest approach for fixing data migration issues is to reset the database:
+
+    mongo vistazo-development
+    > db.dropDatabase()
+
+However, for reference, here is a listing of migrations that can be run (from the root directory):
+
+    ruby db/migrations/2012-01-13-upgrade-0.5.1-to-multiple-teams.rb
+    ruby db/migrations/2012-01-17-remove-pending-teams-from-user-team_ids.rb
+
+
 ## Development
 
 To set up
@@ -21,20 +36,43 @@ To set up
     gem install bundler
     bundle install
 
-To run
+To run (using the development procfile)
 
-    foreman start dev
+    rake server
     # open http://localhost:6100/
 
 To ensure the Google OAuth callback is correct ensure you run the site from http://localhost:6100
 
+To turn on/off maintenance mode on heroku
+
+    heroku maintenance:on --app [app]
+    heroku maintenance:off --app [app]
+
+### Mongo db
+
+To get access to the mongo development database:
+
+    mongo vistazo-development
+
 ### Testing
 
-To run tests manually
+To run all specs manually
 
     bundle exec rake spec
 
-To run tests automatically with [guard](https://github.com/guard/guard)
+To run an individual spec
+
+    bundle exec ruby -S rspec --color [filename]
+    
+    # eg,
+    bundle exec ruby -S rspec --color spec/models/team_spec.rb
+
+To run on a particular line number
+
+    # eg, Run line 16 in spec/integration/invite_user_spec.rb
+    bundle exec ruby -S rspec --color -l 16 spec/integration/invite_user_spec.rb
+
+To run specs automatically with [guard](https://github.com/guard/guard)
 
     bundle exec guard
 
@@ -66,12 +104,46 @@ Google client callback url:
 
     http://vistazo-sandbox.herokuapp.com/auth/google_oauth2/callback
 
+Add remote url to local git
+
+    git remote add sandbox git@heroku.com:vistazo-sandbox.git
+
 To push
 
     git push sandbox [branch of code]:master
     
     # Or if there are conflicts, you may need to do a force push
     git push sandbox [branch of code]:master --force
+
+## Sandbox 2
+
+Another place for playing around with things, where you don't want to break staging or production. 
+Deployed on [heroku](http://www.heroku.com/).
+
+Project was created with (shouldn't need to be done again, but here just for reference)
+
+    heroku create vistazo-sandbox2 --stack cedar --remote sandbox
+    heroku config:add RACK_ENV=staging --app vistazo-sandbox2
+    heroku addons:add mongolab:starter --app vistazo-sandbox2
+    heroku addons:add sendgrid:starter --app vistazo-sandbox2
+    heroku config:add LOG_LEVEL=DEBUG --app vistazo-sandbox2
+    heroku config:add GOOGLE_CLIENT_ID=[google client id] --app vistazo-sandbox2
+    heroku config:add GOOGLE_SECRET=[google api secret] --app vistazo-sandbox2
+
+Google client callback url:
+
+    http://vistazo-sandbox2.herokuapp.com/auth/google_oauth2/callback
+
+Add remote url to local git
+
+    git remote add sandbox2 git@heroku.com:vistazo-sandbox2.git
+
+To push
+
+    git push sandbox2 [branch of code]:master
+    
+    # Or if there are conflicts, you may need to do a force push
+    git push sandbox2 [branch of code]:master --force
 
 ## Staging
 
@@ -177,6 +249,34 @@ This is deployed at: http://vistazo.herokuapp.com/
 
 ## Mongo
 
+### Import/Export
+
+#### Sandbox 2 export
+
+    # Binary form
+    mongodump -h ds029267.mongolab.com:29267 -d heroku_app2178743 -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji -o sandbox2-export
+    
+    # JSON file for a particular collection
+    mongoexport -h ds029267.mongolab.com:29267 -d heroku_app2178743 -c <collection> -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji -o <output file>
+    
+    mongoexport -h ds029267.mongolab.com:29267 -d heroku_app2178743 -c users -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji -o vistazo-sandbox2-users.json
+    mongoexport -h ds029267.mongolab.com:29267 -d heroku_app2178743 -c teams -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji -o vistazo-sandbox2-teams.json
+    mongoexport -h ds029267.mongolab.com:29267 -d heroku_app2178743 -c team_members -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji -o vistazo-sandbox2-team_members.json
+    mongoexport -h ds029267.mongolab.com:29267 -d heroku_app2178743 -c projects -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji -o vistazo-sandbox2-projects.json
+
+#### Production export
+
+    # Binary form
+    mongodump -h dbh85.mongolab.com:27857 -d heroku_app1810392 -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production
+    
+    # JSON file for a particular collection
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c <collection> -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o <output file>
+    
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c users -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production-users.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c accounts -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production-accounts.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c team_members -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production-team_members.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c projects -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production-projects.json
+
 ### Add new team member
 
 To an a new team member in the mongo backend interface on staging or production:
@@ -188,7 +288,7 @@ Add > Copy the following code (making sure oid is unique):
     ```
     { "_id" : {"$oid": "4ecf82c6b01a520547000011"},
       "name" : "Satish S",
-      "team_member_projects" : [] }
+      "timetable_items" : [] }
     ```
 1. Click on create
 
@@ -204,3 +304,30 @@ Pending users
             "$exists": true
         }
     }
+    
+## Troubleshooting
+
+## Problems with starting the server
+
+eg, 
+
+    16:19:46 web.1     | /Users/markdurrant/.rbenv/versions/1.9.2-p290/lib/ruby/gems/1.9.1/gems/eventmachine-0.12.10/lib/eventmachine.rb:572:in `start_tcp_server': no acceptor (RuntimeError)
+
+or
+
+    Errno::EPIPE: Broken pipe - <STDERR>
+
+Try killing it, and running it again. First find the process id:
+
+    ps aux | grep shotgun
+
+which outputs something like:
+
+    25:ttt      44616   0.1  0.8  2471192  32192 s000  S+   11:45am   0:02.94 ruby /Users/ttt/.rbenv/versions/1.9.2-p290/lib/ruby/gems/1.9.1/bin/shotgun --server=thin config.ru -p 6100
+    122:ttt      44653   0.0  0.0  2425700    264 s001  R+   11:46am   0:00.00 grep -n shotgun
+    
+The 2nd column is the process id, so to kill the shotgun server from the previous output, you would run
+
+    kill 44616
+    
+Then run the server again.

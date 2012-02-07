@@ -4,35 +4,24 @@ class User
   key :name, String
   key :uid, String
   key :email, String, :required => true
+  key :team_ids, Array
+  key :is_new, Boolean, :default => true
 
   timestamps!
 
   # Relationships
-  belongs_to :account
+  many :teams, :in => :team_ids
 
   # Validations
   validates_format_of :email, :with => /\b[a-zA-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i
-  # validates_presence_of :account_id  # Need it to be nil, so that a user can be created before the account is created
+  # validates_presence_of :team_id  # Need it to be nil, so that a user can be created before the team is created
 
-  def is_pending?
-    self.status == :pending
-  end
-  
-  def is_active?
-    self.status == :active
-  end
-  
-  def status
-    if self.valid? 
-      if (self.uid == nil) and (self.email != nil)     # Missing email
-        :pending
-      elsif (self.uid != nil) and (self.email != nil)  # Email and uid present
-        :active
-      else
-        :unknown
-      end
-    else
-      :invalid
-    end
+
+  #############################################################################
+  # Public methods
+  #############################################################################
+
+  def to_hash
+    { "id" => self.id.to_s, "uid" => self.uid, "name" => self.name, "email" => self.email }
   end
 end

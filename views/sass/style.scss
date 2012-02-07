@@ -69,12 +69,17 @@ $warning_color: #000000;
   margin: 5px 0 10px 0;
 }
 
-
 @mixin close-button {
   outline: none;
   color: #ffffff;
   font: 10px $web_symbols_font_family;
   text-decoration: none;
+}
+
+@mixin dialog-title {
+  margin-top: 15px;
+  font-size: 16px;
+  line-height: 16px;
 }
 
 /* General styles
@@ -203,34 +208,31 @@ body {
   } // button
 } // .update-object-fieldset
 
+#delete-project-dialog {
+  .warning-msg {
+    width: 400px;
+    float: none;
+  }
+
+  form {
+    fieldset {
+      button {
+        float: right;
+        margin-top: 0;
+        margin-left: 10px;
+      }
+    }
+  } // form
+} // #delete-project-dialog
+
 .delete-object-fieldset {
   legend {
+    @include dialog-title;
+    
     color: #FFFFFF;
-    font-size: 16px;
     font-weight: bold;
-    line-height: 16px;
     margin-bottom: 5px;
-    padding-top: 15px;
     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-  }
-  
-  .warning {
-    width: 300px;
-    float: left;
-    color: #FFFFFF;
-    font-size: 16px;
-    font-weight: bold;
-    line-height: 16px;
-    margin-bottom: 5px;
-    padding-top: 12px;
-    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-  }
-  
-  .warning-icon{
-    float: left;
-    margin: 15px 10px 0 0;
-    font-family: $web_symbols_font_family;
-    font-size: 2em;
   }
   
   button {
@@ -265,13 +267,36 @@ body {
   } // button
 } // .delete-object-fieldset
 
+.warning-msg {
+  width: 300px;
+  float: left;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 16px;
+  margin-bottom: 5px;
+  padding-top: 12px;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+} // .warning
+
+.warning-icon{
+  float: left;
+  margin: 15px 10px 0 0;
+  font-family: $web_symbols_font_family;
+  font-size: 2em;
+} // .warning-icon
+
+.new-window-icon {
+  font-family: $web_symbols_font_family;
+}
+
 textarea:focus, input:focus{
   outline: none;
 }
 
 /* Error styles */
 
-#account-users-dialog{
+#team-users-dialog{
   .errors-on-form {
     .new-object-fieldset {
       padding: 0;
@@ -336,8 +361,20 @@ textarea:focus, input:focus{
       text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
       margin: 7px 0 0 0;
       padding: 3px 50px 0 10px;
+<<<<<<< HEAD
       float: left;
           
+=======
+      
+      background-image: url(../img/team.png);
+      background-repeat: no-repeat;
+      background-position: right 0 ;
+      
+      position: absolute;
+      left: 125px;
+      top: 0;
+      
+>>>>>>> d89f0d1a99a840e7983a8d74698b6722394fdb7b
       &:hover{
         text-shadow: 0 2px 2px rgba(0, 0, 0, 0.30);
       }
@@ -345,7 +382,7 @@ textarea:focus, input:focus{
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.30);
         margin: 8px 0 -1px 0;
       }
-    }
+    } // h2
   } // #team-name
   
   .action-bar {
@@ -453,18 +490,21 @@ textarea:focus, input:focus{
   @include box-shadow(0, 5px, 20px, rgba(0, 0, 0, 0.1));
   
   position: relative;
-  width: 920px;
+  width: 96%;
+  min-width: 1000px;
   clear: both;
   margin: 0 auto;
-  padding: 20px;
+  padding: 1%;
   background-color: #fff;
   margin-top: 0 auto;
   
   #week-view {
+    width: 100%;
     td, .first-row.col1, .first-row.col6 {
       border-right: 1px dashed #b3b3b3;
     }
-    .col7 {
+    .col-last {
+      border-left: 1px dashed #b3b3b3;
       border-right: none; /* Cancel out border on last column */
     }
     
@@ -481,7 +521,7 @@ textarea:focus, input:focus{
           background-color: #d2ecf6;
         }
       }
-    }
+    } // .row-divider
     
     .first-row {
       height: 50px;
@@ -492,29 +532,39 @@ textarea:focus, input:focus{
       border-right: none; /* Cancel out border on last column */
       
       #new-team-member-form {
-        margin-left: 5px;
+      	margin-left: 6px;
+        
         legend {
+        
           display: none;
         }
         .new-object-fieldset {
-          width: 127px;
+          width: 115px;
+          margin-bottom: 12px;
           
           .new-object-text-box {
             width: 103px;
           }
         }
       }
-    }
+    } // .last-row
 
     tr.team-member {
       padding-bottom: 20px;
-      
       &.even {
-        background:url('/img/hatch1.gif');
+        background: transparent url('/img/hatch1.gif') repeat 0 0;
+        .col7, .col8, .col-last{
+          background: transparent url('/img/hatch1-desat.gif') repeat 0 0;
+        }
       }
 
       &.odd {
-        background:url('/img/hatch2.gif');
+        background: transparent url('/img/hatch2.gif') repeat 0 0;
+        .col7, .col8, .col-last{
+          // Can't get hatch2 to work with transparent background for some reason
+/*           background: white url('/img/hatch2-desat.gif') repeat 0 0;*/
+          background: transparent url('/img/hatch2-desat.gif') repeat 0 0;
+        }
       }
       
       .box {
@@ -524,6 +574,7 @@ textarea:focus, input:focus{
         
         &:hover {
           background: transparent url("/img/new-project.png") no-repeat center bottom;
+          z-index: 1;
         }
         &.remove-add-img {
           background: none;
@@ -534,13 +585,13 @@ textarea:focus, input:focus{
         @include border-radius(5px);
         @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.1));
         
-        height: 20px;
         background-color: #fff;
         margin: 5px 6px 0 8px;
         font-size: 14px;
         color: #808080;
         border: 1px solid #cccccc;
         padding-right: 2px;
+        padding-bottom: 3px;
         position: relative;
         
         cursor: move;
@@ -551,8 +602,8 @@ textarea:focus, input:focus{
         }
         
         .project-title{
-          float: left;
           margin-top: 3px;
+          
         }
         
         &.is_loading {
@@ -605,18 +656,40 @@ textarea:focus, input:focus{
     } // tr.team-member
   } // #week-view
 
-  .col1 {
-    width: 140px;
+  .col1, .col2, .col3, .col4, .col5, .col6{
+    width: 13.33333%;
+    min-width: 125px;
+  }
+  
+  .col7, .col8{
+  	width: 9%;
+  	min-width: 100px;
+  } 
+  
+  /* @group weekend styling */
+  
+  .col7, .col8{
+    &.first-row{
+      background: #fff;
+    }
+  
+  /* @end */
   }
 
-  .col2, .col3, .col4, .col5, .col6 {
-    width: 150px;
+  .col-last {
+    width: 2%;
   }
-
-  .col7 {
-    width: 30px;
+  
+  .today{
+    background-image: url(../img/hatch3.png);
+    width: 13.3333%;
+    min-width: 125px;
+    height: 90%;
+    position: absolute;
+    top: 10px;
+    border-radius: 10px;
   }
-
+  
   .arrows {
     font-family: $web_symbols_font_family;
     float: right;
@@ -657,8 +730,8 @@ textarea:focus, input:focus{
     @include border-radius(5px);
     @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
     
-    height: 20px;
-    background: rgba(41, 171, 226, 1) url('/img/people-arrow.png') no-repeat 115px 6px;
+    background: rgba(41, 171, 226, 1) url('/img/people-arrow.png') no-repeat;
+    background-position: 100% 50%;
     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
     color: #fff;
     font-size: 14px;
@@ -710,6 +783,15 @@ textarea:focus, input:focus{
 /* Dialogs
 -----------------------------------------------------------------------------*/
 
+.list-bullet {
+  @extend .circle;
+  height: 5px;
+  width: 5px;
+  margin: 7px 10px 5px 5px;
+  @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+  background-color: #fff;
+} // #point
+
 #new-project-dialog {
   legend {
     margin: 0;
@@ -725,12 +807,70 @@ textarea:focus, input:focus{
   }
   
   #existing-projects-listing {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
+
+    .listing {
+      li {
+        position: relative;
+
+        .delete {
+          font-family: $web_symbols_font_family;
+          color: #B0B0B0;
+          cursor: pointer;
+          float: right;
+          font-size: 12px;
+          line-height: 12px;
+          padding: 5px 0 0 0px;
+          height: 18px;
+          width: 15px;
+          text-decoration: none;
+
+          position: absolute;
+          right: 0;
+          top: 0;
+          z-index: 100;
+
+          display: none; // Hide by default
+        } // .delete
+
+        &:hover .delete {
+          display: block; // Show on hover
+        }
+      } // li
+    }
   }
   
   .new-object-fieldset {
     margin-top: 0;
   } // .new-object-fieldset
+  
+  #manage-projects-link {
+    color: #333;
+    float: right;
+    text-decoration: none;
+    margin-bottom: 10px;
+    text-shadow: none;
+  }
+
+  #dialog-arrow {
+    display: block;
+    width: 20px;
+    height: 20px;
+
+    position: absolute;
+    top: 36px;
+    left: -15px;
+
+    background-image: url("/img/point-left.png");
+  }
+  &.is-weekend {
+    
+    #dialog-arrow {
+      left: 195px;
+
+      background-image: url("/img/point-right.png");
+    }
+  }
 } // #new-tm-project-form
 
 /* Generic jquery-ui styles */
@@ -796,7 +936,6 @@ textarea:focus, input:focus{
       color: #808080;
       background-color: #fff;
       
-      height: 20px;
       margin: 5px 0;
       border: 1px solid #a1a1a1;
     }
@@ -857,12 +996,6 @@ textarea:focus, input:focus{
   }
 }
 
-#dialog-arrow {
-  position: absolute;
-  top: 36px;
-  left: -15px;
-}
-
 #new-project-form {
   background-color: #fff;
   font-size: 14px;
@@ -882,6 +1015,12 @@ textarea:focus, input:focus{
   }
 } // #new-project-form
 
+#invite-user-form {
+  @extend #team-users-dialog;
+  display: block !important;
+
+}
+
 #team-users-dialog {
   display: none; /* Hide by default */
   
@@ -890,13 +1029,24 @@ textarea:focus, input:focus{
   }
   
   .listing {
-      &.pending li .list-bullet {
-      height: 5px;
-      width: 5px;
-      margin: 9px 10px 5px 5px;
-      @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-      background-color: #d8eaf1;
+    &.pending li {
+      clear: both;
+      padding-bottom: 25px;
+      
+      .list-bullet {
+        height: 5px;
+        width: 5px;
+        margin: 9px 10px 5px 5px;
+        @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+        background-color: #d8eaf1;
+      }
+      
+      .pending-user-email{
+        float: left;
+        padding-right: 10px;
+      }
     }
+    
     li {
       background-color: transparent;
       border: none;
@@ -905,29 +1055,17 @@ textarea:focus, input:focus{
       font-weight: normal;
       text-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
       
-      .list-bullet {
-        @extend .circle;
-        height: 5px;
-        width: 5px;
-        margin: 7px 10px 5px 5px;
-        @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-        background-color: #fff;
-      } // #point
-      
       .email {
         font-style: italic;
         font-weight: normal;
       } // .email
-      .pending-user-email{
-        float: left;
-      }
+      
       .resend {
         @include border-radius(5px);
         @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
         
         float: left;
         padding: 0 3px 0 5px;
-        margin-left: 10px;
         display: block;
         background-color: #fff;
         color: #808080;
@@ -970,6 +1108,7 @@ textarea:focus, input:focus{
     border: none;
     padding: 1px;
     margin-top: 0;
+    margin-bottom: 15px;
     
     .submit-button{
       right: 2px;
@@ -987,6 +1126,50 @@ textarea:focus, input:focus{
   display: none; /* Don't display by default */
   margin-top: 20px;
   position: relative;
+  
+  #switch-teams {
+    margin-top: 20px;
+    h2 {
+      color: #FFFFFF;
+      font-size: 1.4em;
+      font-weight: bold;
+      line-height: 16px;
+      margin: 5px 0 20px;
+      text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+    } // h2
+    
+    ul {
+      clear: both;
+      
+      li {
+        margin-bottom: 10px;
+      } // li
+      
+      a {
+        color: #ffffff;
+        text-decoration: none;
+      } // a
+    } // ul
+  } // #switch-teams
+  
+  .add-new-user-title {
+    @include dialog-title;
+  }
+  
+  #new-team {
+    legend {
+      display: none;
+    }
+    
+    h4 {
+      color: #FFFFFF;
+      font-size: 1.4em;
+      font-weight: bold;
+      line-height: 16px;
+      margin: 20px 0 20px;
+      text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+    }
+  }
 } // #team-name-dialog
 
 
@@ -1011,6 +1194,7 @@ textarea:focus, input:focus{
   
   #main {
     width: 770px;
+    min-width: 770px;
     padding: 10px;
     min-height: 510px;
     
@@ -1118,7 +1302,7 @@ textarea:focus, input:focus{
         margin-bottom: 5px;
       }
     }
-  }
+  } // #main
 }
 
 /* Registration page
@@ -1136,7 +1320,14 @@ textarea:focus, input:focus{
 }
 
 .reg-main{
-  min-height: 330px !important;
+  min-height: 425px !important;
+  
+  .help {
+    margin-top: 20px;
+    clear: both;
+    font-size: 14px;
+    line-height: 14px;
+  }
 }
 
 /* Help text
@@ -1156,10 +1347,10 @@ textarea:focus, input:focus{
   #help-week{
     position: absolute;
     top: 50px;
-    left: -175px;
+    left: 15%;
     z-index: 110;
-    height: 244px;
-    width: 307px;
+    height: 171px;
+    width: 280px;
     background: url('/img/help-week.png');
   }
   
@@ -1189,10 +1380,10 @@ textarea:focus, input:focus{
     #help-project{
       position: absolute;
       z-index: 110;
-      bottom: -240px;
-      right: -275px;
-      height: 235px;
-      width: 447px;
+      left: 40%;
+      bottom: -242px;
+      height: 238px;
+      width: 316px;
       background: url('/img/help-project.png');
       pointer-events: none;
     }
@@ -1205,7 +1396,7 @@ textarea:focus, input:focus{
 footer{
   margin: 0 auto;
   padding-top: 100px; /* Use padding instead of margin, so that dialog positions don't screw up */
-  width: 600px;
+  width: 350px;
   color: #ccc;
   ul{
     

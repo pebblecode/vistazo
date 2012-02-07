@@ -26,10 +26,16 @@ module Sinatra
         redirect "/"
       end
     end
-    def require_account_user!(account_id)
+    def require_team_user!(team_id)
       require_user!
-      account = Account.find(account_id)
-      unless current_user.account == account
+      team = Team.find(team_id)
+      
+      unless team.present?
+        flash[:warning] = "You're not authorized to view this page."
+        redirect "/"
+      end
+      
+      unless current_user.teams.include? team
         flash[:warning] = "You're not authorized to view this page."
         redirect "/"
       end

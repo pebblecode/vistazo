@@ -9,41 +9,73 @@ module PathSpecHelper
     '/auth/google_oauth2/callback'
   end
   
+  def logout_path
+    '/logout'
+  end
+  
   ############################################################################
-  # Accounts/users
+  # Teams/users
   ############################################################################
   
-  def account_path(account)
-    "/#{account.id}"
+  def team_id_path(team_id)
+    "/#{team_id}"
   end
   
-  def account_current_week_path(account)
-    "/#{account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+  def team_path(team)
+    team_id_path(team.id)
   end
   
-  def user_account_current_week_path(user)
-    account_current_week_path(user.account)
+  def team_current_week_path(team)
+    "/#{team.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
   end
   
-  def user_account_path(user)
-    account_path(user.account)
+  def team_id_current_week_path(team_id)
+    "/#{team_id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
   end
+  
+  def user_team_current_week_path(user)
+    team_current_week_path(user.teams.first)
+  end
+  
+  def user_team_path(user)
+    team_path(user.teams.first)
+  end
+  
   
   ############################################################################
   # Projects
   ############################################################################
   
-  def add_project_path(account)
-    "/#{account.id}/team-member-project/add"
+  def add_project_path(team)
+    "/#{team.id}/team-member-project/add"
   end
   
-  def update_project_path(account, team_member_project)
-    "/#{account.id}/team-member-project/#{team_member_project.id}/update.json"
+  def update_project_path(team, timetable_item)
+    "/#{team.id}/team-member-project/#{timetable_item.id}/update.json"
   end
   
-  def update_project_with_account_id_path(account_id, team_member_project)
-    "/#{account_id}/team-member-project/#{team_member_project.id}/update.json"
+  def update_project_with_team_id_path(team_id, timetable_item)
+    "/#{team_id}/team-member-project/#{timetable_item.id}/update.json"
   end
-
+  
+  def delete_project_path(team, project)
+    delete_project_path_with_project_id(team, project.id)
+  end
+  
+  def delete_project_path_with_project_id(team, project_id)
+    "/#{team.id}/project/#{project_id}/delete"
+  end
+  
+  ############################################################################
+  # Registration
+  ############################################################################
+  
+  def registration_with_team_id_and_user_id_path(team_id, user_id)
+    "/#{team_id}/user/#{user_id}/register"
+  end
+  
+  def activation_with_team_id_and_user_id_path(team_id, user_id)
+    "/#{team_id}/user/#{user_id}/activate"
+  end
   
 end

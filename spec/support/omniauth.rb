@@ -11,6 +11,14 @@ module OmniauthSpecHelper
       "name" => 'Vistazo Test'
     }
   })
+  DEFAULT_TEAM_NAME = "Vistazo Test's team"
+  OmniAuth.config.mock_auth[:karen_o] = OmniAuth.config.mock_auth[:default].merge({
+    "uid" => '100001',
+    "info" => {
+      "email" => "karen.o@gmail.com",
+      "name" => 'Karen O'
+    }
+  })
   OmniAuth.config.mock_auth[:super_admin] = OmniAuth.config.mock_auth[:default].merge({
     "uid" => '111965288093828509275',
     "info" => {
@@ -60,6 +68,33 @@ module OmniauthSpecHelper
     SessionData.new(rack_test_session.instance_variable_get(:@rack_mock_session).cookie_jar)
   end
   
+  def switch_omniauth_user(user_key)
+    oauth_cred = OmniAuth.config.mock_auth[user_key]
+    if oauth_cred
+      OmniAuth.config.mock_auth[:google_oauth2] = oauth_cred
+    else
+      raise "Invalid oauth user"
+    end
+  end
+  
+  def omniauth_user_name(user_key)
+    oauth_cred = OmniAuth.config.mock_auth[user_key]
+    if oauth_cred
+      oauth_cred["info"]["name"]
+    else
+      raise "Invalid oauth user"
+    end
+  end
+  
+  def omniauth_email(user_key)
+    oauth_cred = OmniAuth.config.mock_auth[user_key]
+    if oauth_cred
+      oauth_cred["info"]["email"]
+    else
+      raise "Invalid oauth user"
+    end
+  end
+  
   def login_normal_user_with_session!(session)
     login!(:normal_user, session)
   end
@@ -79,16 +114,16 @@ module OmniauthSpecHelper
     follow_redirect_with_session_login!(session)
     last_request.path.should == "/"
     
-    # Find account by uid
-    account = User.find_by_uid(session['uid']).account
+    # Find team by uid - should be first team in team list
+    team = User.find_by_uid(session['uid']).teams.first
     
-    # Should redirect to account page
+    # Should redirect to team page
     follow_redirect_with_session_login!(@session)
-    last_request.path.should == "/#{account.id}"
+    last_request.path.should == "/#{team.id}"
     
     # Should redirect to current week
     follow_redirect_with_session_login!(@session)
-    last_request.path.should == "/#{account.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+    last_request.path.should == "/#{team.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
   end
   
   def logout_session!(session)
@@ -140,8 +175,12 @@ module OmniauthSpecHelper
   end
   
   def create_normal_user(session)
-    # Create a new login for normal user will create a new user and account
+    # Create a new login for normal user will create a new user and team
     login_normal_user_with_session!(session)
     logout_session!(session)
+  end
+  
+  def should_be_logged_in_as_username(username)
+    find("#top-nav .action-bar .logged-in-as").text.should == username
   end
 end

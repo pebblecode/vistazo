@@ -1,3 +1,28 @@
+# 0.7.1
+
+* Add weekends to week view
+* Highlight today column
+
+# 0.7.0
+
+* New teams
+* Bugs
+
+# 0.6.1
+
+* Fixed #151 - pending user showing up as switchable team
+
+# 0.6.0
+
+* Multiple teams feature
+* Migration for multiple teams
+
+# 0.5.1
+
+* UX updates based on user testing
+* Clean up
+* Some more testing
+
 # 0.5.0
 
 * Update homepage

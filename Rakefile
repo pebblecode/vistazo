@@ -1,6 +1,12 @@
 # Rake file to help with Vistazo development
 require 'fileutils'
 
+desc "Start the server using the development Procfile."
+task "server" do
+  start_server_cmd = "foreman start -f Procfile_development"
+  sh start_server_cmd
+end
+
 desc "Merge branches, and push to remote server."
 namespace "merge_push_to" do
   

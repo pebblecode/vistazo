@@ -1,12 +1,34 @@
-<% if @account %>
+<% if @team %>
   <div id="team-name-dialog" title="Team name">
-    <form id="team-name-form" action="/<%= @account.url_slug %>/update" method="post">
+    <form id="team-name-form" action="/<%= @team.url_slug %>/update" method="post">
       <fieldset class="update-object-fieldset">
         <legend>Team name</legend>
-        <label for="team_name">Account name</label>
-        <input type="text"name="team_name" title="Team name" class="update-object-text-box" value="<%= @account.name %>"/>
+        <label for="team_name">Team name</label>
+        <input type="text"name="team_name" title="Team name" class="update-object-text-box" value="<%= @team.name %>"/>
         <button type="submit" name="update_team_name" value="true" class="submit-button">update</button>
       </fieldset>
     </form>
+    
+    <% if current_user.teams.count > 1 %>
+      <div id="switch-teams">
+        <h2>Switch teams</h2>
+        <ul>
+          <% current_user.teams.each do |team|%>
+            <li><div class="list-bullet"></div><a href="/<%= team.id %>"><%= team.name %></a></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end%>
+    
+    <div id="new-team">
+      <h4>New team</h4>
+      <form id="new-team-form" action="/team/new" method="post">
+        <fieldset class="new-object-fieldset" title="New team">
+          <legend>New team</legend>
+          <input type="text" name="new_team_name" title="Add new team" class="new-object-text-box" /> 
+          <button id="new-team-button" type="submit" name="new_team" value="new_team" class="submit-button">+</button>
+        </fieldset>
+      </form>
+    </div>
   </div>
 <% end %>

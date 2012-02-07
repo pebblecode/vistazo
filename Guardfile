@@ -14,13 +14,17 @@
 
 # Generated from http://github.com/guard/guard-rspec
 guard 'rspec', :cli => '--color', :version => 2 do
-  watch(%r{^models/(.+)\.rb$})
   
-  watch(%r{^spec/.+_spec\.rb$})
-  watch(%r{^lib/(.+)\.rb$})             { "spec" } #{ |m| "spec/lib/#{m[1]}_spec.rb" }
+  # Models
+  watch(%r{^models/(.+)\.rb$})          { |m| "spec/models/#{m[1]}_spec.rb" }
+  watch(%r{^spec/models/(.+)\.rb$})     { |m| "spec/models/#{m[1]}.rb" }
   
-  watch(%r{^spec/.+_spec\.rb$})
+  # Library files
   watch(%r{^lib/(.+)\.rb$})             { |m| "spec/lib/#{m[1]}_spec.rb" }
+  watch(%r{^spec/lib/(.+)\.rb$})        { |m| "spec/lib/#{m[1]}.rb" }
+
+  # Others
+  watch(%r{^spec/.+_spec\.rb$})         { "spec" }
   watch(%r{^spec/support/(.+)\.rb$})    { "spec" }
   watch('spec/spec_helper.rb')          { "spec" }
   

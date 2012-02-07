@@ -16,10 +16,10 @@ class Project
   timestamps!
 
   # Relationships
-  one :account
+  one :team
 
   def css_class
-    get_project_css_class(self.name)
+    get_project_css_class(self.id.to_s)
   end
 
   private

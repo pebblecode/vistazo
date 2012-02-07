@@ -6,7 +6,7 @@ feature "Team member" do
     
     # Create new user
     get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:normal_user] }
-    @account_id = Account.first.id
+    @team_id = Team.first.id
   end
   
   after do

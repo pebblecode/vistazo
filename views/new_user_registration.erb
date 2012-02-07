@@ -33,7 +33,7 @@
   
   <div id="main" class="reg-main">
     <div id="reg-name">
-      <p>You have been invited to join <span><%= @account.name %></span> on Vistazo</p>
+      <p>You have been invited to join <span><%= @team.name %></span> on Vistazo</p>
     </div>
     <hr />
     <div id="screenshot"></div>
@@ -41,13 +41,14 @@
       <p id="vistazo-is">Vistazo is a simple, lightweight tool for small teams to see <span>who</span> is working on <span>what</span>, <span>when</span>.</p>
       <br />
       <br />
-      <p id="to-start">To start, just sign in with your Google mail account with the button below:</p>
-      <a href="/auth/google_oauth2/" id="start-btn">Start using Vistazo<span> </span>!</a>
+      <p id="to-start">To start, just sign in with your Google mail account <span><%= @user.email %></span>*, with the button below:</p>
+      <a href="<%= @activation_link %>" id="start-btn">Start using Vistazo<span> </span>!</a>
+      <p class="help">* If the email shown here is not a google account, then sorry! We don't currently support other forms of login. Please contact the person who invited you, and get them to re-invite you through a Google account.</p>
   </div>
   </div>
   <footer>
     <ul>
-      <li><span>Vistazo Alpha</span> 0.5.0 release</li>
+      <li><span>Vistazo Alpha</span> <%= settings.version_string %></li>
       <li>Created by <a href="http://pebblecode.com/">pebble {code}</a></li>
       <!--<li><a href="#">get satisfaction / UX testing link</a></li>--->
     </ul>
@@ -57,7 +58,7 @@
 
 <!--
 <div id="registration-page">
-  <h1>Register for <%= @account.name %></h1>
+  <h1>Register for <%= @team.name %></h1>
   <p>Just sign in using your google account with this link: <a href="/auth/google_oauth2/">Sign in to google</a></p>
 </div>
 -->
