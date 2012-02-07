@@ -74,18 +74,23 @@ $(function () {
       
       // Replace #week-view
       // $(this.el).html("<div id='test'>Testing testing</div>");
+
       console.log("Render team member row");
+      var rowNum = $("#week-view").find(".team-member").length + 1 + 1; // 1 to increment and 1 for header row
+      var rowClass = "row" + rowNum;
+      var oddOrEvenClass = rowNum % 2 == 0 ? "even" : "odd";
       var weekTemplateVars = {
         tmId: "123",
         tmName: "Some dude",
-        oddOrEvenClass: "odd",
-        rowClass: "row1",
+        oddOrEvenClass: oddOrEvenClass,
+        rowClass: rowClass,
         tmProjects: {}
       };
       var week = _.template($("#week-template").html(), weekTemplateVars);
 
       $(this.el).find(".team-member").last().after(week);
 
+      // TODO: Hook up pop ups
       return this;
     }
   });
