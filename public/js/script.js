@@ -80,20 +80,7 @@ $(function () {
         tmName: "Some dude",
         oddOrEvenClass: "odd",
         rowClass: "row1",
-        tmProjects: {
-          1: {
-            id: "111",
-            date: "2012-02-06",
-            project_name: "Some project",
-            css_class: "Some project"
-          },
-          2: {
-            id: "222",
-            date: "2012-02-07",
-            project_name: "Some project 2",
-            css_class: "Some project 2"
-          }
-        }
+        tmProjects: {}
       };
       var week = _.template($("#week-template").html(), weekTemplateVars);
 
