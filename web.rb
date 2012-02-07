@@ -773,7 +773,7 @@ get '/:team_id/team-members/:team_member_id.json' do
     output = { :message => outputMsg }
   end
 
-  output
+  output.to_json
 end
 
 # Add a team member
@@ -835,7 +835,7 @@ post '/:team_id/team-members.json' do
   end
 
   content_type :json
-  output
+  output.to_json
 end
 
 post '/team-member/:team_member_id/edit' do
