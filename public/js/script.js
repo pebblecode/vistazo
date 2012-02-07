@@ -6,8 +6,11 @@ var TEAM_ID = window.location.pathname.split('/')[1]; // From the first path of 
 
 $(function () {
   // Use mustache symbols for variables in templates
+  // To interpolate values from input use: {{ ... }}
+  // To evaluate js use: {% ... %}
   _.templateSettings = {
-    interpolate : /\{\{(.+?)\}\}/g
+    interpolate: /\{\{(.+?)\}\}/g,
+    evaluate: /\{\%(.+?)\%\}/g
   };
 
   // var TeamMember = Backbone.Model.extend({
@@ -77,12 +80,12 @@ $(function () {
         tmName: "Some dude",
         oddOrEvenClass: "odd",
         rowClass: "row1",
-        dayProjects: {
-          0: {
-            "id": "222",
-            "date": "2012-02-06",
-            "project_name": "Some project",
-            "css_class": "Some project"
+        tmProjects: {
+          1: {
+            id: "222",
+            date: "2012-02-06",
+            project_name: "Some project",
+            css_class: "Some project"
           }
         }
       };
