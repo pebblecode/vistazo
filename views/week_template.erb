@@ -1,0 +1,61 @@
+<script type="text/template" id="week-template">
+  <tr class="row-divider">
+    <td colspan="9"><hr/></td>
+  </tr>  <!--the divider-->
+  <tr class="team-member {{ oddOrEvenClass }}" data-team-member-id="{{ tmId }}">
+    <td class="{{ rowClass }} col1" title="{{ tmName }}">
+      <a href="#edit-tm-{{ tmId }}" class="team-member-name">
+        {{ tmName.substring(0, 40) }}
+      </a>
+      
+      <div id="edit-tm-{{ tmId }}" class="edit-team-member-dialog" title="Edit team member name">
+        <form action="/team-member/{{ tmId }}/edit" method="post">
+          <fieldset class="update-object-fieldset" title="Edit team member">
+            <legend>Edit team member</legend>
+            <label for="name">Name</label>
+            <input type="text" name="name" class="new-object-text-box" value="{{ tmName }}"/>
+            <button type="submit" class="submit-button">update</button>
+          </fieldset> <!-- Edit team member -->
+        </form>
+        
+        <h4 class="add-new-user-title">Invite someone (note: needs to be a Google account)</h4>
+        <%= erb :_invite_user_form %>
+        
+        <form action="/team-member/{{ tmId }}/delete" method="post">
+          <fieldset class="delete-object-fieldset" title="Delete team member">
+            <legend>Delete team member</legend>
+            <p class="warning-icon">W</p><p class="warning-msg">All projects associated with '{{ tmName }}' will also be deleted.</p>
+            <button type="submit" class="submit-button">delete</button>
+          </fieldset> <!-- Edit team member -->
+        </form>
+      </div> <!-- .edit-team-member-dialog -->
+    </td>
+    
+    <% prev_cols = 1 %>
+    <% (MONDAY..SUNDAY).each do |work_day| %>
+      <%#
+        data-date: Used for update to know the date moving to, and the date when adding a project
+        data-team-member-id: Used for adding a new project to know the team member to add to
+      %>
+      <td class="box {{ rowClass }} <%= "col#{work_day + prev_cols}" %>" data-date="<%= (@monday_date - 1.day) + work_day.day %>" data-team-member-id="{{ tmId }}">
+        
+        {{ 
+          var dayProjects = tmProjects[work_day];
+          console.log(work_day);
+          console.log(dayProjects);
+          if (dayProjects != null) {
+        }}
+          {{ _.each(dayProjects, function(dayProject) { }}
+            <div class="project" data-team-member-id="{{ tmId }}" data-team-member-project-id="{{ dayProject['id'] }}" data-date="{{ dayProject['date'] }}"> 
+              <div class="handle-container"><div class="handle {{ dayProject['css_class'] }}"></div></div> <p class="project-title" title="{{ dayProject['project_name'] }}">{{ dayProject['project_name'].substring(0, 40) }}</p>
+              <form class="delete-tm-project-form" action="/team-member/{{ tmId }}/project/{{ dayProject['id'] }}/delete" method="post">
+                <button name="delete_project" type="submit" value="true">×</button>
+              </form>
+            </div>
+          {{ }); }}
+        {{ } }}
+      </td>
+    <% end %>
+    <td class="{{ rowClass }} col-last" %>"></td>
+  </tr>
+</script>

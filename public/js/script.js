@@ -71,7 +71,24 @@ $(function () {
       
       // Replace #week-view
       // $(this.el).html("<div id='test'>Testing testing</div>");
-      console.log("Render team member");
+      console.log("Render team member row");
+      var weekTemplateVars = {
+        tmId: "123",
+        tmName: "Some dude",
+        oddOrEvenClass: "odd",
+        rowClass: "row1",
+        dayProjects: {
+          0: {
+            "id": "222",
+            "date": "2012-02-06",
+            "project_name": "Some project",
+            "css_class": "Some project"
+          }
+        }
+      };
+      var week = _.template($("#week-template").html(), weekTemplateVars);
+
+      $(this.el).html(week);
 
       return this;
     }
