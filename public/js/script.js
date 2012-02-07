@@ -54,7 +54,7 @@ $(function () {
       console.log("Pre create");
       
       // This doesn't get sent to the server!!
-      var teamMember = teamMembers.create({name: inputField.val(), test: "ack face"});
+      var teamMember = teamMembers.create({ name: inputField.val() });
 
       console.log("Post create");
 

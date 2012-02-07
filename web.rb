@@ -808,9 +808,8 @@ post '/:team_id/team-members.json' do
   require_team_user!(params[:team_id])
 
   team = Team.find(params[:team_id])
-  
-  # Why are the params not being sent?!!? AFASDFASDF!!
-  logger.info("Add team member (json): #{params}")
+  input = JSON.parse(request.body.read.to_s) 
+  logger.info("name in json: #{input["name"]}")
 
   output = ""
   if team.present?
