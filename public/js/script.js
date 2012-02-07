@@ -97,7 +97,7 @@ $(function () {
       };
       var week = _.template($("#week-template").html(), weekTemplateVars);
 
-      $(this.el).html(week);
+      $(this.el).find(".team-member").last().after(week);
 
       return this;
     }
