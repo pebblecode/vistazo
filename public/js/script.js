@@ -1,5 +1,6 @@
 var TEAM_ID = window.location.pathname.split('/')[1]; // From the first path of url
 
+// Attempt at modularising backbone code
 // VistazoApp = (function($) {
 //   TeamMemberView = Backbone.View.extend({
 //     render: function() {
