@@ -13,15 +13,6 @@ $(function () {
     evaluate: /\{\%(.+?)\%\}/g
   };
 
-  // var TeamMember = Backbone.Model.extend({
-  //   defaults: {
-  //     name : ""
-  //   },
-  //   url : function() {
-  //     return this.id ? "/" + TEAM_ID + '/team-members/' + this.id + ".json" : "/" + TEAM_ID + "/team-members.json";
-  //   } 
-  // });
-
   var TeamMember = Backbone.Model.extend({
     defaults: {
       name : ""
@@ -35,13 +26,6 @@ $(function () {
 
   var teamMembers = new TeamMembers;
 
-  // // How to sync with the server
-  // Backbone.sync = function(method, model) {
-  //   console.log(method + ": " + JSON.stringify(model));
-  //   model.id = 1;
-  // };
-
-
   // TODO prepopulate team members
   // teamMembers.fetch();
 
@@ -54,34 +38,53 @@ $(function () {
       console.log("Pre create");
       
       // This doesn't get sent to the server!!
-      var teamMember = teamMembers.create({ name: inputField.val() });
+      var teamMember = teamMembers.create({ name: inputField.val() }, { 
+          wait: true, 
+          success: function(data) {
+            console.log("successful creation");
 
-      console.log("Post create");
+            console.log(data);
+            var team_member = data["team_member"]
+            console.log(team_member);
 
-      console.log("Saved team member:");
-      console.log(teamMember);
-      console.log(teamMember.name);
+            // Not working? Need to .add?
+            teamMemberView.render(teamMember);
+          },
+          error: function(data) {
+            console.log("error creation");
+          },
+          complete: function(data, status) {
+            var response = JSON.parse(data.responseText);
+            if (status == "success") {
+              console.log(response["team_member"]);
+              updateFlash("success", response["message"]);
+            } else {
+              if (response) {
+                updateFlash("warning", response["message"]);
+              } else {
+                updateFlash("warning", "Something weird happened. Please contact support about it.");
+              }
+            }
+          }
+        });
 
-      // TODO: reset this!!!
-      //inputField.val('');
+      inputField.val('');
 
       return false; // Don't submit form
     }, 
-    render: function() {
+    render: function(teamMember) {
       // var data = teamMembers.map(function(teamMember) { return teamMember.get('name')});
       // var result = data.reduce(function(memo,str) { return memo + str }, '');
       // Render team member
       
       // Replace #week-view
-      // $(this.el).html("<div id='test'>Testing testing</div>");
-
-      console.log("Render team member row");
+      console.log("Render team member row for: " + teamMember.get("name"));
       var rowNum = $("#week-view").find(".team-member").length + 1 + 1; // 1 to increment and 1 for header row
       var rowClass = "row" + rowNum;
       var oddOrEvenClass = rowNum % 2 == 0 ? "even" : "odd";
       var weekTemplateVars = {
-        tmId: "123",
-        tmName: "Some dude",
+        tmId: teamMember.get("id"),
+        tmName: teamMember.get("name"),
         oddOrEvenClass: oddOrEvenClass,
         rowClass: rowClass,
         tmProjects: {}
@@ -95,26 +98,15 @@ $(function () {
     }
   });
 
-  teamMembers.bind('add', function(teamMember) {
-    // console.log("Bind: team name = " + teamMember.get('name'));
-    teamMembers.fetch({
-      success: function() {
-        console.log("Success: teamMemberView");
-        console.log(teamMemberView);
-        teamMemberView.render();
-      },
-      error: function() {
-        console.log("Failed fetch in add");
-      }
-    }
-    );    
-  });
+  // teamMembers.bind('add', function(teamMember) {
+  //   teamMemberView.render(teamMember);   
+  // });
+
+  // teamMembers.bind('sync', function(teamMember) {
+  //   teamMemberView.render(teamMember);
+  // });
 
   var teamMemberView = new TeamMemberView({el: $('#week-view')});
-
-  // setInterval(function(){
-  //   teamMembers.fetch({success: function(){view.render();}});
-  // },1000)
 });
 
 /*
