@@ -792,7 +792,7 @@ post '/:team_id/team-members.json' do
       team_member = TeamMember.create(:name => team_member_name, :team_id => team.id)
       logger.info("Added team_member: #{team_member_name}")
       status HTTP_STATUS_OK
-      output = { :message => "Successfully added '<em>#{team_member.name}</em>'.", :team_member => team_member.to_json }
+      output = { :message => "Successfully added '<em>#{team_member.name}</em>'.", :team_member => team_member }
 
     else
       logger.warn("team_member name not present")

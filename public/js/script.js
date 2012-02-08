@@ -42,13 +42,25 @@ $(function () {
           wait: true, 
           success: function(data) {
             console.log("successful creation");
+            console.log("success data in json: " + JSON.stringify(data));
+            
+            console.log("data: " + data);
+            console.log("data['team_member']: " + data["team_member"]);
+            console.log("data.get: " + data.get("team_member"));
+            console.log("json stringify data.get: " +  JSON.stringify(data.get("team_member")));
 
-            console.log(data);
-            var team_member = data["team_member"]
-            console.log(team_member);
+            var tm = data.get("team_member");
+            console.log("tm: " + tm);
+            console.log("tm stringify: " + JSON.stringify(tm));
 
-            // Not working? Need to .add?
-            teamMemberView.render(teamMember);
+            // Need to add explicitly, as we need to pull the data from the response data
+            // TODO: Check this is true. Maybe it gets added twice
+            // var retVal = teamMembers.add(tm);
+            // console.log("return value: " + JSON.stringify(retVal));
+
+            // Id not working? Need to .add?
+            // teamMemberView.render(retVal);
+            teamMemberView.render(tm);
           },
           error: function(data) {
             console.log("error creation");
@@ -71,15 +83,21 @@ $(function () {
       inputField.val('');
 
       return false; // Don't submit form
-    }, 
+    },
+    // teamMember is a hash of attributes
     render: function(teamMember) {
-      console.log("Render team member row for: " + teamMember.get("name"));
+      // teamMember = JSON.parse(teamMember);
+      console.log("Render team member row for: " + teamMember + "(" + teamMember["id"] + ")");
+      console.log("json string: " + JSON.stringify(teamMember));
+      // console.log("json parse: " + JSON.parse(teamMember));
+      // console.log("json parse id: " + JSON.parse(teamMember)["id"]);
+
       var rowNum = $("#week-view").find(".team-member").length + 1 + 1; // 1 to increment and 1 for header row
       var rowClass = "row" + rowNum;
       var oddOrEvenClass = rowNum % 2 == 0 ? "even" : "odd";
       var weekTemplateVars = {
-        tmId: teamMember.get("id"),
-        tmName: teamMember.get("name"),
+        tmId: teamMember["id"],
+        tmName: teamMember["name"],
         oddOrEvenClass: oddOrEvenClass,
         rowClass: rowClass,
         tmProjects: {}
