@@ -776,32 +776,6 @@ get '/:team_id/team-members/:team_member_id.json' do
   output.to_json
 end
 
-# Add a team member
-# post '/:team_id/team-members.json' do
-#   protected!
-
-#   team = Team.find(params[:team_id])
-
-#   logger.info "Add team member: #{params}"
-
-#   if team.present?
-#     team_member_name = params[:new_team_member_name]
-  
-#     if team_member_name.present?
-#       team_member = TeamMember.create(:name => team_member_name, :team_id => team.id)
-    
-#       flash[:success] = "Successfully added '<em>#{team_member.name}</em>'."
-#     else
-#       flash[:warning] = "Please specify a team member name."
-#     end
-    
-#   else
-#     flash[:warning] = "Invalid team"
-#   end
-
-#   redirect back
-# end
-
 # Add new team member
 post '/:team_id/team-members.json' do
   protected!
@@ -816,7 +790,7 @@ post '/:team_id/team-members.json' do
   
     if team_member_name.present?
       team_member = TeamMember.create(:name => team_member_name, :team_id => team.id)
-      logger.info("team_member: #{team_member}")
+      logger.info("Added team_member: #{team_member_name}")
       status HTTP_STATUS_OK
       output = { :message => "Successfully added '<em>#{team_member.name}</em>'.", :team_member => team_member.to_json }
 
