@@ -73,11 +73,6 @@ $(function () {
       return false; // Don't submit form
     }, 
     render: function(teamMember) {
-      // var data = teamMembers.map(function(teamMember) { return teamMember.get('name')});
-      // var result = data.reduce(function(memo,str) { return memo + str }, '');
-      // Render team member
-      
-      // Replace #week-view
       console.log("Render team member row for: " + teamMember.get("name"));
       var rowNum = $("#week-view").find(".team-member").length + 1 + 1; // 1 to increment and 1 for header row
       var rowClass = "row" + rowNum;
@@ -91,7 +86,7 @@ $(function () {
       };
       var week = _.template($("#week-template").html(), weekTemplateVars);
 
-      $(this.el).find(".team-member").last().after(week);
+      $(this.el).find("tbody").first().append(week);
 
       // TODO: Hook up pop ups
       return this;
