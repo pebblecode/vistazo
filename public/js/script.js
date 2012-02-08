@@ -125,18 +125,30 @@ $(function () {
 
       $(this.el).find("tbody").first().append(week);
 
-      // TODO: Hook up pop ups
+      // Team member edit
+      $( ".edit-team-member-dialog" ).each(function() {
+        // Create dialog with id instead of class
+        $(this).dialog({
+          modal: true,
+          closeOnEscape: true,
+          minWidth: 470,
+          minHeight: 85,
+          autoOpen: false,
+          position: 'top',
+          closeText: "'"
+        })
+      });
+      $("#main .team-member-name").click(function() {
+        var dialog_id = $(this).attr("href");
+        $(dialog_id).dialog('open');
+        overlayCloseOnClick();
+        
+        return false;
+      });
+
       return this;
     }
   });
-
-  // teamMembers.bind('add', function(teamMember) {
-  //   teamMemberView.render(teamMember);   
-  // });
-
-  // teamMembers.bind('sync', function(teamMember) {
-  //   teamMemberView.render(teamMember);
-  // });
 
   var teamMemberView = new TeamMemberView({el: $('#week-view')});
 });
@@ -220,27 +232,6 @@ $(function () {
       return false;
     });
     
-    // Team member edit
-    $( ".edit-team-member-dialog" ).each(function() {
-      // Create dialog with id instead of class
-      $(this).dialog({
-        modal: true,
-        closeOnEscape: true,
-        minWidth: 470,
-        minHeight: 85,
-        autoOpen: false,
-        position: 'top',
-        closeText: "'"
-      })
-    });
-    $("#main .team-member-name").click(function() {
-      var dialog_id = $(this).attr("href");
-      $(dialog_id).dialog('open');
-      overlayCloseOnClick();
-      
-      return false;
-    });
-    
     // Delete project
     $("#new-project-dialog .delete").click(function() {
       $( "#delete-project-dialog" ).dialog('open');
@@ -281,13 +272,6 @@ $(function () {
     // }, function() {
     //   $(this).parent().find(".delete").hide();
     // });
-    
-    // Overlays - close dialogs when clicking (Note: need to run this after dialogs are created)
-    function overlayCloseOnClick() {
-      $(".ui-widget-overlay").live('click', function(){
-         $(".ui-dialog-titlebar-close").trigger('click');
-      });
-    }
   }
   
   // Add user email checking
@@ -518,6 +502,14 @@ $(function () {
   .disableSelection();
   
 });
+
+// Overlays - close dialogs when clicking (Note: need to run this after dialogs are created)
+function overlayCloseOnClick() {
+  $(".ui-widget-overlay").live('click', function(){
+     $(".ui-dialog-titlebar-close").trigger('click');
+  });
+}
+
 
 // Update team member project
 function updateTimetableItem(proj) {
