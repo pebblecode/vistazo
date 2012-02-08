@@ -1,5 +1,23 @@
 var TEAM_ID = window.location.pathname.split('/')[1]; // From the first path of url
 
+// VistazoApp = (function($) {
+//   TeamMemberView = Backbone.View.extend({
+//     render: function() {
+//       $("week-view").html("weeeeeek");
+//     }
+//   });
+
+//   var self = {};
+//   self.start = function() {
+//     new TeamMemberView({el: $('#week-view')}).render();
+//   }
+//   return self;
+// });
+
+// $(function() {
+//   new VistazoApp(jQuery).start();
+// });
+
 /*
  * Backbone.js definitions
  */
