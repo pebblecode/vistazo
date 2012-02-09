@@ -25,18 +25,7 @@
   <script src="/js/jquery.labelify.js" type="text/javascript"></script>
   <script src="/js/underscore-min.js" type="text/javascript"></script>
   <script src="/js/backbone-min.js"></script>
-  <script src="/js/script.js" type="text/javascript"></script>
-  <script>
-    // Initialise all js models
-    $(function () {
-      var teamMemberView = new TeamMemberView({el: $('#week-view')});
-      teamMembers.reset(<%= @team_members.to_json %>);
-      teamMembers.each(function(tm) {
-        teamMemberView.render(tm);
-      });
-    });
-  </script>
-  
+  <script src="/js/script.js" type="text/javascript"></script>  
 </head>
 <%
   body_classes = []
@@ -103,4 +92,13 @@
   </footer>
 
   <%= erb :week_template %>
+
+  <script>
+    // Initialise all js models
+    var teamMemberView = new TeamMemberView({el: $('#week-view')});
+    teamMembers.reset(<%= @team_members.to_json %>);
+    teamMembers.each(function(tm) {
+      teamMemberView.render(tm);
+    });
+  </script>
 </body>
