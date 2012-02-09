@@ -54,6 +54,20 @@ teamMembers.bind('sync', function(teamMember) {
   updateFlash("success", "Successfully added '<em>" + teamMember.get('name') + "</em>'.");
 });
 
+teamMembers.bind('error', function(response) {
+  if (response) {
+    try {
+      respJson = JSON.parse(response.responseText);
+      updateFlash("warning", respJson["message"]);
+    } catch(error) {
+      console.log(error);
+      updateFlashWithError();
+    }
+  } else {
+    updateFlashWithError();
+  }
+});
+
 var TeamMemberView = Backbone.View.extend({
   events: { 
     "click #new-team-member-form .submit-button" : "handleNewTeamMember" 
@@ -588,6 +602,8 @@ function updateFlash(flashType, msg) {
   $("#flash").append(flashMessage).hide(0, function() {
     $(this).fadeIn(1000);
   });
+}
 
-  
+function updateFlashWithError() {
+  updateFlash("warning", "Something weird happened. Please contact support about it.");
 }

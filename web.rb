@@ -782,7 +782,7 @@ post '/:team_id/team-member/add' do
   require_team_user!(params[:team_id])
 
   team = Team.find(params[:team_id])
-
+  
   output = ""
   if team.present?
     request_body = JSON.parse(request.body.read.to_s)
@@ -793,7 +793,6 @@ post '/:team_id/team-member/add' do
       logger.info("Added team_member: #{team_member_name}")
       status HTTP_STATUS_OK
       output = team_member
-
     else
       logger.warn("team_member name not present")
       status HTTP_STATUS_BAD_REQUEST
