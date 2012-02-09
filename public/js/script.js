@@ -83,34 +83,10 @@ var TeamMemberView = Backbone.View.extend({
     tm.save();
     teamMembers.add(tm);
 
-    // // This doesn't get sent to the server!!
-    // var teamMember = teamMembers.create({ name: inputField.val() }, { 
-    //     wait: true, 
-    //     success: function(data) {
-    //     },
-    //     error: function(data) {
-    //       console.log("error creation");
-    //     },
-    //     complete: function(data, status) {
-    //       var response = JSON.parse(data.responseText);
-    //       if (status == "success") {
-    //         console.log(response["team_member"]);
-    //         updateFlash("success", response["message"]);
-    //       } else {
-    //         if (response) {
-    //           updateFlash("warning", response["message"]);
-    //         } else {
-    //           updateFlash("warning", "Something weird happened. Please contact support about it.");
-    //         }
-    //       }
-    //     }
-    //   });
-
     inputField.val('');
 
     return false; // Don't submit form
   },
-  // teamMember is a hash of attributes
   render: function(teamMember) {
     console.log("Render team member row for: " + JSON.stringify(teamMember) + " (" + teamMember.get("id") + "): " + teamMember.get("name"));
     
