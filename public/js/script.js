@@ -98,7 +98,7 @@ var TeamMemberView = Backbone.View.extend({
       tmName: teamMember.get("name"),
       oddOrEvenClass: oddOrEvenClass,
       rowClass: rowClass,
-      tmProjects: {}
+      tmProjects: teamMember.get("timetable_items")
     };
     var week = _.template($("#week-template").html(), weekTemplateVars);
     

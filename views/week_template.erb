@@ -38,17 +38,19 @@
         data-date: Used for update to know the date moving to, and the date when adding a project
         data-team-member-id: Used for adding a new project to know the team member to add to
       %>
-      <td class="box {{ rowClass }} <%= "col#{work_day + prev_cols}" %>" data-date="<%= (@monday_date - 1.day) + work_day.day %>" data-team-member-id="{{ tmId }}">
+      <% date = (@monday_date - 1.day) + work_day.day %>
+      <td class="box {{ rowClass }} <%= "col#{work_day + prev_cols}" %>" data-date="<%= date %>" data-team-member-id="{{ tmId }}">
         
-        {% var dayProject = tmProjects[<%= work_day %>]; %}
-        {% if (dayProject != null) { %}          
-          <div class="project" data-team-member-id="{{ tmId }}" data-team-member-project-id="{{ dayProject['id'] }}" data-date="{{ dayProject['date'] }}"> 
-            <div class="handle-container"><div class="handle {{ dayProject['css_class'] }}"></div></div> <p class="project-title" title="{{ dayProject['project_name'] }}">{{ dayProject['project_name'].substring(0, 40) }}</p>
-            <form class="delete-tm-project-form" action="/team-member/{{ tmId }}/project/{{ dayProject['id'] }}/delete" method="post">
+        {% var dayProjects = _.select(tmProjects, function(proj) {proj["date"] == "<%= date %>"; }) %}
+        {{ console.log(dayProjects) }}
+        {% _.each(dayProjects, function(proj) { %}
+          <div class="project" data-team-member-id="{{ tmId }}" data-team-member-project-id="{{ proj['id'] }}" data-date="<%= date %>"> 
+            <div class="handle-container"><div class="handle {{ tmId }}"></div></div> <p class="project-title" title="{{ proj['project_name'] }}">{{ proj['project_name'].substring(0, 40) }}</p>
+            <form class="delete-tm-project-form" action="/team-member/{{ tmId }}/project/{{ proj['id'] }}/delete" method="post">
               <button name="delete_project" type="submit" value="true">×</button>
             </form>
           </div>
-        {% } %}
+        {% }); %}
       </td>
     <% end %>
     <td class="{{ rowClass }} col-last" %></td>
