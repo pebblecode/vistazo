@@ -23,134 +23,126 @@ var TEAM_ID = window.location.pathname.split('/')[1]; // From the first path of 
  * Backbone.js definitions
  */
 
-$(function () {
-  // Use mustache symbols for variables in templates
-  // To interpolate values from input use: {{ ... }}
-  // To evaluate js use: {% ... %}
-  _.templateSettings = {
-    interpolate: /\{\{(.+?)\}\}/g,
-    evaluate: /\{\%(.+?)\%\}/g
-  };
+// Use mustache symbols for variables in templates
+// To interpolate values from input use: {{ ... }}
+// To evaluate js use: {% ... %}
+_.templateSettings = {
+  interpolate: /\{\{(.+?)\}\}/g,
+  evaluate: /\{\%(.+?)\%\}/g
+};
 
-  var TeamMember = Backbone.Model.extend({
-    defaults: {
-      name : ""
-    }
-  });
+var TeamMember = Backbone.Model.extend({
+  defaults: {
+    name : ""
+  }
+});
 
-  var TeamMembers = Backbone.Collection.extend({
-    model: TeamMember,
-    url: "/" + TEAM_ID + "/team-members.json"
-  });
+var TeamMembers = Backbone.Collection.extend({
+  model: TeamMember,
+  url: "/" + TEAM_ID + "/team-members.json"
+});
 
-  var teamMembers = new TeamMembers;
+var teamMembers = new TeamMembers;
 
-  // TODO prepopulate team members
-  // teamMembers.fetch();
+// TODO prepopulate team members
+// teamMembers.fetch();
 
-  var TeamMemberView = Backbone.View.extend({
-    events: { 
-      "click #new-team-member-form .submit-button" : "handleNewTeamMember" 
-    },
-    handleNewTeamMember: function(data) {
-      var inputField = $('input[name=new_team_member_name]');
-      console.log("Pre create");
-      
-      // This doesn't get sent to the server!!
-      var teamMember = teamMembers.create({ name: inputField.val() }, { 
-          wait: true, 
-          success: function(data) {
-            console.log("successful creation");
-            console.log("success data in json: " + JSON.stringify(data));
-            
-            console.log("data: " + data);
-            console.log("data['team_member']: " + data["team_member"]);
-            console.log("data.get: " + data.get("team_member"));
-            console.log("json stringify data.get: " +  JSON.stringify(data.get("team_member")));
+var TeamMemberView = Backbone.View.extend({
+  events: { 
+    "click #new-team-member-form .submit-button" : "handleNewTeamMember" 
+  },
+  handleNewTeamMember: function(data) {
+    var inputField = $('input[name=new_team_member_name]');
+    console.log("Pre create");
+    
+    // This doesn't get sent to the server!!
+    var teamMember = teamMembers.create({ name: inputField.val() }, { 
+        wait: true, 
+        success: function(data) {
+          console.log("successful creation");
+          console.log("success data in json: " + JSON.stringify(data));
+          
+          console.log("data: " + data);
+          console.log("data['team_member']: " + data["team_member"]);
+          console.log("data.get: " + data.get("team_member"));
+          console.log("json stringify data.get: " +  JSON.stringify(data.get("team_member")));
 
-            var tm = data.get("team_member");
-            console.log("tm: " + tm);
-            console.log("tm stringify: " + JSON.stringify(tm));
+          var tm = data.get("team_member");
+          console.log("tm: " + tm);
+          console.log("tm stringify: " + JSON.stringify(tm));
 
-            // Need to add explicitly, as we need to pull the data from the response data
-            // TODO: Check this is true. Maybe it gets added twice
-            // var retVal = teamMembers.add(tm);
-            // console.log("return value: " + JSON.stringify(retVal));
+          // Need to add explicitly, as we need to pull the data from the response data
+          // TODO: Check this is true. Maybe it gets added twice
+          // var retVal = teamMembers.add(tm);
+          // console.log("return value: " + JSON.stringify(retVal));
 
-            // Id not working? Need to .add?
-            // teamMemberView.render(retVal);
-            teamMemberView.render(tm);
-          },
-          error: function(data) {
-            console.log("error creation");
-          },
-          complete: function(data, status) {
-            var response = JSON.parse(data.responseText);
-            if (status == "success") {
-              console.log(response["team_member"]);
-              updateFlash("success", response["message"]);
+          // Id not working? Need to .add?
+          // teamMemberView.render(retVal);
+          teamMemberView.render(tm);
+        },
+        error: function(data) {
+          console.log("error creation");
+        },
+        complete: function(data, status) {
+          var response = JSON.parse(data.responseText);
+          if (status == "success") {
+            console.log(response["team_member"]);
+            updateFlash("success", response["message"]);
+          } else {
+            if (response) {
+              updateFlash("warning", response["message"]);
             } else {
-              if (response) {
-                updateFlash("warning", response["message"]);
-              } else {
-                updateFlash("warning", "Something weird happened. Please contact support about it.");
-              }
+              updateFlash("warning", "Something weird happened. Please contact support about it.");
             }
           }
-        });
-
-      inputField.val('');
-
-      return false; // Don't submit form
-    },
-    // teamMember is a hash of attributes
-    render: function(teamMember) {
-      // teamMember = JSON.parse(teamMember);
-      console.log("Render team member row for: " + teamMember + "(" + teamMember["id"] + ")");
-      console.log("json string: " + JSON.stringify(teamMember));
-      // console.log("json parse: " + JSON.parse(teamMember));
-      // console.log("json parse id: " + JSON.parse(teamMember)["id"]);
-
-      var rowNum = $("#week-view").find(".team-member").length + 1 + 1; // 1 to increment and 1 for header row
-      var rowClass = "row" + rowNum;
-      var oddOrEvenClass = rowNum % 2 == 0 ? "even" : "odd";
-      var weekTemplateVars = {
-        tmId: teamMember["id"],
-        tmName: teamMember["name"],
-        oddOrEvenClass: oddOrEvenClass,
-        rowClass: rowClass,
-        tmProjects: {}
-      };
-      var week = _.template($("#week-template").html(), weekTemplateVars);
-
-      $(this.el).find("tbody").first().append(week);
-
-      // Team member edit
-      $( ".edit-team-member-dialog" ).each(function() {
-        // Create dialog with id instead of class
-        $(this).dialog({
-          modal: true,
-          closeOnEscape: true,
-          minWidth: 470,
-          minHeight: 85,
-          autoOpen: false,
-          position: 'top',
-          closeText: "'"
-        })
-      });
-      $("#main .team-member-name").click(function() {
-        var dialog_id = $(this).attr("href");
-        $(dialog_id).dialog('open');
-        overlayCloseOnClick();
-        
-        return false;
+        }
       });
 
-      return this;
-    }
-  });
+    inputField.val('');
 
-  var teamMemberView = new TeamMemberView({el: $('#week-view')});
+    return false; // Don't submit form
+  },
+  // teamMember is a hash of attributes
+  render: function(teamMember) {
+    console.log("Render team member row for: " + JSON.stringify(teamMember) + " (" + teamMember.get("id") + "): " + teamMember.get("name"));
+    
+    var rowNum = $("#week-view").find(".team-member").length + 1 + 1; // 1 to increment and 1 for header row
+    var rowClass = "row" + rowNum;
+    var oddOrEvenClass = rowNum % 2 == 0 ? "even" : "odd";
+    var weekTemplateVars = {
+      tmId: teamMember.get("id"),
+      tmName: teamMember.get("name"),
+      oddOrEvenClass: oddOrEvenClass,
+      rowClass: rowClass,
+      tmProjects: {}
+    };
+    var week = _.template($("#week-template").html(), weekTemplateVars);
+
+    $(this.el).find("#week-view-content").first().append(week);
+
+    // Team member edit
+    $( ".edit-team-member-dialog" ).each(function() {
+      // Create dialog with id instead of class
+      $(this).dialog({
+        modal: true,
+        closeOnEscape: true,
+        minWidth: 470,
+        minHeight: 85,
+        autoOpen: false,
+        position: 'top',
+        closeText: "'"
+      })
+    });
+    $("#main .team-member-name").click(function() {
+      var dialog_id = $(this).attr("href");
+      $(dialog_id).dialog('open');
+      overlayCloseOnClick();
+      
+      return false;
+    });
+
+    return this;
+  }
 });
 
 /*

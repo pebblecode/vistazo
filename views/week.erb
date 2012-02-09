@@ -65,79 +65,8 @@
     </tr>
   </thead>
   
-  <tbody>
-    <% @team_members.each_with_index do |tm, tm_index| %>
-      <% prev_rows = 1 %>
-      <% row_num = (tm_index + 1) + prev_rows %>
-      <% row_class = "row#{row_num}" %>
-      <%#
-        data-team-member-id: Used for update to know the team member moving to
-      %>
-      <tr class="team-member <%= row_num.odd? ? "odd" : "even" %>" data-team-member-id="<%= tm.id %>">
-        <td class="<%= row_class %> col1" title="<%= h tm.name %>">
-          <a href="#edit-tm-<%= tm.id %>" class="team-member-name">
-            <%= h truncate(tm.name, :length => 40) %>
-          </a>
-          
-          <div id="edit-tm-<%= tm.id %>" class="edit-team-member-dialog" title="Edit team member name">
-            <form action="/team-member/<%= tm.id %>/edit" method="post">
-              <fieldset class="update-object-fieldset" title="Edit team member">
-                <legend>Edit team member</legend>
-                <label for="name">Name</label>
-                <input type="text" name="name" class="new-object-text-box" value="<%= tm.name %>"/>
-                <button type="submit" class="submit-button">update</button>
-              </fieldset> <!-- Edit team member -->
-            </form>
-            
-            <h4 class="add-new-user-title">Invite someone (note: needs to be a Google account)</h4>
-            <%= erb :_invite_user_form %>
-            
-            <form action="/team-member/<%= tm.id %>/delete" method="post">
-              <fieldset class="delete-object-fieldset" title="Delete team member">
-                <legend>Delete team member</legend>
-                <p class="warning-icon">W</p><p class="warning-msg">All projects associated with '<%= tm.name %>' will also be deleted.</p>
-                <button type="submit" class="submit-button">delete</button>
-              </fieldset> <!-- Edit team member -->
-            </form>
-          </div> <!-- .edit-team-member-dialog -->
-        </td>
-        
-        <% prev_cols = 1 %>
-        <% (MONDAY..SUNDAY).each do |work_day| %>
-          <%#
-            data-date: Used for update to know the date moving to, and the date when adding a project
-            data-team-member-id: Used for adding a new project to know the team member to add to
-          %>
-          <td class="box <%= "#{row_class} col#{work_day + prev_cols}" %>" data-date="<%= (@monday_date - 1.day) + work_day.day %>" data-team-member-id="<%= tm.id %>">
-            <% tm_projects = @timetable_items_on_day[tm][work_day] %>
-            <% for tm_project in tm_projects %>
-              <%#
-                data-team-member-id: Used for update to know the team member moving from
-                data-team-member-project-id: Used for update to know the team member project
-                data-date: Used for update to know the date of the team member project
-              %>
-              <div class="project" data-team-member-id="<%= tm.id %>" data-team-member-project-id="<%= tm_project.id %>" data-date="<%= tm_project.date %>"> 
-                <div class="handle-container"><div class="handle <%= tm_project.css_class %>"></div></div> <p class="project-title" title="<%= h tm_project.project_name %>"><%= h truncate(tm_project.project_name, :length => 40) %></p>
-                <form class="delete-tm-project-form" action="/team-member/<%= tm.id %>/project/<%= tm_project.id %>/delete" method="post">
-                  <button name="delete_project" type="submit" value="true">×</button>
-                </form>
-              </div>
-            <% end %>
-            <% if (work_day == THURSDAY) and (tm_index == 0) %>
-              <div id="help-project-container">
-                <div id="help-project"></div>
-              </div>
-            <% end %>
-          </td>
-        <% end %>
-        <td class="<%= "#{row_class} col-last" %>"></td>
-      </tr>
-      <% unless tm == @team_members.last %>
-        <tr class="row-divider">
-          <td colspan="9"><hr/></td>
-        </tr>  <!--the divider-->
-      <% end %>
-    <% end %>
+  <tbody id="week-view-content">
+    <%# Filled in using js from backbone TeamMemberView %>
   </tbody>
   
   <tr>
