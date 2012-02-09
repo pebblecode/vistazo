@@ -106,7 +106,7 @@ var TeamMemberView = Backbone.View.extend({
   render: function(teamMember) {
     console.log("Render team member row for: " + JSON.stringify(teamMember) + " (" + teamMember.get("id") + "): " + teamMember.get("name"));
     
-    var rowNum = $("#week-view").find(".team-member").length + 1 + 1; // 1 to increment and 1 for header row
+    var rowNum = $(this.el).find(".team-member").length + 1 + 1; // 1 to increment and 1 for header row
     var rowClass = "row" + rowNum;
     var oddOrEvenClass = rowNum % 2 == 0 ? "even" : "odd";
     var weekTemplateVars = {
@@ -117,8 +117,8 @@ var TeamMemberView = Backbone.View.extend({
       tmProjects: {}
     };
     var week = _.template($("#week-template").html(), weekTemplateVars);
-
-    $(this.el).find("#week-view-content").first().append(week);
+    
+    $(this.el).find('#week-view-content').append(week);
 
     // Team member edit
     $( ".edit-team-member-dialog" ).each(function() {
@@ -142,7 +142,7 @@ var TeamMemberView = Backbone.View.extend({
     });
 
     return this;
-  }
+  }  
 });
 
 /*
