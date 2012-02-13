@@ -46,11 +46,7 @@ var TeamMembers = Backbone.Collection.extend({
 var teamMembers = new TeamMembers;
 
 teamMembers.bind('sync', function(teamMember) {
-  console.log("successful creation");
-  console.log("teamMember: " + JSON.stringify(teamMember));
-
   teamMemberView.render(teamMember);
-
   updateFlash("success", "Successfully added '<em>" + teamMember.get('name') + "</em>'.");
 });
 
@@ -74,7 +70,6 @@ var TeamMemberView = Backbone.View.extend({
   },
   handleNewTeamMember: function(data) {
     var inputField = $('input[name=new_team_member_name]');
-    console.log("Pre create");
     
     var tm = new TeamMember({
       name: inputField.val()
@@ -88,7 +83,7 @@ var TeamMemberView = Backbone.View.extend({
     return false; // Don't submit form
   },
   render: function(teamMember) {
-    console.log("Render team member row for: " + JSON.stringify(teamMember) + " (" + teamMember.get("id") + "): " + teamMember.get("name"));
+    // console.log("Render team member row for: " + JSON.stringify(teamMember) + " (" + teamMember.get("id") + "): " + teamMember.get("name"));
     
     var rowNum = $(this.el).find(".team-member").length + 1 + 1; // 1 to increment and 1 for header row
     var rowClass = "row" + rowNum;
