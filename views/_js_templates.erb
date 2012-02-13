@@ -1,4 +1,30 @@
-<%# Week template for backbone.js view %>
+<%# Javascript templates for backbone.js views %>
+
+<script type="text/template" id="project-template">
+  <div class='project' data-team-member-id='{{ tmId }}' data-team-member-project-id='{{ tmProjId }}' data-date='{{ projDate }}'>
+    <div class='handle-container'>
+      <div class='{{ projHandleCssClass }}'></div>
+    </div>
+    <p class='project-title' title='{{ projName }}'>{{ projName.substring(0, 40) }}</p>
+    <form class='delete-tm-project-form' action='/team-member/{{ tmId }}/project/{{ tmProjId }}/delete' method='post'>
+      <button name='delete_project' type='submit' value='true'>×</button>
+    </form>
+  </div>
+</script>
+
+
+<script type="text/template" id="delete-project-dialog-template">
+  <div id='delete-project-dialog' title='Delete &ldquo;{{ projectName }}&rdquo; project'>
+    <p class='warning-icon'>W</p><p class='warning-msg'>All items added to the weekly timetable will also be deleted.</p>
+    <form method='post' action='/{{ teamId }}/project/{{ projectId }}/delete'>
+      <fieldset class='delete-object-fieldset' title='Delete project'>
+      <button class='delete' value='delete' name='delete' type='submit'>delete</button>
+      </fieldset>
+    </form>
+  </div>
+</script>
+
+
 <script type="text/template" id="week-template">
   <tr class="row-divider">
     <td colspan="9"><hr/></td>

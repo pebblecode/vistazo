@@ -178,15 +178,7 @@ $(function () {
       overlayCloseOnClick();
 
       // Fill in form
-      var deleteProjectDialog = _.template("\
-      <div id='delete-project-dialog' title='Delete &ldquo;{{ projectName }}&rdquo; project'>\
-        <p class='warning-icon'>W</p><p class='warning-msg'>All items added to the weekly timetable will also be deleted.</p>\
-        <form method='post' action='/{{ teamId }}/project/{{ projectId }}/delete'>\
-          <fieldset class='delete-object-fieldset' title='Delete project'>\
-            <button class='delete' value='delete' name='delete' type='submit'>delete</button>\
-          </fieldset>\
-        </form>\
-      </div>");
+      var deleteProjectDialog = _.template($("#delete-project-dialog-template").html());
 
       $("#main").append(deleteProjectDialog({
         teamId: TEAM_ID, 
@@ -334,9 +326,7 @@ $(function () {
       var projHandleCssClass = $(this).parent().find(".handle").attr("class");
       
       // Add project object
-      var projectTemplate = _.template(
-        "<div class='project' data-team-member-id='{{ tmId }}' data-team-member-project-id='{{ tmProjId }}' data-date='{{ projDate }}'><div class='handle-container'><div class='{{ projHandleCssClass }}'></div></div><p class='project-title' title='{{ projName }}'>{{ projName.substring(0, 40) }}</p><form class='delete-tm-project-form' action='/team-member/{{ tmId }}/project/{{ tmProjId }}/delete' method='post'><button name='delete_project' type='submit' value='true'>×</button></form></div>"
-      );
+      var projectTemplate = _.template($("#project-template").html());
       var defaultProject = projectTemplate({
         tmId: teamMemberId,
         tmProjId: '',
