@@ -123,18 +123,6 @@ $(function () {
     }
   }
   
-  // Hide project add button on .project hover
-  {
-    $(".project").hover(
-      function() {
-        $(this).parents(".box").addClass("remove-add-img")
-      },
-      function() {
-        $(this).parents(".box").removeClass("remove-add-img")
-      }
-    );
-  }
-  
   // Declare dialogs (but don't open by default)
   {
     // Team name
@@ -248,24 +236,6 @@ $(function () {
     });
   }
   
-  // Team member project delete button
-  {
-    // Only show on hover
-    $(".delete-tm-project-form button").hide();
-    $(".project").hover(function() {
-      $(this).find(".delete-tm-project-form button").fadeIn(200);
-    },
-    function() {
-      $(this).find(".delete-tm-project-form button").fadeOut(100);
-    });
-    
-    // AJAX-ify delete
-    $(".delete-tm-project-form button").click(function(event) {
-      deleteTimetableItem($(this).first().parents(".project").first());
-      return false;
-    });
-  }
-  
   // Labelify new object text boxes
   $(".new-object-text-box").labelify({ labelledClass: "new-object-text-box-label" });
   
@@ -293,17 +263,12 @@ $(function () {
     $("#new-project-dialog").click(function(event) {
       event.stopPropagation(); // Prevent clicking on form from hiding the form
     });
-    
-    $(".project").click(function(event) {
-      $("#new-project-dialog").hide();
-      event.stopPropagation(); // Prevent opening new project dialog
-    });
 
     $("#new-project-dialog .close").click(function() {
       $("#new-project-dialog").hide();
       return false;
     });
-    
+
     // Enter key for new project submits the form
     $("#new-project-dialog .new-object-text-box").bind("keydown", function(event) {
        // track enter key
@@ -315,8 +280,8 @@ $(function () {
        } else  {
           return true;
        }
-    }); // end of function
-    
+    }); // $("#new-project-dialog .new-object-text-box").bind
+
     // AJAX-ify add existing project
     $("#new-project-dialog .listing li button").click(function() {
       var teamMemberId = $(this).parents('#new-tm-project-form').find("input[name=team_member_id]").val();
@@ -353,6 +318,7 @@ $(function () {
             projName: projName
           });
           $(proj).replaceWith(submittedProj); // NOTE: proj is no longer available
+          setupProjects();
         })
         .error(function(response) {
           $(proj).remove();
@@ -374,10 +340,12 @@ $(function () {
       $("#new-project-dialog").hide();
       
       return false;
-    });
-    
+    }); // $("#new-project-dialog .listing li button").click
+
     // AJAX-ify add new project
-    
+    // TODO
+
+    setupProjects();
   }
 });
 
@@ -386,6 +354,43 @@ function overlayCloseOnClick() {
   $(".ui-widget-overlay").live('click', function(){
      $(".ui-dialog-titlebar-close").trigger('click');
   });
+}
+
+function setupProjects() {
+  $(".project").click(function(event) {
+  $("#new-project-dialog").hide();
+    event.stopPropagation(); // Prevent opening new project dialog
+  });
+
+  // Team member project delete button
+  // Only show on hover
+  $(".project .delete-tm-project-form button").hide();
+  $(".project").hover(
+    function() {
+      $(this).find(".delete-tm-project-form button").fadeIn(200);
+    },
+    function() {
+      $(this).find(".delete-tm-project-form button").fadeOut(100);
+    }
+  );
+  
+  // AJAX-ify delete
+  $(".project .delete-tm-project-form button").click(
+    function(event) {
+      deleteTimetableItem($(this).first().parents(".project").first());
+      return false;
+    }
+  ); // $(".project .delete-tm-project-form button").click
+
+  // Hide project add button on .project hover
+  $(".project").hover(
+    function() {
+      $(this).parents(".box").addClass("remove-add-img")
+    },
+    function() {
+      $(this).parents(".box").removeClass("remove-add-img")
+    }
+  );
 }
 
 function setupNewProjectDialog() {
