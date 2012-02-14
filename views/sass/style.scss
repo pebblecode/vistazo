@@ -547,14 +547,14 @@ textarea:focus, input:focus{
       padding-bottom: 20px;
       &.even {
         background: transparent url('/img/hatch1.gif') repeat 0 0;
-        .col7, .col8, .col-last{
+        .col7, .col8 {
           background: transparent url('/img/hatch1-desat.gif') repeat 0 0;
         }
       }
 
       &.odd {
         background: transparent url('/img/hatch2.gif') repeat 0 0;
-        .col7, .col8, .col-last{
+        .col7, .col8 {
           // Can't get hatch2 to work with transparent background for some reason
 /*           background: white url('/img/hatch2-desat.gif') repeat 0 0;*/
           background: transparent url('/img/hatch2-desat.gif') repeat 0 0;
