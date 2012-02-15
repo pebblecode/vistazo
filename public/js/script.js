@@ -106,60 +106,113 @@ var TeamMemberView = Backbone.View.extend({
   }  
 });
 
-$(function () {
-  
-  // Flash the flash message
-  if ($("#flash").length > 0) {
-    $("#flash").hide(0, function() {
-      $(this).fadeIn(1000);
-    });
-  }
-  
-  // First signed on
-  {
-    // Show help text
-    if ($("body").hasClass("first-signon")) {
-      $("body").addClass("help-on");
+// var Project = Backbone.Model.extend({
+//   defaults: {
+//     name: "",
+//     hex_colour: ""
+//   },
+//   url: "/" + TEAM_ID + "/team-member/:team_member_id/project/add.json"
+// });
+
+// var Projects = Backbone.Collection.extend({
+//   model: Project,
+//   url: "/" + TEAM_ID + "/team-member-projects"
+// });
+
+// var projects = new Projects;
+
+// projects.bind('sync', function(teamMember) {
+//   teamMemberView.render(teamMember);
+//   updateFlash("success", "Successfully added '<em>" + teamMember.get('name') + "</em>'.");
+// });
+
+// projects.bind('error', function(response) {
+//   if (response) {
+//     try {
+//       respJson = JSON.parse(response.responseText);
+//       updateFlash("warning", respJson["message"]);
+//     } catch(error) {
+//       console.log(error);
+//       updateFlashWithError();
+//     }
+//   } else {
+//     updateFlashWithError();
+//   }
+// });
+
+var ProjectDialogView = Backbone.View.extend({
+  events: {
+    "click .box": "openProjectDialog"
+  },
+  openProjectDialog: function(event) {
+    var box = event.target;
+    this.render(box);
+
+    $("#new-project-dialog form input[name=date]").val($(box).attr("data-date"));
+    $("#new-project-dialog form input[name=team_member_id]").val($(box).attr("data-team-member-id"));
+    
+    // If clicked on weekend add class for weekend, and place dialog on the left
+    // Otherwise, place dialog on the right
+    $( "#new-project-dialog" ).removeClass("is-weekend");
+    var new_project_dialog_top_offset = -46;
+    var new_project_dialog_left_offset = 0;
+    if ($(box).hasClass("col7") || $(box).hasClass("col8")) {
+      $( "#new-project-dialog" ).addClass("is-weekend");
+      new_project_dialog_left_offset = -220;
+    } else {
+      new_project_dialog_left_offset = 20;
     }
-  }
-  
-  // Declare dialogs (but don't open by default)
-  {
-    // Team name
-    $("#team-name-dialog").dialog({
-      modal: true,
-      closeOnEscape: true,
-      minWidth: 470,
-      minHeight: 65,
-      autoOpen: false,
-      position: 'top',
-      closeText: "'"
-    });
-    $("#team-name h2").click(function(event) {
-      $("#team-name-dialog").dialog('open');
-      $("#team-name #team-name-form input:first").focus();
-      overlayCloseOnClick();
-      
-      return false;
+
+    $("#new-project-dialog").show().offset({ top: event.pageY + new_project_dialog_top_offset, left: event.pageX + new_project_dialog_left_offset });
+    $("#new-project-dialog").show();
+    
+    // Focus on new project text box
+    $("#new-project-dialog .new-object-text-box").focus();
+
+    event.stopPropagation(); // Prevent click from hiding form
+    return false;
+  }, // openProjectDialog
+
+  render: function(box) {
+    if ($("#new-project-dialog").length <= 0) {
+      var newProjectDialog = _.template($("#new-project-dialog-template").html());
+      $(this.el).append(newProjectDialog());
+
+      this.setupNewProjectDialog(box);
+    }
+
+    return this;
+  },
+
+  setupNewProjectDialog: function(box) {
+    // Hide if clicking outside #new-project-dialog
+    $('html').click(function() {
+      $("#new-project-dialog").hide();
     });
     
-    // User settings
-    $( "#team-users-dialog" ).dialog({
-      modal: true,
-      closeOnEscape: true,
-      minWidth: 480,
-      position: 'top',
-      autoOpen: false,
-      closeText: "'"
+    $("#new-project-dialog").click(function(event) {
+      event.stopPropagation(); // Prevent clicking on form from hiding the form
     });
-    $("#top-nav .action-bar .user-settings").click(function() {
-      $( "#team-users-dialog" ).dialog('open');
-      overlayCloseOnClick();
-      
+
+    $("#new-project-dialog .close").click(function() {
+      $("#new-project-dialog").hide();
       return false;
     });
-    
-    // Delete project
+
+    // Enter key for new project submits the form
+    $("#new-project-dialog .new-object-text-box").bind("keydown", function(event) {
+        // track enter key
+        var keycode = (event.keyCode ? event.keyCode : (event.which ? event.which : event.charCode));
+        if (keycode == 13) { // keycode for enter key
+          // force the 'Enter Key' to implicitly click the Update button
+          $("#new-project-dialog .submit-button").click();
+          return false;
+        } else  {
+          return true;
+        }
+    }); // $("#new-project-dialog .new-object-text-box").bind
+
+    // Delete project link
     $("#new-project-dialog .delete").click(function() {
       $( "#delete-project-dialog" ).dialog('open');
       $("#new-project-dialog").hide();
@@ -184,103 +237,7 @@ $(function () {
       });
       
       return false;
-    });
-    // Hide delete buttons by default and only show on 
-    // $("#new-project-dialog .listing li button").hover(function() {
-    //   $(this).parent().find(".delete").show();
-    // }, function() {
-    //   $(this).parent().find(".delete").hide();
-    // });
-  }
-  
-  // Add user email checking
-  {
-    $("#invite-user-form").submit(function() {
-      var error_form_classname = "errors-on-form";
-      var error_field_msg_classname = "error-field-msg";
-      var email = $(this).find(".new-object-text-box").val();
-      
-      // Regex from http://www.regular-expressions.info/email.html
-      var valid_email = email.match(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/i);
-      if (!valid_email) {
-        // Set invalid class and append message
-        $(this).addClass(error_form_classname);
-        if ($(this).find("." + error_field_msg_classname).length <= 0) {
-          $(this).append("<p class='" + error_field_msg_classname + "'>Invalid email address</p>")
-        }
-        
-        // Flash the error message
-        $(this).find("." + error_field_msg_classname).hide(0, function() {
-          $(this).fadeIn(500);
-        });
-        
-        // Don't send the form
-        return false;
-      } else {
-        $(this).find("." + error_field_msg_classname).remove();
-        $(this).removeClass(error_form_classname);
-      }
-    });
-  }
-  
-  // Team member
-  {
-    // Hijack submit button if nothing is in textbox (either empty or labelified value)
-    $("#new-team-member-form .submit-button").click(function() {
-      if (($("#new-team-member-form .new-object-text-box").val() == "") ||
-           $("#new-team-member-form .new-object-text-box").val() == $("#new-team-member-form .new-object-text-box").attr("title")) {
-
-        $("#new-team-member-form .new-object-text-box").focus();
-        return false;
-      }
-    });
-  }
-  
-  // Labelify new object text boxes
-  $(".new-object-text-box").labelify({ labelledClass: "new-object-text-box-label" });
-  
-  // Add help body class
-  $("#top-nav .action-bar .help").click(function() {
-    $("body").toggleClass("help-on");
-    
-    return false;
-  });
-  
-  //remove help body class
-  $("#overlay-bg, #help-nav, #help-week, #help-new, #help-close, #help-project, help-team").click(function() {
-    $("body").removeClass("help-on");
-  });
-  
-  // Project dialog
-  {
-    $("#new-project-dialog").hide(); // Hide by default
-    
-    // Hide if clicking outside #new-project-dialog
-    $('html').click(function() {
-      $("#new-project-dialog").hide();
-    });
-    
-    $("#new-project-dialog").click(function(event) {
-      event.stopPropagation(); // Prevent clicking on form from hiding the form
-    });
-
-    $("#new-project-dialog .close").click(function() {
-      $("#new-project-dialog").hide();
-      return false;
-    });
-
-    // Enter key for new project submits the form
-    $("#new-project-dialog .new-object-text-box").bind("keydown", function(event) {
-       // track enter key
-       var keycode = (event.keyCode ? event.keyCode : (event.which ? event.which : event.charCode));
-       if (keycode == 13) { // keycode for enter key
-          // force the 'Enter Key' to implicitly click the Update button
-          $("#new-project-dialog .submit-button").click();
-          return false;
-       } else  {
-          return true;
-       }
-    }); // $("#new-project-dialog .new-object-text-box").bind
+    }); // $("#new-project-dialog .delete")
 
     // AJAX-ify add existing project
     $("#new-project-dialog .listing li button").click(function() {
@@ -346,7 +303,128 @@ $(function () {
     // TODO
 
     setupProjects();
+  } // setupNewProjectDialog
+});
+
+
+$(function () {
+  
+  // Flash the flash message
+  if ($("#flash").length > 0) {
+    $("#flash").hide(0, function() {
+      $(this).fadeIn(1000);
+    });
   }
+  
+  // First signed on
+  {
+    // Show help text
+    if ($("body").hasClass("first-signon")) {
+      $("body").addClass("help-on");
+    }
+  }
+  
+  // Declare dialogs (but don't open by default)
+  {
+    // Team name
+    $("#team-name-dialog").dialog({
+      modal: true,
+      closeOnEscape: true,
+      minWidth: 470,
+      minHeight: 65,
+      autoOpen: false,
+      position: 'top',
+      closeText: "'"
+    });
+    $("#team-name h2").click(function(event) {
+      $("#team-name-dialog").dialog('open');
+      $("#team-name #team-name-form input:first").focus();
+      overlayCloseOnClick();
+      
+      return false;
+    });
+    
+    // User settings
+    $( "#team-users-dialog" ).dialog({
+      modal: true,
+      closeOnEscape: true,
+      minWidth: 480,
+      position: 'top',
+      autoOpen: false,
+      closeText: "'"
+    });
+    $("#top-nav .action-bar .user-settings").click(function() {
+      $( "#team-users-dialog" ).dialog('open');
+      overlayCloseOnClick();
+      
+      return false;
+    });
+    
+    // Hide delete buttons by default and only show on 
+    // $("#new-project-dialog .listing li button").hover(function() {
+    //   $(this).parent().find(".delete").show();
+    // }, function() {
+    //   $(this).parent().find(".delete").hide();
+    // });
+  }
+  
+  // Add user email checking
+  {
+    $("#invite-user-form").submit(function() {
+      var error_form_classname = "errors-on-form";
+      var error_field_msg_classname = "error-field-msg";
+      var email = $(this).find(".new-object-text-box").val();
+      
+      // Regex from http://www.regular-expressions.info/email.html
+      var valid_email = email.match(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/i);
+      if (!valid_email) {
+        // Set invalid class and append message
+        $(this).addClass(error_form_classname);
+        if ($(this).find("." + error_field_msg_classname).length <= 0) {
+          $(this).append("<p class='" + error_field_msg_classname + "'>Invalid email address</p>")
+        }
+        
+        // Flash the error message
+        $(this).find("." + error_field_msg_classname).hide(0, function() {
+          $(this).fadeIn(500);
+        });
+        
+        // Don't send the form
+        return false;
+      } else {
+        $(this).find("." + error_field_msg_classname).remove();
+        $(this).removeClass(error_form_classname);
+      }
+    });
+  }
+  
+  // Team member
+  {
+    // Hijack submit button if nothing is in textbox (either empty or labelified value)
+    $("#new-team-member-form .submit-button").click(function() {
+      if (($("#new-team-member-form .new-object-text-box").val() == "") ||
+           $("#new-team-member-form .new-object-text-box").val() == $("#new-team-member-form .new-object-text-box").attr("title")) {
+
+        $("#new-team-member-form .new-object-text-box").focus();
+        return false;
+      }
+    });
+  }
+  
+  // Labelify new object text boxes
+  $(".new-object-text-box").labelify({ labelledClass: "new-object-text-box-label" });
+  
+  // Add help body class
+  $("#top-nav .action-bar .help").click(function() {
+    $("body").toggleClass("help-on");
+    
+    return false;
+  });
+  
+  //remove help body class
+  $("#overlay-bg, #help-nav, #help-week, #help-new, #help-close, #help-project, help-team").click(function() {
+    $("body").removeClass("help-on");
+  });
 });
 
 // Overlays - close dialogs when clicking (Note: need to run this after dialogs are created)
@@ -358,7 +436,7 @@ function overlayCloseOnClick() {
 
 function setupProjects() {
   $(".project").click(function(event) {
-  $("#new-project-dialog").hide();
+    $("#new-project-dialog").hide();
     event.stopPropagation(); // Prevent opening new project dialog
   });
 
@@ -394,33 +472,6 @@ function setupProjects() {
 }
 
 function setupNewProjectDialog() {
-    // Click box to show new project dialog
-  $(".box").click(function (event) {
-    $("#new-project-dialog form input[name=date]").val($(this).attr("data-date"));
-    $("#new-project-dialog form input[name=team_member_id]").val($(this).attr("data-team-member-id"));
-    
-    // If clicked on weekend add class for weekend, and place dialog on the left
-    // Otherwise, place dialog on the right
-    $( "#new-project-dialog" ).removeClass("is-weekend");
-    var new_project_dialog_top_offset = -46;
-    var new_project_dialog_left_offset = 0;
-    if ($(this).hasClass("col7") || $(this).hasClass("col8")) {
-      $( "#new-project-dialog" ).addClass("is-weekend");
-      new_project_dialog_left_offset = -220;
-    } else {
-      new_project_dialog_left_offset = 20;
-    }
-
-    $("#new-project-dialog").show().offset({ top: event.pageY + new_project_dialog_top_offset, left: event.pageX + new_project_dialog_left_offset });
-    $("#new-project-dialog").show();
-    
-    // Focus on new project text box
-    $("#new-project-dialog .new-object-text-box").focus();
-    
-    event.stopPropagation(); // Prevent click from hiding form
-    return false;
-  });
-
   // Drag and drop for projects
   $('table .box').sortable({
       connectWith: '.box',

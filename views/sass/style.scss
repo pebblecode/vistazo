@@ -98,6 +98,10 @@ body {
   float: left;
 }
 
+  .handle {
+    @extend .circle;
+  }
+
 /* Forms */
 .new-object-fieldset {
   @include border-radius(5px);
@@ -763,10 +767,6 @@ textarea:focus, input:focus{
     font-size: 10px;
     margin-top: 3px;
     color: #e6e6e6;
-  }
-  
-  .handle {
-    @extend .circle;
   }
   
 } // #main

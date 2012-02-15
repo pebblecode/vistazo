@@ -110,7 +110,9 @@
   <%= erb :_js_templates %>
 
   <script>
-    // Initialise all js models
+    var projectDialogView = new ProjectDialogView({el: "body"});
+
+    // Initialise team members
     var teamMemberView = new TeamMemberView({el: $('#week-view')});
     teamMembers.reset(<%= @team_members.to_json %>);
     teamMembers.each(function(tm) {

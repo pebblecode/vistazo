@@ -1,5 +1,39 @@
 <%# Javascript templates for backbone.js views %>
 
+<script type="text/template" id="new-project-dialog-template">
+  <div id="new-project-dialog">
+    <a href="#" class="close">'</a>
+    <form id="new-tm-project-form" action="/<%= @team.url_slug %>/team-member-project/add" method="post">
+      <input type="hidden" name="date" value=""/>
+      <input type="hidden" name="team_member_id" value=""/>
+      
+      <% if @projects.present? %>
+        <fieldset id="existing-projects-listing" title="Existing projects">
+          <legend>Add a project</legend>
+          <ul class="listing">
+            <% for project in @projects %>
+              <li>
+                <div class="handle <%= project.css_class %>"></div>
+                <button name="project_id" type="submit" value="<%= project.id %>" title="<%= h project.name %>"><%= h truncate(project.name, :length => 40) %></button>
+                <a class="delete" title="Delete project" href="#">×</a>
+              </li>
+            <% end %>
+          </ul>
+        </fieldset> <!-- Existing projects -->
+      <% end %>
+      <fieldset>
+        <legend>Add new project</legend>
+        <fieldset class="new-object-fieldset" title="New project">
+          <label for="new_project_name">Add new project</label>
+          <input type="text"name="new_project_name" title="Project name" class="new-object-text-box" /> <button type="submit" name="new_project" value="true" class="submit-button">+</button>
+        </fieldset> <!-- New project -->
+      </fieldset>
+    </form>
+    
+    <div id="dialog-arrow"></div>
+  </div>
+</script>
+
 <script type="text/template" id="project-template">
   <div class='project' data-team-member-id='{{ tmId }}' data-team-member-project-id='{{ tmProjId }}' data-date='{{ projDate }}'>
     <div class='handle-container'>
