@@ -106,20 +106,15 @@ var TeamMemberView = Backbone.View.extend({
   }  
 });
 
-// var Project = Backbone.Model.extend({
-//   defaults: {
-//     name: "",
-//     hex_colour: ""
-//   },
-//   url: "/" + TEAM_ID + "/team-member/:team_member_id/project/add.json"
-// });
-
-// var Projects = Backbone.Collection.extend({
-//   model: Project,
-//   url: "/" + TEAM_ID + "/team-member-projects"
-// });
-
-// var projects = new Projects;
+var Project = Backbone.Model.extend({
+  defaults: {
+    name: "",
+    hex_colour: "",
+    team_id: "",
+    team_member_id: ""
+  },
+  url: "/" + this.team_id + "/team-member/" + this.team_member_id + "/project/add.json"
+});
 
 // projects.bind('sync', function(teamMember) {
 //   teamMemberView.render(teamMember);
