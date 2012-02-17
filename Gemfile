@@ -1,4 +1,5 @@
 source :rubyforge
+gem 'rake'
 gem 'sinatra'
 gem 'thin'
 gem 'sinatra-flash'
