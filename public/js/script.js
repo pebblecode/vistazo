@@ -111,7 +111,9 @@ var Project = Backbone.Model.extend({
     name: "",
     hex_colour: "",
     team_id: "",
-    team_member_id: ""
+    team_member_id: "",
+    date: "",
+    project_id: ""
   },
   url: function() {
     return "/" + this.get("team_id") + "/team-member/" + this.get("team_member_id") + "/project/add.json";
@@ -257,7 +259,9 @@ var ProjectDialogView = Backbone.View.extend({
       var proj = new Project({
         name: projName,
         team_id: TEAM_ID,
-        team_member_id: teamMemberId
+        team_member_id: teamMemberId,
+        date: projDate,
+        project_id: projId
       });
       
       console.log(proj.url());
