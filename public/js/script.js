@@ -261,7 +261,7 @@ var ProjectDialogView = Backbone.View.extend({
       });
       
       console.log(proj.url());
-      // proj.save();
+      proj.save();
       
       // // Add project object
       // var projectTemplate = _.template($("#project-template").html());

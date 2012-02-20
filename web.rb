@@ -497,7 +497,7 @@ post '/:team_id/team-member-project/add' do
   
   team = Team.find(params[:team_id])
   team_member = TeamMember.find(params[:team_member_id])
-  date = Date.parse(params[:date])
+  date = Date.parse(params[:date]) if params[:to_date]
 
   logger.info "Add team member project: #{params}"
 
@@ -536,9 +536,9 @@ post '/:team_id/team-member/:team_member_id/project/add.?:format?' do
   
   team = Team.find(params[:team_id])
   team_member = TeamMember.find(params[:team_member_id])
-  date = Date.parse(params[:date])
-
-  logger.info "Add team member project: #{params}"
+  date = Date.parse(params[:date]) if params[:to_date]
+  
+  logger.info "Add team member project (format: #{params[:format]}): #{params}"
 
   if params[:new_project].present?
     project_name = params[:new_project_name]
@@ -596,7 +596,7 @@ post '/:team_id/team-member/:team_member_id/project/add.?:format?' do
       end
     end
   end
-
+  
   if params[:format] == "json"
     content_type :json
     output.to_json
