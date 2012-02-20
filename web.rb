@@ -861,6 +861,7 @@ end
 error do
   send_error_email(env['sinatra.error'])
   
+  @is_error = true
   erb :error
 end
 

@@ -107,8 +107,9 @@
     </ul>
   </footer>
 
-  <%= erb :_js_templates %>
-
+  <% unless @is_error %>
+    <%= erb :_js_templates %>
+  <% end %>
   <script>
     var projectDialogView = new ProjectDialogView({el: "body"});
 
