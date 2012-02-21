@@ -556,13 +556,13 @@ post '/:team_id/team-member/:team_member_id/project/add.json' do
       else
         outputMsg = "Invalid team."
         
-        status = HTTP_STATUS_BAD_REQUEST
+        status HTTP_STATUS_BAD_REQUEST
         output = { :message => outputMsg }
       end
     else
       outputMsg = "Please specify a project name."
       
-      status = HTTP_STATUS_BAD_REQUEST
+      status HTTP_STATUS_BAD_REQUEST
       output = { :message => outputMsg }
     end
   else
@@ -575,10 +575,10 @@ post '/:team_id/team-member/:team_member_id/project/add.json' do
       status HTTP_STATUS_OK
       output = { :message => outputMsg, :team_member_project_id => team_member_project.id }
     else
-      logger.warn "Add existing team member project error: team_member: #{team_member}, project: #{project}, date: #{date}"
+      logger.warn "ERROR: Add existing team member project: team_member: #{team_member}, project: #{project}, date: #{date}"
       outputMsg = "Something went wrong when adding a team member project. Please refresh and try again later."
 
-      status = HTTP_STATUS_BAD_REQUEST
+      status HTTP_STATUS_BAD_REQUEST
       output = { :message => outputMsg }
     end
   end

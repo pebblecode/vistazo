@@ -252,8 +252,8 @@ var ProjectDialogView = Backbone.View.extend({
       var newProj = $(projContainer).find(".project").last();
       $(newProj).addClass('is_loading');
 
-      proj.on("sync", function(proj) {
-        var tmProjId = proj.get("team_member_project_id");
+      proj.on("sync", function(p) {
+        var tmProjId = p.get("team_member_project_id");
         
         // Regenerate project using template
         submittedProj = projectTemplate({
@@ -268,20 +268,11 @@ var ProjectDialogView = Backbone.View.extend({
 
         updateFlash("success", proj.get("message"));
       });
-      proj.on("error", function(msg) {
-        // $(proj).remove();
-        // $(proj).removeClass('is_loading');
-
-        // var response = JSON.parse(data.responseText);
-        // if (status == "success") {
-        //   updateFlash("success", response["message"]);
-        // } else {
-        //   if (response) {
-        //     updateFlash("warning", response["message"]);
-        //   } else {
-        //     updateFlash("warning", "Something weird happened. Please contact support about it.");
-        //   }
-        // }
+      proj.on("error", function(data) {
+        $(newProj).remove();
+        $(newProj).removeClass('is_loading');
+        
+        updateFlash("warning", JSON.parse(data.responseText)["message"]);
       });
 
       // Hide dialog box
