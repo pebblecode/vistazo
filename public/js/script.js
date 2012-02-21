@@ -109,7 +109,6 @@ var TeamMemberView = Backbone.View.extend({
 var Project = Backbone.Model.extend({
   defaults: {
     name: "",
-    hex_colour: "",
     team_id: "",
     team_member_id: "",
     date: "",
@@ -119,35 +118,6 @@ var Project = Backbone.Model.extend({
     return "/" + this.get("team_id") + "/team-member/" + this.get("team_member_id") + "/project/add.json";
   }
 });
-
-var Projects = Backbone.Collection.extend({
-  model: Project,
-  url: function() {
-    return "/" + TEAM_ID + "/team-member/" + this.team_member_id + "/projects";
-  }
-});
-
-var projects = new Projects;
-
-projects.bind('sync', function(teamMember) {
-  console.log("syncing");
-  // teamMemberView.render(teamMember);
-  // updateFlash("success", "Successfully added '<em>" + teamMember.get('name') + "</em>'.");
-});
-
-// projects.bind('error', function(response) {
-//   if (response) {
-//     try {
-//       respJson = JSON.parse(response.responseText);
-//       updateFlash("warning", respJson["message"]);
-//     } catch(error) {
-//       console.log(error);
-//       updateFlashWithError();
-//     }
-//   } else {
-//     updateFlashWithError();
-//   }
-// });
 
 var ProjectDialogView = Backbone.View.extend({
   events: {
@@ -255,6 +225,8 @@ var ProjectDialogView = Backbone.View.extend({
       var projDate = $(this).parents('#new-tm-project-form').find("input[name=date]").val();
       var projName = $(this).attr("title");
       var projHandleCssClass = $(this).parent().find(".handle").attr("class");
+
+      var projectTemplate = _.template($("#project-template").html());
       
       var proj = new Project({
         name: projName,
@@ -264,56 +236,55 @@ var ProjectDialogView = Backbone.View.extend({
         project_id: projId
       });
       
-      console.log(proj.url());
       proj.save();
       
-      // // Add project object
-      // var projectTemplate = _.template($("#project-template").html());
-      // var defaultProject = projectTemplate({
-      //   tmId: teamMemberId,
-      //   tmProjId: '',
-      //   projHandleCssClass: projHandleCssClass,
-      //   projDate: projDate,
-      //   projName: projName
-      // });
-      // var projContainer = $(".box[data-team-member-id=" + teamMemberId + "][data-date='" + projDate + "']");
-      // $(projContainer).append(defaultProject);
-      // var proj = $(projContainer).children().last(".project");
-      // $(proj).addClass('is_loading');
-      // 
-      // var url = "/" + TEAM_ID + "/team-member/" + teamMemberId + "/project/add.json";
-      // $.post(url, { date: projDate, project_id: projId })
-      //   .success(function(response) {
-      //     var tmProjId = response["team_member_project_id"];
-      //     
-      //     // Regenerate project using template
-      //     submittedProj = projectTemplate({
-      //       tmId: teamMemberId,
-      //       tmProjId: tmProjId,
-      //       projHandleCssClass: projHandleCssClass,
-      //       projDate: projDate,
-      //       projName: projName
-      //     });
-      //     $(proj).replaceWith(submittedProj); // NOTE: proj is no longer available
-      //     setupProjects();
-      //   })
-      //   .error(function(response) {
-      //     $(proj).remove();
-      //     $(proj).removeClass('is_loading');
-      //   })
-      //   .complete(function(data, status) {
-      //     var response = JSON.parse(data.responseText);
-      //     if (status == "success") {
-      //       updateFlash("success", response["message"]);
-      //     } else {
-      //       if (response) {
-      //         updateFlash("warning", response["message"]);
-      //       } else {
-      //         updateFlash("warning", "Something weird happened. Please contact support about it.");
-      //       }
-      //     }
-      //   });
-      
+      // Show temporary project
+      var tempProject = projectTemplate({
+        tmId: teamMemberId,
+        tmProjId: '',
+        projHandleCssClass: projHandleCssClass,
+        projDate: projDate,
+        projName: projName
+      });
+      var projContainer = $(".box[data-team-member-id=" + teamMemberId + "][data-date='" + projDate + "']");
+
+      $(projContainer).append(tempProject);      
+      var newProj = $(projContainer).find(".project").last();
+      $(newProj).addClass('is_loading');
+
+      proj.on("sync", function(proj) {
+        var tmProjId = proj.get("team_member_project_id");
+        
+        // Regenerate project using template
+        submittedProj = projectTemplate({
+          tmId: teamMemberId,
+          tmProjId: tmProjId,
+          projHandleCssClass: projHandleCssClass,
+          projDate: projDate,
+          projName: projName
+        });
+        $(newProj).replaceWith(submittedProj);
+        setupProjects();
+
+        updateFlash("success", proj.get("message"));
+      });
+      proj.on("error", function(msg) {
+        // $(proj).remove();
+        // $(proj).removeClass('is_loading');
+
+        // var response = JSON.parse(data.responseText);
+        // if (status == "success") {
+        //   updateFlash("success", response["message"]);
+        // } else {
+        //   if (response) {
+        //     updateFlash("warning", response["message"]);
+        //   } else {
+        //     updateFlash("warning", "Something weird happened. Please contact support about it.");
+        //   }
+        // }
+      });
+
+      // Hide dialog box
       $("#new-project-dialog").hide();
       
       return false;
