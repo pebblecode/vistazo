@@ -244,6 +244,10 @@ var ProjectDialogView = Backbone.View.extend({
       var newProjectDialog = _.template($("#new-project-dialog-template").html());
       $(this.el).append(newProjectDialog());
 
+      // Add project to existing project list
+      var existingProjectsView = new ExistingProjectsView({ el: $("#existing-projects-listing") });
+      existingProjectsView.render();
+
       this.setupNewProjectDialog(box);
     }
 
