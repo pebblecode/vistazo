@@ -119,5 +119,7 @@
     teamMembers.each(function(tm) {
       teamMemberView.render(tm);
     });
+
+    teamProjects.reset(<%= @projects.to_json %>);
   </script>
 </body>

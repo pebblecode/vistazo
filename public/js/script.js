@@ -174,6 +174,15 @@ var Project = Backbone.Model.extend({
   }
 });
 
+var Projects = Backbone.Collection.extend({
+  model: Project,
+  url: "/" + TEAM_ID + "/projects"
+});
+
+var teamProjects = new Projects;
+
+
+
 var ProjectDialogView = Backbone.View.extend({
   events: {
     "click .box": "openProjectDialog"
@@ -275,6 +284,7 @@ var ProjectDialogView = Backbone.View.extend({
 
     // AJAX-ify add existing project
     var projectTemplate = _.template($("#project-template").html());
+    var existingProjectsTemplate = _.template($("#existing-projects-listing-template").html());
 
     $("#new-project-dialog .listing li button").click(function() {
       var teamMemberId = $(this).parents('#new-tm-project-form').find("input[name=team_member_id]").val();
@@ -372,14 +382,19 @@ var ProjectDialogView = Backbone.View.extend({
 
         // Update project styles
         var retProj = new Project(ttItem.get("project"));
+        teamProjects.add(retProj);
+
         var projectCssSel = '.' + retProj.css_class();
         var projectCssStyle = 'background-color: ' + retProj.get("hex_colour") + ';';
         var projectStyles = document.createStyleSheet();
         projectStyles.addRule(projectCssSel, projectCssStyle);
 
         
-        // Add project to project list - TODO
-
+        // Add project to existing project list
+        var existingProjects = existingProjectsTemplate({
+          projects: teamProjects.toArray()
+        });
+        $("#existing-projects-listing").replaceWith(existingProjects);
 
         // Regenerate project using template
         submittedProj = projectTemplate({

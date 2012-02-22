@@ -34,6 +34,21 @@
   </div>
 </script>
 
+<script type="text/template" id="existing-projects-listing-template">
+  <fieldset id="existing-projects-listing" title="Existing projects">
+    <legend>Add a project</legend>
+    <ul class="listing">
+      {% _.each(projects, function(project) { %}
+        <li>
+          <div class="handle {{ project.css_class() }}"></div>
+          <button name="project_id" type="submit" value="{{ project.get("id") }}" title="{{ project.get("name") }}">{{ project.get("name").substring(0, 40) }}</button>
+          <a class="delete" title="Delete project" href="#">×</a>
+        </li>
+      {% }); %}
+    </ul>
+  </fieldset> <!-- Existing projects -->
+</script>
+
 <script type="text/template" id="project-template">
   <div class='project' data-team-member-id='{{ tmId }}' data-team-member-project-id='{{ tmProjId }}' data-date='{{ projDate }}'>
     <div class='handle-container'>
