@@ -199,7 +199,6 @@ var ExistingProjectsView = Backbone.View.extend({
     var projListingHtml = existingProjTemplate({
       projects: teamProjects.toArray()
     });
-    console.log(projListingHtml);
     
     $(this.el).replaceWith(projListingHtml);
 
