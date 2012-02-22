@@ -559,7 +559,7 @@ post '/:team_id/team-member/:team_member_id/project/add.json' do
       output = { :message => outputMsg }
     end
   else # New project if there is no project id
-    project_name = request_body["name"]
+    project_name = request_body["project_name"]
   
     if project_name.present?
       if team.present?

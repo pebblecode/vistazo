@@ -106,13 +106,13 @@ var TeamMemberView = Backbone.View.extend({
   }  
 });
 
-var Project = Backbone.Model.extend({
+var TimetableItem = Backbone.Model.extend({
   defaults: {
-    name: "",
+    project_id: "",
+    project_name: "",
     team_id: "",
     team_member_id: "",
-    date: "",
-    project_id: ""
+    date: ""
   },
   url: function() {
     return "/" + this.get("team_id") + "/team-member/" + this.get("team_member_id") + "/project/add.json";
@@ -228,15 +228,15 @@ var ProjectDialogView = Backbone.View.extend({
       var projName = $(this).attr("title");
       var projHandleCssClass = $(this).parent().find(".handle").attr("class");
       
-      var proj = new Project({
-        name: projName,
+      var timetableItem = new TimetableItem({
+        project_id: projId,
+        project_name: projName,
         team_id: TEAM_ID,
         team_member_id: teamMemberId,
-        date: projDate,
-        project_id: projId
+        date: projDate
       });
       
-      proj.save();
+      timetableItem.save();
       
       // Show temporary project
       var tempProject = projectTemplate({
@@ -252,8 +252,8 @@ var ProjectDialogView = Backbone.View.extend({
       var newProj = $(projContainer).find(".project").last();
       $(newProj).addClass('is_loading');
 
-      proj.on("sync", function(p) {
-        var tmProjId = p.get("team_member_project_id");
+      timetableItem.on("sync", function(ttItem) {
+        var tmProjId = ttItem.get("team_member_project_id");
         
         // Regenerate project using template
         submittedProj = projectTemplate({
@@ -266,9 +266,9 @@ var ProjectDialogView = Backbone.View.extend({
         $(newProj).replaceWith(submittedProj);
         setupProjects();
 
-        updateFlash("success", proj.get("message"));
+        updateFlash("success", timetableItem.get("message"));
       });
-      proj.on("error", function(data) {
+      timetableItem.on("error", function(data) {
         $(newProj).remove();
         $(newProj).removeClass('is_loading');
         
@@ -288,15 +288,15 @@ var ProjectDialogView = Backbone.View.extend({
       var projName = $(this).parent().find("input[name=project_name]").val();
       var projHandleCssClass = $(this).parent().find(".handle").attr("class");
       
-      var proj = new Project({
-        name: projName,
+      var timetableItem = new TimetableItem({
+        // No project_id because it is new
+        project_name: projName,
         team_id: TEAM_ID,
         team_member_id: teamMemberId,
         date: projDate
-        // No project id because it is new
       });
       
-      proj.save();
+      timetableItem.save();
       
       // Show temporary project
       var tempProject = projectTemplate({
@@ -312,8 +312,8 @@ var ProjectDialogView = Backbone.View.extend({
       var newProj = $(projContainer).find(".project").last();
       $(newProj).addClass('is_loading');
 
-      proj.on("sync", function(p) {
-        var tmProjId = p.get("team_member_project_id");
+      timetableItem.on("sync", function(ttItem) {
+        var tmProjId = ttItem.get("team_member_project_id");
         
         // Regenerate project using template
         submittedProj = projectTemplate({
@@ -326,9 +326,9 @@ var ProjectDialogView = Backbone.View.extend({
         $(newProj).replaceWith(submittedProj);
         setupProjects();
 
-        updateFlash("success", proj.get("message"));
+        updateFlash("success", timetableItem.get("message"));
       });
-      proj.on("error", function(data) {
+      timetableItem.on("error", function(data) {
         $(newProj).remove();
         $(newProj).removeClass('is_loading');
         
