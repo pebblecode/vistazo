@@ -115,7 +115,21 @@ var TimetableItem = Backbone.Model.extend({
     date: ""
   },
   url: function() {
-    return "/" + this.get("team_id") + "/team-member/" + this.get("team_member_id") + "/project/add.json";
+    return "/" + this.get("team_id") + "/team-member/" + this.get("team_member_id") + "/timetable-items/new.json";
+  }
+});
+
+var Project = Backbone.Model.extend({
+  defaults: {
+    id: "",
+    name: "",
+    hex_colour: ""
+  },
+
+  // Same logic as lib/css_classes.rb > get_project_css_class
+  css_class: function() {
+    var formattedId = this.get("id").toLowerCase().replace(/W/g, '-');
+    return "project-" + formattedId;
   }
 });
 

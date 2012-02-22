@@ -531,7 +531,7 @@ end
 #   redirect back
 # end
 
-post '/:team_id/team-member/:team_member_id/project/add.json' do
+post '/:team_id/team-member/:team_member_id/timetable-items/new.json' do
   protected!
   require_team_user!(params[:team_id])
   
