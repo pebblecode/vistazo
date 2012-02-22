@@ -182,6 +182,30 @@ var Projects = Backbone.Collection.extend({
 var teamProjects = new Projects;
 
 
+var ExistingProjectsView = Backbone.View.extend({
+  template: function() {
+    return _.template($("#existing-projects-listing-template").html())
+  },
+
+  render: function() {
+    // var projListingHtml = this.template(teamProjects.toJSON());
+
+    // this.template doesn't work for some reason
+    // var projListingHtml = this.template({
+    //   projects: teamProjects.toArray()
+    // });
+    
+    var existingProjTemplate = _.template($("#existing-projects-listing-template").html());
+    var projListingHtml = existingProjTemplate({
+      projects: teamProjects.toArray()
+    });
+    console.log(projListingHtml);
+    
+    $(this.el).replaceWith(projListingHtml);
+
+    return this;
+  }
+});
 
 var ProjectDialogView = Backbone.View.extend({
   events: {
