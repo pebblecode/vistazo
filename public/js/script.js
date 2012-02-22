@@ -350,74 +350,82 @@ var ProjectDialogView = Backbone.View.extend({
     $("#new-project-dialog .new-object-fieldset .submit-button").click(function() {
       var teamMemberId = $(this).parents('#new-tm-project-form').find("input[name=team_member_id]").val();
       var projDate = $(this).parents('#new-tm-project-form').find("input[name=date]").val();
-      var projName = $(this).parent().find("input[name=project_name]").val();
+      var projNameTextbox = $(this).parent().find("input[name=project_name]");
+      var projName = projNameTextbox.val();
       
-      var timetableItem = new TimetableItem({
-        // No project_id because it is new
-        project_name: projName,
-        team_id: TEAM_ID,
-        team_member_id: teamMemberId,
-        date: projDate
-      });
-      
-      timetableItem.save();
-      
-      // Show temporary project
-      var tempProject = projectTemplate({
-        tmId: teamMemberId,
-        tmProjId: '',
-        projHandleCssClass: 'handle',
-        projDate: projDate,
-        projName: projName
-      });
-      var projContainer = $(".box[data-team-member-id=" + teamMemberId + "][data-date='" + projDate + "']");
-
-      $(projContainer).append(tempProject);      
-      var newProj = $(projContainer).find(".project").last();
-      $(newProj).addClass('is_loading');
-
-      timetableItem.on("sync", function(ttItem) {
-        var tmProjId = ttItem.get("team_member_project_id");
+      if (projName.length <= 0) {
         
+        // Focus textbox and exit
+        $(projNameTextbox).focus();
 
-        // Update project styles
-        var retProj = new Project(ttItem.get("project"));
-        teamProjects.add(retProj);
-
-        var projectCssSel = '.' + retProj.css_class();
-        var projectCssStyle = 'background-color: ' + retProj.get("hex_colour") + ';';
-        var projectStyles = document.createStyleSheet();
-        projectStyles.addRule(projectCssSel, projectCssStyle);
-
-        
-        // Add project to existing project list
-        var existingProjects = existingProjectsTemplate({
-          projects: teamProjects.toArray()
+      } else {
+        var timetableItem = new TimetableItem({
+          // No project_id because it is new
+          project_name: projName,
+          team_id: TEAM_ID,
+          team_member_id: teamMemberId,
+          date: projDate
         });
-        $("#existing-projects-listing").replaceWith(existingProjects);
-
-        // Regenerate project using template
-        submittedProj = projectTemplate({
+        
+        timetableItem.save();
+        
+        // Show temporary project
+        var tempProject = projectTemplate({
           tmId: teamMemberId,
-          tmProjId: tmProjId,
-          projHandleCssClass: 'handle ' + retProj.css_class(),
+          tmProjId: '',
+          projHandleCssClass: 'handle',
           projDate: projDate,
           projName: projName
         });
-        $(newProj).replaceWith(submittedProj);
-        setupProjects();
+        var projContainer = $(".box[data-team-member-id=" + teamMemberId + "][data-date='" + projDate + "']");
 
-        updateFlash("success", timetableItem.get("message"));
-      });
-      timetableItem.on("error", function(data) {
-        $(newProj).remove();
-        $(newProj).removeClass('is_loading');
-        
-        updateFlash("warning", JSON.parse(data.responseText)["message"]);
-      });
+        $(projContainer).append(tempProject);      
+        var newProj = $(projContainer).find(".project").last();
+        $(newProj).addClass('is_loading');
 
-      // Hide dialog box
-      $("#new-project-dialog").hide();
+        timetableItem.on("sync", function(ttItem) {
+          var tmProjId = ttItem.get("team_member_project_id");
+          
+
+          // Update project styles
+          var retProj = new Project(ttItem.get("project"));
+          teamProjects.add(retProj);
+
+          var projectCssSel = '.' + retProj.css_class();
+          var projectCssStyle = 'background-color: ' + retProj.get("hex_colour") + ';';
+          var projectStyles = document.createStyleSheet();
+          projectStyles.addRule(projectCssSel, projectCssStyle);
+
+          
+          // Add project to existing project list
+          var existingProjects = existingProjectsTemplate({
+            projects: teamProjects.toArray()
+          });
+          $("#existing-projects-listing").replaceWith(existingProjects);
+
+          // Regenerate project using template
+          submittedProj = projectTemplate({
+            tmId: teamMemberId,
+            tmProjId: tmProjId,
+            projHandleCssClass: 'handle ' + retProj.css_class(),
+            projDate: projDate,
+            projName: projName
+          });
+          $(newProj).replaceWith(submittedProj);
+          setupProjects();
+
+          updateFlash("success", timetableItem.get("message"));
+        });
+        timetableItem.on("error", function(data) {
+          $(newProj).remove();
+          $(newProj).removeClass('is_loading');
+          
+          updateFlash("warning", JSON.parse(data.responseText)["message"]);
+        });
+
+        // Hide dialog box
+        $("#new-project-dialog").hide();
+      }
 
       return false;
     });
