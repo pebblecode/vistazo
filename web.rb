@@ -569,7 +569,7 @@ post '/:team_id/team-member/:team_member_id/timetable-items/new.json' do
         outputMsg = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
 
         status HTTP_STATUS_OK
-        output = { :message => outputMsg, :team_member_project_id => team_member_project.id }
+        output = { :message => outputMsg, :team_member_project_id => team_member_project.id, :project => project }
       else
         outputMsg = "Invalid team."
         

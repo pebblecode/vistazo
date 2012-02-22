@@ -1,5 +1,46 @@
 var TEAM_ID = window.location.pathname.split('/')[1]; // From the first path of url
 
+
+// Dynamically add stylesheets
+// From http://stackoverflow.com/a/524798
+if (typeof document.createStyleSheet === 'undefined') {
+  document.createStyleSheet = (function() {
+    function createStyleSheet(href) {
+      if(typeof href !== 'undefined') {
+        var element = document.createElement('link');
+        element.type = 'text/css';
+        element.rel = 'stylesheet';
+        element.href = href;
+      }
+      else {
+        var element = document.createElement('style');
+        element.type = 'text/css';
+      }
+
+      document.getElementsByTagName('head')[0].appendChild(element);
+      var sheet = document.styleSheets[document.styleSheets.length - 1];
+
+      if(typeof sheet.addRule === 'undefined')
+        sheet.addRule = addRule;
+
+      if(typeof sheet.removeRule === 'undefined')
+        sheet.removeRule = sheet.deleteRule;
+
+      return sheet;
+    }
+
+    function addRule(selectorText, cssText, index) {
+      if(typeof index === 'undefined')
+        index = this.cssRules.length;
+
+      this.insertRule(selectorText + ' {' + cssText + '}', index);
+    }
+
+    return createStyleSheet;
+  })();
+}
+
+
 // Attempt at modularising backbone code
 // VistazoApp = (function($) {
 //   TeamMemberView = Backbone.View.extend({
@@ -300,7 +341,6 @@ var ProjectDialogView = Backbone.View.extend({
       var teamMemberId = $(this).parents('#new-tm-project-form').find("input[name=team_member_id]").val();
       var projDate = $(this).parents('#new-tm-project-form').find("input[name=date]").val();
       var projName = $(this).parent().find("input[name=project_name]").val();
-      var projHandleCssClass = $(this).parent().find(".handle").attr("class");
       
       var timetableItem = new TimetableItem({
         // No project_id because it is new
@@ -316,7 +356,7 @@ var ProjectDialogView = Backbone.View.extend({
       var tempProject = projectTemplate({
         tmId: teamMemberId,
         tmProjId: '',
-        projHandleCssClass: projHandleCssClass,
+        projHandleCssClass: 'handle',
         projDate: projDate,
         projName: projName
       });
@@ -329,11 +369,23 @@ var ProjectDialogView = Backbone.View.extend({
       timetableItem.on("sync", function(ttItem) {
         var tmProjId = ttItem.get("team_member_project_id");
         
+
+        // Update project styles
+        var retProj = new Project(ttItem.get("project"));
+        var projectCssSel = '.' + retProj.css_class();
+        var projectCssStyle = 'background-color: ' + retProj.get("hex_colour") + ';';
+        var projectStyles = document.createStyleSheet();
+        projectStyles.addRule(projectCssSel, projectCssStyle);
+
+        
+        // Add project to project list - TODO
+
+
         // Regenerate project using template
         submittedProj = projectTemplate({
           tmId: teamMemberId,
           tmProjId: tmProjId,
-          projHandleCssClass: projHandleCssClass,
+          projHandleCssClass: 'handle ' + retProj.css_class(),
           projDate: projDate,
           projName: projName
         });
@@ -671,3 +723,4 @@ function updateFlash(flashType, msg) {
 function updateFlashWithError() {
   updateFlash("warning", "Something weird happened. Please contact support about it.");
 }
+
