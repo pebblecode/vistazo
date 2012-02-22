@@ -491,44 +491,45 @@ end
 # Add team member project
 ############################################
 
-post '/:team_id/team-member-project/add' do
-  protected!
-  require_team_user!(params[:team_id])
+# Using ajax api
+# post '/:team_id/team-member-project/add' do
+#   protected!
+#   require_team_user!(params[:team_id])
   
-  team = Team.find(params[:team_id])
-  team_member = TeamMember.find(params[:team_member_id])
-  date = Date.parse(params[:date]) if params[:to_date]
+#   team = Team.find(params[:team_id])
+#   team_member = TeamMember.find(params[:team_member_id])
+#   date = Date.parse(params[:date]) if params[:to_date]
 
-  logger.info "Add team member project: #{params}"
+#   logger.info "Add team member project: #{params}"
 
-  if params[:new_project].present?
-    project_name = params[:new_project_name]
+#   if params[:new_project].present?
+#     project_name = params[:new_project_name]
   
-    if project_name.present?
-      if team.present?
-        project = Project.create(:name => project_name, :team_id => team.id)
-        team_member.add_project_on_date(project, date)
+#     if project_name.present?
+#       if team.present?
+#         project = Project.create(:name => project_name, :team_id => team.id)
+#         team_member.add_project_on_date(project, date)
     
-        flash[:success] = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
-      else
-        flash[:warning] = "Invalid team."
-      end
-    else
-      flash[:warning] = "Please specify a project name."
-    end
-  else
-    project = Project.find(params[:project_id])
-    if (team_member.present? and project.present? and date.present?)
-      team_member.add_project_on_date(project, date)
+#         flash[:success] = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
+#       else
+#         flash[:warning] = "Invalid team."
+#       end
+#     else
+#       flash[:warning] = "Please specify a project name."
+#     end
+#   else
+#     project = Project.find(params[:project_id])
+#     if (team_member.present? and project.present? and date.present?)
+#       team_member.add_project_on_date(project, date)
     
-      flash[:success] = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
-    else
-      flash[:warning] = "Something went wrong when adding a team member project. Please refresh and try again later."
-    end
-  end
+#       flash[:success] = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
+#     else
+#       flash[:warning] = "Something went wrong when adding a team member project. Please refresh and try again later."
+#     end
+#   end
 
-  redirect back
-end
+#   redirect back
+# end
 
 post '/:team_id/team-member/:team_member_id/project/add.json' do
   protected!
@@ -539,10 +540,26 @@ post '/:team_id/team-member/:team_member_id/project/add.json' do
   team_member = TeamMember.find(params[:team_member_id])
   date = Date.parse(request_body["date"]) if request_body["date"]
   
-  logger.info "Add team member project (format: #{params[:format]}): #{params} | #{request_body}"
+  logger.info "Add team member project: #{params} | #{request_body}"
   
-  if params[:new_project].present?
-    project_name = params[:new_project_name]
+  if request_body["project_id"].present?
+    project = Project.find(request_body["project_id"])
+    if (team_member.present? and project.present? and date.present?)
+      team_member_project = team_member.add_project_on_date(project, date)
+      
+      outputMsg = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
+
+      status HTTP_STATUS_OK
+      output = { :message => outputMsg, :team_member_project_id => team_member_project.id }
+    else
+      logger.warn "ERROR: Add existing team member project: team_member: #{team_member}, project: #{project}, date: #{date}"
+      outputMsg = "Something went wrong when adding a team member project. Please refresh and try again later."
+
+      status HTTP_STATUS_BAD_REQUEST
+      output = { :message => outputMsg }
+    end
+  else # New project if there is no project id
+    project_name = request_body["name"]
   
     if project_name.present?
       if team.present?
@@ -562,22 +579,6 @@ post '/:team_id/team-member/:team_member_id/project/add.json' do
     else
       outputMsg = "Please specify a project name."
       
-      status HTTP_STATUS_BAD_REQUEST
-      output = { :message => outputMsg }
-    end
-  else
-    project = Project.find(request_body["project_id"])
-    if (team_member.present? and project.present? and date.present?)
-      team_member_project = team_member.add_project_on_date(project, date)
-      
-      outputMsg = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
-
-      status HTTP_STATUS_OK
-      output = { :message => outputMsg, :team_member_project_id => team_member_project.id }
-    else
-      logger.warn "ERROR: Add existing team member project: team_member: #{team_member}, project: #{project}, date: #{date}"
-      outputMsg = "Something went wrong when adding a team member project. Please refresh and try again later."
-
       status HTTP_STATUS_BAD_REQUEST
       output = { :message => outputMsg }
     end

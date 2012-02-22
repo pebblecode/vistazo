@@ -219,14 +219,14 @@ var ProjectDialogView = Backbone.View.extend({
     }); // $("#new-project-dialog .delete")
 
     // AJAX-ify add existing project
+    var projectTemplate = _.template($("#project-template").html());
+
     $("#new-project-dialog .listing li button").click(function() {
       var teamMemberId = $(this).parents('#new-tm-project-form').find("input[name=team_member_id]").val();
       var projId = $(this).val();
       var projDate = $(this).parents('#new-tm-project-form').find("input[name=date]").val();
       var projName = $(this).attr("title");
       var projHandleCssClass = $(this).parent().find(".handle").attr("class");
-
-      var projectTemplate = _.template($("#project-template").html());
       
       var proj = new Project({
         name: projName,
@@ -282,7 +282,64 @@ var ProjectDialogView = Backbone.View.extend({
     }); // $("#new-project-dialog .listing li button").click
 
     // AJAX-ify add new project
-    // TODO
+    $("#new-project-dialog .new-object-fieldset .submit-button").click(function() {
+      var teamMemberId = $(this).parents('#new-tm-project-form').find("input[name=team_member_id]").val();
+      var projDate = $(this).parents('#new-tm-project-form').find("input[name=date]").val();
+      var projName = $(this).parent().find("input[name=project_name]").val();
+      var projHandleCssClass = $(this).parent().find(".handle").attr("class");
+      
+      var proj = new Project({
+        name: projName,
+        team_id: TEAM_ID,
+        team_member_id: teamMemberId,
+        date: projDate
+        // No project id because it is new
+      });
+      
+      proj.save();
+      
+      // Show temporary project
+      var tempProject = projectTemplate({
+        tmId: teamMemberId,
+        tmProjId: '',
+        projHandleCssClass: projHandleCssClass,
+        projDate: projDate,
+        projName: projName
+      });
+      var projContainer = $(".box[data-team-member-id=" + teamMemberId + "][data-date='" + projDate + "']");
+
+      $(projContainer).append(tempProject);      
+      var newProj = $(projContainer).find(".project").last();
+      $(newProj).addClass('is_loading');
+
+      proj.on("sync", function(p) {
+        var tmProjId = p.get("team_member_project_id");
+        
+        // Regenerate project using template
+        submittedProj = projectTemplate({
+          tmId: teamMemberId,
+          tmProjId: tmProjId,
+          projHandleCssClass: projHandleCssClass,
+          projDate: projDate,
+          projName: projName
+        });
+        $(newProj).replaceWith(submittedProj);
+        setupProjects();
+
+        updateFlash("success", proj.get("message"));
+      });
+      proj.on("error", function(data) {
+        $(newProj).remove();
+        $(newProj).removeClass('is_loading');
+        
+        updateFlash("warning", JSON.parse(data.responseText)["message"]);
+      });
+
+      // Hide dialog box
+      $("#new-project-dialog").hide();
+
+      return false;
+    });
 
     setupProjects();
   } // setupNewProjectDialog
