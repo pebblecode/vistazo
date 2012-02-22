@@ -423,12 +423,15 @@ var ProjectDialogView = Backbone.View.extend({
           updateFlash("warning", JSON.parse(data.responseText)["message"]);
         });
 
+        // Clear new project name textbox
+        $("#new-project-dialog .new-object-fieldset input[name=project_name]").val("");
+
         // Hide dialog box
         $("#new-project-dialog").hide();
       }
 
       return false;
-    });
+    }); // $("#new-project-dialog .new-object-fieldset .submit-button").click
 
     setupProjects();
   } // setupNewProjectDialog
