@@ -183,30 +183,92 @@ var teamProjects = new Projects;
 
 
 var ExistingProjectsView = Backbone.View.extend({
-  template: function() {
-    return _.template($("#existing-projects-listing-template").html())
+  resetElement: function() {
+    this.setElement($("#existing-projects-listing"));
   },
-
   render: function() {
-    // var projListingHtml = this.template(teamProjects.toJSON());
+    this.resetElement();
 
-    // this.template doesn't work for some reason
-    // var projListingHtml = this.template({
-    //   projects: teamProjects.toArray()
-    // });
-    
+    // TODO: Figure out how to DRY this up
     var existingProjTemplate = _.template($("#existing-projects-listing-template").html());
     var projListingHtml = existingProjTemplate({
       projects: teamProjects.toArray()
     });
-    
     $(this.el).replaceWith(projListingHtml);
+    
+
+    $("#new-project-dialog .listing li button").click(this.existingProjectButtonClickHandle);
 
     return this;
-  }
+  },
+  existingProjectButtonClickHandle: function() {
+    // TODO: Figure out how to DRY this up
+    var projectTemplate = _.template($("#project-template").html());
+
+    var teamMemberId = $(this).parents('#new-tm-project-form').find("input[name=team_member_id]").val();
+    var projId = $(this).val();
+    var projDate = $(this).parents('#new-tm-project-form').find("input[name=date]").val();
+    var projName = $(this).attr("title");
+    var projHandleCssClass = $(this).parent().find(".handle").attr("class");
+    
+    var timetableItem = new TimetableItem({
+      project_id: projId,
+      project_name: projName,
+      team_id: TEAM_ID,
+      team_member_id: teamMemberId,
+      date: projDate
+    });
+    
+    timetableItem.save();
+    
+    // Show temporary project
+    var tempProject = projectTemplate({
+      tmId: teamMemberId,
+      tmProjId: '',
+      projHandleCssClass: projHandleCssClass,
+      projDate: projDate,
+      projName: projName
+    });
+    var projContainer = $(".box[data-team-member-id=" + teamMemberId + "][data-date='" + projDate + "']");
+
+    $(projContainer).append(tempProject);      
+    var newProj = $(projContainer).find(".project").last();
+    $(newProj).addClass('is_loading');
+
+    timetableItem.on("sync", function(ttItem) {
+      var tmProjId = ttItem.get("team_member_project_id");
+      
+      // Regenerate project using template
+      submittedProj = projectTemplate({
+        tmId: teamMemberId,
+        tmProjId: tmProjId,
+        projHandleCssClass: projHandleCssClass,
+        projDate: projDate,
+        projName: projName
+      });
+      $(newProj).replaceWith(submittedProj);
+      setupProjects();
+
+      updateFlash("success", timetableItem.get("message"));
+    });
+    timetableItem.on("error", function(data) {
+      $(newProj).remove();
+      $(newProj).removeClass('is_loading');
+      
+      updateFlash("warning", JSON.parse(data.responseText)["message"]);
+    });
+
+    // Hide dialog box
+    $("#new-project-dialog").hide();
+    
+    return false;
+  } // existingProjectButtonClickHandle
 });
 
 var ProjectDialogView = Backbone.View.extend({
+  // Can't figure out how to do this as per http://ricostacruz.com/backbone-patterns/#inline_templates
+  //projectTemplate: _.template($("#project-template").html()),
+
   events: {
     "click .box": "openProjectDialog"
   },
@@ -245,16 +307,23 @@ var ProjectDialogView = Backbone.View.extend({
       $(this.el).append(newProjectDialog());
 
       // Add project to existing project list
-      var existingProjectsView = new ExistingProjectsView({ el: $("#existing-projects-listing") });
-      existingProjectsView.render();
+      this.existingProjectsView().render();
 
-      this.setupNewProjectDialog(box);
+      this.setupNewProjectDialog(box, this);
     }
 
     return this;
   },
 
-  setupNewProjectDialog: function(box) {
+  _existingProjectsView: null,
+  existingProjectsView: function() {
+    if (this._existingProjectsView == null) {
+      this._existingProjectsView = new ExistingProjectsView();  
+    }
+    return this._existingProjectsView;
+  },
+
+  setupNewProjectDialog: function(box, projectDialog) {
     // Hide if clicking outside #new-project-dialog
     $('html').click(function() {
       $("#new-project-dialog").hide();
@@ -313,66 +382,6 @@ var ProjectDialogView = Backbone.View.extend({
     var projectTemplate = _.template($("#project-template").html());
     var existingProjectsTemplate = _.template($("#existing-projects-listing-template").html());
 
-    $("#new-project-dialog .listing li button").click(function() {
-      var teamMemberId = $(this).parents('#new-tm-project-form').find("input[name=team_member_id]").val();
-      var projId = $(this).val();
-      var projDate = $(this).parents('#new-tm-project-form').find("input[name=date]").val();
-      var projName = $(this).attr("title");
-      var projHandleCssClass = $(this).parent().find(".handle").attr("class");
-      
-      var timetableItem = new TimetableItem({
-        project_id: projId,
-        project_name: projName,
-        team_id: TEAM_ID,
-        team_member_id: teamMemberId,
-        date: projDate
-      });
-      
-      timetableItem.save();
-      
-      // Show temporary project
-      var tempProject = projectTemplate({
-        tmId: teamMemberId,
-        tmProjId: '',
-        projHandleCssClass: projHandleCssClass,
-        projDate: projDate,
-        projName: projName
-      });
-      var projContainer = $(".box[data-team-member-id=" + teamMemberId + "][data-date='" + projDate + "']");
-
-      $(projContainer).append(tempProject);      
-      var newProj = $(projContainer).find(".project").last();
-      $(newProj).addClass('is_loading');
-
-      timetableItem.on("sync", function(ttItem) {
-        var tmProjId = ttItem.get("team_member_project_id");
-        
-        // Regenerate project using template
-        submittedProj = projectTemplate({
-          tmId: teamMemberId,
-          tmProjId: tmProjId,
-          projHandleCssClass: projHandleCssClass,
-          projDate: projDate,
-          projName: projName
-        });
-        $(newProj).replaceWith(submittedProj);
-        setupProjects();
-
-        updateFlash("success", timetableItem.get("message"));
-      });
-      timetableItem.on("error", function(data) {
-        $(newProj).remove();
-        $(newProj).removeClass('is_loading');
-        
-        updateFlash("warning", JSON.parse(data.responseText)["message"]);
-      });
-
-      // Hide dialog box
-      $("#new-project-dialog").hide();
-      
-      return false;
-    }); // $("#new-project-dialog .listing li button").click
-
     // AJAX-ify add new project
     $("#new-project-dialog .new-object-fieldset .submit-button").click(function() {
       var teamMemberId = $(this).parents('#new-tm-project-form').find("input[name=team_member_id]").val();
@@ -381,10 +390,8 @@ var ProjectDialogView = Backbone.View.extend({
       var projName = projNameTextbox.val();
       
       if (projName.length <= 0) {
-        
         // Focus textbox and exit
         $(projNameTextbox).focus();
-
       } else {
         var timetableItem = new TimetableItem({
           // No project_id because it is new
@@ -425,10 +432,7 @@ var ProjectDialogView = Backbone.View.extend({
 
           
           // Add project to existing project list
-          var existingProjects = existingProjectsTemplate({
-            projects: teamProjects.toArray()
-          });
-          $("#existing-projects-listing").replaceWith(existingProjects);
+          projectDialog.existingProjectsView().render();
 
           // Regenerate project using template
           submittedProj = projectTemplate({
@@ -439,6 +443,7 @@ var ProjectDialogView = Backbone.View.extend({
             projName: projName
           });
           $(newProj).replaceWith(submittedProj);
+
           setupProjects();
 
           updateFlash("success", timetableItem.get("message"));
@@ -456,6 +461,8 @@ var ProjectDialogView = Backbone.View.extend({
         // Hide dialog box
         $("#new-project-dialog").hide();
       }
+
+      setupProjects();
 
       return false;
     }); // $("#new-project-dialog .new-object-fieldset .submit-button").click
