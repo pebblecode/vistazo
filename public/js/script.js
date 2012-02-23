@@ -142,7 +142,8 @@ var TeamMemberView = Backbone.View.extend({
 
     setupEditTeamMemberDialog();
     setupNewProjectDialog();
-
+    setupProjects();
+    
     return this;
   }  
 });
