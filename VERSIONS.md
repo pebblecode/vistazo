@@ -1,3 +1,10 @@
+# 0.8.0
+
+* Fluid layout
+* Delete projects
+* Ajaxify new project, delete project, and add team member
+* Bug fixes
+
 # 0.7.1
 
 * Add weekends to week view
