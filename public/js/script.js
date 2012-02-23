@@ -606,7 +606,7 @@ function setupProjects() {
     event.stopPropagation(); // Prevent opening new project dialog
   });
 
-  // Team member project delete button
+  // Timetable item delete button
   // Only show on hover
   $(".project .delete-tm-project-form button").hide();
   $(".project").hover(
