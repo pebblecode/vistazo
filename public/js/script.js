@@ -107,7 +107,7 @@ teamMembers.bind('error', function(response) {
 
 var TeamMemberView = Backbone.View.extend({
   events: { 
-    "click #new-team-member-form .submit-button" : "handleNewTeamMember" 
+    "click #new-team-member-form .submit-button": "handleNewTeamMember" 
   },
   handleNewTeamMember: function(data) {
     var inputField = $('input[name=new_team_member_name]');
