@@ -185,7 +185,7 @@ var teamProjects = new Projects;
 
 var ExistingProjectsView = Backbone.View.extend({
   events: {
-    "click #new-project-dialog .listing li button": "existingProjectButtonClickHandle"
+    "click #existing-projects-listing button": "existingProjectButtonClickHandle"
   },
   render: function() {
     // TODO: Figure out how to DRY this up
