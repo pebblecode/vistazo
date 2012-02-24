@@ -120,6 +120,13 @@
             </form>
           </div>
         {% }); %}
+        <% if (work_day == THURSDAY) %>
+          {% if (isFirst) { %}
+            <div id="help-project-container">
+              <div id="help-project"></div>
+            </div>
+          {% } %}
+        <% end %>
       </td>
     <% end %>
     <td class="{{ rowClass }} col-last" %></td>
