@@ -184,33 +184,31 @@ var teamProjects = new Projects;
 
 
 var ExistingProjectsView = Backbone.View.extend({
-  resetElement: function() {
-    this.setElement($("#existing-projects-listing"));
+  events: {
+    "click #new-project-dialog .listing li button": "existingProjectButtonClickHandle"
   },
   render: function() {
-    this.resetElement();
-
     // TODO: Figure out how to DRY this up
     var existingProjTemplate = _.template($("#existing-projects-listing-template").html());
     var projListingHtml = existingProjTemplate({
       projects: teamProjects.toArray()
     });
     $(this.el).replaceWith(projListingHtml);
-    
-
-    $("#new-project-dialog .listing li button").click(this.existingProjectButtonClickHandle);
+    this.setElement($("#existing-projects-listing")); // Re-initialise element after replacement
 
     return this;
   },
-  existingProjectButtonClickHandle: function() {
+  existingProjectButtonClickHandle: function(event) {
+    var button = event.target;
+
     // TODO: Figure out how to DRY this up
     var projectTemplate = _.template($("#project-template").html());
 
-    var teamMemberId = $(this).parents('#new-tm-project-form').find("input[name=team_member_id]").val();
-    var projId = $(this).val();
-    var projDate = $(this).parents('#new-tm-project-form').find("input[name=date]").val();
-    var projName = $(this).attr("title");
-    var projHandleCssClass = $(this).parent().find(".handle").attr("class");
+    var teamMemberId = $(button).parents('#new-tm-project-form').find("input[name=team_member_id]").val();
+    var projId = $(button).val();
+    var projDate = $(button).parents('#new-tm-project-form').find("input[name=date]").val();
+    var projName = $(button).attr("title");
+    var projHandleCssClass = $(button).parent().find(".handle").attr("class");
     
     var timetableItem = new TimetableItem({
       project_id: projId,
@@ -316,12 +314,8 @@ var ProjectDialogView = Backbone.View.extend({
     return this;
   },
 
-  _existingProjectsView: null,
   existingProjectsView: function() {
-    if (this._existingProjectsView == null) {
-      this._existingProjectsView = new ExistingProjectsView();  
-    }
-    return this._existingProjectsView;
+    return new ExistingProjectsView({el: $("#existing-projects-listing")});
   },
 
   setupNewProjectDialog: function(box, projectDialog) {
