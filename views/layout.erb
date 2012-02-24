@@ -24,6 +24,7 @@
   <script src="/js/jquery.labelify.js" type="text/javascript"></script>
   <script src="/js/underscore-min.js" type="text/javascript"></script>
   <script src="/js/backbone-min.js" type="text/javascript"></script>
+  <script src="/js/script.js" type="text/javascript"></script>
   <script type="text/javascript">
     /*
      * Preload images jQuery plugin
@@ -42,20 +43,40 @@
       ///////////////////////////////////////////////////////////////
       // Set up backbone
       ///////////////////////////////////////////////////////////////
-      
+
       App.projectDialogView = new App.ProjectDialogView({el: "body"});
 
+      App.teamProjects = new App.Projects;
       App.teamProjects.reset(<%= @projects.to_json %>);
 
       // Initialise team members
       App.teamMemberView = new App.TeamMemberView({el: $('#week-view')});
+      App.teamMembers = new App.TeamMembers;
+      App.teamMembers.bind('sync', function(teamMember) {
+        App.teamMemberView.render(teamMember);
+        updateFlash("success", "Successfully added '<em>" + teamMember.get('name') + "</em>'.");
+      });
+
+      App.teamMembers.bind('error', function(response) {
+        if (response) {
+          try {
+            respJson = JSON.parse(response.responseText);
+            updateFlash("warning", respJson["message"]);
+          } catch(error) {
+            console.log(error);
+            updateFlashWithError();
+          }
+        } else {
+          updateFlashWithError();
+        }
+      });
+
       App.teamMembers.reset(<%= @team_members.to_json %>);
       App.teamMembers.each(function(tm) {
         App.teamMemberView.render(tm);
       });
     });
   </script>
-  <script src="/js/script.js" type="text/javascript"></script>  
 </head>
 <%
   body_classes = []

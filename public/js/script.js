@@ -5,50 +5,6 @@ var App = {};
 
 var TEAM_ID = window.location.pathname.split('/')[1]; // From the first path of url
 
-
-// Dynamically add stylesheets
-// From http://stackoverflow.com/a/524798
-if (typeof document.createStyleSheet === 'undefined') {
-  document.createStyleSheet = (function() {
-    function createStyleSheet(href) {
-      if(typeof href !== 'undefined') {
-        var element = document.createElement('link');
-        element.type = 'text/css';
-        element.rel = 'stylesheet';
-        element.href = href;
-      }
-      else {
-        var element = document.createElement('style');
-        element.type = 'text/css';
-      }
-
-      document.getElementsByTagName('head')[0].appendChild(element);
-      var sheet = document.styleSheets[document.styleSheets.length - 1];
-
-      if(typeof sheet.addRule === 'undefined')
-        sheet.addRule = addRule;
-
-      if(typeof sheet.removeRule === 'undefined')
-        sheet.removeRule = sheet.deleteRule;
-
-      return sheet;
-    }
-
-    function addRule(selectorText, cssText, index) {
-      if(typeof index === 'undefined')
-        index = this.cssRules.length;
-
-      this.insertRule(selectorText + ' {' + cssText + '}', index);
-    }
-
-    return createStyleSheet;
-  })();
-}
-
-/*
- * Backbone.js definitions
- */
-
 // Use mustache symbols for variables in templates
 // To interpolate values from input use: {{ ... }}
 // To evaluate js use: {% ... %}
@@ -56,6 +12,10 @@ _.templateSettings = {
   interpolate: /\{\{(.+?)\}\}/g,
   evaluate: /\{\%(.+?)\%\}/g
 };
+
+///////////////////////////////////////////////////////////////
+// Model/Collection declarations
+///////////////////////////////////////////////////////////////
 
 App.TeamMember = Backbone.Model.extend({
   defaults: {
@@ -69,26 +29,42 @@ App.TeamMembers = Backbone.Collection.extend({
   url: "/" + TEAM_ID + "/team-members"
 });
 
-App.teamMembers = new App.TeamMembers;
-
-App.teamMembers.bind('sync', function(teamMember) {
-  App.teamMemberView.render(teamMember);
-  updateFlash("success", "Successfully added '<em>" + teamMember.get('name') + "</em>'.");
-});
-
-App.teamMembers.bind('error', function(response) {
-  if (response) {
-    try {
-      respJson = JSON.parse(response.responseText);
-      updateFlash("warning", respJson["message"]);
-    } catch(error) {
-      console.log(error);
-      updateFlashWithError();
-    }
-  } else {
-    updateFlashWithError();
+App.TimetableItem = Backbone.Model.extend({
+  defaults: {
+    project_id: "",
+    project_name: "",
+    team_id: "",
+    team_member_id: "",
+    date: ""
+  },
+  url: function() {
+    return "/" + this.get("team_id") + "/team-member/" + this.get("team_member_id") + "/timetable-items/new.json";
   }
 });
+
+App.Project = Backbone.Model.extend({
+  defaults: {
+    id: "",
+    name: "",
+    hex_colour: ""
+  },
+
+  // Same logic as lib/css_classes.rb > get_project_css_class
+  css_class: function() {
+    var formattedId = this.get("id").toLowerCase().replace(/W/g, '-');
+    return "project-" + formattedId;
+  }
+});
+
+App.Projects = Backbone.Collection.extend({
+  model: App.Project,
+  url: "/" + TEAM_ID + "/projects"
+});
+
+
+///////////////////////////////////////////////////////////////
+// View declarations
+///////////////////////////////////////////////////////////////
 
 App.TeamMemberView = Backbone.View.extend({
   events: { 
@@ -133,41 +109,6 @@ App.TeamMemberView = Backbone.View.extend({
     return this;
   }  
 });
-
-App.TimetableItem = Backbone.Model.extend({
-  defaults: {
-    project_id: "",
-    project_name: "",
-    team_id: "",
-    team_member_id: "",
-    date: ""
-  },
-  url: function() {
-    return "/" + this.get("team_id") + "/team-member/" + this.get("team_member_id") + "/timetable-items/new.json";
-  }
-});
-
-App.Project = Backbone.Model.extend({
-  defaults: {
-    id: "",
-    name: "",
-    hex_colour: ""
-  },
-
-  // Same logic as lib/css_classes.rb > get_project_css_class
-  css_class: function() {
-    var formattedId = this.get("id").toLowerCase().replace(/W/g, '-');
-    return "project-" + formattedId;
-  }
-});
-
-App.Projects = Backbone.Collection.extend({
-  model: App.Project,
-  url: "/" + TEAM_ID + "/projects"
-});
-
-App.teamProjects = new App.Projects;
-
 
 App.ExistingProjectsView = Backbone.View.extend({
   events: {
@@ -453,7 +394,50 @@ App.ProjectDialogView = Backbone.View.extend({
 });
 
 
+///////////////////////////////////////////////////////////////
+// Setup
+///////////////////////////////////////////////////////////////
+
 $(function () {
+
+  // Dynamically add stylesheets
+  // From http://stackoverflow.com/a/524798
+  if (typeof document.createStyleSheet === 'undefined') {
+    document.createStyleSheet = (function() {
+      function createStyleSheet(href) {
+        if(typeof href !== 'undefined') {
+          var element = document.createElement('link');
+          element.type = 'text/css';
+          element.rel = 'stylesheet';
+          element.href = href;
+        }
+        else {
+          var element = document.createElement('style');
+          element.type = 'text/css';
+        }
+
+        document.getElementsByTagName('head')[0].appendChild(element);
+        var sheet = document.styleSheets[document.styleSheets.length - 1];
+
+        if(typeof sheet.addRule === 'undefined')
+          sheet.addRule = addRule;
+
+        if(typeof sheet.removeRule === 'undefined')
+          sheet.removeRule = sheet.deleteRule;
+
+        return sheet;
+      }
+
+      function addRule(selectorText, cssText, index) {
+        if(typeof index === 'undefined')
+          index = this.cssRules.length;
+
+        this.insertRule(selectorText + ' {' + cssText + '}', index);
+      }
+
+      return createStyleSheet;
+    })();
+  }
   
   // Flash the flash message
   if ($("#flash").length > 0) {
@@ -572,6 +556,11 @@ $(function () {
     $("body").removeClass("help-on");
   });
 });
+
+
+///////////////////////////////////////////////////////////////
+// Helper functions
+///////////////////////////////////////////////////////////////
 
 // Overlays - close dialogs when clicking (Note: need to run this after dialogs are created)
 function overlayCloseOnClick() {
