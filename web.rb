@@ -837,7 +837,7 @@ end
 # ----------------------------------------------------------------------------
 
 not_found do
-  logger.info "not_found: #{request.path_info}"
+  logger.info "not_found: #{request.request_method} #{request.url}"
 end
 
 # All errors
