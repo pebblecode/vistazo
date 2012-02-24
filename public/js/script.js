@@ -1,3 +1,8 @@
+// Global app namespace
+var App = {};
+
+(function() {
+
 var TEAM_ID = window.location.pathname.split('/')[1]; // From the first path of url
 
 
@@ -40,26 +45,6 @@ if (typeof document.createStyleSheet === 'undefined') {
   })();
 }
 
-
-// Attempt at modularising backbone code
-// VistazoApp = (function($) {
-//   TeamMemberView = Backbone.View.extend({
-//     render: function() {
-//       $("week-view").html("weeeeeek");
-//     }
-//   });
-
-//   var self = {};
-//   self.start = function() {
-//     new TeamMemberView({el: $('#week-view')}).render();
-//   }
-//   return self;
-// });
-
-// $(function() {
-//   new VistazoApp(jQuery).start();
-// });
-
 /*
  * Backbone.js definitions
  */
@@ -72,26 +57,26 @@ _.templateSettings = {
   evaluate: /\{\%(.+?)\%\}/g
 };
 
-var TeamMember = Backbone.Model.extend({
+App.TeamMember = Backbone.Model.extend({
   defaults: {
     name : ""
   },
   url: "/" + TEAM_ID + "/team-member/add"
 });
 
-var TeamMembers = Backbone.Collection.extend({
-  model: TeamMember,
+App.TeamMembers = Backbone.Collection.extend({
+  model: App.TeamMember,
   url: "/" + TEAM_ID + "/team-members"
 });
 
-var teamMembers = new TeamMembers;
+App.teamMembers = new App.TeamMembers;
 
-teamMembers.bind('sync', function(teamMember) {
-  teamMemberView.render(teamMember);
+App.teamMembers.bind('sync', function(teamMember) {
+  App.teamMemberView.render(teamMember);
   updateFlash("success", "Successfully added '<em>" + teamMember.get('name') + "</em>'.");
 });
 
-teamMembers.bind('error', function(response) {
+App.teamMembers.bind('error', function(response) {
   if (response) {
     try {
       respJson = JSON.parse(response.responseText);
@@ -105,19 +90,19 @@ teamMembers.bind('error', function(response) {
   }
 });
 
-var TeamMemberView = Backbone.View.extend({
+App.TeamMemberView = Backbone.View.extend({
   events: { 
     "click #new-team-member-form .submit-button": "handleNewTeamMember" 
   },
   handleNewTeamMember: function(data) {
     var inputField = $('input[name=new_team_member_name]');
     
-    var tm = new TeamMember({
+    var tm = new App.TeamMember({
       name: inputField.val()
     });
 
     tm.save();
-    teamMembers.add(tm);
+    App.teamMembers.add(tm);
 
     inputField.val('');
 
@@ -135,7 +120,7 @@ var TeamMemberView = Backbone.View.extend({
       oddOrEvenClass: oddOrEvenClass,
       rowClass: rowClass,
       tmProjects: teamMember.get("timetable_items"),
-      isFirst: (teamMembers.first() == teamMember)
+      isFirst: (App.teamMembers.first() == teamMember)
     };
     var week = _.template($("#week-template").html(), weekTemplateVars);
     
@@ -149,7 +134,7 @@ var TeamMemberView = Backbone.View.extend({
   }  
 });
 
-var TimetableItem = Backbone.Model.extend({
+App.TimetableItem = Backbone.Model.extend({
   defaults: {
     project_id: "",
     project_name: "",
@@ -162,7 +147,7 @@ var TimetableItem = Backbone.Model.extend({
   }
 });
 
-var Project = Backbone.Model.extend({
+App.Project = Backbone.Model.extend({
   defaults: {
     id: "",
     name: "",
@@ -176,15 +161,15 @@ var Project = Backbone.Model.extend({
   }
 });
 
-var Projects = Backbone.Collection.extend({
-  model: Project,
+App.Projects = Backbone.Collection.extend({
+  model: App.Project,
   url: "/" + TEAM_ID + "/projects"
 });
 
-var teamProjects = new Projects;
+App.teamProjects = new App.Projects;
 
 
-var ExistingProjectsView = Backbone.View.extend({
+App.ExistingProjectsView = Backbone.View.extend({
   events: {
     "click #existing-projects-listing button": "existingProjectButtonClickHandle"
   },
@@ -192,7 +177,7 @@ var ExistingProjectsView = Backbone.View.extend({
     // TODO: Figure out how to DRY this up
     var existingProjTemplate = _.template($("#existing-projects-listing-template").html());
     var projListingHtml = existingProjTemplate({
-      projects: teamProjects.toArray()
+      projects: App.teamProjects.toArray()
     });
     $(this.el).replaceWith(projListingHtml);
     this.setElement($("#existing-projects-listing")); // Re-initialise element after replacement
@@ -211,7 +196,7 @@ var ExistingProjectsView = Backbone.View.extend({
     var projName = $(button).attr("title");
     var projHandleCssClass = $(button).parent().find(".handle").attr("class");
     
-    var timetableItem = new TimetableItem({
+    timetableItem = new App.TimetableItem({
       project_id: projId,
       project_name: projName,
       team_id: TEAM_ID,
@@ -249,7 +234,7 @@ var ExistingProjectsView = Backbone.View.extend({
       $(newProj).replaceWith(submittedProj);
       setupProjects();
 
-      updateFlash("success", timetableItem.get("message"));
+      updateFlash("success", ttItem.get("message"));
     });
     timetableItem.on("error", function(data) {
       $(newProj).remove();
@@ -265,7 +250,7 @@ var ExistingProjectsView = Backbone.View.extend({
   } // existingProjectButtonClickHandle
 });
 
-var ProjectDialogView = Backbone.View.extend({
+App.ProjectDialogView = Backbone.View.extend({
   // Can't figure out how to do this as per http://ricostacruz.com/backbone-patterns/#inline_templates
   //projectTemplate: _.template($("#project-template").html()),
 
@@ -316,7 +301,7 @@ var ProjectDialogView = Backbone.View.extend({
   },
 
   existingProjectsView: function() {
-    return new ExistingProjectsView({el: $("#existing-projects-listing")});
+    return new App.ExistingProjectsView({el: $("#existing-projects-listing")});
   },
 
   setupNewProjectDialog: function(box, projectDialog) {
@@ -389,7 +374,7 @@ var ProjectDialogView = Backbone.View.extend({
         // Focus textbox and exit
         $(projNameTextbox).focus();
       } else {
-        var timetableItem = new TimetableItem({
+        var timetableItem = new App.TimetableItem({
           // No project_id because it is new
           project_name: projName,
           team_id: TEAM_ID,
@@ -418,8 +403,8 @@ var ProjectDialogView = Backbone.View.extend({
           
 
           // Update project styles
-          var retProj = new Project(ttItem.get("project"));
-          teamProjects.add(retProj);
+          var retProj = new App.Project(ttItem.get("project"));
+          App.teamProjects.add(retProj);
 
           var projectCssSel = '.' + retProj.css_class();
           var projectCssStyle = 'background-color: ' + retProj.get("hex_colour") + ';';
@@ -442,7 +427,7 @@ var ProjectDialogView = Backbone.View.extend({
 
           setupProjects();
 
-          updateFlash("success", timetableItem.get("message"));
+          updateFlash("success", ttItem.get("message"));
         });
         timetableItem.on("error", function(data) {
           $(newProj).remove();
@@ -779,4 +764,8 @@ function updateFlash(flashType, msg) {
 function updateFlashWithError() {
   updateFlash("warning", "Something weird happened. Please contact support about it.");
 }
+
+
+
+})();
 
