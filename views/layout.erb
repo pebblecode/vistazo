@@ -110,17 +110,15 @@
     <%= erb :_js_templates %>
   <% end %>
   <script>
-    $(function () {
-      var projectDialogView = new ProjectDialogView({el: "body"});
+    var projectDialogView = new ProjectDialogView({el: "body"});
 
-      teamProjects.reset(<%= @projects.to_json %>);
+    teamProjects.reset(<%= @projects.to_json %>);
 
-      // Initialise team members
-      var teamMemberView = new TeamMemberView({el: $('#week-view')});
-      teamMembers.reset(<%= @team_members.to_json %>);
-      teamMembers.each(function(tm) {
-        teamMemberView.render(tm);
-      });
+    // Initialise team members
+    var teamMemberView = new TeamMemberView({el: $('#week-view')});
+    teamMembers.reset(<%= @team_members.to_json %>);
+    teamMembers.each(function(tm) {
+      teamMemberView.render(tm);
     });
   </script>
 </body>
