@@ -729,9 +729,6 @@ function deleteTimetableItem(proj) {
       
     var url = "/team-member/" + teamMemberId + "/project/" + timetableItemId + "/delete.json";
     $(proj).addClass('is_loading');
-
-
-    console.log($(deleteButton));
     $(deleteButton).attr("disabled", "disabled");
 
     $.post(url)
