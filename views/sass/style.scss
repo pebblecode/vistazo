@@ -478,6 +478,51 @@ textarea:focus, input:focus{
 } // #flash
 
 
+/* View selector
+-----------------------------------------------------------------------------*/
+
+#view-selector {
+  position: absolute;
+  min-width: 1000px;
+  margin: 0 auto;
+  top: 112px;
+  left: 25px;
+
+  li {
+    a {
+      @include border-radius(5px);
+      outline: none;
+
+      font-size: 14px;
+      text-align: center;
+
+      display: block;
+      width: 90px;
+      padding: 7px 12px 10px;
+      text-decoration: none;
+      color: #bbbbbb;
+      background-color: #E6E6E6;
+    }
+    &#team-view-selector {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    &#project-view-selector {
+      position: absolute;
+      top: 0;
+      left: 118px;
+    }
+    &.active a {
+      background-color: white;
+      color: black;
+      position: absolute;
+      z-index: 200;
+    }
+  }
+} // #view-selector
+
+
 /* Main styles
 -----------------------------------------------------------------------------*/
 
@@ -488,6 +533,7 @@ textarea:focus, input:focus{
   @include box-shadow(0, 5px, 20px, rgba(0, 0, 0, 0.1));
   
   position: relative;
+  z-index: 0;
   width: 96%;
   min-width: 1000px;
   clear: both;
@@ -495,7 +541,7 @@ textarea:focus, input:focus{
   padding: 1%;
   background-color: #fff;
   margin-top: 0 auto;
-  
+
   #timetable {
     width: 100%;
     td, .first-row.col1, .first-row.col6 {
@@ -1453,7 +1499,7 @@ footer{
 #modify-data {
   display: block;
   position: absolute;
-  top: 110px;
+  top: 42px;
   left: 0px;
   
   a {

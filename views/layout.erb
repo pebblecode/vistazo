@@ -52,6 +52,7 @@
       App.teamProjects = new App.Projects;
       App.teamProjects.reset(<%= @projects.to_json %>);
 
+      App.timetableViewSelector = new App.TimetableViewSelector({el: $("#view-selector")})
       // Initialise team members
       App.teamMemberView = new App.TeamMemberView({el: $('#timetable')});
       App.teamMembers = new App.TeamMembers;
@@ -128,6 +129,11 @@
   
   <%= styled_flash %>
   
+  <ul id="view-selector">
+    <li id="team-view-selector" class="active"><a href="#" title="View team member listing">Team view</a></li>
+    <li id="project-view-selector"><a href="#" title="View project listing">Project view</a></li>
+  </ul>
+
   <div id="main">
     <%= yield %>
   </div>

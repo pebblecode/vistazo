@@ -86,6 +86,18 @@ App.FlashView = Backbone.View.extend({
   }
 });
 
+App.TimetableViewSelector = Backbone.View.extend({
+  events: { 
+    "click #view-selector li a": "handleViewChange" 
+  },
+  handleViewChange: function(event) {
+    var viewLink = event.target;
+    console.log(viewLink);
+
+    return false;
+  }
+});
+
 App.TeamMemberView = Backbone.View.extend({
   events: { 
     "click #new-team-member-form .submit-button": "handleNewTeamMember" 
