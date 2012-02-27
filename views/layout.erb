@@ -53,7 +53,7 @@
       App.teamProjects.reset(<%= @projects.to_json %>);
 
       // Initialise team members
-      App.teamMemberView = new App.TeamMemberView({el: $('#week-view')});
+      App.teamMemberView = new App.TeamMemberView({el: $('#timetable')});
       App.teamMembers = new App.TeamMembers;
       App.teamMembers.bind('sync', function(teamMember) {
         App.teamMemberView.render(teamMember);

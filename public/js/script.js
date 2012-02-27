@@ -120,7 +120,7 @@ App.TeamMemberView = Backbone.View.extend({
     };
     var week = _.template($("#week-template").html(), weekTemplateVars);
     
-    $(this.el).find('#week-view-content').append(week);
+    $(this.el).find('#content').append(week);
 
     setupEditTeamMemberDialog();
     setupNewProjectDialog();
