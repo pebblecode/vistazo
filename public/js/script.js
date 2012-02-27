@@ -106,8 +106,10 @@ App.TimetableViewSelector = Backbone.View.extend({
       // Show relevant view
       if (parentId === "team-view-selector") {
         this._showTeamView();
+        $("#new-team-member-row").show();
       } else if (parentId === "project-view-selector") {
         this._showProjectView();
+        $("#new-team-member-row").hide();
       }
       this._setActiveView("#" + parentId);
     }
@@ -121,7 +123,7 @@ App.TimetableViewSelector = Backbone.View.extend({
     $(viewSelector).addClass("active");
   },
   _showTeamView: function() {
-    App.teamMemberView = new App.TeamMemberView({el: $('#timetable')});
+    App.teamMemberView = new App.TeamMemberView({ el: $("#timetable") });
 
     App.teamMembers.bind('sync', function(teamMember) {
       App.teamMemberView.render(teamMember);
@@ -147,7 +149,8 @@ App.TimetableViewSelector = Backbone.View.extend({
     });
   },
   _showProjectView: function() {
-    console.log("project");
+    App.projectListingView = new App.ProjectListingView({ el: $("#timetable #content") });
+    App.projectListingView.render();
   }
 });
 
@@ -195,6 +198,19 @@ App.TeamMemberView = Backbone.View.extend({
   }  
 });
 
+App.ProjectListingView = Backbone.View.extend({
+  render: function() {
+    var projectListingVars = {
+      projects: App.teamProjects.toArray(),
+      teamMembers: App.teamMembers.toArray()
+    };
+    var projectListing = _.template($("#project-listing-template").html(), projectListingVars);
+    $(this.el).append(projectListing);
+
+    return this;
+  }
+});
+
 App.ExistingProjectsView = Backbone.View.extend({
   events: {
     "click #existing-projects-listing button": "existingProjectButtonClickHandle"
@@ -214,7 +230,7 @@ App.ExistingProjectsView = Backbone.View.extend({
     var button = event.target;
 
     // TODO: Figure out how to DRY this up
-    var projectTemplate = _.template($("#project-template").html());
+    var projectTemplate = _.template($("#existing-project-template").html());
 
     var teamMemberId = $(button).parents('#new-tm-project-form').find("input[name=team_member_id]").val();
     var projId = $(button).val();
@@ -278,7 +294,7 @@ App.ExistingProjectsView = Backbone.View.extend({
 
 App.ProjectDialogView = Backbone.View.extend({
   // Can't figure out how to do this as per http://ricostacruz.com/backbone-patterns/#inline_templates
-  //projectTemplate: _.template($("#project-template").html()),
+  //projectTemplate: _.template($("#existing-project-template").html()),
 
   events: {
     "click .box": "openProjectDialog"
@@ -386,7 +402,7 @@ App.ProjectDialogView = Backbone.View.extend({
     }); // $("#new-project-dialog .delete")
 
     // AJAX-ify add existing project
-    var projectTemplate = _.template($("#project-template").html());
+    var projectTemplate = _.template($("#existing-project-template").html());
     var existingProjectsTemplate = _.template($("#existing-projects-listing-template").html());
 
     // AJAX-ify add new project

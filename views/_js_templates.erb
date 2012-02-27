@@ -42,7 +42,7 @@
   {% } %}
 </script>
 
-<script type="text/template" id="project-template">
+<script type="text/template" id="existing-project-template">
   <div class='project' data-team-member-id='{{ tmId }}' data-team-member-project-id='{{ tmProjId }}' data-date='{{ projDate }}'>
     <div class='handle-container'>
       <div class='{{ projHandleCssClass }}'></div>
@@ -131,4 +131,36 @@
     <% end %>
     <td class="{{ rowClass }} col-last" %></td>
   </tr>
+</script>
+
+<script type="text/template" id="project-listing-template">
+  {% if (projects.length > 0) { %}
+
+    {% var oddOrEvenClass = "odd"; %}
+    {% var rowClass = ""; %}
+
+    {% _.each(projects, function(project) { %}  
+      <tr class="row-divider">
+        <td colspan="9"><hr/></td>
+      </tr>  <!--the divider-->
+      <tr class="team-member {{ oddOrEvenClass }}">
+        <td class="{{ rowClass }} col1" title="{{ project.get("name") }}">
+          <div class="team-member-name">
+            {{ project.get("name").substring(0, 40) }}
+          </div>
+        </td>
+        
+        <% prev_cols = 1 %>
+        <% (MONDAY..SUNDAY).each do |work_day| %>
+          <% date = (@monday_date - 1.day) + work_day.day %>
+          <td class="box {{ rowClass }} <%= "col#{work_day + prev_cols}" %>" data-date="<%= date %>">
+
+          <!-- Add stuff here -->
+
+          </td>
+        <% end %>
+        <td class="{{ rowClass }} col-last" %></td>
+      </tr>
+    {% }); %}
+  {% } %}
 </script>
