@@ -691,6 +691,8 @@ function updateTimetableItem(proj) {
       var old_team_member_id = delete_url.split("/")[2];
       var new_delete_url = delete_url.replace(old_team_member_id, toTeamMemberId);
       $(proj).find(".delete-tm-project-form").attr("action", new_delete_url);
+      
+      setupProjects();
     })
     .error(function(response) {
       // Move team member project back
