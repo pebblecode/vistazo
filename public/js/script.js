@@ -87,14 +87,67 @@ App.FlashView = Backbone.View.extend({
 });
 
 App.TimetableViewSelector = Backbone.View.extend({
-  events: { 
-    "click #view-selector li a": "handleViewChange" 
+  initialize: function() {
+    // Show team view by default
+    this._showTeamView();
   },
-  handleViewChange: function(event) {
+  events: { 
+    "click #view-selector li a": "render" 
+  },
+  render: function(event) {
     var viewLink = event.target;
-    console.log(viewLink);
+    var currentViewId = $("#view-selector .active").attr("id");
+    var parentId = $(viewLink).parent().attr("id");
+
+    if (parentId !== currentViewId) {
+      // Clear view
+      $('#content').empty();
+
+      // Show relevant view
+      if (parentId === "team-view-selector") {
+        this._showTeamView();
+      } else if (parentId === "project-view-selector") {
+        this._showProjectView();
+      }
+      this._setActiveView("#" + parentId);
+    }
 
     return false;
+  },
+  _setActiveView: function(viewSelector) {
+    $("#view-selector .active").each(function() {
+      $(this).removeClass("active");
+    });
+    $(viewSelector).addClass("active");
+  },
+  _showTeamView: function() {
+    App.teamMemberView = new App.TeamMemberView({el: $('#timetable')});
+
+    App.teamMembers.bind('sync', function(teamMember) {
+      App.teamMemberView.render(teamMember);
+      App.flashView.render("success", "Successfully added '<em>" + teamMember.get('name') + "</em>'.");
+    });
+
+    App.teamMembers.bind('error', function(response) {
+      if (response) {
+        try {
+          respJson = JSON.parse(response.responseText);
+          App.flashView.render(("warning", respJson["message"]));
+        } catch(error) {
+          console.log(error);
+          App.flashView.renderError();
+        }
+      } else {
+        App.flashView.renderError();
+      }
+    });
+
+    App.teamMembers.each(function(tm) {
+      App.teamMemberView.render(tm);
+    });
+  },
+  _showProjectView: function() {
+    console.log("project");
   }
 });
 
