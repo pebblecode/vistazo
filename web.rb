@@ -219,7 +219,7 @@ get '/' do
   erb :homepage, :layout => false
 end
 
-# Vistazo weekly view - the crux of the app
+# Vistazo timetable view - the crux of the app
 get '/:team_id/:year/week/:week_num' do
   protected!
   require_team_user!(params[:team_id])
@@ -273,7 +273,7 @@ get '/:team_id/:year/week/:week_num' do
         end
       end
 
-      erb :week
+      erb :timetable
     else
       flash.next[:warning] = "Invalid week and year."
       redirect "/#{params[:team_id]}"
