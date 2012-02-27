@@ -66,6 +66,26 @@ App.Projects = Backbone.Collection.extend({
 // View declarations
 ///////////////////////////////////////////////////////////////
 
+App.FlashView = Backbone.View.extend({
+  render: function(flashType, msg) {
+    var flashMessage = "<div class='flash " + flashType + "'>" + msg + "</div>";
+    
+    if ($("#flash").length <= 0) {
+      $(this.el).before("<div id='flash'></div>");
+    }  
+    
+    $("#flash .flash").remove();
+    // Flash the flash message
+    $("#flash").append(flashMessage).hide(0, function() {
+      $(this).fadeIn(1000);
+    });
+  },
+
+  renderError: function() {
+    this.render("warning", "Something weird happened. Please contact support about it.");
+  }
+});
+
 App.TeamMemberView = Backbone.View.extend({
   events: { 
     "click #new-team-member-form .submit-button": "handleNewTeamMember" 
@@ -175,13 +195,13 @@ App.ExistingProjectsView = Backbone.View.extend({
       $(newProj).replaceWith(submittedProj);
       setupProjects();
 
-      updateFlash("success", ttItem.get("message"));
+      App.flashView.render("success", ttItem.get("message"));
     });
     timetableItem.on("error", function(data) {
       $(newProj).remove();
       $(newProj).removeClass('is_loading');
       
-      updateFlash("warning", JSON.parse(data.responseText)["message"]);
+      App.flashView.render("warning", JSON.parse(data.responseText)["message"]);
     });
 
     // Hide dialog box
@@ -368,13 +388,13 @@ App.ProjectDialogView = Backbone.View.extend({
 
           setupProjects();
 
-          updateFlash("success", ttItem.get("message"));
+          App.flashView.render("success", ttItem.get("message"));
         });
         timetableItem.on("error", function(data) {
           $(newProj).remove();
           $(newProj).removeClass('is_loading');
           
-          updateFlash("warning", JSON.parse(data.responseText)["message"]);
+          App.flashView.render("warning", JSON.parse(data.responseText)["message"]);
         });
 
         // Clear new project name textbox
@@ -683,12 +703,12 @@ function updateTimetableItem(proj) {
     .complete(function(data, status) {
       response = JSON.parse(data.responseText);
       if (status == "success") {
-        updateFlash("success", response["message"]);
+        App.flashView.render("success", response["message"]);
       } else {
         if (response) {
-          updateFlash("warning", response["message"]);
+          App.flashView.render("warning", response["message"]);
         } else {
-          updateFlash("warning", "Something weird happened. Please contact support about it.");
+          App.flashView.render("warning", "Something weird happened. Please contact support about it.");
         }
       }
       
@@ -716,12 +736,12 @@ function deleteTimetableItem(proj) {
     .complete(function(data, status) {
       response = JSON.parse(data.responseText);
       if (status == "success") {
-        updateFlash("success", response["message"]);
+        App.flashView.render("success", response["message"]);
       } else {
         if (response) {
-          updateFlash("warning", response["message"]);
+          App.flashView.render("warning", response["message"]);
         } else {
-          updateFlash("warning", "Something weird happened. Please contact support about it.");
+          App.flashView.render("warning", "Something weird happened. Please contact support about it.");
         }
       }
       
@@ -741,23 +761,5 @@ function overlayCloseOnClick() {
   $(".ui-widget-overlay").live('click', function(){
      $(".ui-dialog-titlebar-close").trigger('click');
   });
-}
-
-function updateFlash(flashType, msg) {
-  var flashMessage = "<div class='flash " + flashType + "'>" + msg + "</div>";
-  
-  if ($("#flash").length <= 0) {
-    $("#main").before("<div id='flash'></div>");
-  }  
-  
-  $("#flash .flash").remove();
-  // Flash the flash message
-  $("#flash").append(flashMessage).hide(0, function() {
-    $(this).fadeIn(1000);
-  });
-}
-
-function updateFlashWithError() {
-  updateFlash("warning", "Something weird happened. Please contact support about it.");
 }
 

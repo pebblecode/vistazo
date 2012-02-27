@@ -43,7 +43,7 @@
       ///////////////////////////////////////////////////////////////
       // Set up backbone
       ///////////////////////////////////////////////////////////////
-
+      App.flashView = new App.FlashView({el: "#main"});
       App.projectDialogView = new App.ProjectDialogView({el: "body"});
 
       App.teamProjects = new App.Projects;
@@ -54,20 +54,20 @@
       App.teamMembers = new App.TeamMembers;
       App.teamMembers.bind('sync', function(teamMember) {
         App.teamMemberView.render(teamMember);
-        updateFlash("success", "Successfully added '<em>" + teamMember.get('name') + "</em>'.");
+        App.flashView.render("success", "Successfully added '<em>" + teamMember.get('name') + "</em>'.");
       });
 
       App.teamMembers.bind('error', function(response) {
         if (response) {
           try {
             respJson = JSON.parse(response.responseText);
-            updateFlash("warning", respJson["message"]);
+            App.flashView.render(("warning", respJson["message"]));
           } catch(error) {
             console.log(error);
-            updateFlashWithError();
+            App.flashView.renderError();
           }
         } else {
-          updateFlashWithError();
+          App.flashView.renderError();
         }
       });
 
