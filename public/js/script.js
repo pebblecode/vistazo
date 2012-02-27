@@ -721,34 +721,45 @@ function updateTimetableItem(proj) {
 
 // Delete team member project
 function deleteTimetableItem(proj) {
-  var teamMemberId = $(proj).attr("data-team-member-id");
-  var timetableItemId = $(proj).attr("data-team-member-project-id");
-    
-  var url = "/team-member/" + teamMemberId + "/project/" + timetableItemId + "/delete.json";
-  $(proj).addClass('is_loading');
-  $.post(url)
-    .success(function(response) {
-      $(proj).fadeOut("slow", function() {
-        $(this).remove();
-      });
-    })
-    .error(function(response) {
-      // Do nothing
-    })
-    .complete(function(data, status) {
-      response = JSON.parse(data.responseText);
-      if (status == "success") {
-        App.flashView.render("success", response["message"]);
-      } else {
-        if (response) {
-          App.flashView.render("warning", response["message"]);
-        } else {
-          App.flashView.render("warning", "Something weird happened. Please contact support about it.");
-        }
-      }
+  var deleteButton = $(proj).find(".delete-tm-project-form button");
+
+  if ($(deleteButton).is(":enabled")) {
+    var teamMemberId = $(proj).attr("data-team-member-id");
+    var timetableItemId = $(proj).attr("data-team-member-project-id");
       
-      $(proj).removeClass('is_loading');
-    });
+    var url = "/team-member/" + teamMemberId + "/project/" + timetableItemId + "/delete.json";
+    $(proj).addClass('is_loading');
+
+
+    console.log($(deleteButton));
+    $(deleteButton).attr("disabled", "disabled");
+
+    $.post(url)
+      .success(function(response) {
+        $(proj).fadeOut("slow", function() {
+          $(this).remove();
+        });
+      })
+      .error(function(response) {
+        // Re-enable delete button
+        $(deleteButton).removeAttr("disabled");
+        setupProjectEvents();
+      })
+      .complete(function(data, status) {
+        response = JSON.parse(data.responseText);
+        if (status == "success") {
+          App.flashView.render("success", response["message"]);
+        } else {
+          if (response) {
+            App.flashView.render("warning", response["message"]);
+          } else {
+            App.flashView.render("warning", "Something weird happened. Please contact support about it.");
+          }
+        }
+        
+        $(proj).removeClass('is_loading');
+      });
+  }
 }
 
 })();
