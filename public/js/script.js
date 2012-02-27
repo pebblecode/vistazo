@@ -118,7 +118,7 @@ App.TeamMemberView = Backbone.View.extend({
       tmProjects: teamMember.get("timetable_items"),
       isFirst: (App.teamMembers.first() == teamMember)
     };
-    var week = _.template($("#week-template").html(), weekTemplateVars);
+    var week = _.template($("#team-member-template").html(), weekTemplateVars);
     
     $(this.el).find('#content').append(week);
 
