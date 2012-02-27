@@ -562,13 +562,6 @@ $(function () {
 // Helper functions
 ///////////////////////////////////////////////////////////////
 
-// Overlays - close dialogs when clicking (Note: need to run this after dialogs are created)
-function overlayCloseOnClick() {
-  $(".ui-widget-overlay").live('click', function(){
-     $(".ui-dialog-titlebar-close").trigger('click');
-  });
-}
-
 function setupProjects() {
   $(".project").click(function(event) {
     $("#new-project-dialog").hide();
@@ -736,6 +729,20 @@ function deleteTimetableItem(proj) {
     });
 }
 
+})();
+
+
+///////////////////////////////////////////////////////////////
+// Helper functions
+///////////////////////////////////////////////////////////////
+
+// Overlays - close dialogs when clicking (Note: need to run this after dialogs are created)
+function overlayCloseOnClick() {
+  $(".ui-widget-overlay").live('click', function(){
+     $(".ui-dialog-titlebar-close").trigger('click');
+  });
+}
+
 function updateFlash(flashType, msg) {
   var flashMessage = "<div class='flash " + flashType + "'>" + msg + "</div>";
   
@@ -753,8 +760,4 @@ function updateFlash(flashType, msg) {
 function updateFlashWithError() {
   updateFlash("warning", "Something weird happened. Please contact support about it.");
 }
-
-
-
-})();
 
