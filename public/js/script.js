@@ -90,7 +90,7 @@ App.TeamMemberView = Backbone.View.extend({
   events: { 
     "click #new-team-member-form .submit-button": "handleNewTeamMember" 
   },
-  handleNewTeamMember: function(data) {
+  handleNewTeamMember: function(event) {
     var inputField = $('input[name=new_team_member_name]');
     
     var tm = new App.TeamMember({
