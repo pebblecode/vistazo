@@ -124,7 +124,7 @@ App.TeamMemberView = Backbone.View.extend({
 
     setupEditTeamMemberDialog();
     setupNewProjectDialog();
-    setupProjects();
+    setupProjectEvents();
     
     return this;
   }  
@@ -193,7 +193,7 @@ App.ExistingProjectsView = Backbone.View.extend({
         projName: projName
       });
       $(newProj).replaceWith(submittedProj);
-      setupProjects();
+      setupProjectEvents();
 
       App.flashView.render("success", ttItem.get("message"));
     });
@@ -386,7 +386,7 @@ App.ProjectDialogView = Backbone.View.extend({
           });
           $(newProj).replaceWith(submittedProj);
 
-          setupProjects();
+          setupProjectEvents();
 
           App.flashView.render("success", ttItem.get("message"));
         });
@@ -404,12 +404,12 @@ App.ProjectDialogView = Backbone.View.extend({
         $("#new-project-dialog").hide();
       }
 
-      setupProjects();
+      setupProjectEvents();
 
       return false;
     }); // $("#new-project-dialog .new-object-fieldset .submit-button").click
 
-    setupProjects();
+    setupProjectEvents();
   } // setupNewProjectDialog
 });
 
@@ -582,7 +582,7 @@ $(function () {
 // Helper functions
 ///////////////////////////////////////////////////////////////
 
-function setupProjects() {
+function setupProjectEvents() {
   $(".project").click(function(event) {
     $("#new-project-dialog").hide();
     event.stopPropagation(); // Prevent opening new project dialog
@@ -691,8 +691,8 @@ function updateTimetableItem(proj) {
       var old_team_member_id = delete_url.split("/")[2];
       var new_delete_url = delete_url.replace(old_team_member_id, toTeamMemberId);
       $(proj).find(".delete-tm-project-form").attr("action", new_delete_url);
-      
-      setupProjects();
+
+      setupProjectEvents();
     })
     .error(function(response) {
       // Move team member project back
