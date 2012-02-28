@@ -774,8 +774,7 @@ textarea:focus, input:focus{
     @include border-radius(5px);
     @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
     
-    background: rgba(41, 171, 226, 1) url('/img/people-arrow.png') no-repeat;
-    background-position: 100% 50%;
+    background-color: rgba(41, 171, 226, 1);
     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
     color: #fff;
     font-size: 14px;
@@ -788,17 +787,19 @@ textarea:focus, input:focus{
     display: block;
     text-decoration: none;
     outline: none;
-    
+  } // .team-member-name
+  .team-member .team-member-name { // On team view 1st col
+    background: rgba(41, 171, 226, 1) url('/img/people-arrow.png') no-repeat 100% 5px;
+
     &:hover{
       text-shadow: 0 2px 1px rgba(0, 0, 0, 0.25);
       @include emboss-box-shadow-small;
     }
-    
     &:active {
       margin: 6px 5px 4px 5px;
       background-color: #28a6db;
     }
-  }
+  } // .team-member .team-member-name
 
   .highlight {
     height: 1px;
