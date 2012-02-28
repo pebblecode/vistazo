@@ -50,7 +50,7 @@ $warning_color: #000000;
 
 @mixin overlay {
   position: absolute;
-  z-index: 100;
+  z-index: 1000;
   top: 0;
   left: 0;
   width: 100%;
@@ -550,7 +550,8 @@ textarea:focus, input:focus{
   @include box-shadow(0, 5px, 20px, rgba(0, 0, 0, 0.1));
   
   position: relative;
-  z-index: 0;
+  // z-index: 0; // Can't have z-index, otherwise help overlay items inside main can't show on top of the bg overlay
+
   width: 96%;
   min-width: 1000px;
   clear: both;
@@ -1391,7 +1392,7 @@ textarea:focus, input:focus{
 .help-on {
   #help-nav{
     position: absolute;
-    z-index: 110;
+    z-index: 1100;
     top: 3px;
     right: 0;
     height: 197px;
@@ -1403,7 +1404,7 @@ textarea:focus, input:focus{
     position: absolute;
     top: 42px;
     left: 14%;
-    z-index: 110;
+    z-index: 1100;
     height: 171px;
     width: 280px;
     background: url('/img/help-week.png');
@@ -1413,15 +1414,15 @@ textarea:focus, input:focus{
     position: absolute;
     top: 45px;
     left: 35px;
-    z-index: 110;
-    height: 120pxpx;
+    z-index: 1100;
+    height: 120px;
     width: 315px;
     background: url('/img/help-new.png');
   }
   
   #help-team{
     position: absolute;
-    z-index: 110;
+    z-index: 1100;
     top: 25px;
     left: 40px;
     height: 112px;
@@ -1434,7 +1435,7 @@ textarea:focus, input:focus{
     
     #help-project{
       position: absolute;
-      z-index: 110;
+      z-index: 1100;
       left: 40%;
       bottom: -242px;
       height: 238px;
