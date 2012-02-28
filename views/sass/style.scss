@@ -610,14 +610,13 @@ textarea:focus, input:focus{
       }
     } // .last-row
 
-    tr.team-member {
-      padding-bottom: 20px;
+    tr {
       &.even {
         background: transparent url('/img/hatch1.gif') repeat 0 0;
         .col7, .col8 {
           background: transparent url('/img/hatch1-desat.gif') repeat 0 0;
         }
-      }
+      } // &.even
 
       &.odd {
         background: transparent url('/img/hatch2.gif') repeat 0 0;
@@ -626,101 +625,106 @@ textarea:focus, input:focus{
 /*           background: white url('/img/hatch2-desat.gif') repeat 0 0;*/
           background: transparent url('/img/hatch2-desat.gif') repeat 0 0;
         }
-      }
-      
-      .box {
-        padding-bottom: 30px;
-        cursor: pointer;
-        position: relative;
-        
-        &:hover {
-          background: transparent url("/img/new-project.png") no-repeat center bottom;
-          z-index: 1;
-        }
-        &.remove-add-img {
-          background: none;
-        }
-      } // .box
-      
-      .project {
-        @include border-radius(5px);
-        @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.1));
-        
-        background-color: #fff;
-        margin: 5px 6px 0 8px;
-        font-size: 14px;
-        color: #808080;
-        border: 1px solid #cccccc;
-        padding-right: 2px;
-        padding-bottom: 3px;
-        position: relative;
-        
-        cursor: move;
-        
-        &:hover {
-          border: 1px solid #aaa;
-          @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-        }
-        
-        .project-title{
-          margin-top: 3px;
-          
-        }
-        
-        &.is_loading {
-          cursor: wait;
-          
-          .handle-container {
-            background: transparent url("/img/loading.gif") no-repeat 2px 2px;
-            width: 20px;
-            height: 20px;
-            float: left;
+      } // &.odd
 
-            .handle {
-              display: none;
-            }
-          } // .handle-container
+      &.team-member {
+        padding-bottom: 20px;
+        
+        .box {
+          padding-bottom: 30px;
+          cursor: pointer;
+          position: relative;
+          
+          &:hover {
+            background: transparent url("/img/new-project.png") no-repeat center bottom;
+            z-index: 1;
+          }
+          &.remove-add-img {
+            background: none;
+          }
+        } // .box
+        
+        .project {
+          @include border-radius(5px);
+          @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.1));
+          
+          background-color: #fff;
+          margin: 5px 6px 0 8px;
+          font-size: 14px;
+          color: #808080;
+          border: 1px solid #cccccc;
+          padding-right: 2px;
+          padding-bottom: 3px;
+          position: relative;
+          
+          cursor: move;
+          
+          &:hover {
+            border: 1px solid #aaa;
+            @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+          }
+          
+          .project-title{
+            margin-top: 3px;
+            
+          }
+          
+          &.is_loading {
+            cursor: wait;
+            
+            .handle-container {
+              background: transparent url("/img/loading.gif") no-repeat 2px 2px;
+              width: 20px;
+              height: 20px;
+              float: left;
+
+              .handle {
+                display: none;
+              }
+            } // .handle-container
+            
+            .delete-tm-project-form {
+              display: none; /* Hide delete form if loading */
+            } // .delete-tm-project-form
+            
+          } // &.is_loading
           
           .delete-tm-project-form {
-            display: none; /* Hide delete form if loading */
-          } // .delete-tm-project-form
-          
-        } // &.is_loading
-        
-        .delete-tm-project-form {
-          display: inline;
-          
-          button {
-            color: #B0B0B0;
-            cursor: pointer;
-            background: none;
-            border: none;
+            display: inline;
             
-            font-family: $web_symbols_font_family;
-            font-size: 12px;
-            line-height: 12px;
-            vertical-align: center;
-            float: right;
-            padding: 2px 0 0 0;
-            
-            position: absolute;
-            right: 0;
-            top: 0;
-            
-            &:active {
-              color: #999999;
+            button {
+              color: #B0B0B0;
+              cursor: pointer;
+              background: none;
+              border: none;
+              
+              font-family: $web_symbols_font_family;
+              font-size: 12px;
+              line-height: 12px;
+              vertical-align: center;
+              float: right;
+              padding: 2px 0 0 0;
+              
+              position: absolute;
+              right: 0;
+              top: 0;
+              
+              &:active {
+                color: #999999;
+              }
             }
           }
+          
+        } // .project
+      } // &.team-member
+
+      &.project-row {
+        .project-title-container {
+          @include project-button;
+          width: 95%;
         }
-        
-      } // .project
-    } // tr.team-member
-    tr.project-row {
-      .project-title-container {
-        @include project-button;
-        width: 95%;
-      }
-    } // tr.team-member    
+      } // &.team-member    
+    } // tr
   } // #timetable
 
   .col1, .col2, .col3, .col4, .col5, .col6{
