@@ -26,6 +26,13 @@ App.TeamMember = Backbone.Model.extend({
     var newTimetableItems = this.get("timetable_items");
     newTimetableItems.push(ttItem);
     this.set("timetable_items", newTimetableItems);
+  },
+  removeTimetableItem: function(ttItemId) {
+    var newTimetableItems = _.reject(this.get("timetable_items"), 
+      function(ttItem) {
+        return ttItem["id"] === ttItemId;
+      });
+    this.set("timetable_items", newTimetableItems);
   }
 });
 
@@ -35,7 +42,12 @@ App.TeamMembers = Backbone.Collection.extend({
   addTimetableItemToTeamMember: function(ttItem, teamMemberId) {
     var teamMember = this.get(teamMemberId);
     teamMember.addTimetableItem(ttItem);
+  },
+  removeTimetableItemFromTeamMember: function(ttItemId, teamMemberId) {
+    var teamMember = this.get(teamMemberId);
+    teamMember.removeTimetableItem(ttItemId);
   }
+
 });
 
 App.TimetableItem = Backbone.Model.extend({
@@ -828,9 +840,12 @@ function deleteTimetableItem(proj) {
     $(deleteButton).attr("disabled", "disabled");
 
     $.post(url)
-      .success(function(response) {
+      .success(function(resp) {
         $(proj).fadeOut("slow", function() {
           $(this).remove();
+
+          // Remove from collection
+          App.teamMembers.removeTimetableItemFromTeamMember(resp["timetable_item_id"], teamMemberId);
         });
       })
       .error(function(response) {
