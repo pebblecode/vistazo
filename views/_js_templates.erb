@@ -109,17 +109,17 @@
       <% date = (@monday_date - 1.day) + work_day.day %>
       <td class="box {{ rowClass }} <%= "col#{work_day + prev_cols}" %>" data-date="<%= date %>" data-team-member-id="{{ tmId }}">
 
-        {% var dayProjects = []; %}
-        {% _.each(tmProjects, function(proj) { if (proj["date"] == "<%= date %>") { dayProjects.push(proj); } }) %}
-
-        {% _.each(dayProjects, function(proj) { %}
-          <div class="project" data-team-member-id="{{ tmId }}" data-team-member-project-id="{{ proj['id'] }}" data-date="<%= date %>"> 
-            <div class="handle-container"><div class="handle project-{{ proj['project_id'] }}"></div></div> <p class="project-title" title="{{ proj['project_name'] }}">{{ proj['project_name'].substring(0, 40) }}</p>
-            <form class="delete-tm-project-form" action="/team-member/{{ tmId }}/project/{{ proj['id'] }}/delete" method="post">
-              <button name="delete_project" type="submit" value="true">×</button>
-            </form>
-          </div>
+        {% _.each(tmProjects, function(proj) { %}
+          {% if (proj["date"] == "<%= date %>") { %}
+            <div class="project" data-team-member-id="{{ tmId }}" data-team-member-project-id="{{ proj['id'] }}" data-date="<%= date %>"> 
+              <div class="handle-container"><div class="handle project-{{ proj['project_id'] }}"></div></div> <p class="project-title" title="{{ proj['project_name'] }}">{{ proj['project_name'].substring(0, 40) }}</p>
+              <form class="delete-tm-project-form" action="/team-member/{{ tmId }}/project/{{ proj['id'] }}/delete" method="post">
+                <button name="delete_project" type="submit" value="true">×</button>
+              </form>
+            </div>
+          {% } %} 
         {% }); %}
+
         <% if (work_day == THURSDAY) %>
           {% if (isFirst) { %}
             <div id="help-project-container">
