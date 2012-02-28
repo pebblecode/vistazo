@@ -21,12 +21,21 @@ App.TeamMember = Backbone.Model.extend({
   defaults: {
     name : ""
   },
-  url: "/" + TEAM_ID + "/team-member/add"
+  url: "/" + TEAM_ID + "/team-member/add",
+  addTimetableItem: function(ttItem) {
+    var newTimetableItems = this.get("timetable_items");
+    newTimetableItems.push(ttItem);
+    this.set("timetable_items", newTimetableItems);
+  }
 });
 
 App.TeamMembers = Backbone.Collection.extend({
   model: App.TeamMember,
-  url: "/" + TEAM_ID + "/team-members"
+  url: "/" + TEAM_ID + "/team-members",
+  addTimetableItemToTeamMember: function(ttItem, teamMemberId) {
+    var teamMember = this.get(teamMemberId);
+    teamMember.addTimetableItem(ttItem);
+  }
 });
 
 App.TimetableItem = Backbone.Model.extend({
@@ -278,10 +287,7 @@ App.ExistingProjectsView = Backbone.View.extend({
       setupProjectEvents();
 
       // Update model
-      var teamMember = App.teamMembers.get(teamMemberId);
-      var newTimetableItems = teamMember.get("timetable_items");
-      newTimetableItems.push(ttItem);
-      teamMember.set("timetable_items", newTimetableItems);
+      App.teamMembers.addTimetableItemToTeamMember(ttItem, teamMemberId);
 
       App.flashView.render("success", resp.get("message"));
     });
