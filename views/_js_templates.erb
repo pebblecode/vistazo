@@ -135,19 +135,16 @@
 
 <script type="text/template" id="project-listing-template">
   {% if (projects.length > 0) { %}
-
-    {% var oddOrEvenClass = "odd"; %}
-    {% var rowClass = ""; %}
-
-    {% _.each(projects, function(project) { %}  
+    {% _.each(projects, function(project, index) { %}
+      {% var rowClass = "row" + (index + 1 + 1); %}
+      {% var oddOrEvenClass = ((index % 2) === 0) ? "even" : "odd"; %}
       <tr class="row-divider">
         <td colspan="9"><hr/></td>
       </tr>  <!--the divider-->
-      <tr class="team-member {{ oddOrEvenClass }}">
+      <tr class="project-row {{ oddOrEvenClass }}">
         <td class="{{ rowClass }} col1" title="{{ project.get("name") }}">
-          <div class="team-member-name">
-            {{ project.get("name").substring(0, 40) }}
-          </div>
+          <div class="handle {{ project.css_class() }}"></div>
+          <p class="project-title" title="{{ project.get("name") }}">{{ project.get("name").substring(0, 40) }}</p>
         </td>
         
         <% prev_cols = 1 %>
