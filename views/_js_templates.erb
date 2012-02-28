@@ -143,8 +143,10 @@
       </tr>  <!--the divider-->
       <tr class="project-row {{ oddOrEvenClass }}">
         <td class="{{ rowClass }} col1" title="{{ project.get("name") }}">
-          <div class="handle {{ project.css_class() }}"></div>
-          <p class="project-title" title="{{ project.get("name") }}">{{ project.get("name").substring(0, 40) }}</p>
+          <div class="project-title-container">
+            <div class="handle {{ project.css_class() }}"></div>
+            <p class="project-title" title="{{ project.get("name") }}">{{ project.get("name").substring(0, 40) }}</p>
+          </div>
         </td>
         
         <% prev_cols = 1 %>

@@ -82,6 +82,23 @@ $warning_color: #000000;
   line-height: 16px;
 }
 
+@mixin project-button {
+  @include border-radius(5px);
+  @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+
+  font-family: $default_font_family;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: normal;
+  text-shadow: none;
+  
+  color: #808080;
+  background-color: #fff;
+  
+  margin: 5px 0;
+  border: 1px solid #a1a1a1;
+}
+
 /* General styles
 -----------------------------------------------------------------------------*/
 
@@ -698,6 +715,12 @@ textarea:focus, input:focus{
         
       } // .project
     } // tr.team-member
+    tr.project-row {
+      .project-title-container {
+        @include project-button;
+        width: 95%;
+      }
+    } // tr.team-member    
   } // #timetable
 
   .col1, .col2, .col3, .col4, .col5, .col6{
@@ -963,22 +986,9 @@ textarea:focus, input:focus{
     @include dialog-heading;
   }
   
-  .listing {
+  .listing      {
     li {
-      @include border-radius(5px);
-      @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-
-      font-family: $default_font_family;
-      font-size: 14px;
-      line-height: 20px;
-      font-weight: normal;
-      text-shadow: none;
-      
-      color: #808080;
-      background-color: #fff;
-      
-      margin: 5px 0;
-      border: 1px solid #a1a1a1;
+      @include project-button;
     }
   } // .listing
   
