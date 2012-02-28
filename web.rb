@@ -564,12 +564,12 @@ post '/:team_id/team-member/:team_member_id/timetable-items/new.json' do
     if project_name.present?
       if team.present?
         project = Project.create(:name => project_name, :team_id => team.id)
-        team_member_project = team_member.add_project_on_date(project, date)
+        timetable_item = team_member.add_project_on_date(project, date)
         
         outputMsg = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
 
         status HTTP_STATUS_OK
-        output = { :message => outputMsg, :team_member_project_id => team_member_project.id, :project => project }
+        output = { :message => outputMsg, :timetable_item => timetable_item, :project => project }
       else
         outputMsg = "Invalid team."
         

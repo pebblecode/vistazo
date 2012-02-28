@@ -453,19 +453,18 @@ App.ProjectDialogView = Backbone.View.extend({
         var newProj = $(projContainer).find(".project").last();
         $(newProj).addClass('is_loading');
 
-        timetableItem.on("sync", function(ttItem) {
-          var tmProjId = ttItem.get("team_member_project_id");
-          
+        timetableItem.on("sync", function(resp) {
+          var ttItem = resp.get("timetable_item");
+          var tmProjId = ttItem["id"];
 
           // Update project styles
-          var retProj = new App.Project(ttItem.get("project"));
+          var retProj = new App.Project(resp.get("project"));
           App.teamProjects.add(retProj);
 
           var projectCssSel = '.' + retProj.css_class();
           var projectCssStyle = 'background-color: ' + retProj.get("hex_colour") + ';';
           var projectStyles = document.createStyleSheet();
           projectStyles.addRule(projectCssSel, projectCssStyle);
-
           
           // Add project to existing project list
           projectDialog.existingProjectsView().render();
@@ -482,7 +481,10 @@ App.ProjectDialogView = Backbone.View.extend({
 
           setupProjectEvents();
 
-          App.flashView.render("success", ttItem.get("message"));
+          // Update model
+          App.teamMembers.addTimetableItemToTeamMember(ttItem, teamMemberId);
+
+          App.flashView.render("success", resp.get("message"));
         });
         timetableItem.on("error", function(data) {
           $(newProj).remove();
