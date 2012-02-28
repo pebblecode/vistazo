@@ -219,7 +219,7 @@ get '/' do
   erb :homepage, :layout => false
 end
 
-# Vistazo weekly view - the crux of the app
+# Vistazo timetable view - the crux of the app
 get '/:team_id/:year/week/:week_num' do
   protected!
   require_team_user!(params[:team_id])
@@ -273,7 +273,7 @@ get '/:team_id/:year/week/:week_num' do
         end
       end
 
-      erb :week
+      erb :timetable
     else
       flash.next[:warning] = "Invalid week and year."
       redirect "/#{params[:team_id]}"
@@ -545,12 +545,12 @@ post '/:team_id/team-member/:team_member_id/timetable-items/new.json' do
   if request_body["project_id"].present?
     project = Project.find(request_body["project_id"])
     if (team_member.present? and project.present? and date.present?)
-      team_member_project = team_member.add_project_on_date(project, date)
+      timetable_item = team_member.add_project_on_date(project, date)
       
       outputMsg = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
 
       status HTTP_STATUS_OK
-      output = { :message => outputMsg, :team_member_project_id => team_member_project.id }
+      output = { :message => outputMsg, :timetable_item => timetable_item }
     else
       logger.warn "ERROR: Add existing team member project: team_member: #{team_member}, project: #{project}, date: #{date}"
       outputMsg = "Something went wrong when adding a team member project. Please refresh and try again later."
@@ -564,12 +564,12 @@ post '/:team_id/team-member/:team_member_id/timetable-items/new.json' do
     if project_name.present?
       if team.present?
         project = Project.create(:name => project_name, :team_id => team.id)
-        team_member_project = team_member.add_project_on_date(project, date)
+        timetable_item = team_member.add_project_on_date(project, date)
         
         outputMsg = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
 
         status HTTP_STATUS_OK
-        output = { :message => outputMsg, :team_member_project_id => team_member_project.id, :project => project }
+        output = { :message => outputMsg, :timetable_item => timetable_item, :project => project }
       else
         outputMsg = "Invalid team."
         
@@ -614,18 +614,18 @@ post '/:team_id/team-member-project/:tm_project_id/update.json' do
   
         if successful_move
           status HTTP_STATUS_OK
-          output = { :message => "Successfully moved '<em>#{timetable_item.project_name}</em>' project to #{to_team_member.name} on #{to_date}." }
+          output = { :message => "Successfully moved '<em>#{timetable_item.project_name}</em>' project to #{to_team_member.name} on #{to_date}.", timetable_item: timetable_item }
         else
           status HTTP_STATUS_INTERNAL_SERVER_ERROR
-          output = { :message => "Something went wrong with saving the changes when updating team member project. Please refresh and try again later." }
+          output = { :message => "Something went wrong with saving the changes when updating team member project. Please refresh and try again later.", timetable_item: timetable_item }
         end
       else
         status HTTP_STATUS_BAD_REQUEST
-        output = { :message => "Invalid team." }
+        output = { :message => "Invalid team.", timetable_item: timetable_item }
       end
     else
       status HTTP_STATUS_BAD_REQUEST
-      output = { :message => "Something went wrong with the input when updating team member project. Please refresh and try again later." }
+      output = { :message => "Something went wrong with the input when updating team member project. Please refresh and try again later.", timetable_item: timetable_item }
     end
   else
     status HTTP_STATUS_BAD_REQUEST
@@ -662,25 +662,25 @@ post '/team-member/:team_member_id/project/:tm_project_id/delete' do
   redirect back
 end
 
-post '/team-member/:team_member_id/project/:tm_project_id/delete.json' do
+post '/team-member/:team_member_id/project/:timetable_id/delete.json' do
   protected!
 
   team_member = TeamMember.find(params[:team_member_id])
   output = ""
   if team_member.present?
-    did_delete = team_member.timetable_items.reject! { |proj| proj.id.to_s == params[:tm_project_id] }
+    did_delete = team_member.timetable_items.reject! { |ttItem| ttItem.id.to_s == params[:timetable_id] }
     team_member.save
 
     if did_delete
       status HTTP_STATUS_OK
-      output = { :message => "Successfully deleted team member project for #{team_member.name}." }
+      output = { :message => "Successfully deleted team member project for #{team_member.name}.", :timetable_item_id => params[:timetable_id] }
     else
       status HTTP_STATUS_INTERNAL_SERVER_ERROR
-      output = { :message => "Something went wrong when trying to delete a team member project for #{team_member.name}. Please try again later." }
+      output = { :message => "Something went wrong when trying to delete a team member project for #{team_member.name}. Please try again later.", :timetable_item_id => params[:timetable_id] }
     end
   else
     status HTTP_STATUS_BAD_REQUEST
-    output = { :message => "Something went wrong when trying to delete a team member project. Please refresh and try again later." }
+    output = { :message => "Something went wrong when trying to delete a team member project. Please refresh and try again later.", :timetable_item_id => params[:timetable_id] }
   end
 
   content_type :json 

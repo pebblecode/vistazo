@@ -48,7 +48,7 @@ feature "Delete project" do
     #   click_button "delete"
     # end
     
-    # within("#week-view") do
+    # within("#timetable") do
     #   page.should_not have_content("Business time")
     # end
   end
@@ -64,12 +64,12 @@ feature "Delete project" do
     # # Check project was added
     # visit "/"
     # click_link "start-btn"
-    # within("#week-view") do
+    # within("#timetable") do
     #   page.should have_content("Business time")
     # end
     
     # click_link "Next week"
-    # within("#week-view") do
+    # within("#timetable") do
     #   page.should have_content("Business time")
     # end
     
@@ -80,12 +80,12 @@ feature "Delete project" do
     
     # # Check project was deleted from week views
     # visit "/"
-    # within("#week-view") do
+    # within("#timetable") do
     #   page.should_not have_content("Business time")
     # end
     
     # click_link "Next week"
-    # within("#week-view") do
+    # within("#timetable") do
     #   page.should_not have_content("Business time")
     # end
     

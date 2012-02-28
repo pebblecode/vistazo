@@ -21,12 +21,39 @@ App.TeamMember = Backbone.Model.extend({
   defaults: {
     name : ""
   },
-  url: "/" + TEAM_ID + "/team-member/add"
+  url: "/" + TEAM_ID + "/team-member/add",
+  addTimetableItem: function(ttItem) {
+    var newTimetableItems = this.get("timetable_items");
+    newTimetableItems.push(ttItem);
+    this.set("timetable_items", newTimetableItems);
+  },
+  removeTimetableItemId: function(ttItemId) {
+    var newTimetableItems = _.reject(this.get("timetable_items"), 
+      function(ttItem) {
+        return ttItem["id"] === ttItemId;
+      });
+    this.set("timetable_items", newTimetableItems);
+  }
 });
 
 App.TeamMembers = Backbone.Collection.extend({
   model: App.TeamMember,
-  url: "/" + TEAM_ID + "/team-members"
+  url: "/" + TEAM_ID + "/team-members",
+  addTimetableItemToTeamMember: function(ttItem, teamMemberId) {
+    var teamMember = this.get(teamMemberId);
+    teamMember.addTimetableItem(ttItem);
+  },
+  updateTimetableItemForTeamMember: function(ttItem, fromTeamMemberId, toTeamMemberId) {
+    var fromTeamMember = this.get(fromTeamMemberId);
+    fromTeamMember.removeTimetableItemId(ttItem["id"]);
+
+    var toTeamMember = this.get(toTeamMemberId);
+    toTeamMember.addTimetableItem(ttItem);
+  },
+  removeTimetableItemIdFromTeamMember: function(ttItemId, teamMemberId) {
+    var teamMember = this.get(teamMemberId);
+    teamMember.removeTimetableItemId(ttItemId);
+  }
 });
 
 App.TimetableItem = Backbone.Model.extend({
@@ -86,11 +113,79 @@ App.FlashView = Backbone.View.extend({
   }
 });
 
+App.TimetableViewSelector = Backbone.View.extend({
+  initialize: function() {
+    // Show team view by default
+    this._showTeamView();
+  },
+  events: { 
+    "click #view-selector li a": "render"
+  },
+  render: function(event) {
+    var viewLink = event.target;
+    var currentViewId = $("#view-selector .active").attr("id");
+    var parentId = $(viewLink).parent().attr("id");
+
+    if (parentId !== currentViewId) {
+      // Clear view
+      $('#content').empty();
+
+      // Show relevant view
+      if (parentId === "team-view-selector") {
+        this._showTeamView();
+        $("#new-team-member-row").show();
+      } else if (parentId === "project-view-selector") {
+        this._showProjectView();
+        $("#new-team-member-row").hide();
+      }
+      this._setActiveView("#" + parentId);
+    }
+
+    return false;
+  },
+  _setActiveView: function(viewSelector) {
+    $("#view-selector .active").each(function() {
+      $(this).removeClass("active");
+    });
+    $(viewSelector).addClass("active");
+  },
+  _showTeamView: function() {
+    App.teamMemberView = new App.TeamMemberView({ el: $("#timetable") });
+
+    App.teamMembers.bind('sync', function(teamMember) {
+      App.teamMemberView.render(teamMember);
+      App.flashView.render("success", "Successfully added '<em>" + teamMember.get('name') + "</em>'.");
+    });
+
+    App.teamMembers.bind('error', function(response) {
+      if (response) {
+        try {
+          respJson = JSON.parse(response.responseText);
+          App.flashView.render(("warning", respJson["message"]));
+        } catch(error) {
+          console.log(error);
+          App.flashView.renderError();
+        }
+      } else {
+        App.flashView.renderError();
+      }
+    });
+
+    App.teamMembers.each(function(tm) {
+      App.teamMemberView.render(tm);
+    });
+  },
+  _showProjectView: function() {
+    App.projectListingView = new App.ProjectListingView({ el: $("#timetable #content") });
+    App.projectListingView.render();
+  }
+});
+
 App.TeamMemberView = Backbone.View.extend({
   events: { 
     "click #new-team-member-form .submit-button": "handleNewTeamMember" 
   },
-  handleNewTeamMember: function(data) {
+  handleNewTeamMember: function(event) {
     var inputField = $('input[name=new_team_member_name]');
     
     var tm = new App.TeamMember({
@@ -118,9 +213,9 @@ App.TeamMemberView = Backbone.View.extend({
       tmProjects: teamMember.get("timetable_items"),
       isFirst: (App.teamMembers.first() == teamMember)
     };
-    var week = _.template($("#week-template").html(), weekTemplateVars);
+    var week = _.template($("#team-member-template").html(), weekTemplateVars);
     
-    $(this.el).find('#week-view-content').append(week);
+    $(this.el).find('#content').append(week);
 
     setupEditTeamMemberDialog();
     setupNewProjectDialog();
@@ -128,6 +223,19 @@ App.TeamMemberView = Backbone.View.extend({
     
     return this;
   }  
+});
+
+App.ProjectListingView = Backbone.View.extend({
+  render: function() {
+    var projectListingVars = {
+      projects: App.teamProjects.toArray(),
+      teamMembers: App.teamMembers.toArray()
+    };
+    var projectListing = _.template($("#project-listing-template").html(), projectListingVars);
+    $(this.el).append(projectListing);
+
+    return this;
+  }
 });
 
 App.ExistingProjectsView = Backbone.View.extend({
@@ -149,7 +257,7 @@ App.ExistingProjectsView = Backbone.View.extend({
     var button = event.target;
 
     // TODO: Figure out how to DRY this up
-    var projectTemplate = _.template($("#project-template").html());
+    var projectTemplate = _.template($("#existing-project-template").html());
 
     var teamMemberId = $(button).parents('#new-tm-project-form').find("input[name=team_member_id]").val();
     var projId = $(button).val();
@@ -181,8 +289,9 @@ App.ExistingProjectsView = Backbone.View.extend({
     var newProj = $(projContainer).find(".project").last();
     $(newProj).addClass('is_loading');
 
-    timetableItem.on("sync", function(ttItem) {
-      var tmProjId = ttItem.get("team_member_project_id");
+    timetableItem.on("sync", function(resp) {
+      var ttItem = resp.get("timetable_item");
+      var tmProjId = ttItem["id"];
       
       // Regenerate project using template
       submittedProj = projectTemplate({
@@ -195,7 +304,10 @@ App.ExistingProjectsView = Backbone.View.extend({
       $(newProj).replaceWith(submittedProj);
       setupProjectEvents();
 
-      App.flashView.render("success", ttItem.get("message"));
+      // Update model
+      App.teamMembers.addTimetableItemToTeamMember(ttItem, teamMemberId);
+
+      App.flashView.render("success", resp.get("message"));
     });
     timetableItem.on("error", function(data) {
       $(newProj).remove();
@@ -213,7 +325,7 @@ App.ExistingProjectsView = Backbone.View.extend({
 
 App.ProjectDialogView = Backbone.View.extend({
   // Can't figure out how to do this as per http://ricostacruz.com/backbone-patterns/#inline_templates
-  //projectTemplate: _.template($("#project-template").html()),
+  //projectTemplate: _.template($("#existing-project-template").html()),
 
   events: {
     "click .box": "openProjectDialog"
@@ -321,7 +433,7 @@ App.ProjectDialogView = Backbone.View.extend({
     }); // $("#new-project-dialog .delete")
 
     // AJAX-ify add existing project
-    var projectTemplate = _.template($("#project-template").html());
+    var projectTemplate = _.template($("#existing-project-template").html());
     var existingProjectsTemplate = _.template($("#existing-projects-listing-template").html());
 
     // AJAX-ify add new project
@@ -359,19 +471,18 @@ App.ProjectDialogView = Backbone.View.extend({
         var newProj = $(projContainer).find(".project").last();
         $(newProj).addClass('is_loading');
 
-        timetableItem.on("sync", function(ttItem) {
-          var tmProjId = ttItem.get("team_member_project_id");
-          
+        timetableItem.on("sync", function(resp) {
+          var ttItem = resp.get("timetable_item");
+          var tmProjId = ttItem["id"];
 
           // Update project styles
-          var retProj = new App.Project(ttItem.get("project"));
+          var retProj = new App.Project(resp.get("project"));
           App.teamProjects.add(retProj);
 
           var projectCssSel = '.' + retProj.css_class();
           var projectCssStyle = 'background-color: ' + retProj.get("hex_colour") + ';';
           var projectStyles = document.createStyleSheet();
           projectStyles.addRule(projectCssSel, projectCssStyle);
-
           
           // Add project to existing project list
           projectDialog.existingProjectsView().render();
@@ -388,7 +499,10 @@ App.ProjectDialogView = Backbone.View.extend({
 
           setupProjectEvents();
 
-          App.flashView.render("success", ttItem.get("message"));
+          // Update model
+          App.teamMembers.addTimetableItemToTeamMember(ttItem, teamMemberId);
+
+          App.flashView.render("success", resp.get("message"));
         });
         timetableItem.on("error", function(data) {
           $(newProj).remove();
@@ -680,7 +794,7 @@ function updateTimetableItem(proj) {
   var url = "/" + TEAM_ID + "/team-member-project/" + timetableItemId + "/update.json";
   $(proj).addClass('is_loading');
   $.post(url, { from_team_member_id: fromTeamMemberId, to_team_member_id: toTeamMemberId, to_date: toDate })
-    .success(function(response) {
+    .success(function(resp) {
       // Update team member project info in data attributes
       $(proj).attr("data-team-member-id", toTeamMemberId);
       $(proj).attr("data-date", toDate);
@@ -693,6 +807,9 @@ function updateTimetableItem(proj) {
       $(proj).find(".delete-tm-project-form").attr("action", new_delete_url);
 
       setupProjectEvents();
+
+      // Update model
+      App.teamMembers.updateTimetableItemForTeamMember(resp["timetable_item"], fromTeamMemberId, toTeamMemberId);
     })
     .error(function(response) {
       // Move team member project back
@@ -732,9 +849,12 @@ function deleteTimetableItem(proj) {
     $(deleteButton).attr("disabled", "disabled");
 
     $.post(url)
-      .success(function(response) {
+      .success(function(resp) {
         $(proj).fadeOut("slow", function() {
           $(this).remove();
+
+          // Remove from collection
+          App.teamMembers.removeTimetableItemIdFromTeamMember(resp["timetable_item_id"], teamMemberId);
         });
       })
       .error(function(response) {

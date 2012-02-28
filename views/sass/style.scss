@@ -82,6 +82,23 @@ $warning_color: #000000;
   line-height: 16px;
 }
 
+@mixin project-button {
+  @include border-radius(5px);
+  @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+
+  font-family: $default_font_family;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: normal;
+  text-shadow: none;
+  
+  color: #808080;
+  background-color: #fff;
+  
+  margin: 5px 0;
+  border: 1px solid #a1a1a1;
+}
+
 /* General styles
 -----------------------------------------------------------------------------*/
 
@@ -478,6 +495,51 @@ textarea:focus, input:focus{
 } // #flash
 
 
+/* View selector
+-----------------------------------------------------------------------------*/
+
+#view-selector {
+  position: absolute;
+  min-width: 1000px;
+  margin: 0 auto;
+  top: 112px;
+  left: 25px;
+
+  li {
+    a {
+      @include border-radius(5px);
+      outline: none;
+
+      font-size: 14px;
+      text-align: center;
+
+      display: block;
+      width: 90px;
+      padding: 7px 12px 10px;
+      text-decoration: none;
+      color: #bbbbbb;
+      background-color: #E6E6E6;
+    }
+    &#team-view-selector {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    &#project-view-selector {
+      position: absolute;
+      top: 0;
+      left: 118px;
+    }
+    &.active a {
+      background-color: white;
+      color: black;
+      position: absolute;
+      z-index: 200;
+    }
+  }
+} // #view-selector
+
+
 /* Main styles
 -----------------------------------------------------------------------------*/
 
@@ -488,6 +550,7 @@ textarea:focus, input:focus{
   @include box-shadow(0, 5px, 20px, rgba(0, 0, 0, 0.1));
   
   position: relative;
+  z-index: 0;
   width: 96%;
   min-width: 1000px;
   clear: both;
@@ -495,8 +558,8 @@ textarea:focus, input:focus{
   padding: 1%;
   background-color: #fff;
   margin-top: 0 auto;
-  
-  #week-view {
+
+  #timetable {
     width: 100%;
     td, .first-row.col1, .first-row.col6 {
       border-right: 1px dashed #b3b3b3;
@@ -547,14 +610,13 @@ textarea:focus, input:focus{
       }
     } // .last-row
 
-    tr.team-member {
-      padding-bottom: 20px;
+    tr {
       &.even {
         background: transparent url('/img/hatch1.gif') repeat 0 0;
         .col7, .col8 {
           background: transparent url('/img/hatch1-desat.gif') repeat 0 0;
         }
-      }
+      } // &.even
 
       &.odd {
         background: transparent url('/img/hatch2.gif') repeat 0 0;
@@ -563,96 +625,107 @@ textarea:focus, input:focus{
 /*           background: white url('/img/hatch2-desat.gif') repeat 0 0;*/
           background: transparent url('/img/hatch2-desat.gif') repeat 0 0;
         }
-      }
-      
-      .box {
-        padding-bottom: 30px;
-        cursor: pointer;
-        position: relative;
-        
-        &:hover {
-          background: transparent url("/img/new-project.png") no-repeat center bottom;
-          z-index: 1;
-        }
-        &.remove-add-img {
-          background: none;
-        }
-      } // .box
-      
-      .project {
-        @include border-radius(5px);
-        @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.1));
-        
-        background-color: #fff;
-        margin: 5px 6px 0 8px;
-        font-size: 14px;
-        color: #808080;
-        border: 1px solid #cccccc;
-        padding-right: 2px;
-        padding-bottom: 3px;
-        position: relative;
-        
-        cursor: move;
-        
-        &:hover {
-          border: 1px solid #aaa;
-          @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-        }
-        
-        .project-title{
-          margin-top: 3px;
-          
-        }
-        
-        &.is_loading {
-          cursor: wait;
-          
-          .handle-container {
-            background: transparent url("/img/loading.gif") no-repeat 2px 2px;
-            width: 20px;
-            height: 20px;
-            float: left;
+      } // &.odd
 
-            .handle {
-              display: none;
-            }
-          } // .handle-container
+      &.team-member {
+        padding-bottom: 20px;
+        
+        .box {
+          padding-bottom: 30px;
+          cursor: pointer;
+          position: relative;
+          
+          &:hover {
+            background: transparent url("/img/new-project.png") no-repeat center bottom;
+            z-index: 1;
+          }
+          &.remove-add-img {
+            background: none;
+          }
+        } // .box
+        
+        .project {
+          @include border-radius(5px);
+          @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.1));
+          
+          background-color: #fff;
+          margin: 5px 6px 0 8px;
+          font-size: 14px;
+          color: #808080;
+          border: 1px solid #cccccc;
+          padding-right: 2px;
+          padding-bottom: 3px;
+          position: relative;
+          
+          cursor: move;
+          
+          &:hover {
+            border: 1px solid #aaa;
+            @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+          }
+          
+          .project-title{
+            margin-top: 3px;
+            
+          }
+          
+          &.is_loading {
+            cursor: wait;
+            
+            .handle-container {
+              background: transparent url("/img/loading.gif") no-repeat 2px 2px;
+              width: 20px;
+              height: 20px;
+              float: left;
+
+              .handle {
+                display: none;
+              }
+            } // .handle-container
+            
+            .delete-tm-project-form {
+              display: none; /* Hide delete form if loading */
+            } // .delete-tm-project-form
+            
+          } // &.is_loading
           
           .delete-tm-project-form {
-            display: none; /* Hide delete form if loading */
-          } // .delete-tm-project-form
-          
-        } // &.is_loading
-        
-        .delete-tm-project-form {
-          display: inline;
-          
-          button {
-            color: #B0B0B0;
-            cursor: pointer;
-            background: none;
-            border: none;
+            display: inline;
             
-            font-family: $web_symbols_font_family;
-            font-size: 12px;
-            line-height: 12px;
-            vertical-align: center;
-            float: right;
-            padding: 2px 0 0 0;
-            
-            position: absolute;
-            right: 0;
-            top: 0;
-            
-            &:active {
-              color: #999999;
+            button {
+              color: #B0B0B0;
+              cursor: pointer;
+              background: none;
+              border: none;
+              
+              font-family: $web_symbols_font_family;
+              font-size: 12px;
+              line-height: 12px;
+              vertical-align: center;
+              float: right;
+              padding: 2px 0 0 0;
+              
+              position: absolute;
+              right: 0;
+              top: 0;
+              
+              &:active {
+                color: #999999;
+              }
             }
           }
+          
+        } // .project
+      } // &.team-member
+
+      &.project-row {
+        .project-title-container {
+          @include project-button;
+          width: 95%;
         }
-        
-      } // .project
-    } // tr.team-member
-  } // #week-view
+      } // &.team-member    
+    } // tr
+  } // #timetable
 
   .col1, .col2, .col3, .col4, .col5, .col6{
     width: 13.33333%;
@@ -728,8 +801,7 @@ textarea:focus, input:focus{
     @include border-radius(5px);
     @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
     
-    background: rgba(41, 171, 226, 1) url('/img/people-arrow.png') no-repeat;
-    background-position: 100% 50%;
+    background-color: rgba(41, 171, 226, 1);
     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
     color: #fff;
     font-size: 14px;
@@ -742,17 +814,19 @@ textarea:focus, input:focus{
     display: block;
     text-decoration: none;
     outline: none;
-    
+  } // .team-member-name
+  .team-member .team-member-name { // On team view 1st col
+    background: rgba(41, 171, 226, 1) url('/img/people-arrow.png') no-repeat 100% 5px;
+
     &:hover{
       text-shadow: 0 2px 1px rgba(0, 0, 0, 0.25);
       @include emboss-box-shadow-small;
     }
-    
     &:active {
       margin: 6px 5px 4px 5px;
       background-color: #28a6db;
     }
-  }
+  } // .team-member .team-member-name
 
   .highlight {
     height: 1px;
@@ -916,22 +990,9 @@ textarea:focus, input:focus{
     @include dialog-heading;
   }
   
-  .listing {
+  .listing      {
     li {
-      @include border-radius(5px);
-      @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-
-      font-family: $default_font_family;
-      font-size: 14px;
-      line-height: 20px;
-      font-weight: normal;
-      text-shadow: none;
-      
-      color: #808080;
-      background-color: #fff;
-      
-      margin: 5px 0;
-      border: 1px solid #a1a1a1;
+      @include project-button;
     }
   } // .listing
   
@@ -1453,7 +1514,7 @@ footer{
 #modify-data {
   display: block;
   position: absolute;
-  top: 110px;
+  top: 42px;
   left: 0px;
   
   a {

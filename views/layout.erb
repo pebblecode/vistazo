@@ -52,32 +52,10 @@
       App.teamProjects = new App.Projects;
       App.teamProjects.reset(<%= @projects.to_json %>);
 
-      // Initialise team members
-      App.teamMemberView = new App.TeamMemberView({el: $('#week-view')});
       App.teamMembers = new App.TeamMembers;
-      App.teamMembers.bind('sync', function(teamMember) {
-        App.teamMemberView.render(teamMember);
-        App.flashView.render("success", "Successfully added '<em>" + teamMember.get('name') + "</em>'.");
-      });
-
-      App.teamMembers.bind('error', function(response) {
-        if (response) {
-          try {
-            respJson = JSON.parse(response.responseText);
-            App.flashView.render(("warning", respJson["message"]));
-          } catch(error) {
-            console.log(error);
-            App.flashView.renderError();
-          }
-        } else {
-          App.flashView.renderError();
-        }
-      });
-
       App.teamMembers.reset(<%= @team_members.to_json %>);
-      App.teamMembers.each(function(tm) {
-        App.teamMemberView.render(tm);
-      });
+
+      App.timetableViewSelector = new App.TimetableViewSelector({el: $("#view-selector")})
     });
   </script>
 </head>
@@ -128,6 +106,11 @@
   
   <%= styled_flash %>
   
+  <ul id="view-selector">
+    <li id="team-view-selector" class="active"><a href="#" title="View team member listing">Team view</a></li>
+    <li id="project-view-selector"><a href="#" title="View project listing">Project view</a></li>
+  </ul>
+
   <div id="main">
     <%= yield %>
   </div>

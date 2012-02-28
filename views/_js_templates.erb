@@ -42,7 +42,7 @@
   {% } %}
 </script>
 
-<script type="text/template" id="project-template">
+<script type="text/template" id="existing-project-template">
   <div class='project' data-team-member-id='{{ tmId }}' data-team-member-project-id='{{ tmProjId }}' data-date='{{ projDate }}'>
     <div class='handle-container'>
       <div class='{{ projHandleCssClass }}'></div>
@@ -67,7 +67,7 @@
 </script>
 
 
-<script type="text/template" id="week-template">
+<script type="text/template" id="team-member-template">
   <tr class="row-divider">
     <td colspan="9"><hr/></td>
   </tr>  <!--the divider-->
@@ -109,17 +109,17 @@
       <% date = (@monday_date - 1.day) + work_day.day %>
       <td class="box {{ rowClass }} <%= "col#{work_day + prev_cols}" %>" data-date="<%= date %>" data-team-member-id="{{ tmId }}">
 
-        {% var dayProjects = []; %}
-        {% _.each(tmProjects, function(proj) { if (proj["date"] == "<%= date %>") { dayProjects.push(proj); } }) %}
-
-        {% _.each(dayProjects, function(proj) { %}
-          <div class="project" data-team-member-id="{{ tmId }}" data-team-member-project-id="{{ proj['id'] }}" data-date="<%= date %>"> 
-            <div class="handle-container"><div class="handle project-{{ proj['project_id'] }}"></div></div> <p class="project-title" title="{{ proj['project_name'] }}">{{ proj['project_name'].substring(0, 40) }}</p>
-            <form class="delete-tm-project-form" action="/team-member/{{ tmId }}/project/{{ proj['id'] }}/delete" method="post">
-              <button name="delete_project" type="submit" value="true">×</button>
-            </form>
-          </div>
+        {% _.each(tmProjects, function(proj) { %}
+          {% if (proj["date"] == "<%= date %>") { %}
+            <div class="project" data-team-member-id="{{ tmId }}" data-team-member-project-id="{{ proj['id'] }}" data-date="<%= date %>"> 
+              <div class="handle-container"><div class="handle project-{{ proj['project_id'] }}"></div></div> <p class="project-title" title="{{ proj['project_name'] }}">{{ proj['project_name'].substring(0, 40) }}</p>
+              <form class="delete-tm-project-form" action="/team-member/{{ tmId }}/project/{{ proj['id'] }}/delete" method="post">
+                <button name="delete_project" type="submit" value="true">×</button>
+              </form>
+            </div>
+          {% } %} 
         {% }); %}
+
         <% if (work_day == THURSDAY) %>
           {% if (isFirst) { %}
             <div id="help-project-container">
@@ -131,4 +131,43 @@
     <% end %>
     <td class="{{ rowClass }} col-last" %></td>
   </tr>
+</script>
+
+<script type="text/template" id="project-listing-template">
+  {% if (projects.length > 0) { %}
+    {% _.each(projects, function(project, index) { %}
+      {% var rowClass = "row" + (index + 1 + 1); %}
+      {% var oddOrEvenClass = ((index % 2) === 0) ? "even" : "odd"; %}
+      <tr class="row-divider">
+        <td colspan="9"><hr/></td>
+      </tr>  <!--the divider-->
+      <tr class="project-row {{ oddOrEvenClass }}">
+        <td class="{{ rowClass }} col1" title="{{ project.get("name") }}">
+          <div class="project-title-container">
+            <div class="handle {{ project.css_class() }}"></div>
+            <p class="project-title" title="{{ project.get("name") }}">{{ project.get("name").substring(0, 40) }}</p>
+          </div>
+        </td>
+        
+        <% prev_cols = 1 %>
+        <% (MONDAY..SUNDAY).each do |work_day| %>
+          <% date = (@monday_date - 1.day) + work_day.day %>
+          <td class="{{ rowClass }} <%= "col#{work_day + prev_cols}" %>" data-date="<%= date %>">
+
+            {% var projectTeamMembers = []; %}
+            {% _.each(teamMembers, function(teamMember) { %}
+              {% var ttItems = teamMember.get("timetable_items"); %}
+              {% _.each(ttItems, function(ttItem) { %}
+                {% if ((ttItem["date"] == "<%= date %>") && (ttItem["project_id"] === project.get("id"))) { %}
+                  <div class="team-member-name">{{ teamMember.get("name") }}</div>
+                {% } %} 
+              {% }); %}
+            {% }); %}
+
+          </td>
+        <% end %>
+        <td class="{{ rowClass }} col-last" %></td>
+      </tr>
+    {% }); %}
+  {% } %}
 </script>

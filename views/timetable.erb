@@ -1,4 +1,4 @@
-<table id="week-view">
+<table id="timetable">
   <thead>
     <tr>
       <th class="first-row col1"> 
@@ -65,11 +65,11 @@
     </tr>
   </thead>
   
-  <tbody id="week-view-content">
-    <%# Filled in using js from backbone TeamMemberView %>
+  <tbody id="content">
+    <%# Filled in using js %>
   </tbody>
   
-  <tr>
+  <tr id="new-team-member-row">
     <td colspan="9" class="last-row col1">
       <form id="new-team-member-form" action="/<%= @team.url_slug %>/team-member/add" method="post">
         <fieldset class="new-object-fieldset" title="New team member">
