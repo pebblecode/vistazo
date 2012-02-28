@@ -92,7 +92,7 @@ App.TimetableViewSelector = Backbone.View.extend({
     this._showTeamView();
   },
   events: { 
-    "click #view-selector li a": "render" 
+    "click #view-selector li a": "render"
   },
   render: function(event) {
     var viewLink = event.target;
@@ -262,8 +262,9 @@ App.ExistingProjectsView = Backbone.View.extend({
     var newProj = $(projContainer).find(".project").last();
     $(newProj).addClass('is_loading');
 
-    timetableItem.on("sync", function(ttItem) {
-      var tmProjId = ttItem.get("team_member_project_id");
+    timetableItem.on("sync", function(resp) {
+      var ttItem = resp.get("timetable_item");
+      var tmProjId = ttItem["id"];
       
       // Regenerate project using template
       submittedProj = projectTemplate({
@@ -276,7 +277,13 @@ App.ExistingProjectsView = Backbone.View.extend({
       $(newProj).replaceWith(submittedProj);
       setupProjectEvents();
 
-      App.flashView.render("success", ttItem.get("message"));
+      // Update model
+      var teamMember = App.teamMembers.get(teamMemberId);
+      var newTimetableItems = teamMember.get("timetable_items");
+      newTimetableItems.push(ttItem);
+      teamMember.set("timetable_items", newTimetableItems);
+
+      App.flashView.render("success", resp.get("message"));
     });
     timetableItem.on("error", function(data) {
       $(newProj).remove();
