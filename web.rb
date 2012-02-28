@@ -614,18 +614,18 @@ post '/:team_id/team-member-project/:tm_project_id/update.json' do
   
         if successful_move
           status HTTP_STATUS_OK
-          output = { :message => "Successfully moved '<em>#{timetable_item.project_name}</em>' project to #{to_team_member.name} on #{to_date}." }
+          output = { :message => "Successfully moved '<em>#{timetable_item.project_name}</em>' project to #{to_team_member.name} on #{to_date}.", timetable_item: timetable_item }
         else
           status HTTP_STATUS_INTERNAL_SERVER_ERROR
-          output = { :message => "Something went wrong with saving the changes when updating team member project. Please refresh and try again later." }
+          output = { :message => "Something went wrong with saving the changes when updating team member project. Please refresh and try again later.", timetable_item: timetable_item }
         end
       else
         status HTTP_STATUS_BAD_REQUEST
-        output = { :message => "Invalid team." }
+        output = { :message => "Invalid team.", timetable_item: timetable_item }
       end
     else
       status HTTP_STATUS_BAD_REQUEST
-      output = { :message => "Something went wrong with the input when updating team member project. Please refresh and try again later." }
+      output = { :message => "Something went wrong with the input when updating team member project. Please refresh and try again later.", timetable_item: timetable_item }
     end
   else
     status HTTP_STATUS_BAD_REQUEST

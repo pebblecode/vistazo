@@ -27,7 +27,7 @@ App.TeamMember = Backbone.Model.extend({
     newTimetableItems.push(ttItem);
     this.set("timetable_items", newTimetableItems);
   },
-  removeTimetableItem: function(ttItemId) {
+  removeTimetableItemId: function(ttItemId) {
     var newTimetableItems = _.reject(this.get("timetable_items"), 
       function(ttItem) {
         return ttItem["id"] === ttItemId;
@@ -43,11 +43,17 @@ App.TeamMembers = Backbone.Collection.extend({
     var teamMember = this.get(teamMemberId);
     teamMember.addTimetableItem(ttItem);
   },
-  removeTimetableItemFromTeamMember: function(ttItemId, teamMemberId) {
-    var teamMember = this.get(teamMemberId);
-    teamMember.removeTimetableItem(ttItemId);
-  }
+  updateTimetableItemForTeamMember: function(ttItem, fromTeamMemberId, toTeamMemberId) {
+    var fromTeamMember = this.get(fromTeamMemberId);
+    fromTeamMember.removeTimetableItemId(ttItem["id"]);
 
+    var toTeamMember = this.get(toTeamMemberId);
+    toTeamMember.addTimetableItem(ttItem);
+  },
+  removeTimetableItemIdFromTeamMember: function(ttItemId, teamMemberId) {
+    var teamMember = this.get(teamMemberId);
+    teamMember.removeTimetableItemId(ttItemId);
+  }
 });
 
 App.TimetableItem = Backbone.Model.extend({
@@ -788,7 +794,7 @@ function updateTimetableItem(proj) {
   var url = "/" + TEAM_ID + "/team-member-project/" + timetableItemId + "/update.json";
   $(proj).addClass('is_loading');
   $.post(url, { from_team_member_id: fromTeamMemberId, to_team_member_id: toTeamMemberId, to_date: toDate })
-    .success(function(response) {
+    .success(function(resp) {
       // Update team member project info in data attributes
       $(proj).attr("data-team-member-id", toTeamMemberId);
       $(proj).attr("data-date", toDate);
@@ -801,6 +807,9 @@ function updateTimetableItem(proj) {
       $(proj).find(".delete-tm-project-form").attr("action", new_delete_url);
 
       setupProjectEvents();
+
+      // Update model
+      App.teamMembers.updateTimetableItemForTeamMember(resp["timetable_item"], fromTeamMemberId, toTeamMemberId);
     })
     .error(function(response) {
       // Move team member project back
@@ -845,7 +854,7 @@ function deleteTimetableItem(proj) {
           $(this).remove();
 
           // Remove from collection
-          App.teamMembers.removeTimetableItemFromTeamMember(resp["timetable_item_id"], teamMemberId);
+          App.teamMembers.removeTimetableItemIdFromTeamMember(resp["timetable_item_id"], teamMemberId);
         });
       })
       .error(function(response) {
