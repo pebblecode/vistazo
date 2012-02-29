@@ -861,6 +861,12 @@ textarea:focus, input:focus{
   background-color: #fff;
 } // #point
 
+#new-team-form {
+  .new-object-text-box {
+    width: 445px;
+  }
+}
+
 #new-project-dialog {
   legend {
     margin: 0;
