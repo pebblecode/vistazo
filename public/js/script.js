@@ -171,10 +171,8 @@ App.TimetableViewSelector = Backbone.View.extend({
       // Show relevant view
       if (parentId === "team-view-selector") {
         this._showTeamView();
-        $("#new-team-member-row").show();
       } else if (parentId === "project-view-selector") {
         this._showProjectView();
-        $("#new-team-member-row").hide();
       }
       this._setActiveView("#" + parentId);
     }
@@ -188,11 +186,11 @@ App.TimetableViewSelector = Backbone.View.extend({
     $(viewSelector).addClass("active");
   },
   _showTeamView: function() {
-    App.teamMemberListingView = new App.TeamMemberListingView({ el: $("#main") });
+    App.teamMemberListingView = App.teamMemberListingView || new App.TeamMemberListingView({ el: $("#main") });
     App.teamMemberListingView.render();
   },
   _showProjectView: function() {
-    App.projectListingView = new App.ProjectListingView({ el: $("#main") });
+    App.projectListingView = App.projectListingView || new App.ProjectListingView({ el: $("#main") });
     App.projectListingView.render();
   }
 });
@@ -247,12 +245,15 @@ App.TeamMemberListingView = Backbone.View.extend({
   render: function() {
     // Put week scaffold on page
     var weekTable = _.template($("#week-template").html());
-    if ($("#timetable").length > 0) {
-      $("#timetable").replaceWith(weekTable);
-    } else {
+    if ($("#timetable").length <= 0) {
       $(this.el).append(weekTable);
+    } else {
+      $("#timetable").replaceWith(weekTable);
     }
-
+    var newTeamMemberRow = _.template($("#new-team-member-row-template").html());
+    $("#timetable").append(newTeamMemberRow);
+    labelifyTextBoxes();
+    
     // Add team members
     var listingView = this;
     App.teamMembers.each(function(tm) {
@@ -289,10 +290,10 @@ App.ProjectListingView = Backbone.View.extend({
   render: function() {
     // Put week scaffold on page
     var weekTable = _.template($("#week-template").html());
-    if ($("#timetable").length > 0) {
-      $("#timetable").replaceWith(weekTable);
-    } else {
+    if ($("#timetable").length <= 0) {
       $(this.el).append(weekTable);
+    } else {
+      $("#timetable").replaceWith(weekTable);
     }
 
     var projectListingVars = {
@@ -707,9 +708,6 @@ $(function () {
     });
   }
   
-  // Labelify new object text boxes
-  $(".new-object-text-box").labelify({ labelledClass: "new-object-text-box-label" });
-  
   // Add help body class
   $("#top-nav .action-bar .help").click(function() {
     $("body").toggleClass("help-on");
@@ -721,6 +719,8 @@ $(function () {
   $("#overlay-bg, #help-nav, #help-week, #help-new, #help-close, #help-project, help-team").click(function() {
     $("body").removeClass("help-on");
   });
+
+  labelifyTextBoxes();
 });
 
 
@@ -917,6 +917,11 @@ function deleteTimetableItem(proj) {
 ///////////////////////////////////////////////////////////////
 // Helper functions
 ///////////////////////////////////////////////////////////////
+
+// Labelify new object text boxes
+function labelifyTextBoxes() {
+  $(".new-object-text-box").labelify({ labelledClass: "new-object-text-box-label" });
+}
 
 // Overlays - close dialogs when clicking (Note: need to run this after dialogs are created)
 function overlayCloseOnClick() {
