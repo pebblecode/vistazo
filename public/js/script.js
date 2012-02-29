@@ -188,14 +188,21 @@ App.TeamMemberView = Backbone.View.extend({
   handleNewTeamMember: function(event) {
     var inputField = $('input[name=new_team_member_name]');
     
-    var tm = new App.TeamMember({
-      name: inputField.val()
-    });
+    // Hijack submit button if nothing is in textbox (either empty or labelified value)
+    if (($(inputField).val() == "") ||
+         $(inputField).val() == $("#new-team-member-form .new-object-text-box").attr("title")) {
 
-    tm.save();
-    App.teamMembers.add(tm);
+      $("#new-team-member-form .new-object-text-box").focus();
+    } else {
+      var tm = new App.TeamMember({
+        name: inputField.val()
+      });
 
-    inputField.val('');
+      tm.save();
+      App.teamMembers.add(tm);
+
+      inputField.val('');
+    }
 
     return false; // Don't submit form
   },
@@ -658,19 +665,6 @@ $(function () {
       } else {
         $(this).find("." + error_field_msg_classname).remove();
         $(this).removeClass(error_form_classname);
-      }
-    });
-  }
-  
-  // Team member
-  {
-    // Hijack submit button if nothing is in textbox (either empty or labelified value)
-    $("#new-team-member-form .submit-button").click(function() {
-      if (($("#new-team-member-form .new-object-text-box").val() == "") ||
-           $("#new-team-member-form .new-object-text-box").val() == $("#new-team-member-form .new-object-text-box").attr("title")) {
-
-        $("#new-team-member-form .new-object-text-box").focus();
-        return false;
       }
     });
   }
