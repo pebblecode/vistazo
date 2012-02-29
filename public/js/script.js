@@ -188,10 +188,24 @@ App.TimetableViewSelector = Backbone.View.extend({
     $(viewSelector).addClass("active");
   },
   _showTeamView: function() {
-    App.teamMemberView = new App.TeamMemberView({ el: $("#timetable") });
+    App.teamMemberListingView = new App.TeamMemberListingView({ el: $("#main") });
+    App.teamMemberListingView.render();
+  },
+  _showProjectView: function() {
+    // TODO
+    // App.projectListingView = new App.ProjectListingView({ el: $("#timetable #content") });
+    // App.projectListingView.render();
+  }
+});
 
+App.TeamMemberListingView = Backbone.View.extend({
+  events: { 
+    "click #new-team-member-form .submit-button": "handleNewTeamMember"
+  },
+  initialize: function() {
+    var listingView = this;
     App.teamMembers.bind('sync', function(teamMember) {
-      App.teamMemberView.render(teamMember);
+      listingView._renderTeamMember(teamMember);
       App.flashView.render("success", "Successfully added '<em>" + teamMember.get('name') + "</em>'.");
     });
 
@@ -208,20 +222,6 @@ App.TimetableViewSelector = Backbone.View.extend({
         App.flashView.renderError();
       }
     });
-
-    App.teamMembers.each(function(tm) {
-      App.teamMemberView.render(tm);
-    });
-  },
-  _showProjectView: function() {
-    App.projectListingView = new App.ProjectListingView({ el: $("#timetable #content") });
-    App.projectListingView.render();
-  }
-});
-
-App.TeamMemberView = Backbone.View.extend({
-  events: { 
-    "click #new-team-member-form .submit-button": "handleNewTeamMember"
   },
   handleNewTeamMember: function(event) {
     var inputField = $('input[name=new_team_member_name]');
@@ -244,7 +244,26 @@ App.TeamMemberView = Backbone.View.extend({
 
     return false; // Don't submit form
   },
-  render: function(teamMember) {
+  // Either add to #main or replace #timetable
+  render: function() {
+    var teamMemberListing = _.template($("#team-member-listing-template").html());
+
+    // Put scaffold on page
+    if ($("#timetable").length > 0) {
+      $("#timetable").replaceWith(teamMemberListing);
+    } else {
+      $(this.el).append(teamMemberListing);
+    }
+
+    // Add team members
+    var listingView = this;
+    App.teamMembers.each(function(tm) {
+      listingView._renderTeamMember(tm);
+    });
+
+    return this;
+  },
+  _renderTeamMember: function(teamMember) {
     // console.log("Render team member row for: " + JSON.stringify(teamMember) + " (" + teamMember.get("id") + "): " + teamMember.get("name"));
     
     var rowNum = $(this.el).find(".team-member").length + 1 + 1; // 1 to increment and 1 for header row
@@ -265,9 +284,7 @@ App.TeamMemberView = Backbone.View.extend({
     setupEditTeamMemberDialog();
     setupNewProjectDialog();
     setupProjectEvents();
-    
-    return this;
-  }  
+  }
 });
 
 App.ProjectListingView = Backbone.View.extend({
