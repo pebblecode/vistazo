@@ -375,6 +375,19 @@ App.ProjectDialogView = Backbone.View.extend({
       this.existingProjectsView().render();
 
       this.setupNewProjectDialog(box, this);
+
+      // Enter key for new project submits the form
+      $("#new-project-dialog .new-object-text-box").bind("keydown", function(event) {
+          // track enter key
+          var keycode = (event.keyCode ? event.keyCode : (event.which ? event.which : event.charCode));
+          if (keycode == 13) { // keycode for enter key
+            // force the 'Enter Key' to implicitly click the Update button
+            $("#new-project-dialog .submit-button").click();
+            return false;
+          } else  {
+            return true;
+          }
+      }); // keydown
     }
 
     return this;
@@ -399,18 +412,7 @@ App.ProjectDialogView = Backbone.View.extend({
       return false;
     });
 
-    // Enter key for new project submits the form
-    $("#new-project-dialog .new-object-text-box").bind("keydown", function(event) {
-        // track enter key
-        var keycode = (event.keyCode ? event.keyCode : (event.which ? event.which : event.charCode));
-        if (keycode == 13) { // keycode for enter key
-          // force the 'Enter Key' to implicitly click the Update button
-          $("#new-project-dialog .submit-button").click();
-          return false;
-        } else  {
-          return true;
-        }
-    }); // $("#new-project-dialog .new-object-text-box").bind
+
 
     // Delete project link
     $("#new-project-dialog .delete").click(function() {
