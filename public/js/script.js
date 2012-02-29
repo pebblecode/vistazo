@@ -192,9 +192,8 @@ App.TimetableViewSelector = Backbone.View.extend({
     App.teamMemberListingView.render();
   },
   _showProjectView: function() {
-    // TODO
-    // App.projectListingView = new App.ProjectListingView({ el: $("#timetable #content") });
-    // App.projectListingView.render();
+    App.projectListingView = new App.ProjectListingView({ el: $("#main") });
+    App.projectListingView.render();
   }
 });
 
@@ -246,13 +245,12 @@ App.TeamMemberListingView = Backbone.View.extend({
   },
   // Either add to #main or replace #timetable
   render: function() {
-    var teamMemberListing = _.template($("#team-member-listing-template").html());
-
-    // Put scaffold on page
+    // Put week scaffold on page
+    var weekTable = _.template($("#week-template").html());
     if ($("#timetable").length > 0) {
-      $("#timetable").replaceWith(teamMemberListing);
+      $("#timetable").replaceWith(weekTable);
     } else {
-      $(this.el).append(teamMemberListing);
+      $(this.el).append(weekTable);
     }
 
     // Add team members
@@ -289,12 +287,20 @@ App.TeamMemberListingView = Backbone.View.extend({
 
 App.ProjectListingView = Backbone.View.extend({
   render: function() {
+    // Put week scaffold on page
+    var weekTable = _.template($("#week-template").html());
+    if ($("#timetable").length > 0) {
+      $("#timetable").replaceWith(weekTable);
+    } else {
+      $(this.el).append(weekTable);
+    }
+
     var projectListingVars = {
       projects: App.teamProjects.toArray(),
       teamMembers: App.teamMembers.toArray()
     };
     var projectListing = _.template($("#project-listing-template").html(), projectListingVars);
-    $(this.el).append(projectListing);
+    $("#content").append(projectListing);
 
     return this;
   }
