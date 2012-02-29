@@ -293,19 +293,22 @@ end
 # ----------------------------------------------------------------------------
 
 post '/team/new' do
-  @team = Team.create_for_user(current_user)
-  
-  # Add the user as the first team member
-  @team.team_members << TeamMember.create(:name => current_user.name)
-  @team.name = params[:new_team_name]
-  if @team.save
-    flash[:success] = "Successfully created team."
+  if params[:new_team_name].present?
+    @team = Team.create_for_user(current_user)
+    # Add the user as the first team member
+    @team.team_members << TeamMember.create(:name => current_user.name)
+    @team.name = params[:new_team_name]
+    if @team.save
+      flash[:success] = "Successfully created team."
+    else
+      flash[:warning] = "Create team failed."
+    end
   else
     flash[:warning] = "Create team failed. Team name empty."
   end
   
   # Redirect to new team
-  redirect "/#{@team.id}"
+  redirect @team.present? ? "/#{@team.id}" : back
 end
 
 get '/:team_id' do

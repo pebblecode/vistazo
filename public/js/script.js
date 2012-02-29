@@ -113,6 +113,44 @@ App.FlashView = Backbone.View.extend({
   }
 });
 
+App.TeamDialogView = Backbone.View.extend({
+  events: {
+    "click #team-name h2": "render",
+    "click #new-team-form .submit-button": "handleNewTeamNameSubmit"
+  },
+  initialize: function() {
+    $("#team-name-dialog").dialog({
+      modal: true,
+      closeOnEscape: true,
+      minWidth: 470,
+      minHeight: 65,
+      autoOpen: false,
+      position: 'top',
+      closeText: "'"
+    });
+  },
+  render: function() {
+    $("#team-name-dialog").dialog('open');
+    $("#team-name #team-name-form input:first").focus();
+    overlayCloseOnClick();
+
+    return this;
+  },
+  handleNewTeamNameSubmit: function(event) {
+    var submitButton = event.target;
+    var inputField = $(submitButton).parent().find(".new-object-text-box");
+
+    // Hijack submit button if nothing is in textbox (either empty or labelified value)
+    if (($(inputField).val() == "") ||
+         $(inputField).val() == $(inputField).attr("title")) {
+      $(inputField).focus();
+      return false; // Don't submit form
+    }
+
+    return true; // Carry on
+  }
+});
+
 App.TimetableViewSelector = Backbone.View.extend({
   initialize: function() {
     // Show team view by default
@@ -183,7 +221,7 @@ App.TimetableViewSelector = Backbone.View.extend({
 
 App.TeamMemberView = Backbone.View.extend({
   events: { 
-    "click #new-team-member-form .submit-button": "handleNewTeamMember" 
+    "click #new-team-member-form .submit-button": "handleNewTeamMember"
   },
   handleNewTeamMember: function(event) {
     var inputField = $('input[name=new_team_member_name]');
@@ -599,24 +637,6 @@ $(function () {
   
   // Declare dialogs (but don't open by default)
   {
-    // Team name
-    $("#team-name-dialog").dialog({
-      modal: true,
-      closeOnEscape: true,
-      minWidth: 470,
-      minHeight: 65,
-      autoOpen: false,
-      position: 'top',
-      closeText: "'"
-    });
-    $("#team-name h2").click(function(event) {
-      $("#team-name-dialog").dialog('open');
-      $("#team-name #team-name-form input:first").focus();
-      overlayCloseOnClick();
-      
-      return false;
-    });
-    
     // User settings
     $( "#team-users-dialog" ).dialog({
       modal: true,
@@ -632,13 +652,6 @@ $(function () {
       
       return false;
     });
-    
-    // Hide delete buttons by default and only show on 
-    // $("#new-project-dialog .listing li button").hover(function() {
-    //   $(this).parent().find(".delete").show();
-    // }, function() {
-    //   $(this).parent().find(".delete").hide();
-    // });
   }
   
   // Add user email checking

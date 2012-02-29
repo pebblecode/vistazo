@@ -48,6 +48,7 @@
       ///////////////////////////////////////////////////////////////
       App.flashView = new App.FlashView({el: "#main"});
       App.projectDialogView = new App.ProjectDialogView({el: "body"});
+      App.teamDialogView = new App.TeamDialogView({el: "body"});
 
       App.teamProjects = new App.Projects;
       App.teamProjects.reset(<%= @projects.to_json %>);
