@@ -1,3 +1,9 @@
+# 0.9.0
+
+* Project view
+* Help page fix
+* Bug fixes
+
 # 0.8.0
 
 * Fluid layout
