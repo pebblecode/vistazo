@@ -272,10 +272,10 @@ This is deployed at: http://vistazo.herokuapp.com/
     # JSON file for a particular collection
     mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c <collection> -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o <output file>
     
-    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c users -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production-users.json
-    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c accounts -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production-accounts.json
-    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c team_members -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production-team_members.json
-    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c projects -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production-projects.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c users -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-users.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c accounts -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-accounts.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c team_members -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-team_members.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c projects -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-projects.json
 
 ### Add new team member
 
