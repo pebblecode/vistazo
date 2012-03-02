@@ -19,7 +19,7 @@ _.templateSettings = {
 
 App.TeamMember = Backbone.Model.extend({
   defaults: {
-    name : ""
+    name: ""
   },
   url: "/" + TEAM_ID + "/team-member/add",
   addTimetableItem: function(ttItem) {

@@ -1,18 +1,33 @@
 describe("TeamMember model", function() {
-	var App.teamMembers;
-	beforeEach(function () {
-    App.teamMembers = new App.TeamMembers;
+  var teamMember;
+  beforeEach(function () {
+    teamMember = new App.TeamMember({ "timetable_items": [] });
   });
 
-	it("addTimetableItem", function() {
-		// TimetableItem mock?
-
-
-	});
-  it("new: creates a new team member row", function() {
-    
-    console.log(App.teamMembers.length);
-    expect(App.teamMembers.length).toEqual(0);
+  it("addTimetableItem", function() {
+    expect(teamMember.get("timetable_items").length).toEqual(0);
+    teamMember.addTimetableItem(
+      new App.TimetableItem({})
+    );
+    expect(teamMember.get("timetable_items").length).toEqual(1);
+    console.log(JSON.stringify(teamMember));
   });
-  
+
+  it("removeTimetableItemId", function() {
+    teamMember.addTimetableItem(
+      new App.TimetableItem({
+        id: "id_1",
+        "timetable_items": []
+      })
+    );
+    teamMember.addTimetableItem(
+      new App.TimetableItem({
+        id: "id_2",
+        "timetable_items": []
+      })
+    );
+    expect(teamMember.get("timetable_items").length).toEqual(2);
+    teamMember.removeTimetableItemId("id_1");
+    expect(teamMember.get("timetable_items").length).toEqual(1);
+  });
 });
