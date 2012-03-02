@@ -54,6 +54,7 @@ group :development, :test do
   gem 'rack-test'
   gem "factory_girl", "~> 2.1.0"
   gem 'capybara'
+  gem 'jasmine'
 
   # Tux, console like
   gem 'tux'

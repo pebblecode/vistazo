@@ -76,6 +76,18 @@ To run specs automatically with [guard](https://github.com/guard/guard)
 
     bundle exec guard
 
+#### Javascript testing
+
+Using [jasmine](https://github.com/pivotal/jasmine-gem).
+
+To install (after adding `jasmine` gem in `Gemfile`):
+
+    bundle exec jasmine init
+
+To start jasmine server:
+
+    rake jasmine
+
 ### UX testing
 
 For UX testing, there is a [ux-sandbox-testing](http://github.com/pebblecode/vistazo/tree/ux-sandbox-testing) branch that allows for modifications to be made to the code that can be deployed specifically for ux testing. Currently, we are deploying to http://vistazo-sandbox.herokuapp.com.
