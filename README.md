@@ -263,6 +263,21 @@ This is deployed at: http://vistazo.herokuapp.com/
 
 ### Import/Export
 
+#### Development import
+
+Drop db first
+
+    mongo vistazo-development
+    > db.dropDatabase()
+
+Import files, eg:
+
+    mongoimport -d vistazo-development -c teams tmp/vistazo-production-teams.json
+    mongoimport -d vistazo-development -c users tmp/vistazo-production-users.json
+    mongoimport -d vistazo-development -c team_members tmp/vistazo-production-team_members.json
+    mongoimport -d vistazo-development -c colour_settings tmp/vistazo-production-colour_settings.json
+    mongoimport -d vistazo-development -c projects tmp/vistazo-production-projects.json
+
 #### Sandbox 2 export
 
     # Binary form
@@ -285,9 +300,10 @@ This is deployed at: http://vistazo.herokuapp.com/
     mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c <collection> -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o <output file>
     
     mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c users -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-users.json
-    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c accounts -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-accounts.json
-    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c team_members -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-team_members.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c teams -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-teams.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c users -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-users.json
     mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c projects -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-projects.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c colour_settings -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-colour_settings.json
 
 ### Add new team member
 
