@@ -529,28 +529,28 @@ end
 #   redirect back
 # end
 
-post '/:team_id/team-member/:team_member_id/timetable-items/new.json' do
+post '/:team_id/user/:user_id/timetable-items/new.json' do
   protected!
   require_team_user!(params[:team_id])
   
   request_body = JSON.parse(request.body.read.to_s)
   team = Team.find(params[:team_id])
-  team_member = TeamMember.find(params[:team_member_id])
+  user = User.find(params[:user_id])
   date = Date.parse(request_body["date"]) if request_body["date"]
   
-  logger.info "Add team member project: #{params} | #{request_body}"
+  logger.info "Add timetable item: #{params} | #{request_body}"
   
   if request_body["project_id"].present?
     project = Project.find(request_body["project_id"])
-    if (team_member.present? and project.present? and date.present?)
-      timetable_item = team_member.add_project_on_date(project, date)
+    if (user.present? and project.present? and date.present?)
+      timetable_item = user.add_project_on_date(project, date)
       
-      outputMsg = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
+      outputMsg = "Successfully added '<em>#{project.name}</em>' project for #{user.name} on #{date}."
 
       status HTTP_STATUS_OK
       output = { :message => outputMsg, :timetable_item => timetable_item }
     else
-      logger.warn "ERROR: Add existing team member project: team_member: #{team_member}, project: #{project}, date: #{date}"
+      logger.warn "ERROR: Add existing team member project: user: #{user}, project: #{project}, date: #{date}"
       outputMsg = "Something went wrong when adding a team member project. Please refresh and try again later."
 
       status HTTP_STATUS_BAD_REQUEST
@@ -562,9 +562,9 @@ post '/:team_id/team-member/:team_member_id/timetable-items/new.json' do
     if project_name.present?
       if team.present?
         project = Project.create(:name => project_name, :team_id => team.id)
-        timetable_item = team_member.add_project_on_date(project, date)
+        timetable_item = user.add_project_on_date(project, date)
         
-        outputMsg = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
+        outputMsg = "Successfully added '<em>#{project.name}</em>' project for #{user.name} on #{date}."
 
         status HTTP_STATUS_OK
         output = { :message => outputMsg, :timetable_item => timetable_item, :project => project }

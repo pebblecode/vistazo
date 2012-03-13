@@ -62,11 +62,11 @@ App.TimetableItem = Backbone.Model.extend({
     project_id: "",
     project_name: "",
     team_id: "",
-    team_member_id: "",
+    user_id: "",
     date: ""
   },
   url: function() {
-    return "/" + this.get("team_id") + "/team-member/" + this.get("team_member_id") + "/timetable-items/new.json";
+    return "/" + this.get("team_id") + "/user/" + this.get("user_id") + "/timetable-items/new.json";
   }
 });
 
@@ -339,7 +339,7 @@ App.ExistingProjectsView = Backbone.View.extend({
       project_id: projId,
       project_name: projName,
       team_id: TEAM_ID,
-      team_member_id: userId,
+      user_id: userId,
       date: projDate
     });
     
@@ -523,7 +523,7 @@ App.ProjectDialogView = Backbone.View.extend({
           // No project_id because it is new
           project_name: projName,
           team_id: TEAM_ID,
-          team_member_id: userId,
+          user_id: userId,
           date: projDate
         });
         
