@@ -53,8 +53,8 @@
       App.teamProjects = new App.Projects;
       App.teamProjects.reset(<%= @projects.to_json %>);
 
-      App.teamMembers = new App.TeamMembers;
-      App.teamMembers.reset(<%= @team_members.to_json %>);
+      App.users = new App.Users;
+      App.users.reset(<%= @users.to_json %>);
 
       App.timetableViewSelector = new App.TimetableViewSelector({el: $("#view-selector")})
     });
@@ -116,9 +116,6 @@
     <%= yield %>
   </div>
   
-  <% if @show_users %>
-    <%= erb :users %>
-  <% end %>
   <%= erb :team_name_dialog %>
   
   <footer>

@@ -171,8 +171,6 @@ get '/auth/:provider/callback' do
         if @user.valid?
           @team = Team.create_for_user(@user)
           
-          # Add the user as the first team member
-          @team.team_members << TeamMember.create(:name => @user.name)
           if @team.save
             flash[:success] = "Welcome to Vistazo! We're ready for you to add projects for yourself."
           else
@@ -231,10 +229,6 @@ get '/:team_id/:year/week/:week_num' do
   end
     
   @team = Team.find(params[:team_id])
-  @active_users = @team.active_users
-  @pending_users = @team.pending_users
-  
-  @show_users = true
   
   if @team.present?
     year = params[:year].to_i
@@ -259,15 +253,16 @@ get '/:team_id/:year/week/:week_num' do
       @sunday_date = Date.commercial(year, week_num, SUNDAY)
 
       @projects = Project.where(:team_id => @team.id).sort(:name)
-      @team_members = TeamMember.where(:team_id => @team.id).sort(:name)
+      @users = User.where(:team_ids => @team.id).sort(:name)
+
 
       # Assume it's the right week of dates
       @timetable_items_on_day = {}
-      for tm in @team_members do
-        @timetable_items_on_day[tm] = {}
+      for user in @users do
+        @timetable_items_on_day[user] = {}
 
         (MONDAY..SUNDAY).each do |work_day|
-          @timetable_items_on_day[tm][work_day] = tm.timetable_items.select { |proj|
+          @timetable_items_on_day[user][work_day] = user.timetable_items.select { |proj|
             (proj.date.cwday == work_day) and (proj.date >= @monday_date) and (proj.date <= @sunday_date)
           }
         end

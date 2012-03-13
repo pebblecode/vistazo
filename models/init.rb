@@ -1,5 +1,4 @@
 require_relative 'team'
-require_relative 'team_member'
 require_relative 'user'
 require_relative 'timetable_item'
 require_relative 'project'
