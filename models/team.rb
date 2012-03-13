@@ -43,13 +43,6 @@ class Team
   #   self.save
   # end
   
-  def update_user_cache(user)
-    self.users.delete_if {|u| u["id"] == user.id.to_s} # Delete it, so it can be re-added
-    self.users << user.to_hash
-    
-    self.save
-  end
-  
   def url_slug
     self.id.to_s
   end
