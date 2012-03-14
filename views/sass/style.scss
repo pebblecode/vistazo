@@ -594,14 +594,16 @@ textarea:focus, input:focus{
       border-right: none; /* Cancel out border on last column */
       
       #new-team-member-form {
-      	margin-left: 6px;
+      	width: 13.3333%;
+      	padding: 0 5px;
+      	box-sizing: border-box;
         
         legend {
         
           display: none;
         }
         .new-object-fieldset {
-          width: 115px;
+          width: 100%;
           margin-bottom: 12px;
           
           .new-object-text-box {
