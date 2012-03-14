@@ -503,7 +503,7 @@ textarea:focus, input:focus{
   min-width: 1000px;
   margin: 0 auto;
   top: 112px;
-  left: 25px;
+  left: 15px;
 
   li {
     a {
@@ -528,11 +528,11 @@ textarea:focus, input:focus{
     &#project-view-selector {
       position: absolute;
       top: 0;
-      left: 118px;
+      left: 108px;
     }
     &.active a {
       background-color: white;
-      color: black;
+      color: #555;
       position: absolute;
       z-index: 200;
     }
