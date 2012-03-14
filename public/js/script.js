@@ -824,48 +824,53 @@ function updateTimetableItem(proj) {
   var timetableItemId = $(proj).attr("data-team-member-project-id");
   var toDate = $(proj).parents('.box').first().attr("data-date");
     
-  var url = "/" + TEAM_ID + "/team-member-project/" + timetableItemId + "/update.json";
+  var url = "/" + TEAM_ID + "/timetable-items/" + timetableItemId + "/update.json";
   $(proj).addClass('is_loading');
-  $.post(url, { from_team_member_id: fromUserId, to_team_member_id: toUserId, to_date: toDate })
-    .success(function(resp) {
+  $.post(url, { from_user_id: fromUserId, to_user_id: toUserId, to_date: toDate })
+    .success(function(response) {
       // Update team member project info in data attributes
       $(proj).attr("data-team-member-id", toUserId);
       $(proj).attr("data-date", toDate);
       
       // Update delete link
       var delete_url = $(proj).find(".delete-tm-project-form").attr("action");
-      // Should be in the form /team-member/[team member id]/project/[team member project id]/delete
-      var old_team_member_id = delete_url.split("/")[2];
-      var new_delete_url = delete_url.replace(old_team_member_id, toUserId);
+      // Should be in the form /user/[user id]/project/[timetable id]/delete
+      var old_user_id = delete_url.split("/")[2];
+      var new_delete_url = delete_url.replace(old_user_id, toUserId);
       $(proj).find(".delete-tm-project-form").attr("action", new_delete_url);
 
       setupProjectEvents();
 
       // Update model
-      App.users.updateTimetableItemForUser(resp["timetable_item"], fromUserId, toUserId);
+      App.users.updateTimetableItemForUser(response["timetable_item"], fromUserId, toUserId);
+      App.flashView.render("success", response["message"]);
+      
+      $(proj).removeClass('is_loading');
     })
-    .error(function(response) {
+    .error(function(data) {
       // Move team member project back
       var fromDate = $(proj).attr("data-date");
       var fromLocation = $(".team-member[data-team-member-id=" + fromUserId + "]").find(".box[data-date=" + fromDate + "]");
       
       $(proj).remove();
       $(fromLocation).append(proj);
-    })
-    .complete(function(data, status) {
-      response = JSON.parse(data.responseText);
-      if (status == "success") {
-        App.flashView.render("success", response["message"]);
-      } else {
-        if (response) {
-          App.flashView.render("warning", response["message"]);
-        } else {
-          App.flashView.render("warning", "Something weird happened. Please contact support about it.");
-        }
-      }
-      
+
+      setupProjectEvents();
       $(proj).removeClass('is_loading');
-    });
+
+      try {
+        response = JSON.parse(data.responseText);
+        if (response) {
+          App.flashView.render(("warning", respJson["message"]));
+        } else {
+          App.flashView.renderError();  
+        }
+      } catch(error) {
+        console.log(error);
+        App.flashView.renderError();
+      }
+
+    })
   
 }
 

@@ -591,28 +591,29 @@ end
 # Update team member project
 ############################################
 
-post '/:team_id/team-member-project/:tm_project_id/update.json' do
+post '/:team_id/timetable-items/:timetable_item_id/update.json' do
   protected!
-  require_team_user!(params[:team_id])
+  team_id = params[:team_id]
+  require_team_user!(team_id)
   
   output = ""
-  current_user_team = Team.find(params[:team_id])
+  current_user_team = Team.find(team_id)
   if current_user_team.present?
-    from_team_member = TeamMember.find(params[:from_team_member_id])
-    to_team_member = TeamMember.find(params[:to_team_member_id])
-    timetable_item = from_team_member.timetable_items.find(params[:tm_project_id]) if from_team_member
+    from_user = User.find(params[:from_user_id])
+    to_user = User.find(params[:to_user_id])
+    timetable_item = from_user.timetable_items.find(params[:timetable_item_id]) if from_user
     to_date = Date.parse(params[:to_date]) if params[:to_date]
     
-    logger.info "Update team member project params: #{params}"
+    logger.info "Update timetable item params: #{params}"
     
-    
-    if (from_team_member.present? and to_team_member.present? and timetable_item.present? and to_date.present?)
-      if ((from_team_member.team == current_user_team) and (to_team_member.team == current_user_team))
-        successful_move = from_team_member.move_project(timetable_item, to_team_member, to_date)
+    if (from_user.present? and to_user.present? and timetable_item.present? and to_date.present?)
+
+      if ((from_user.team_ids.include? current_user_team.id) and (to_user.team_ids.include? current_user_team.id))
+        successful_move = from_user.move_project(timetable_item, to_user, to_date)
   
         if successful_move
           status HTTP_STATUS_OK
-          output = { :message => "Successfully moved '<em>#{timetable_item.project_name}</em>' project to #{to_team_member.name} on #{to_date}.", timetable_item: timetable_item }
+          output = { :message => "Successfully moved '<em>#{timetable_item.project_name}</em>' project to #{to_user.name} on #{to_date}.", timetable_item: timetable_item }
         else
           status HTTP_STATUS_INTERNAL_SERVER_ERROR
           output = { :message => "Something went wrong with saving the changes when updating team member project. Please refresh and try again later.", timetable_item: timetable_item }
