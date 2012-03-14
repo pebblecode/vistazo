@@ -661,21 +661,21 @@ post '/team-member/:team_member_id/project/:tm_project_id/delete' do
   redirect back
 end
 
-post '/team-member/:team_member_id/project/:timetable_id/delete.json' do
+post '/team-member/:user_id/project/:timetable_id/delete.json' do
   protected!
 
-  team_member = TeamMember.find(params[:team_member_id])
+  user = User.find(params[:user_id])
   output = ""
-  if team_member.present?
-    did_delete = team_member.timetable_items.reject! { |ttItem| ttItem.id.to_s == params[:timetable_id] }
-    team_member.save
+  if user.present?
+    did_delete = user.timetable_items.reject! { |ttItem| ttItem.id.to_s == params[:timetable_id] }
+    user.save
 
     if did_delete
       status HTTP_STATUS_OK
-      output = { :message => "Successfully deleted team member project for #{team_member.name}.", :timetable_item_id => params[:timetable_id] }
+      output = { :message => "Successfully deleted team member project for #{user.name}.", :timetable_item_id => params[:timetable_id] }
     else
       status HTTP_STATUS_INTERNAL_SERVER_ERROR
-      output = { :message => "Something went wrong when trying to delete a team member project for #{team_member.name}. Please try again later.", :timetable_item_id => params[:timetable_id] }
+      output = { :message => "Something went wrong when trying to delete a team member project for #{user.name}. Please try again later.", :timetable_item_id => params[:timetable_id] }
     end
   else
     status HTTP_STATUS_BAD_REQUEST
