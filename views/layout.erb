@@ -96,10 +96,10 @@
     <div class="top-spacer right"></div> -->
     <ul class="action-bar">
       <% if logged_in? %>
-        <li><a href="/logout" title="Log out">X</a></li>
         <li><a class="user-settings" href="#" title="User settings">U</a></li>
         <li><a class="help" title="Help" href="#">?</a></li>
-        <li class="logged-in-as"><%= current_user.name %></li>
+        <li><a class="logout" href="/logout" title="Log out">&nbsp;logout</a></li>
+        <li class="logged-in-as"><%= current_user.name %> /</li>
       <% end %>
     </ul>
     <!-- <p class="invite-user"><a href="#team-users">Invite people to view this team</a></p> -->
