@@ -768,17 +768,22 @@ post '/:team_id/team-member/add' do
   output = ""
   if team.present?
     request_body = JSON.parse(request.body.read.to_s)
-    team_member_name = request_body["name"] if request_body.present?
+    user_name = request_body["name"] if request_body.present?
+    user_email = request_body["email"] if request_body.present?
   
-    if team_member_name.present?
-      team_member = TeamMember.create(:name => team_member_name, :team_id => team.id)
-      logger.info("Added team_member: #{team_member_name}")
+    if user_name.present? and user_email.present?
+      user = User.create(:name => user_name, :email => user_email, :team_ids => [team.id])
+
+      # TODO: Merge with add user (/:team_id/user/new)
+
+
+      logger.info("Added user: #{user_name} (#{user_email})")
       status HTTP_STATUS_OK
-      output = team_member
+      output = user
     else
-      logger.warn("team_member name not present")
+      logger.warn("user not valid")
       status HTTP_STATUS_BAD_REQUEST
-      output = { :message => "Please specify a team member name." }
+      output = { :message => "User invalid" }
     end
     
   else
