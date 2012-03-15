@@ -14,7 +14,7 @@
         <h2>Switch teams</h2>
         <ul>
           <% current_user.teams.each do |team|%>
-            <li><div class="list-bullet"></div><a href="/<%= team.id %>"><%= team.name %></a></li>
+            <li><a href="/<%= team.id %>"><%= team.name %></a></li>
           <% end %>
         </ul>
       </div>
