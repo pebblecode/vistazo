@@ -99,6 +99,32 @@ $warning_color: #000000;
   border: 1px solid #a1a1a1;
 }
 
+@mixin button-standard {
+  @include border-radius(5px);
+  @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: normal;
+  text-shadow: none;
+  padding: 2px 5px;
+  color: #808080;
+  background-color: #fff;
+  border: 1px solid #a1a1a1;
+}
+
+@mixin text-input{
+  @include border-radius(5px);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: normal;
+  text-shadow: none;
+  padding: 2px 5px;
+  color: #fff;
+  background: #6cc8ee url('../img/edit.png') no-repeat right 6px;
+  border: 1px solid #fff;
+}
+
+
 /* General styles
 -----------------------------------------------------------------------------*/
 
