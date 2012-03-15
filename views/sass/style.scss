@@ -288,6 +288,17 @@ body {
   } // button
 } // .delete-object-fieldset
 
+.errors {
+  li {
+    @include border-radius(5px);
+    color: black;
+    text-shadow: none;
+    background-color: #EEDC94;
+    margin-bottom: 3px;
+    padding: 3px;
+  }
+}
+
 .warning-msg {
   width: 300px;
   float: left;
@@ -334,7 +345,7 @@ textarea:focus, input:focus{
     .error-field-msg {
       margin-top: 5px;
     } // .error-field
-  } // .errors
+  } // .errors-on-form
 }
 
 
@@ -1077,11 +1088,10 @@ textarea:focus, input:focus{
   }
 } // #new-project-form
 
-#invite-user-form {
+#add-user-form {
   @extend #team-users-dialog;
   display: block !important;
-
-}
+} // #add-user-form
 
 #team-users-dialog {
   display: none; /* Hide by default */
@@ -1163,9 +1173,6 @@ textarea:focus, input:focus{
     margin-bottom: 10px;
   }
   
-  #invite-user-form {
-  } // #invite-user-form
-  
   .new-object-fieldset {
     border: none;
     padding: 1px;
@@ -1233,6 +1240,20 @@ textarea:focus, input:focus{
     }
   }
 } // #team-name-dialog
+
+#add-user-dialog {
+  ol {
+    list-style: none;
+    margin-top: 20px;
+
+    li {
+      margin-bottom: 5px;
+    } // li
+  } // ol
+  .submit-button {
+    margin-top: 20px;
+  }
+} // #add-user-dialog
 
 
 /* Homepage

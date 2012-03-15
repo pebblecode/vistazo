@@ -23,6 +23,18 @@ App.User = Backbone.Model.extend({
     email: ""
   },
   url: "/" + TEAM_ID + "/team-member/add",
+  // Can't use built in validate because of http://stackoverflow.com/q/9709968/111884
+  hasErrors: function() {
+    errors = {};
+    if (_.isEmpty(this.get("name"))) {
+      errors["name"] = "Name can't be blank";
+    }
+    if (_.isEmpty(this.get("email"))) {
+      errors["email"] = "Email can't be blank";
+    }
+
+    return _.any(errors) ? errors : null;
+  },
   addTimetableItem: function(ttItem) {
     var newTimetableItems = this.get("timetable_items");
     newTimetableItems.push(ttItem);
@@ -196,9 +208,39 @@ App.TimetableViewSelector = Backbone.View.extend({
   }
 });
 
+App.AddUserDialogView = Backbone.View.extend({
+  events: { 
+    "click #add-user-button": "render"
+  },
+  initialize: function() {
+    var addUserDialog = _.template($("#add-user-dialog-template").html());
+    $(this.el).append(addUserDialog);
+    $("#add-user-dialog").dialog({
+      modal: true,
+      closeOnEscape: true,
+      minWidth: 470,
+      minHeight: 65,
+      autoOpen: false,
+      position: 'top',
+      closeText: "'"
+    });
+  },
+  render: function(event) {
+    // Remove errors
+    $("#add-user-form-errors").remove();
+
+    $("#add-user-dialog").dialog('open');
+    overlayCloseOnClick();
+
+    App.userListingView = new App.UserListingView({el: "body"});
+
+    event.preventDefault();
+  }
+});
+
 App.UserListingView = Backbone.View.extend({
   events: { 
-    "click #new-team-member-form .submit-button": "handleNewUser"
+    "click #add-user-dialog .submit-button": "handleNewUser"
   },
   initialize: function() {
     var listingView = this;
@@ -207,11 +249,11 @@ App.UserListingView = Backbone.View.extend({
       App.flashView.render("success", "Successfully added '<em>" + user.get('name') + "</em>'.");
     });
 
-    App.users.bind('error', function(response) {
-      if (response) {
+    App.users.bind('error', function(data) {
+      if (data) {
         try {
-          respJson = JSON.parse(response.responseText);
-          App.flashView.render(("warning", respJson["message"]));
+          response = JSON.parse(data.responseText);
+          App.flashView.render(("warning", response["message"]));
         } catch(error) {
           console.log(error);
           App.flashView.renderError();
@@ -222,25 +264,35 @@ App.UserListingView = Backbone.View.extend({
     });
   },
   handleNewUser: function(event) {
-    var inputField = $('input[name=new_team_member_name]');
-    
-    // Hijack submit button if nothing is in textbox (either empty or labelified value)
-    if (($(inputField).val() == "") ||
-         $(inputField).val() == $("#new-team-member-form .new-object-text-box").attr("title")) {
+    var newUser = new App.User({
+      name: $('input[name=new_user_name]').val(),
+      email: $('input[name=new_user_email]').val()
+    });
 
-      $("#new-team-member-form .new-object-text-box").focus();
+    var errors = newUser.hasErrors();
+    if (!errors) {
+      newUser.save();
+      App.users.add(newUser);
+
+      $('input[name=new_user_name]').val('');
+      $('input[name=new_user_email]').val('');
+
+      $("#add-user-dialog").dialog('close');
     } else {
-      var tm = new App.User({
-        name: inputField.val()
+      errorsHtml = _.template($("#errors-template").html(), {
+        id: "add-user-form-errors",
+        errors: errors
       });
+      if ($("#add-user-form-errors").length > 0) {
+        $("#add-user-form-errors").replaceWith(errorsHtml);
+      } else {
+        $("#add-user-form").prepend(errorsHtml);
+      }
 
-      tm.save();
-      App.users.add(tm);
-
-      inputField.val('');
+      $("#add-user-form input[name=new_user_name]").focus();
     }
 
-    return false; // Don't submit form
+    event.preventDefault();
   },
   // Either add to #main or replace #timetable
   render: function() {
@@ -251,7 +303,7 @@ App.UserListingView = Backbone.View.extend({
     } else {
       $("#timetable").replaceWith(weekTable);
     }
-    var newUserRow = _.template($("#new-team-member-row-template").html());
+    var newUserRow = _.template($("#new-user-row-template").html());
     $("#timetable").append(newUserRow);
     labelifyTextBoxes();
     

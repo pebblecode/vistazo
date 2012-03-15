@@ -160,9 +160,6 @@
           </fieldset> <!-- Edit team member -->
         </form>
         
-        <h4 class="add-new-user-title">Invite someone (note: needs to be a Google account)</h4>
-        <%= erb :_invite_user_form %>
-        
         <form action="/team-member/{{ tmId }}/delete" method="post">
           <fieldset class="delete-object-fieldset" title="Delete team member">
             <legend>Delete team member</legend>
@@ -206,20 +203,38 @@
   </tr>
 </script>
 
-<script type="text/template" id="new-team-member-row-template">
-  <tr id="new-team-member-row">
+<script type="text/template" id="new-user-row-template">
+  <tr id="new-user-row">
     <td colspan="9" class="last-row col1">
-      <form id="new-team-member-form" action="/<%= @team.url_slug %>/team-member/add" method="post">
-        <fieldset class="new-object-fieldset" title="New team member">
-          <legend>New team member</legend>
-          <label for="new_team_member_name">Add new</label>
-          <input type="text" name="new_team_member_name" title="Add member" class="new-object-text-box" /> 
-          <button type="submit" name="new_team_member" value="new_team_member" class="submit-button">+</button>
-          <div id="help-new"></div>
-        </fieldset> <!-- New team member -->
-      </form>
+      <a id="add-user-button" href="#">Add user</a>
     </td>
   </tr>
+</script>
+
+<script type="text/template" id="add-user-dialog-template">
+  <div id="add-user-dialog" title="Add user">
+    <h4>Enter a Google mail account to add someone to your team.</h4>
+    <form id="add-user-form" action="#" method="post">
+      <fieldset>
+        <legend>New user</legend>
+        <ol>
+          <li>
+            <label for="new_user_name">Name</label>
+            <input type="text" name="new_user_name"/>
+          </li>
+          <li>
+            <label for="new_user_email">Email</label>
+            <input type="text" name="new_user_email"/>
+          </li>
+          <li>
+            <input id="new-user-visible" type="checkbox" name="visible" value="true" checked="checked" />
+            <label for="new-user-visible">Appear on timetable</label>
+          </li>
+        </ol>
+        <button type="submit" name="new_user" value="new_user" class="submit-button">Add</button>
+      </fieldset> <!-- Invite new user -->
+    </form>
+  </div> <!-- #add-users-dialog -->
 </script>
 
 <script type="text/template" id="project-listing-template">
@@ -258,5 +273,16 @@
         <td class="{{ rowClass }} col-last" %></td>
       </tr>
     {% }); %}
+  {% } %}
+</script>
+
+<script type="text/template" id="errors-template">
+  {% var errorKeys = _.keys(errors); %}
+  {% if (errorKeys.length > 0) { %}
+    <ul id="{{ id }}" class="errors">
+      {% _.each(errorKeys, function(key) { %}
+        <li>{{ errors[key] }}</li>
+      {% }); %}
+    </ul>
   {% } %}
 </script>
