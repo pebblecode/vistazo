@@ -258,15 +258,17 @@ get '/:team_id/:year/week/:week_num' do
 
       # Assume it's the right week of dates
       @timetable_items_on_day = {}
-      for user in @users do
-        @timetable_items_on_day[user] = {}
 
-        (MONDAY..SUNDAY).each do |work_day|
-          @timetable_items_on_day[user][work_day] = user.timetable_items.select { |proj|
-            (proj.date.cwday == work_day) and (proj.date >= @monday_date) and (proj.date <= @sunday_date)
-          }
-        end
-      end
+      # TODO: Figure out how to show timetable
+      # for user_timetable in @team.user_timetables do
+      #   @timetable_items_on_day[user_timetable.user] = {}
+
+      #   (MONDAY..SUNDAY).each do |work_day|
+      #     @timetable_items_on_day[user][work_day] = user.timetable_items.select { |proj|
+      #       (proj.date.cwday == work_day) and (proj.date >= @monday_date) and (proj.date <= @sunday_date)
+      #     }
+      #   end
+      # end
 
       erb :timetable
     else
@@ -543,7 +545,7 @@ post '/:team_id/user/:user_id/timetable-items/new.json' do
   if request_body["project_id"].present?
     project = Project.find(request_body["project_id"])
     if (user.present? and project.present? and date.present?)
-      timetable_item = user.add_project_on_date(project, date)
+      timetable_item = team.add_timetable_item(project, date)
       
       outputMsg = "Successfully added '<em>#{project.name}</em>' project for #{user.name} on #{date}."
 

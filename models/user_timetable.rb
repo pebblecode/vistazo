@@ -1,19 +1,15 @@
-class TimetableItem
+class UserTimetable
   include MongoMapper::EmbeddedDocument
   plugin MongoMapper::Plugins::Timestamps
   
-  before_save :cache_project_name
-  
-  key :date, Date, :required => true
-  
-  # Cache project
-  key :project_name, String
+
+  key :is_visible, Boolean, :default => true
   
   timestamps!
   
   # Relationships
-  one :project
-  one :user_timetable
+  one :user
+  many :timetable_items
   
   def css_class
     get_project_css_class(self.project_id.to_s)
