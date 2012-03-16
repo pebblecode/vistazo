@@ -8,7 +8,8 @@ class UserTimetable
   timestamps!
   
   # Relationships
-  one :user
+  belongs_to :team
+  belongs_to :user
   many :timetable_items
   
   def css_class

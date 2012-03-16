@@ -56,7 +56,7 @@ class Team
   
   # Returns the timetable item added, or nil if it isn't saved properly
   def add_timetable_item(user, project, date)
-    user_timetable = self.user_timetable(user) ? self.user_timetable(user) : UserTimetable.new(:user => user)
+    user_timetable = self.user_timetable(user) ? self.user_timetable(user) : UserTimetable.new(:user => user, :team => self)
     
     ttItem = TimetableItem.new(:project_id => project.id, :date => date)
     user_timetable.timetable_items ||= []

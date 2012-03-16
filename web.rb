@@ -564,7 +564,7 @@ post '/:team_id/user/:user_id/timetable-items/new.json' do
     if project_name.present?
       if team.present?
         project = Project.create(:name => project_name, :team_id => team.id)
-        timetable_item = user.add_project_on_date(project, date)
+        timetable_item = team.add_timetable_item(user, project, date)
         
         outputMsg = "Successfully added '<em>#{project.name}</em>' project for #{user.name} on #{date}."
 

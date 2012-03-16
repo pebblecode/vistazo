@@ -13,7 +13,6 @@ class TimetableItem
   
   # Relationships
   one :project
-  one :user_timetable
   
   def css_class
     get_project_css_class(self.project_id.to_s)
