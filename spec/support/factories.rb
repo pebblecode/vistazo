@@ -17,10 +17,10 @@ end
 
 Factory.define :user_timetable do |f|
   f.association :user
+  f.association :team
 end
 
 Factory.define :timetable_item do |f|
   f.date Time.now 
   f.association :project
-  f.association :user_timetable
 end

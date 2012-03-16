@@ -24,13 +24,6 @@ describe "Team model" do
 
       @team.user_timetables.length.should == 1
     end
-    
-    it "default user_timetables is_visible is true" do
-      @team.add_timetable_item(@user, @project, Time.now)
-      user_timetable = @team.user_timetables.first
-
-      user_timetable.is_visible.should == true
-    end
 
     it "should add into the user timetable items" do
       tti = @team.add_timetable_item(@user, @project, Time.now)
@@ -65,6 +58,13 @@ describe "Team model" do
       @team.add_timetable_item(@user, Factory(:project), Time.now)
 
       @team.user_timetable(@user).timetable_items.length.should == 3
+    end
+
+    it "should not add the user multiple times" do
+      @team.add_timetable_item(@user, @project, Time.now)
+      @team.add_timetable_item(@user, @project, Time.now)
+
+      @team.user_timetables.length.should == 1
     end
   end
 end

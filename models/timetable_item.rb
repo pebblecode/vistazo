@@ -12,7 +12,7 @@ class TimetableItem
   timestamps!
   
   # Relationships
-  one :project
+  belongs_to :project
   
   def css_class
     get_project_css_class(self.project_id.to_s)

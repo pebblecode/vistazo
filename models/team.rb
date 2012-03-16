@@ -58,7 +58,7 @@ class Team
   def add_timetable_item(user, project, date)
     user_timetable = self.user_timetable(user) ? self.user_timetable(user) : UserTimetable.new(:user => user, :team => self)
     
-    ttItem = TimetableItem.new(:project_id => project.id, :date => date)
+    ttItem = TimetableItem.new(:project => project, :date => date)
     user_timetable.timetable_items ||= []
     user_timetable.timetable_items << ttItem
 
