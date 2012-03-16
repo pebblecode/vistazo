@@ -57,6 +57,9 @@
       App.users = new App.Users;
       App.users.reset(<%= @users.to_json %>);
 
+      App.userTimetables = new App.UserTimetables;
+      App.userTimetables.reset(<%= @team.user_timetables.to_json %>)
+
       App.timetableViewSelector = new App.TimetableViewSelector({el: $("#view-selector")})
     });
   </script>

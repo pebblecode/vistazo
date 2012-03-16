@@ -30,6 +30,9 @@ class Team
   def add_user(user)
     user.teams << self
     user.save
+
+    self.user_timetables << UserTimetable.new(:user => user, :team => self)
+    self.save
   end
   
   def has_user_timetable?(user)
@@ -63,7 +66,7 @@ class Team
     user_timetable.timetable_items << ttItem
 
     self.user_timetables ||= []
-    self.user_timetables.delete_if { |ut| ut.user.id == user.id }
+    self.user_timetables.delete_if { |ut| ut.user == user }
     self.user_timetables << user_timetable
     
     self.save ? ttItem : nil

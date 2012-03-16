@@ -255,21 +255,6 @@ get '/:team_id/:year/week/:week_num' do
       @projects = Project.where(:team_id => @team.id).sort(:name)
       @users = User.where(:team_ids => @team.id).sort(:name)
 
-
-      # Assume it's the right week of dates
-      @timetable_items_on_day = {}
-
-      # TODO: Figure out how to show timetable
-      # for user_timetable in @team.user_timetables do
-      #   @timetable_items_on_day[user_timetable.user] = {}
-
-      #   (MONDAY..SUNDAY).each do |work_day|
-      #     @timetable_items_on_day[user][work_day] = user.timetable_items.select { |proj|
-      #       (proj.date.cwday == work_day) and (proj.date >= @monday_date) and (proj.date <= @sunday_date)
-      #     }
-      #   end
-      # end
-
       erb :timetable
     else
       flash.next[:warning] = "Invalid week and year."
@@ -483,53 +468,13 @@ def send_registration_email_to(user)
 end
 
 # ----------------------------------------------------------------------------
-# Project
+# Timetable items
 # ----------------------------------------------------------------------------
 
 
 ############################################
 # Add team member project
 ############################################
-
-# Using ajax api
-# post '/:team_id/team-member-project/add' do
-#   protected!
-#   require_team_user!(params[:team_id])
-  
-#   team = Team.find(params[:team_id])
-#   team_member = TeamMember.find(params[:team_member_id])
-#   date = Date.parse(params[:date]) if params[:to_date]
-
-#   logger.info "Add team member project: #{params}"
-
-#   if params[:new_project].present?
-#     project_name = params[:new_project_name]
-  
-#     if project_name.present?
-#       if team.present?
-#         project = Project.create(:name => project_name, :team_id => team.id)
-#         team_member.add_project_on_date(project, date)
-    
-#         flash[:success] = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
-#       else
-#         flash[:warning] = "Invalid team."
-#       end
-#     else
-#       flash[:warning] = "Please specify a project name."
-#     end
-#   else
-#     project = Project.find(params[:project_id])
-#     if (team_member.present? and project.present? and date.present?)
-#       team_member.add_project_on_date(project, date)
-    
-#       flash[:success] = "Successfully added '<em>#{project.name}</em>' project for #{team_member.name} on #{date}."
-#     else
-#       flash[:warning] = "Something went wrong when adding a team member project. Please refresh and try again later."
-#     end
-#   end
-
-#   redirect back
-# end
 
 post '/:team_id/user/:user_id/timetable-items/new.json' do
   protected!
@@ -545,7 +490,7 @@ post '/:team_id/user/:user_id/timetable-items/new.json' do
   if request_body["project_id"].present?
     project = Project.find(request_body["project_id"])
     if (user.present? and project.present? and date.present?)
-      timetable_item = team.add_timetable_item(project, date)
+      timetable_item = team.add_timetable_item(user, project, date)
       
       outputMsg = "Successfully added '<em>#{project.name}</em>' project for #{user.name} on #{date}."
 
@@ -563,7 +508,7 @@ post '/:team_id/user/:user_id/timetable-items/new.json' do
   
     if project_name.present?
       if team.present?
-        project = Project.create(:name => project_name, :team_id => team.id)
+        project = Project.create(:name => project_name, :team => team)
         timetable_item = team.add_timetable_item(user, project, date)
         
         outputMsg = "Successfully added '<em>#{project.name}</em>' project for #{user.name} on #{date}."
@@ -590,7 +535,7 @@ end
 
 
 ############################################
-# Update team member project
+# Update timetable items
 ############################################
 
 post '/:team_id/timetable-items/:timetable_item_id/update.json' do
@@ -639,7 +584,7 @@ end
 
 
 ############################################
-# Delete team member project
+# Delete timetable items
 ############################################
 
 post '/team-member/:team_member_id/project/:tm_project_id/delete' do

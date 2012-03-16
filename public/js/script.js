@@ -17,6 +17,28 @@ _.templateSettings = {
 // Model/Collection declarations
 ///////////////////////////////////////////////////////////////
 
+App.UserTimetable = Backbone.Model.extend({
+  // // Use user_id as the id
+  idAttribute: "user_id",
+  // Convenience method fo getting access to the user name
+  userName: function() {
+    return App.users.get(this.get("user_id")).get("name");
+  },
+  addTimetableItem: function(ttItem) {
+    var newTimetableItems = this.get("timetable_items");
+    newTimetableItems.push(ttItem);
+    this.set("timetable_items", newTimetableItems);
+  },
+});
+
+App.UserTimetables = Backbone.Collection.extend({
+  model: App.UserTimetable,
+  addTimetableItemForUser: function(ttItem, userId) {
+    var userTimetable = this.get(userId);
+    userTimetable.addTimetableItem(ttItem);
+  },
+});
+
 App.User = Backbone.Model.extend({
   defaults: {
     name: "",
@@ -34,39 +56,30 @@ App.User = Backbone.Model.extend({
     }
 
     return _.any(errors) ? errors : null;
-  },
-  addTimetableItem: function(ttItem) {
-    var newTimetableItems = this.get("timetable_items");
-    newTimetableItems.push(ttItem);
-    this.set("timetable_items", newTimetableItems);
-  },
-  removeTimetableItemId: function(ttItemId) {
-    var newTimetableItems = _.reject(this.get("timetable_items"), 
-      function(ttItem) {
-        return ttItem["id"] === ttItemId;
-      });
-    this.set("timetable_items", newTimetableItems);
   }
+  // removeTimetableItemId: function(ttItemId) {
+  //   var newTimetableItems = _.reject(this.get("timetable_items"), 
+  //     function(ttItem) {
+  //       return ttItem["id"] === ttItemId;
+  //     });
+  //   this.set("timetable_items", newTimetableItems);
+  // }
 });
 
 App.Users = Backbone.Collection.extend({
   model: App.User,
   url: "/" + TEAM_ID + "/team-members",
-  addTimetableItemToUser: function(ttItem, userId) {
-    var user = this.get(userId);
-    user.addTimetableItem(ttItem);
-  },
-  updateTimetableItemForUser: function(ttItem, fromUserId, toUserId) {
-    var fromUser = this.get(fromUserId);
-    fromUser.removeTimetableItemId(ttItem["id"]);
+  // updateTimetableItemForUser: function(ttItem, fromUserId, toUserId) {
+  //   var fromUser = this.get(fromUserId);
+  //   fromUser.removeTimetableItemId(ttItem["id"]);
 
-    var toUser = this.get(toUserId);
-    toUser.addTimetableItem(ttItem);
-  },
-  removeTimetableItemIdFromUser: function(ttItemId, userId) {
-    var user = this.get(userId);
-    user.removeTimetableItemId(ttItemId);
-  }
+  //   var toUser = this.get(toUserId);
+  //   toUser.addTimetableItem(ttItem);
+  // },
+  // removeTimetableItemIdFromUser: function(ttItemId, userId) {
+  //   var user = this.get(userId);
+  //   user.removeTimetableItemId(ttItemId);
+  // }
 });
 
 App.TimetableItem = Backbone.Model.extend({
@@ -309,25 +322,28 @@ App.UserListingView = Backbone.View.extend({
     
     // Add team members
     var listingView = this;
-    App.users.each(function(tm) {
-      listingView._renderUser(tm);
+    App.userTimetables.each(function(userTimetable) {
+      listingView._renderUserTimetable(userTimetable);
     });
 
     return this;
   },
   _renderUser: function(user) {
+    console.log("Figure this out! For adding new user");
+  },
+  _renderUserTimetable: function(userTimetable) {
     // console.log("Render team member row for: " + JSON.stringify(user) + " (" + user.get("id") + "): " + user.get("name"));
     
     var rowNum = $(this.el).find(".team-member").length + 1 + 1; // 1 to increment and 1 for header row
     var rowClass = "row" + rowNum;
     var oddOrEvenClass = rowNum % 2 == 0 ? "even" : "odd";
     var weekTemplateVars = {
-      tmId: user.get("id"),
-      tmName: user.get("name"),
+      userId: userTimetable.get("user_id"),
+      userName: userTimetable.userName(),
       oddOrEvenClass: oddOrEvenClass,
       rowClass: rowClass,
-      tmProjects: user.get("timetable_items"),
-      isFirst: (App.users.first() == user)
+      timetableItems: userTimetable.get("timetable_items"),
+      isFirst: (App.userTimetables.first() == userTimetable)
     };
     var week = _.template($("#team-member-template").html(), weekTemplateVars);
     
@@ -427,7 +443,7 @@ App.ExistingProjectsView = Backbone.View.extend({
       setupProjectEvents();
 
       // Update model
-      App.users.addTimetableItemToUser(ttItem, userId);
+      App.userTimetables.addTimetableItemForUser(ttItem, userId);
 
       App.flashView.render("success", resp.get("message"));
     });
@@ -624,7 +640,7 @@ App.ProjectDialogView = Backbone.View.extend({
           setupProjectEvents();
 
           // Update model
-          App.users.addTimetableItemToUser(ttItem, userId);
+          App.userTimetables.addTimetableItemForUser(ttItem, userId);
 
           App.flashView.render("success", resp.get("message"));
         });

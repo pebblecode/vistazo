@@ -16,6 +16,17 @@ describe "Team model" do
       @team.add_user(@user)
       @user.team_ids.include?(@team.id).should == true
     end
+
+    it "should add to team user timetables with no timetable items" do
+      @team.add_user(@user)
+
+      user_timetables = @team.user_timetables.find_all { |ut| ut.user_id == @user.id }
+      user_timetables.length.should == 1
+
+      user_timetable = user_timetables.first
+      user_timetable.user_id.should == @user.id
+      user_timetable.timetable_items.length.should == 0
+    end
   end
 
   describe "add timetable item" do

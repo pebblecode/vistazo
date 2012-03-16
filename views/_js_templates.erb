@@ -144,26 +144,26 @@
   <tr class="row-divider">
     <td colspan="9"><hr/></td>
   </tr>  <!--the divider-->
-  <tr class="team-member {{ oddOrEvenClass }}" data-team-member-id="{{ tmId }}">
-    <td class="{{ rowClass }} col1" title="{{ tmName }}">
-      <a href="#edit-tm-{{ tmId }}" class="team-member-name">
-        {{ tmName.substring(0, 40) }}
+  <tr class="team-member {{ oddOrEvenClass }}" data-team-member-id="{{ userId }}">
+    <td class="{{ rowClass }} col1" title="{{ userName }}">
+      <a href="#edit-tm-{{ userId }}" class="team-member-name">
+        {{ userName.substring(0, 40) }}
       </a>
       
-      <div id="edit-tm-{{ tmId }}" class="edit-team-member-dialog" title="Edit team member name">
-        <form action="/team-member/{{ tmId }}/edit" method="post">
+      <div id="edit-tm-{{ userId }}" class="edit-team-member-dialog" title="Edit team member name">
+        <form action="/team-member/{{ userId }}/edit" method="post">
           <fieldset class="update-object-fieldset" title="Edit team member">
             <legend>Edit team member</legend>
             <label for="name">Name</label>
-            <input type="text" name="name" class="new-object-text-box" value="{{ tmName }}"/>
+            <input type="text" name="name" class="new-object-text-box" value="{{ userName }}"/>
             <button type="submit" class="submit-button">update</button>
           </fieldset> <!-- Edit team member -->
         </form>
         
-        <form action="/team-member/{{ tmId }}/delete" method="post">
+        <form action="/team-member/{{ userId }}/delete" method="post">
           <fieldset class="delete-object-fieldset" title="Delete team member">
             <legend>Delete team member</legend>
-            <p class="warning-icon">W</p><p class="warning-msg">All projects associated with '{{ tmName }}' will also be deleted.</p>
+            <p class="warning-icon">W</p><p class="warning-msg">All projects associated with '{{ userName }}' will also be deleted.</p>
             <button type="submit" class="submit-button">delete</button>
           </fieldset> <!-- Edit team member -->
         </form>
@@ -177,13 +177,13 @@
         data-team-member-id: Used for adding a new project to know the team member to add to
       %>
       <% date = (@monday_date - 1.day) + work_day.day %>
-      <td class="box {{ rowClass }} <%= "col#{work_day + prev_cols}" %>" data-date="<%= date %>" data-team-member-id="{{ tmId }}">
+      <td class="box {{ rowClass }} <%= "col#{work_day + prev_cols}" %>" data-date="<%= date %>" data-team-member-id="{{ userId }}">
 
-        {% _.each(tmProjects, function(proj) { %}
-          {% if (proj["date"] == "<%= date %>") { %}
-            <div class="project" data-team-member-id="{{ tmId }}" data-team-member-project-id="{{ proj['id'] }}" data-date="<%= date %>"> 
-              <div class="handle-container"><div class="handle project-{{ proj['project_id'] }}"></div></div> <p class="project-title" title="{{ proj['project_name'] }}">{{ proj['project_name'].substring(0, 40) }}</p>
-              <form class="delete-tm-project-form" action="/team-member/{{ tmId }}/project/{{ proj['id'] }}/delete" method="post">
+        {% _.each(timetableItems, function(ti) { %}
+          {% if (ti["date"] == "<%= date %>") { %}
+            <div class="project" data-team-member-id="{{ userId }}" data-team-member-project-id="{{ ti['id'] }}" data-date="<%= date %>"> 
+              <div class="handle-container"><div class="handle project-{{ ti['project_id'] }}"></div></div> <p class="project-title" title="{{ ti['project_name'] }}">{{ ti['project_name'].substring(0, 40) }}</p>
+              <form class="delete-tm-project-form" action="/team-member/{{ userId }}/project/{{ ti['id'] }}/delete" method="post">
                 <button name="delete_project" type="submit" value="true">×</button>
               </form>
             </div>
