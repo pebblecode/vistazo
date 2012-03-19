@@ -104,6 +104,38 @@ describe "Teams:" do
   
 end
 
+describe "Timetable items:" do
+  before do
+    http_authorization!
+    @session = init_omniauth_session
+
+    create_normal_user(@session)
+    @user = User.first
+    @team = @user.teams.first
+
+    @project = Project.create(:name => "Take over world", :team => @team)
+    @date = Time.now
+    @timetable_item = @team.add_timetable_item(@user, @project, @date)
+
+    login_normal_user_with_session!(@session)
+  end
+  
+  after do
+    clean_db!
+    @session = nil
+  end
+  
+  describe "Delete timetable items" do
+    it "should delete" do
+      debugger
+      post_params! delete_timetable_item_path(@team, @user, @timetable_item), nil, @session
+
+      debugger
+    end
+  end
+
+end
+
 describe "Delete project:" do
   before do
     http_authorization!
@@ -111,7 +143,6 @@ describe "Delete project:" do
     
     create_normal_user(@session)
     @team = User.first.teams.first
-    @team_member = TeamMember.first
   end
   
   it "should require login" do

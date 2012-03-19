@@ -65,6 +65,10 @@ module PathSpecHelper
   def delete_project_path_with_project_id(team, project_id)
     "/#{team.id}/project/#{project_id}/delete"
   end
+
+  def delete_timetable_item_path(team, user, timetable_item)
+    "/#{team.id}/users/#{user.id}/timetable-items/#{timetable_item.id}/delete.json"
+  end
   
   ############################################################################
   # Registration

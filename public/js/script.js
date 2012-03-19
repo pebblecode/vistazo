@@ -29,6 +29,13 @@ App.UserTimetable = Backbone.Model.extend({
     newTimetableItems.push(ttItem);
     this.set("timetable_items", newTimetableItems);
   },
+  removeTimetableItemId: function(ttItemId) {
+    var newTimetableItems = _.reject(this.get("timetable_items"), 
+      function(ttItem) {
+        return ttItem["id"] === ttItemId;
+      });
+    this.set("timetable_items", newTimetableItems);
+  }
 });
 
 App.UserTimetables = Backbone.Collection.extend({
@@ -37,6 +44,10 @@ App.UserTimetables = Backbone.Collection.extend({
     var userTimetable = this.get(userId);
     userTimetable.addTimetableItem(ttItem);
   },
+  removeTimetableItemIdFromUser: function(ttItemId, userId) {
+    var userTimetable = this.get(userId);
+    userTimetable.removeTimetableItemId(ttItemId);
+  }
 });
 
 App.User = Backbone.Model.extend({
@@ -57,13 +68,6 @@ App.User = Backbone.Model.extend({
 
     return _.any(errors) ? errors : null;
   }
-  // removeTimetableItemId: function(ttItemId) {
-  //   var newTimetableItems = _.reject(this.get("timetable_items"), 
-  //     function(ttItem) {
-  //       return ttItem["id"] === ttItemId;
-  //     });
-  //   this.set("timetable_items", newTimetableItems);
-  // }
 });
 
 App.Users = Backbone.Collection.extend({
@@ -75,10 +79,6 @@ App.Users = Backbone.Collection.extend({
 
   //   var toUser = this.get(toUserId);
   //   toUser.addTimetableItem(ttItem);
-  // },
-  // removeTimetableItemIdFromUser: function(ttItemId, userId) {
-  //   var user = this.get(userId);
-  //   user.removeTimetableItemId(ttItemId);
   // }
 });
 
@@ -950,7 +950,7 @@ function deleteTimetableItem(proj) {
     var userId = $(proj).attr("data-team-member-id");
     var timetableItemId = $(proj).attr("data-team-member-project-id");
       
-    var url = "/team-member/" + userId + "/project/" + timetableItemId + "/delete.json";
+    var url = "/" + TEAM_ID + "/users/" + userId + "/timetable-items/" + timetableItemId + "/delete.json";
     $(proj).addClass('is_loading');
     $(deleteButton).attr("disabled", "disabled");
 
@@ -960,7 +960,7 @@ function deleteTimetableItem(proj) {
           $(this).remove();
 
           // Remove from collection
-          App.users.removeTimetableItemIdFromUser(resp["timetable_item_id"], userId);
+          App.userTimetables.removeTimetableItemIdFromUser(resp["timetable_item_id"], userId);
         });
       })
       .error(function(response) {
@@ -969,18 +969,23 @@ function deleteTimetableItem(proj) {
         setupProjectEvents();
       })
       .complete(function(data, status) {
-        response = JSON.parse(data.responseText);
-        if (status == "success") {
-          App.flashView.render("success", response["message"]);
-        } else {
-          if (response) {
-            App.flashView.render("warning", response["message"]);
-          } else {
-            App.flashView.render("warning", "Something weird happened. Please contact support about it.");
-          }
-        }
-        
         $(proj).removeClass('is_loading');
+
+        try {
+          response = JSON.parse(data.responseText);
+          if (status == "success") {
+            App.flashView.render("success", response["message"]);
+          } else {
+            if (response) {
+              App.flashView.render("warning", response["message"]);
+            } else {
+              App.flashView.render("warning", "Something weird happened. Please contact support about it.");
+            }
+          }
+        } catch(error) {
+          console.log(error);
+          App.flashView.renderError();
+        }
       });
   }
 }

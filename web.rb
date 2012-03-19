@@ -473,7 +473,7 @@ end
 
 
 ############################################
-# Add team member project
+# Add timetable item
 ############################################
 
 post '/:team_id/users/:user_id/timetable-items/new.json' do
@@ -587,35 +587,40 @@ end
 # Delete timetable items
 ############################################
 
-post '/team-member/:team_member_id/project/:tm_project_id/delete' do
-  protected!
+# Not used: Use json version
+# post '/team-member/:team_member_id/project/:tm_project_id/delete' do
+#   protected!
 
-  team_member = TeamMember.find(params[:team_member_id])
+#   team_member = TeamMember.find(params[:team_member_id])
   
-  if team_member.present?
-    did_delete = team_member.timetable_items.reject! { |proj| proj.id.to_s == params[:tm_project_id] }
-    team_member.save
+#   if team_member.present?
+#     did_delete = team_member.timetable_items.reject! { |proj| proj.id.to_s == params[:tm_project_id] }
+#     team_member.save
 
-    if did_delete
-      flash[:success] = "Successfully deleted team member project for #{team_member.name}."
-    else
-      flash[:warning] = "Something went wrong when trying to delete a team member project for #{team_member.name}. Please try again later."
-    end
-  else
-    flash[:warning] = "Something went wrong when trying to delete a team member project. Please refresh and try again later."
-  end
+#     if did_delete
+#       flash[:success] = "Successfully deleted team member project for #{team_member.name}."
+#     else
+#       flash[:warning] = "Something went wrong when trying to delete a team member project for #{team_member.name}. Please try again later."
+#     end
+#   else
+#     flash[:warning] = "Something went wrong when trying to delete a team member project. Please refresh and try again later."
+#   end
 
-  redirect back
-end
+#   redirect back
+# end
 
-post '/team-member/:user_id/project/:timetable_id/delete.json' do
+post '/:team_id/users/:user_id/timetable-items/:timetable_item_id/delete.json' do
   protected!
 
+  team = Team.find(params[:team_id])
   user = User.find(params[:user_id])
+  timetable_item_id = params[:timetable_item_id]
   output = ""
-  if user.present?
-    did_delete = user.timetable_items.reject! { |ttItem| ttItem.id.to_s == params[:timetable_id] }
-    user.save
+  if team.present? and team.has_user_timetable? user and timetable_item_id.present?
+
+    logger.info "Deleting: Team(#{team.id}), user (#{user.id}), timetable_item_id (#{timetable_item_id})"
+
+    did_delete = team.delete_timetable_item_with_id!(user, timetable_item_id)
 
     if did_delete
       status HTTP_STATUS_OK

@@ -75,7 +75,8 @@ class Team
   def delete_timetable_item_with_id!(user, timetable_item_id)
     user_timetable = self.user_timetable(user)
     
-    user_timetable.timetable_items.reject! { |ttItem| ttItem.id == timetable_item_id }
+    user_timetable.timetable_items.reject! { |ttItem| ttItem.id.to_s == timetable_item_id.to_s }
+
     self.save
   end
 
