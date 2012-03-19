@@ -53,17 +53,44 @@ describe "Team model" do
     end
   end
 
+  describe "update timetable item" do
+    before do
+      @timetable_item = @team.add_timetable_item(@user, @project, Time.now)
+      @from_user = @user
+      @to_user = Factory(:user)
+      @to_date = Time.now + 1.day
+      @team.update_timetable_item(@timetable_item, @from_user, @to_user, @to_date)
+      @team.reload
+    end
+
+    it "should update the date of the timetable item" do
+      @team.user_timetable(@user).timetable_items.length.should == 1
+      updated_timetable_item = @team.user_timetable(@from_user).timetable_items.first
+      updated_timetable_item.date.should == @to_date
+    end
+
+    it "should not have the timetable item in the from user timetable (timetable item id should be the same)" do
+      timetable_item_is_in_from_user = @team.user_timetable(@from_user).timetable_items.select { |ti| ti.id.to_s == @timetable_item.id }
+      timetable_item_is_in_from_user.should == false
+
+      timetable_item_is_in_to_user = @team.user_timetable(@to_user).timetable_items.select { |ti| ti.id.to_s == @timetable_item.id }
+      timetable_item_is_in_to_user.should == true
+    end
+  end
+
   describe "delete timetable item" do
+    before do
+      @timetable_item = @team.add_timetable_item(@user, @project, Time.now)
+    end
+
     it "should create user_timetables" do
-      timetable_item = @team.add_timetable_item(@user, @project, Time.now)
       ut = @team.user_timetable(@user)
       ut.timetable_items.length.should == 1
 
-      @team.delete_timetable_item_with_id!(@user, timetable_item.id)
+      @team.delete_timetable_item_with_id!(@user, @timetable_item.id)
       ut.timetable_items.length.should == 0
 
     end
-
   end
 
   describe "user_timetable" do

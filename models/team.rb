@@ -80,19 +80,23 @@ class Team
     self.save
   end
 
-  def move_project(timetable_item, to_user, to_date)
-    # puts "Moving from #{self.name} (#{timetable_item}) to #{to_user.name} on #{to_date}"
+  def update_timetable_item(timetable_item, from_user, to_user, to_date)
+    puts "Update from #{from_user.name} (#{timetable_item.to_s}) to #{to_user.name} on #{to_date}"
     project_id = timetable_item.project_id
     
     timetable_item.date = to_date
     self.save
     
-    if self != to_user
-      did_delete = self.timetable_items.reject! { |proj| proj == timetable_item }
+    if from_user != to_user
+      from_user_timetable = self.user_timetable(from_user)
+      did_delete = from_user_timetable.timetable_items.reject! { |ti| ti == timetable_item }
       self.save
       # puts "Team member should still exist: #{timetable_item}"
       unless did_delete.nil?
-        to_user.timetable_items << timetable_item
+        to_user_timetable = self.user_timetable(to_user)
+
+        to_user_timetable.timetable_items ||= []
+        to_user_timetable.timetable_items << timetable_item
         to_user.save
       else
         return false
