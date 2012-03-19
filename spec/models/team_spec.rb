@@ -53,6 +53,17 @@ describe "Team model" do
     end
   end
 
+  describe "delete timetable item" do
+    it "should create user_timetables" do
+      timetable_item = @team.add_timetable_item(@user, @project, Time.now)
+      @team.delete_timetable_item_with_id!(@user, timetable_item.id)
+
+      ut = @team.user_timetable(@user)
+      ut.timetable_items.length.should == 0
+    end
+
+  end
+
   describe "user_timetable" do
     it "should reference the user" do
       tti = @team.add_timetable_item(@user, @project, Time.now)

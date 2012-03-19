@@ -71,7 +71,14 @@ class Team
     
     self.save ? ttItem : nil
   end
-  
+
+  def delete_timetable_item_with_id!(user, timetable_item_id)
+    user_timetable = self.user_timetable(user)
+    
+    user_timetable.timetable_items.reject! { |ttItem| ttItem.id == timetable_item_id }
+    self.save
+  end
+
   def move_project(timetable_item, to_user, to_date)
     # puts "Moving from #{self.name} (#{timetable_item}) to #{to_user.name} on #{to_date}"
     project_id = timetable_item.project_id
