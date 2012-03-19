@@ -91,7 +91,7 @@ App.TimetableItem = Backbone.Model.extend({
     date: ""
   },
   url: function() {
-    return "/" + this.get("team_id") + "/user/" + this.get("user_id") + "/timetable-items/new.json";
+    return "/" + this.get("team_id") + "/users/" + this.get("user_id") + "/timetable-items/new.json";
   }
 });
 
@@ -902,7 +902,7 @@ function updateTimetableItem(proj) {
       
       // Update delete link
       var delete_url = $(proj).find(".delete-tm-project-form").attr("action");
-      // Should be in the form /user/[user id]/project/[timetable id]/delete
+      // Should be in the form /users/[user id]/project/[timetable id]/delete
       var old_user_id = delete_url.split("/")[2];
       var new_delete_url = delete_url.replace(old_user_id, toUserId);
       $(proj).find(".delete-tm-project-form").attr("action", new_delete_url);

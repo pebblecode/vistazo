@@ -306,7 +306,7 @@ get '/:team_id' do
   end
 end
 
-post '/:team_id/user/new' do
+post '/:team_id/users/new' do
   logger.info "New user: #{params}"
   email = params[:new_user_email]
   
@@ -340,14 +340,14 @@ post '/:team_id/user/new' do
   redirect back
 end
 
-get '/:team_id/user/:user_id/register' do
+get '/:team_id/users/:user_id/register' do
   protected!
   
   @team = Team.find(params[:team_id])
   if @team.present?
     @user = User.find(params[:user_id])
     if @user.present?
-      @activation_link = "#{APP_CONFIG['base_url']}/#{@team.id}/user/#{@user.id}/activate"
+      @activation_link = "#{APP_CONFIG['base_url']}/#{@team.id}/users/#{@user.id}/activate"
       erb :new_user_registration, :layout => false
     else
       flash[:warning] = "Invalid user"
@@ -359,7 +359,7 @@ get '/:team_id/user/:user_id/register' do
   end
 end
 
-get '/:team_id/user/:user_id/activate' do
+get '/:team_id/users/:user_id/activate' do
   protected!
   
   @team = Team.find(params[:team_id])
@@ -380,7 +380,7 @@ get '/:team_id/user/:user_id/activate' do
   end
 end
 
-post '/:team_id/user/:user_id/resend' do
+post '/:team_id/users/:user_id/resend' do
   protected!
   
   @team = Team.find(params[:team_id])
@@ -429,7 +429,7 @@ post '/:team_id/update' do
 end
 
 def send_registration_email_to(user)
-  @signup_link = "#{APP_CONFIG['base_url']}/#{params[:team_id]}/user/#{user.id}/register"
+  @signup_link = "#{APP_CONFIG['base_url']}/#{params[:team_id]}/users/#{user.id}/register"
   
   send_from_email = settings.send_from_email
   subject = "You are invited to Vistazo"
@@ -476,7 +476,7 @@ end
 # Add team member project
 ############################################
 
-post '/:team_id/user/:user_id/timetable-items/new.json' do
+post '/:team_id/users/:user_id/timetable-items/new.json' do
   protected!
   require_team_user!(params[:team_id])
   

@@ -71,11 +71,11 @@ module PathSpecHelper
   ############################################################################
   
   def registration_with_team_id_and_user_id_path(team_id, user_id)
-    "/#{team_id}/user/#{user_id}/register"
+    "/#{team_id}/users/#{user_id}/register"
   end
   
   def activation_with_team_id_and_user_id_path(team_id, user_id)
-    "/#{team_id}/user/#{user_id}/activate"
+    "/#{team_id}/users/#{user_id}/activate"
   end
   
 end
