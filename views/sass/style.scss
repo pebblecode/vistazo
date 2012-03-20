@@ -1268,14 +1268,11 @@ textarea:focus, input:focus{
 
 .homepage {
   #top-nav{
-    margin-bottom: 60px;
-  }
-  h1 {
-    float: none;
-    text-align: center;
-    font-size: 4.5em;
-    line-height: 0.8em;
-    margin: 15px 0 10px 0;
+    a{
+      color: #fff;
+      float: right;
+      margin: 8px 15px;
+    }
   }
   
   #flash {
