@@ -544,21 +544,24 @@ post '/:team_id/timetable-items/:timetable_item_id/update.json' do
   require_team_user!(team_id)
   
   output = ""
-  current_user_team = Team.find(team_id)
-  if current_user_team.present?
+  team = Team.find(team_id)
+  if team.present?
     from_user = User.find(params[:from_user_id])
     to_user = User.find(params[:to_user_id])
-    timetable_item = from_user.timetable_items.find(params[:timetable_item_id]) if from_user
+
+
+    timetable_item = team.user_timetable_items(from_user).find(params[:timetable_item_id]) if from_user
+
     to_date = Date.parse(params[:to_date]) if params[:to_date]
     
     logger.info "Update timetable item params: #{params}"
     
     if (from_user.present? and to_user.present? and timetable_item.present? and to_date.present?)
 
-      if ((from_user.team_ids.include? current_user_team.id) and (to_user.team_ids.include? current_user_team.id))
-        successful_move = from_user.move_project(timetable_item, to_user, to_date)
-  
-        if successful_move
+      if ((from_user.team_ids.include? team.id) and (to_user.team_ids.include? team.id))
+        successful_update = team.update_timetable_item(timetable_item, from_user, to_user, to_date)
+
+        if successful_update
           status HTTP_STATUS_OK
           output = { :message => "Successfully moved '<em>#{timetable_item.project_name}</em>' project to #{to_user.name} on #{to_date}.", timetable_item: timetable_item }
         else

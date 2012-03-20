@@ -47,6 +47,10 @@ App.UserTimetables = Backbone.Collection.extend({
   removeTimetableItemIdFromUser: function(ttItemId, userId) {
     var userTimetable = this.get(userId);
     userTimetable.removeTimetableItemId(ttItemId);
+  },
+  updateTimetableItemForUser: function(ttItem, fromUserId, toUserId) {
+    this.removeTimetableItemIdFromUser(ttItem["id"], fromUserId);
+    this.addTimetableItemForUser(ttItem, toUserId);
   }
 });
 
@@ -72,14 +76,7 @@ App.User = Backbone.Model.extend({
 
 App.Users = Backbone.Collection.extend({
   model: App.User,
-  url: "/" + TEAM_ID + "/team-members",
-  // updateTimetableItemForUser: function(ttItem, fromUserId, toUserId) {
-  //   var fromUser = this.get(fromUserId);
-  //   fromUser.removeTimetableItemId(ttItem["id"]);
-
-  //   var toUser = this.get(toUserId);
-  //   toUser.addTimetableItem(ttItem);
-  // }
+  url: "/" + TEAM_ID + "/team-members"
 });
 
 App.TimetableItem = Backbone.Model.extend({
@@ -910,7 +907,7 @@ function updateTimetableItem(proj) {
       setupProjectEvents();
 
       // Update model
-      App.users.updateTimetableItemForUser(response["timetable_item"], fromUserId, toUserId);
+      App.userTimetables.updateTimetableItemForUser(response["timetable_item"], fromUserId, toUserId);
       App.flashView.render("success", response["message"]);
       
       $(proj).removeClass('is_loading');

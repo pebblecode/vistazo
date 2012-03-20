@@ -45,6 +45,12 @@ class Team
     u_timetable.present? ? u_timetable.first : nil
   end
 
+  # Convenience method to access a users timetable items(user)
+  def user_timetable_items(user)
+    user = user_timetable(user)
+    user.timetable_items
+  end
+
   # def activate_user(user)
   #   self.pending_users.delete_if {|u| u["id"] == user.id.to_s}
     
@@ -85,7 +91,6 @@ class Team
     project_id = timetable_item.project_id
     
     timetable_item.date = to_date
-    self.save
     
     if from_user != to_user
       did_delete = self.delete_timetable_item_with_id!(from_user, timetable_item.id)
@@ -96,13 +101,12 @@ class Team
         to_user_timetable.timetable_items ||= []
         to_user_timetable.timetable_items << timetable_item
 
-        self.save
       else
         return false
       end
     end
     
-    return true
+    self.save
   end
 
   def url_slug
