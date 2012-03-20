@@ -29,6 +29,31 @@ describe "Team model" do
     end
   end
 
+  describe "user_timetable" do
+    before do
+      @team.add_user(@user)
+      @timetable_item = @team.add_timetable_item(@user, @project, Time.now)
+    end
+
+    it "should return the correct user timetable" do
+      user_timetable = @team.user_timetable(@user)
+
+      user_timetable.user.should == @user
+      user_timetable.timetable_items.should == [@timetable_item]
+    end
+  end
+
+  describe "user_timetable_items" do
+    before do
+      @team.add_user(@user)
+      @timetable_item = @team.add_timetable_item(@user, @project, Time.now)
+    end
+
+    it "should return the correct timetable items" do
+      @team.user_timetable_items(@user).should == [@timetable_item]
+    end
+  end
+
   describe "add timetable item" do
     it "should create user_timetables" do
       @team.add_timetable_item(@user, @project, Time.now)
@@ -55,16 +80,14 @@ describe "Team model" do
 
   describe "update timetable item" do
     before do
-      @timetable_item = @team.add_timetable_item(@user, @project, Time.now)
       @from_user = @user
       @to_user = Factory(:user)
       
       @team.add_user(@from_user)
       @team.add_user(@to_user)
 
+      @timetable_item = @team.add_timetable_item(@user, @project, Time.now)
       @to_date = Time.now + 1.day
-
-      # debugger
 
       @team.update_timetable_item(@timetable_item, @from_user, @to_user, @to_date)
       @team.reload
