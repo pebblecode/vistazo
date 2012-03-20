@@ -59,7 +59,7 @@ App.User = Backbone.Model.extend({
     name: "",
     email: ""
   },
-  url: "/" + TEAM_ID + "/team-member/add",
+  url: "/" + TEAM_ID + "/users/new.json",
   // Can't use built in validate because of http://stackoverflow.com/q/9709968/111884
   hasErrors: function() {
     errors = {};
@@ -263,7 +263,7 @@ App.UserListingView = Backbone.View.extend({
       if (data) {
         try {
           response = JSON.parse(data.responseText);
-          App.flashView.render(("warning", response["message"]));
+          App.flashView.render("warning", response["message"]);
         } catch(error) {
           console.log(error);
           App.flashView.renderError();
@@ -275,17 +275,17 @@ App.UserListingView = Backbone.View.extend({
   },
   handleNewUser: function(event) {
     var newUser = new App.User({
-      name: $('input[name=new_user_name]').val(),
-      email: $('input[name=new_user_email]').val()
+      name: $('input[name=name]').val(),
+      email: $('input[name=email]').val()
     });
 
     var errors = newUser.hasErrors();
     if (!errors) {
-      newUser.save();
       App.users.add(newUser);
+      newUser.save();
 
-      $('input[name=new_user_name]').val('');
-      $('input[name=new_user_email]').val('');
+      $('input[name=name]').val('');
+      $('input[name=email]').val('');
 
       $("#add-user-dialog").dialog('close');
     } else {
@@ -299,7 +299,7 @@ App.UserListingView = Backbone.View.extend({
         $("#add-user-form").prepend(errorsHtml);
       }
 
-      $("#add-user-form input[name=new_user_name]").focus();
+      $("#add-user-form input[name=name]").focus();
     }
 
     event.preventDefault();
@@ -926,7 +926,7 @@ function updateTimetableItem(proj) {
       try {
         response = JSON.parse(data.responseText);
         if (response) {
-          App.flashView.render(("warning", respJson["message"]));
+          App.flashView.render("warning", respJson["message"]);
         } else {
           App.flashView.renderError();  
         }

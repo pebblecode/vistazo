@@ -87,6 +87,7 @@ NUM_WEEKS_IN_A_YEAR = 52
 
 HTTP_STATUS_OK = 200
 HTTP_STATUS_BAD_REQUEST = 400
+HTTP_STATUS_BAD_REQUEST_CONFLICT = 409
 HTTP_STATUS_INTERNAL_SERVER_ERROR = 500
 
 require_relative 'models/init'
@@ -145,7 +146,7 @@ get '/auth/:provider/callback' do
     unless @user.present?
       @user = User.find_by_email(hash["info"]["email"])
 
-      if @user.present? # Present if invited and following registration link
+      if @user.present?
         @user.uid = hash["uid"]
         @user.name = hash["info"]["name"]
         
@@ -160,9 +161,8 @@ get '/auth/:provider/callback' do
           flash[:warning] = "Could not register user."
           logger.warn @user.errors
           @user = nil
-          redirect '/'
         end
-      else
+      else # User not present - create one
         @user = User.create(
           :uid   => hash["uid"],
           :name  => hash["info"]["name"],
@@ -183,7 +183,6 @@ get '/auth/:provider/callback' do
           @user.errors.each { |e| logger.warn "#{e}: #{@user.errors[e]}" }
           
           @user = nil
-          redirect '/'
         end
       end
     end
@@ -306,93 +305,113 @@ get '/:team_id' do
   end
 end
 
-post '/:team_id/users/new' do
-  logger.info "New user: #{params}"
-  email = params[:new_user_email]
+post '/:team_id/users/new.json' do
+  protected!
+  require_team_user!(params[:team_id])
+
+  team = Team.find(params[:team_id])
+
+  request_body = JSON.parse(request.body.read.to_s)
+  logger.info "New user: \nparams: #{params}\nrequest_body: #{request_body}"
+
+  user_name = request_body[:name]
+  user_email = request_body[:email]
+
+  output = ""
+  if team
+    request_body = JSON.parse(request.body.read.to_s) unless request.body.read.to_s.empty?
+    user_name = request_body["name"] if request_body
+    user_email = request_body["email"] if request_body
   
-  @team = Team.find(params[:team_id])
-  if @team.present?
-    @user = User.find_by_email(email)
-    if @user.present?
-      if @team.has_pending_user?(@user)
-        flash[:warning] = "User has already been sent an invitation email. To resend, open the user settings and click on the resend button next to their email address."
-      elsif @team.has_active_user?(@user)
-        flash[:warning] = "User is already registered to this team."
+    if user_name.present? and user_email.present?
+      user = User.find_by_email(user_email)
+  
+      if user.present?
+        error_message = "#{user.name} (#{user.email}) already exists in the project."
+        unless team.user_timetable(user).is_visible
+          error_message += " Click on their name to make them visible in the team."
+        end
+        status HTTP_STATUS_BAD_REQUEST_CONFLICT
+        output = { :message => error_message }
       else
-        @team.add_user(@user)
-        send_registration_email_for_params(@user, params)
-        
-        flash[:success] = "Invitation email has been sent"
+        # user = User.create(:name => user_name, :email => user_email, :team_ids => [team.id])
+
+        # logger.info("Added user: #{user_name} (#{user_email})")
+        # status HTTP_STATUS_OK
+        # output = user
+
+        status HTTP_STATUS_BAD_REQUEST
+        output = { :message => "TODO: Create user" }
+
       end
     else
-      @user = User.new(:email => email)
-      if @user.save
-        @team.add_user(@user)
-        send_registration_email_for_params(@user, params)
-      else
-        flash[:warning] = "Email is not valid"
-      end
+      logger.warn("Invalid input")
+      status HTTP_STATUS_BAD_REQUEST
+      output = { :message => "User invalid" }
     end
   else
-    flash[:warning] = "Team is not valid"
+    logger.warn("Invalid team")
+    status HTTP_STATUS_BAD_REQUEST
+    output = { :message => "Invalid team" }
   end
-  
-  redirect back
+
+  content_type :json
+  return output.to_json
 end
 
-get '/:team_id/users/:user_id/register' do
-  protected!
+# get '/:team_id/users/:user_id/register' do
+#   protected!
   
-  @team = Team.find(params[:team_id])
-  if @team.present?
-    @user = User.find(params[:user_id])
-    if @user.present?
-      @activation_link = "#{APP_CONFIG['base_url']}/#{@team.id}/users/#{@user.id}/activate"
-      erb :new_user_registration, :layout => false
-    else
-      flash[:warning] = "Invalid user"
-      redirect '/'
-    end
-  else
-    flash[:warning] = "Invalid team"
-    redirect '/'
-  end
-end
+#   @team = Team.find(params[:team_id])
+#   if @team.present?
+#     @user = User.find(params[:user_id])
+#     if @user.present?
+#       @activation_link = "#{APP_CONFIG['base_url']}/#{@team.id}/users/#{@user.id}/activate"
+#       erb :new_user_registration, :layout => false
+#     else
+#       flash[:warning] = "Invalid user"
+#       redirect '/'
+#     end
+#   else
+#     flash[:warning] = "Invalid team"
+#     redirect '/'
+#   end
+# end
 
-get '/:team_id/users/:user_id/activate' do
-  protected!
+# get '/:team_id/users/:user_id/activate' do
+#   protected!
   
-  @team = Team.find(params[:team_id])
-  if @team.present?
-    @user = User.find(params[:user_id])
-    if @user.present?
-      @team.activate_user(@user)
+#   @team = Team.find(params[:team_id])
+#   if @team.present?
+#     @user = User.find(params[:user_id])
+#     if @user.present?
+#       @team.activate_user(@user)
       
-      # Login
-      redirect "/auth/google_oauth2/"
-    else
-      flash[:warning] = "Invalid user"
-      redirect '/'
-    end
-  else
-    flash[:warning] = "Invalid team"
-    redirect '/'
-  end
-end
+#       # Login
+#       redirect "/auth/google_oauth2/"
+#     else
+#       flash[:warning] = "Invalid user"
+#       redirect '/'
+#     end
+#   else
+#     flash[:warning] = "Invalid team"
+#     redirect '/'
+#   end
+# end
 
-post '/:team_id/users/:user_id/resend' do
-  protected!
+# post '/:team_id/users/:user_id/resend' do
+#   protected!
   
-  @team = Team.find(params[:team_id])
-  if @team.present?
-    @user = User.find(params[:user_id])
-    send_registration_email_for_params(@user, params)
-  else
-    flash[:warning] = "Invalid team"
-  end
+#   @team = Team.find(params[:team_id])
+#   if @team.present?
+#     @user = User.find(params[:user_id])
+#     send_registration_email_for_params(@user, params)
+#   else
+#     flash[:warning] = "Invalid team"
+#   end
   
-  redirect back
-end
+#   redirect back
+# end
 
 def send_registration_email_for_params(user, params)
   begin
@@ -677,118 +696,82 @@ end
 # Team member
 # ----------------------------------------------------------------------------
 
-get '/:team_id/team-members.json' do
-  protected!
-  require_team_user!(params[:team_id])
+# get '/:team_id/team-members.json' do
+#   protected!
+#   require_team_user!(params[:team_id])
 
-  logger.info("Team members");
-  @team = Team.find(params[:team_id])
-  if @team.present?
-    @team_members = TeamMember.where(:team_id => @team.id)
+#   logger.info("Team members");
+#   @team = Team.find(params[:team_id])
+#   if @team.present?
+#     @team_members = TeamMember.where(:team_id => @team.id)
 
-    status HTTP_STATUS_OK
-    content_type :json
-    @team_members.to_json
-  end
-end
+#     status HTTP_STATUS_OK
+#     content_type :json
+#     @team_members.to_json
+#   end
+# end
 
-# Get individual team members
-get '/:team_id/team-members/:team_member_id.json' do
-  protected!
-  require_team_user!(params[:team_id])
+# # Get individual team members
+# get '/:team_id/team-members/:team_member_id.json' do
+#   protected!
+#   require_team_user!(params[:team_id])
 
-  @team = Team.find(params[:team_id])
-  if @team.present?
-    team_member = TeamMember.where(:id => params[:team_member_id], :team_id => @team.id)
+#   @team = Team.find(params[:team_id])
+#   if @team.present?
+#     team_member = TeamMember.where(:id => params[:team_member_id], :team_id => @team.id)
 
-    status HTTP_STATUS_OK
-    content_type :json
-    output = team_member.to_json
-  else
-    outputMsg = "Invalid team"
-    status HTTP_STATUS_BAD_REQUEST
-    output = { :message => outputMsg }
-  end
+#     status HTTP_STATUS_OK
+#     content_type :json
+#     output = team_member.to_json
+#   else
+#     outputMsg = "Invalid team"
+#     status HTTP_STATUS_BAD_REQUEST
+#     output = { :message => outputMsg }
+#   end
 
-  output.to_json
-end
+#   output.to_json
+# end
 
 # Add new team member
-post '/:team_id/team-member/add' do
-  protected!
-  require_team_user!(params[:team_id])
 
-  team = Team.find(params[:team_id])
+# post '/team-member/:team_member_id/edit' do
+#   protected!
   
-  output = ""
-  if team.present?
-    request_body = JSON.parse(request.body.read.to_s)
-    user_name = request_body["name"] if request_body.present?
-    user_email = request_body["email"] if request_body.present?
-  
-    if user_name.present? and user_email.present?
-      user = User.create(:name => user_name, :email => user_email, :team_ids => [team.id])
-
-      # TODO: Merge with add user (/:team_id/user/new)
-
-
-      logger.info("Added user: #{user_name} (#{user_email})")
-      status HTTP_STATUS_OK
-      output = user
-    else
-      logger.warn("user not valid")
-      status HTTP_STATUS_BAD_REQUEST
-      output = { :message => "User invalid" }
-    end
-    
-  else
-    logger.warn("team not present")
-    status HTTP_STATUS_BAD_REQUEST
-    output = { :message => "Invalid team" }
-  end
-
-  content_type :json
-  output.to_json
-end
-
-post '/team-member/:team_member_id/edit' do
-  protected!
-  
-  team_member = TeamMember.find(params[:team_member_id])
-  if team_member.present?
-    new_name = params[:name]
-    if new_name.present?
-      team_member.name = new_name
+#   team_member = TeamMember.find(params[:team_member_id])
+#   if team_member.present?
+#     new_name = params[:name]
+#     if new_name.present?
+#       team_member.name = new_name
         
-      if team_member.save
-        flash[:success] = "Successfully updated team member name."
-      else
-        flash[:warning] = "Something went wrong with saving team member name. Please try again another time."
-      end
-    else
-      flash[:warning] = "Please specify a team member name."
-    end
-  else
-    flash[:warning] = "Invalid team member."
-  end
+#       if team_member.save
+#         flash[:success] = "Successfully updated team member name."
+#       else
+#         flash[:warning] = "Something went wrong with saving team member name. Please try again another time."
+#       end
+#     else
+#       flash[:warning] = "Please specify a team member name."
+#     end
+#   else
+#     flash[:warning] = "Invalid team member."
+#   end
   
-  redirect back
-end
+#   redirect back
+# end
 
-post '/team-member/:team_member_id/delete' do
-  protected!
+# post '/team-member/:team_member_id/delete' do
+#   protected!
   
-  team_member = TeamMember.find(params[:team_member_id])
-  if team_member.present?
-    name = team_member.name
-    team_member.delete
-    flash[:success] = "Successfully deleted '#{name}'."
-  else
-    flash[:warning] = "Invalid team member."
-  end
+#   team_member = TeamMember.find(params[:team_member_id])
+#   if team_member.present?
+#     name = team_member.name
+#     team_member.delete
+#     flash[:success] = "Successfully deleted '#{name}'."
+#   else
+#     flash[:warning] = "Invalid team member."
+#   end
   
-  redirect back
-end
+#   redirect back
+# end
 
 
 # ----------------------------------------------------------------------------

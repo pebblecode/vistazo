@@ -9,16 +9,22 @@ feature "New user" do
     clean_db!
   end
   
-  scenario "from new login, should have first-signon body class on first login" do
-    visit "/"
-    click_link "start-btn"
-    page.body.should include("first-signon")
+  describe "from new login" do
+    scenario "has first-signon body class on first login" do
+      visit "/"
+      click_link "start-btn"
+      page.body.should include("first-signon")
+      
+      visit "/"
+      page.body.should_not include("first-signon")
+    end
     
-    visit "/"
-    page.body.should_not include("first-signon")
-  end
-  
-  it "from invite, should have first-signon body class" do
-    pending
+    scenario "is in team" do
+      visit "/"
+      click_link "start-btn"
+
+      # Should have user in team
+      pending "Check user"
+    end
   end
 end
