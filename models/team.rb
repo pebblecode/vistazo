@@ -81,23 +81,22 @@ class Team
   end
 
   def update_timetable_item(timetable_item, from_user, to_user, to_date)
-    puts "Update from #{from_user.name} (#{timetable_item.to_s}) to #{to_user.name} on #{to_date}"
+    # puts "Update from #{from_user.name} (#{timetable_item.to_s}) to #{to_user.name} (#{to_date})"
     project_id = timetable_item.project_id
     
     timetable_item.date = to_date
     self.save
     
     if from_user != to_user
-      from_user_timetable = self.user_timetable(from_user)
-      did_delete = from_user_timetable.timetable_items.reject! { |ti| ti == timetable_item }
-      self.save
-      # puts "Team member should still exist: #{timetable_item}"
-      unless did_delete.nil?
+      did_delete = self.delete_timetable_item_with_id!(from_user, timetable_item.id)
+
+      if did_delete
         to_user_timetable = self.user_timetable(to_user)
 
         to_user_timetable.timetable_items ||= []
         to_user_timetable.timetable_items << timetable_item
-        to_user.save
+
+        self.save
       else
         return false
       end
