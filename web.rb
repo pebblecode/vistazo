@@ -305,44 +305,49 @@ get '/:team_id' do
   end
 end
 
-post '/:team_id/users/new.json' do
+# Add a new user to the user timetables. If it is a new user, the 
+# user is added as well. 
+#
+# Returns the user timetable and the user object in json form
+post '/:team_id/user-timetables/new-user.json' do
   protected!
   require_team_user!(params[:team_id])
 
   team = Team.find(params[:team_id])
 
-  request_body = JSON.parse(request.body.read.to_s)
-  logger.info "New user: \nparams: #{params}\nrequest_body: #{request_body}"
-
-  user_name = request_body[:name]
-  user_email = request_body[:email]
+  logger.info "New user: \nparams: #{params}}"
 
   output = ""
   if team
-    request_body = JSON.parse(request.body.read.to_s) unless request.body.read.to_s.empty?
-    user_name = request_body["name"] if request_body
-    user_email = request_body["email"] if request_body
+    user_name = params[:name]
+    user_email = params[:email]
   
     if user_name.present? and user_email.present?
       user = User.find_by_email(user_email)
   
       if user.present?
-        error_message = "#{user.name} (#{user.email}) already exists in the project."
-        unless team.user_timetable(user).is_visible
-          error_message += " Click on their name to make them visible in the team."
+        user_in_team = team.user_timetable(user)
+        if user_in_team
+          error_message = "#{user.name} (#{user.email}) already exists in the project."
+          unless team.user_timetable(user).is_visible
+            error_message += " Click on their name to make them visible in the team."
+          end
+
+          status HTTP_STATUS_BAD_REQUEST_CONFLICT
+          output = { :message => error_message }
+        else
+          team.add_user(user)
+
+          status HTTP_STATUS_OK
+          output = { :user => user, :user_timetable => team.user_timetable(user) }
         end
-        status HTTP_STATUS_BAD_REQUEST_CONFLICT
-        output = { :message => error_message }
-      else
-        # user = User.create(:name => user_name, :email => user_email, :team_ids => [team.id])
+      else # Create new user
+        new_user = User.create(:name => user_name, :email => user_email)
+        team.add_user(new_user) # Creates new user timetable too
 
-        # logger.info("Added user: #{user_name} (#{user_email})")
-        # status HTTP_STATUS_OK
-        # output = user
-
-        status HTTP_STATUS_BAD_REQUEST
-        output = { :message => "TODO: Create user" }
-
+        logger.info("Added user: #{user_name} (#{user_email})")
+        status HTTP_STATUS_OK
+        output = { :user => new_user, :user_timetable => team.user_timetable(new_user) }
       end
     else
       logger.warn("Invalid input")

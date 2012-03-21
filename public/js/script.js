@@ -59,7 +59,6 @@ App.User = Backbone.Model.extend({
     name: "",
     email: ""
   },
-  url: "/" + TEAM_ID + "/users/new.json",
   // Can't use built in validate because of http://stackoverflow.com/q/9709968/111884
   hasErrors: function() {
     errors = {};
@@ -252,27 +251,6 @@ App.UserListingView = Backbone.View.extend({
   events: { 
     "click #add-user-dialog .submit-button": "handleNewUser"
   },
-  initialize: function() {
-    var listingView = this;
-    App.users.bind('sync', function(user) {
-      listingView._renderUser(user);
-      App.flashView.render("success", "Successfully added '<em>" + user.get('name') + "</em>'.");
-    });
-
-    App.users.bind('error', function(data) {
-      if (data) {
-        try {
-          response = JSON.parse(data.responseText);
-          App.flashView.render("warning", response["message"]);
-        } catch(error) {
-          console.log(error);
-          App.flashView.renderError();
-        }
-      } else {
-        App.flashView.renderError();
-      }
-    });
-  },
   handleNewUser: function(event) {
     var newUser = new App.User({
       name: $('input[name=name]').val(),
@@ -281,8 +259,8 @@ App.UserListingView = Backbone.View.extend({
 
     var errors = newUser.hasErrors();
     if (!errors) {
-      App.users.add(newUser);
-      newUser.save();
+      
+      this._addUserToUserTimetables(newUser);
 
       $('input[name=name]').val('');
       $('input[name=email]').val('');
@@ -325,8 +303,37 @@ App.UserListingView = Backbone.View.extend({
 
     return this;
   },
-  _renderUser: function(user) {
-    console.log("Figure this out! For adding new user");
+  _addUserToUserTimetables: function(user) {
+    var url = "/" + TEAM_ID + "/user-timetables/new-user.json";
+    var listingView = this;
+
+    $.post(url, { 
+      name: user.get("name"), 
+      email: user.get("email") 
+    })
+    .success(function(response) {
+      var user = new App.User(response["user"]);
+      App.users.add(user);
+
+      var userTimetable = new App.UserTimetable(response["user_timetable"]);
+      App.userTimetables.add(userTimetable);
+      
+      listingView._renderUserTimetable(userTimetable);
+      App.flashView.render("success", "Successfully added '<em>" + user.get('name') + "</em>'.");
+    })
+    .error(function(data) {
+      if (data) {
+        try {
+          response = JSON.parse(data.responseText);
+          App.flashView.render("warning", response["message"]);
+        } catch(error) {
+          console.log(error);
+          App.flashView.renderError();
+        }
+      } else {
+        App.flashView.renderError();
+      }
+    });
   },
   _renderUserTimetable: function(userTimetable) {
     // console.log("Render team member row for: " + JSON.stringify(user) + " (" + user.get("id") + "): " + user.get("name"));
@@ -935,7 +942,7 @@ function updateTimetableItem(proj) {
         App.flashView.renderError();
       }
 
-    })
+    });
   
 }
 
