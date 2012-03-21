@@ -11,15 +11,16 @@ describe "Team model" do
     clean_db!
   end
 
-  describe "add user" do  
-    it "should add team to user teams" do
+  describe "add user" do
+    before do
       @team.add_user(@user)
+    end
+
+    it "should add team to user teams" do
       @user.team_ids.include?(@team.id).should == true
     end
 
     it "should add to team user timetables with no timetable items" do
-      @team.add_user(@user)
-
       user_timetables = @team.user_timetables.find_all { |ut| ut.user_id == @user.id }
       user_timetables.length.should == 1
 
