@@ -1267,7 +1267,10 @@ textarea:focus, input:focus{
 -----------------------------------------------------------------------------*/
 
 .homepage {
+
   #top-nav{
+    margin-bottom: 60px;
+    
     a{
       color: #fff;
       float: right;
@@ -1290,7 +1293,7 @@ textarea:focus, input:focus{
     
     #intro{
       margin: 15px 0 40px;
-      color: #999;
+      color: #bbb;
       font-weight: bold;
       text-align: center;
       font-size: 40px;
@@ -1301,44 +1304,67 @@ textarea:focus, input:focus{
       }
     }
     
-    .glance{
+    #glance{
       height: 200px;
       background-color: #f4fbfe;
       
       img{
-        margin: 40px 0 0 70px;
+        margin: 40px 0 0 75px;
+      }
+      
+      .home-right{
+        margin: 55px 20px 0 0;
+        
+        p{
+          margin: 0 20px 0 10px;
+        }
       }
     }
     
-    .abc{
+    #abc{
       height: 200px;
       
       img{
         margin: 65px 0 0 85px;
       }
+      
+      .home-right{
+        margin: 40px 20px 0 0;
+        
+        span{
+          color: $vistazo_blue;
+        }
+      }
     }
     
-    .day{
+    #day{
       height: 200px;
       background-color: #f4fbfe;
       
       img{
         margin: 20px 0 0 110px;
       }
+      
+      .home-right{
+        margin: 50px 20px 0 0;
+      }
     }
     
-    .demo{
+    #demo{
       height: 200px;
       
       img{
         margin: 20px 0 0 105px;
+      }
+      
+      .home-right{
+        margin: 50px 20px 0 0;
       }
     }
     
     .home-right{
       width: 350px;
       float: right;
-      margin: 0 20px 0 0;
       
       h2{
         float: none;
@@ -1351,6 +1377,46 @@ textarea:focus, input:focus{
       p{
         color: #999;
         margin: 0 0 0 10px;
+      }
+    }
+    
+    #outro{
+      margin: 20px 40px;
+      
+      p{
+        color: #bbb;
+        font-weight: bold;
+        font-size: 26px;
+        width: 440px;
+      }
+      
+      a{
+        @include border-radius(5px);
+        @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+        
+        background-color: rgba(41, 171, 226, 1);
+        text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+        color: #fff;
+        font-size: 26px;
+        line-height: 20px;
+        font-weight: bold;
+        margin: -55px 0 0 0;
+        border: 1px solid #259acb;
+        padding: 10px;
+        
+        float: right;
+        
+        text-decoration: none;
+        
+        &:hover{
+          text-shadow: 0 2px 1px rgba(0, 0, 0, 0.25);
+          @include emboss-box-shadow-small;
+        }
+        &:active {
+          margin: 6px 5px 4px 5px;
+          background-color: #28a6db;
+        }
+        
       }
     }
   
