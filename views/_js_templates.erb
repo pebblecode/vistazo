@@ -160,10 +160,10 @@
           </fieldset> <!-- Edit team member -->
         </form>
         
-        <form action="/team-member/{{ userId }}/delete" method="post">
-          <fieldset class="delete-object-fieldset" title="Delete team member">
-            <legend>Delete team member</legend>
-            <p class="warning-icon">W</p><p class="warning-msg">All projects associated with '{{ userName }}' will also be deleted.</p>
+        <form action="/{{ teamId }}/users/{{ userId }}/delete" method="post">
+          <fieldset class="delete-object-fieldset" title="Delete user">
+            <legend>Delete user</legend>
+            <p class="warning-icon">W</p><p class="warning-msg">All timetable items associated with '{{ userName }}' will also be deleted.</p>
             <button type="submit" class="submit-button">delete</button>
           </fieldset> <!-- Edit team member -->
         </form>

@@ -30,6 +30,23 @@ describe "Team model" do
     end
   end
 
+  describe "delete user" do
+    before do
+      @team.add_user(@user)
+      @team.delete_user(@user)
+      @team.reload
+    end
+
+    it "should delete user team from user" do
+      @user.team_ids.include?(@team.id).should == false
+    end
+
+    it "should delete user timetables from team" do
+      user_timetables = @team.user_timetables.find_all { |ut| ut.user_id == @user.id }
+      user_timetables.length.should == 0
+    end
+  end
+
   describe "user_timetable" do
     before do
       @team.add_user(@user)

@@ -698,7 +698,7 @@ post "/:team_id/project/:project_id/delete" do
 end
 
 # ----------------------------------------------------------------------------
-# Team member
+# Users
 # ----------------------------------------------------------------------------
 
 # get '/:team_id/team-members.json' do
@@ -763,20 +763,27 @@ end
 #   redirect back
 # end
 
-# post '/team-member/:team_member_id/delete' do
-#   protected!
-  
-#   team_member = TeamMember.find(params[:team_member_id])
-#   if team_member.present?
-#     name = team_member.name
-#     team_member.delete
-#     flash[:success] = "Successfully deleted '#{name}'."
-#   else
-#     flash[:warning] = "Invalid team member."
-#   end
-  
-#   redirect back
-# end
+post '/:team_id/users/:user_id/delete' do
+  protected!
+
+  @team = Team.find(params[:team_id])
+  if @team.present?
+    user = User.find(params[:user_id])
+    if user.present?
+      name = user.name
+      user.delete
+      @team.delete_user(user)
+
+      flash[:success] = "Successfully deleted '#{name}'."
+    else
+      flash[:warning] = "Invalid user."
+    end
+  else
+    flash[:warning] = "Invalid team."
+  end
+
+  redirect back
+end
 
 
 # ----------------------------------------------------------------------------

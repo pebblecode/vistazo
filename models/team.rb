@@ -34,6 +34,14 @@ class Team
     self.user_timetables << UserTimetable.new(:user => user, :team => self)
     self.save
   end
+
+  def delete_user(user)
+    user.team_ids.delete_if { |tid| tid == self.id }
+    user.save
+
+    self.user_timetables.delete_if { |ut| ut.user_id == user.id } 
+    self.save
+  end
   
   def has_user_timetable?(user)
     self.user_timetables.select { |ut| ut.user == user }

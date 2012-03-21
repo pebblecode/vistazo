@@ -317,7 +317,7 @@ App.UserListingView = Backbone.View.extend({
 
       var userTimetable = new App.UserTimetable(response["user_timetable"]);
       App.userTimetables.add(userTimetable);
-      
+
       listingView._renderUserTimetable(userTimetable);
       App.flashView.render("success", "Successfully added '<em>" + user.get('name') + "</em>'.");
     })
@@ -342,6 +342,7 @@ App.UserListingView = Backbone.View.extend({
     var rowClass = "row" + rowNum;
     var oddOrEvenClass = rowNum % 2 == 0 ? "even" : "odd";
     var weekTemplateVars = {
+      teamId: TEAM_ID,
       userId: userTimetable.get("user_id"),
       userName: userTimetable.userName(),
       oddOrEvenClass: oddOrEvenClass,
