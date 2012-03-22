@@ -638,6 +638,7 @@ end
 
 post '/:team_id/users/:user_id/timetable-items/:timetable_item_id/delete.json' do
   protected!
+  require_team_user!(params[:team_id])
 
   team = Team.find(params[:team_id])
   user = User.find(params[:user_id])
@@ -765,6 +766,7 @@ end
 
 post '/:team_id/users/:user_id/delete' do
   protected!
+  require_team_user!(params[:team_id])
 
   @team = Team.find(params[:team_id])
   if @team.present?
