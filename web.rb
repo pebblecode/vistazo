@@ -702,43 +702,6 @@ end
 # Users
 # ----------------------------------------------------------------------------
 
-# get '/:team_id/team-members.json' do
-#   protected!
-#   require_team_user!(params[:team_id])
-
-#   logger.info("Team members");
-#   @team = Team.find(params[:team_id])
-#   if @team.present?
-#     @team_members = TeamMember.where(:team_id => @team.id)
-
-#     status HTTP_STATUS_OK
-#     content_type :json
-#     @team_members.to_json
-#   end
-# end
-
-# # Get individual team members
-# get '/:team_id/team-members/:team_member_id.json' do
-#   protected!
-#   require_team_user!(params[:team_id])
-
-#   @team = Team.find(params[:team_id])
-#   if @team.present?
-#     team_member = TeamMember.where(:id => params[:team_member_id], :team_id => @team.id)
-
-#     status HTTP_STATUS_OK
-#     content_type :json
-#     output = team_member.to_json
-#   else
-#     outputMsg = "Invalid team"
-#     status HTTP_STATUS_BAD_REQUEST
-#     output = { :message => outputMsg }
-#   end
-
-#   output.to_json
-# end
-
-# Add new team member
 
 # post '/team-member/:team_member_id/edit' do
 #   protected!
