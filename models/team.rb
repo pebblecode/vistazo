@@ -44,7 +44,7 @@ class Team
   end
   
   def has_user_timetable?(user)
-    self.user_timetables.select { |ut| ut.user == user }
+    self.user_timetables.select { |ut| ut.user == user }.length > 0
   end
 
   def user_timetable(user)
