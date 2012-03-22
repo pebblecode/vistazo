@@ -99,6 +99,33 @@ $warning_color: #000000;
   border: 1px solid #a1a1a1;
 }
 
+@mixin button-standard {
+  @include border-radius(5px);
+  @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: normal;
+  text-shadow: none;
+  padding: 5px;
+  color: #808080;
+  background-color: #fff;
+  border: 1px solid #a1a1a1;
+  cursor: pointer;
+}
+
+@mixin text-input{
+  @include border-radius(5px);
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: normal;
+  text-shadow: none;
+  padding: 2px 5px;
+  color: #fff;
+  background: #6cc8ee;
+  border: 1px solid #fff;
+}
+
+
 /* General styles
 -----------------------------------------------------------------------------*/
 
@@ -121,22 +148,8 @@ body {
 
 /* Forms */
 .new-object-fieldset {
-  @include border-radius(5px);
-  @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-  
-  background: #ffffff;
-  margin: 20px 0 0 0;
-  display: block;
+  @include text-input;
   position: relative;
-  
-  font-weight: normal;
-  font-size: 14px;
-  height: 20px;
-  background-color: #fff;
-  color: #6cff14;
-  border: 1px solid #a1a1a1;
-  text-shadow: none;
-  
   label {
     display: none;
   }
@@ -147,22 +160,23 @@ body {
     color: #808080;
     font-size: 14px;
     line-height: 16px;
-    height: 16px;
   }
   
   .new-object-text-box {
-    margin: 2px 0 0 5px;
-    width: 163px;
+    color: #fff;
+    background: #6cc8ee;
     border: none;
+    font-size: 13px;
+    line-height: 16px;
   }
   
   .submit-button {
     position: absolute;
-    bottom: 1px;
-    right: 0px;
+    bottom: 5px;
+    right: 5px;
     padding: 0;
     
-    color: #D7D7D7;
+    color: #fff;
     font: 12px $web_symbols_font_family;
     line-height: 14px;
     cursor: pointer;
@@ -172,13 +186,9 @@ body {
 } // .new-object-fieldset
 
 .update-object-fieldset {
-  @include border-radius(5px);
-  @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-  
-  height: 24px;
+  @include text-input;
   width: 380px;
   
-  background-color: #fff;
   
   legend, label {
     display: none;
@@ -186,45 +196,30 @@ body {
   
   input {
     font-family: $default_font_family;
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 13px;
+    line-height: 16px;
     font-weight: normal;
-    color: #808080;
-    height: 22px;
-    
+    color: #fff;
+    background: #6cc8ee;    
     border: none;
-    margin-left: 6px;
     width: 370px;
   } // input
   
   button {
-    @include border-radius(5px);
-    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-      
-    border: none;
-    color: #808080;
-    display: block;
-    padding: 0 3px 1px 5px;
-    text-decoration: none;
-    cursor: pointer;
-    font-size: 14px;
-    line-height: 14px;
-    height: 24px;
+    @include button-standard;
       
     position: absolute;
-    top: 0px;
+    top: -2px;
     left: 400px;
-      
-    background-color: #fff;
-      
+            
     &:hover{
-      background-color: #eee;
-      color: #464646;
+      background-color: #d4eef9;
+      border: 1px solid #666;
+      color: #666;
       @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.3));
     }
     &:active{
-      top: 1px;
-      background-color: #ddd;
+      top: -1px;
     }
   } // button
 } // .update-object-fieldset
@@ -257,33 +252,20 @@ body {
   }
   
   button {
-    @include border-radius(5px);
-    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-      
-    border: none;
-    color: #808080;
-    display: block;
-    padding: 0 3px 1px 5px;
-    text-decoration: none;
-    cursor: pointer;
-    font-size: 14px;
-    line-height: 14px;
-    height: 24px;
+    @include button-standard;
     float: right;
     
     margin-top: 17px;
     margin-right: 3px;
       
-    background-color: #fff;
-      
     &:hover{
-      background-color: #eee;
-      color: #464646;
+      background-color: #d4eef9;
+      border: 1px solid #666;
+      color: #666;
       @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.3));
     }
     &:active{
       top: 1px;
-      background-color: #ddd;
     }
   } // button
 } // .delete-object-fieldset
@@ -291,11 +273,12 @@ body {
 .errors {
   li {
     @include border-radius(5px);
-    color: black;
+    color: red;
     text-shadow: none;
-    background-color: #EEDC94;
-    margin-bottom: 3px;
-    padding: 3px;
+    background-color: #fff;
+    margin-bottom: 10px;
+    font-weight: bold;
+    padding: 5px 10px;
   }
 }
 
@@ -418,9 +401,20 @@ textarea:focus, input:focus{
       font-size: 14px;
       line-height: 16px;
       
+      &:first-child{
+        margin: 11px 15px 0 5px;
+      }
+      
+      &:nth-child(2){
+        margin: 11px 15px 0 0;
+      }
+      
+      &:nth-child(3){
+        margin: 11px 0 0 0;
+      }
+      
       a {
         color: #fff;
-        font-family: $web_symbols_font_family;
         text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
         text-decoration: none;
         
@@ -430,6 +424,14 @@ textarea:focus, input:focus{
         &:active{
           text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
           line-height: 20px;
+        }
+        
+        &.logout{
+          text-decoration: underline;
+          text-shadow: none;
+          &:hover{
+            text-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+          }
         }
         
         &.help {
@@ -514,7 +516,7 @@ textarea:focus, input:focus{
   min-width: 1000px;
   margin: 0 auto;
   top: 112px;
-  left: 25px;
+  left: 15px;
 
   li {
     a {
@@ -539,11 +541,11 @@ textarea:focus, input:focus{
     &#project-view-selector {
       position: absolute;
       top: 0;
-      left: 118px;
+      left: 108px;
     }
     &.active a {
       background-color: white;
-      color: black;
+      color: #555;
       position: absolute;
       z-index: 200;
     }
@@ -603,20 +605,70 @@ textarea:focus, input:focus{
     
     .last-row {
       border-right: none; /* Cancel out border on last column */
+      padding: 15px 0 10px;
+      
+      #add-user-button{
+        text-decoration: none;
+        color: #999;
+        padding: 2px 5px;
+        font-size: 14px;
+        @include border-radius(5px);
+        border: 1px solid #a1a1a1;
+        @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.15));
+        margin-left: 6px;
+        position: relative;
+        background: #fff;
+        
+        
+        &:hover{
+          color: #777;
+        
+          &:after{
+            color: #777;
+          }
+        }
+        
+        &:active{
+          top: 1px;
+          background: #eee;
+        }
+        
+        &:after{
+          content: "+";
+          font-family: $web_symbols_font_family;
+          font-size: 12px;
+          color: #ddd;
+          margin-left: 10px;
+          position: relative;
+          top: -3px;
+        }
+      }
       
       #new-team-member-form {
-      	margin-left: 6px;
+      	width: 13.3333%;
+      	padding: 0 5px;
+      	box-sizing: border-box;
         
         legend {
         
           display: none;
         }
         .new-object-fieldset {
-          width: 115px;
+          width: 100%;
+          margin-top: 10px; 
           margin-bottom: 12px;
+          @include button-standard;
+          padding: 0;
+          
+          .submit-button{
+            color: #909090;
+            right: 2px;
+            bottom: 2px;
+          }
           
           .new-object-text-box {
-            width: 103px;
+            background-color: #fff;
+            color: #808080;
           }
         }
       }
@@ -767,7 +819,7 @@ textarea:focus, input:focus{
     background-image: url(../img/hatch3.png);
     width: 13.3333%;
     min-width: 125px;
-    height: 90%;
+    height: 80%;
     position: absolute;
     top: 10px;
     border-radius: 10px;
@@ -1093,8 +1145,53 @@ textarea:focus, input:focus{
   display: block !important;
 } // #add-user-form
 
-#team-users-dialog {
-  display: none; /* Hide by default */
+  #add-user-name, #add-user-email{
+    @include text-input;
+    display: block;
+    width: 460px;
+    margin: 5px 0 10px;
+  }
+  
+  #team-users-dialog {
+    display: none; /* Hide by default */
+  
+  .submit-button{
+    text-decoration: none;
+    color: #999;
+    padding: 2px 5px;
+    font-size: 14px;
+    @include border-radius(5px);
+    border: 1px solid #a1a1a1;
+    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.15));
+    margin-left: 6px;
+    position: relative;
+    background: #fff;
+    cursor: pointer;
+    float: right;
+    
+    &:hover{
+      color: #777;
+    
+      &:after{
+        color: #777;
+      }
+    }
+    
+    &:active{
+      top: 1px;
+      background: #eee;
+    }
+    
+    &:after{
+      content: "+";
+      font-family: $web_symbols_font_family;
+      font-size: 12px;
+      color: #ddd;
+      margin-left: 10px;
+      position: relative;
+      top: -1px;
+    }
+  }
   
   legend {
     display: none;
@@ -1174,18 +1271,20 @@ textarea:focus, input:focus{
   }
   
   .new-object-fieldset {
-    border: none;
     padding: 1px;
     margin-top: 0;
     margin-bottom: 15px;
+    position: relative;
     
     .submit-button{
+      position: absolute;
       right: 2px;
       bottom: 3px;
     }
     
     .new-object-text-box {
       width: 455px;
+      margin-left: 5px;
     }
   } // .new-object-fieldset
   
@@ -1211,12 +1310,24 @@ textarea:focus, input:focus{
       clear: both;
       
       li {
-        margin-bottom: 10px;
+        margin-bottom: 20px;
       } // li
       
       a {
-        color: #ffffff;
+        @include button-standard;
         text-decoration: none;
+        display: block;
+        
+        &:hover{
+          background-color: #d4eef9;
+          border: 1px solid #666;
+          color: #666;
+          @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.3));
+        }
+        &:active{
+          top: -1px;
+        }
+        
       } // a
     } // ul
   } // #switch-teams
@@ -1250,9 +1361,7 @@ textarea:focus, input:focus{
       margin-bottom: 5px;
     } // li
   } // ol
-  .submit-button {
-    margin-top: 20px;
-  }
+  
 } // #add-user-dialog
 
 
@@ -1260,15 +1369,15 @@ textarea:focus, input:focus{
 -----------------------------------------------------------------------------*/
 
 .homepage {
+
   #top-nav{
     margin-bottom: 60px;
-  }
-  h1 {
-    float: none;
-    text-align: center;
-    font-size: 4.5em;
-    line-height: 0.8em;
-    margin: 15px 0 10px 0;
+    
+    a{
+      color: #fff;
+      float: right;
+      margin: 8px 15px;
+    }
   }
   
   #flash {
@@ -1278,113 +1387,141 @@ textarea:focus, input:focus{
   #main {
     width: 770px;
     min-width: 770px;
-    padding: 10px;
-    min-height: 510px;
+    padding: 0% 0% 10px;
     
-    #screenshot {
-      @include border-radius(5px);
-      @include box-shadow(0, 2px, 5px, rgba(0, 0, 0, 0.1));
-      
-      float: left;
-      background-image: url(../img/screenshot.png);
-      height: 210px;
-      width: 350px;
-      margin: 20px 15px 20px 20px;
-    }
-    
-    p{
-      line-height: 1.2em;
+    #screenshot{
+      margin: 20px;
     }
     
     #intro{
-      float: left;
-      margin: 20px 20px 20px 15px ;
-      width: 350px;
-      height: 200px;
-      color: #999;
-      
-      #vistazo-is{
-        font-size: 1.17em;
-        line-height: 1.1em;
-        font-weight: 700;
-        color: #a0a0a0;
-      }
-      
-      #to-start{
-        margin: 20px 0 10px 0;
-      }
-      
-      span{
-        color: $vistazo_blue;
-      }
-    }
-    #start-btn{
-      @include border-radius(5px);
-      @include box-shadow(0, 2px, 5px, rgba(0, 0, 0, 0.2));
-      
-      background-color: $vistazo_blue;
-      color: #fff;
-      height: 38px;
-      text-align: center;
-      font-family: 'MenschBold';
-      font-size: 2.2em;
-      letter-spacing: 0;
-      padding: 8px 0 1px 0;
-      text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-      border: 1px solid #259acb;
-      cursor: pointer;
-      
-      display: block;
-      text-decoration: none;
-      
-      &:hover{
-        text-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
-        @include emboss-box-shadow;
-      }
-      
-      &:active{
-        margin: 1px 0 -1px 0;
-        background-color: #28a6db;
-      }
-      
-      span{
-        font-size: 15px;
-      }
-    }
-    hr{
-      float: left;
-      width: 740px;
-      margin: 10px 20px;
-      border: 0;
-      border-top: 1px dotted #eee;
-    }
-    .www{
-      float: left;
-      width: 223px;
+      margin: 15px 0 40px;
       color: #bbb;
-      font-size: 0.9em;
-      width: 180px;
-      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+      font-size: 40px;
+      
+      a{
+        text-decoration: none;
+        color: #e74679;
+      }
     }
     
-    .www-icon{
-      float: left;
-      margin: 20px;
-    }
-    h1 {
-      color: #999999;
-      float: none;
-      margin-bottom: 20px;
-      margin-left: 0;
-    }
-    ul {
-      list-style: disc;
-      margin: 10px 0 0 30px;
+    #glance{
+      height: 200px;
+      background-color: #f4fbfe;
       
-      li {
-        margin-bottom: 5px;
+      img{
+        margin: 40px 0 0 75px;
+      }
+      
+      .home-right{
+        margin: 55px 20px 0 0;
+        
+        p{
+          margin: 0 20px 0 10px;
+        }
       }
     }
+    
+    #abc{
+      height: 200px;
+      
+      img{
+        margin: 65px 0 0 85px;
+      }
+      
+      .home-right{
+        margin: 40px 20px 0 0;
+        
+        span{
+          color: $vistazo_blue;
+        }
+      }
+    }
+    
+    #day{
+      height: 200px;
+      background-color: #f4fbfe;
+      
+      img{
+        margin: 20px 0 0 110px;
+      }
+      
+      .home-right{
+        margin: 50px 20px 0 0;
+      }
+    }
+    
+    #demo{
+      height: 200px;
+      
+      img{
+        margin: 20px 0 0 105px;
+      }
+      
+      .home-right{
+        margin: 50px 20px 0 0;
+      }
+    }
+    
+    .home-right{
+      width: 350px;
+      float: right;
+      
+      h2{
+        float: none;
+        font-family: 'MenschBold';
+        color: $vistazo_blue;
+        font-size: 40px;
+        text-shadow: none;
+      }
+      
+      p{
+        color: #999;
+        margin: 0 0 0 10px;
+      }
+    }
+    
+    #outro{
+      margin: 20px 40px;
+      
+      p{
+        color: #bbb;
+        font-weight: bold;
+        font-size: 26px;
+        width: 440px;
+      }
+      
+      a{
+        @include border-radius(5px);
+        @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+        
+        background-color: rgba(41, 171, 226, 1);
+        text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+        color: #fff;
+        font-size: 26px;
+        line-height: 20px;
+        font-weight: bold;
+        margin: -55px 0 0 0;
+        border: 1px solid #259acb;
+        padding: 10px;
+        
+        float: right;
+        
+        text-decoration: none;
+        
+        &:hover{
+          text-shadow: 0 2px 1px rgba(0, 0, 0, 0.25);
+          @include emboss-box-shadow-small;
+        }
+        &:active {
+          margin: -54px 0 0 0;
+          background-color: #28a6db;
+        }
+        
+      }
+    }
+  
   } // #main
 }
 
