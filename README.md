@@ -62,15 +62,17 @@ To run all specs manually
 
 To run an individual spec
 
-    bundle exec ruby -S rspec --color [filename]
+    bundle exec rake spec:run[filename]
     
     # eg,
-    bundle exec ruby -S rspec --color spec/models/team_spec.rb
+    bundle exec rake spec:run[spec/models/team_spec.rb]
 
 To run on a particular line number
 
     # eg, Run line 16 in spec/integration/invite_user_spec.rb
-    bundle exec ruby -S rspec --color -l 16 spec/integration/invite_user_spec.rb
+    bundle exec rake spec:run[spec/integration/invite_user_spec.rb,16]
+
+    # Note: there are no spaces between the commas
 
 To run specs automatically with [guard](https://github.com/guard/guard)
 
