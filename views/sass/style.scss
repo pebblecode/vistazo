@@ -99,6 +99,33 @@ $warning_color: #000000;
   border: 1px solid #a1a1a1;
 }
 
+@mixin button-standard {
+  @include border-radius(5px);
+  @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: normal;
+  text-shadow: none;
+  padding: 5px;
+  color: #808080;
+  background-color: #fff;
+  border: 1px solid #a1a1a1;
+  cursor: pointer;
+}
+
+@mixin text-input{
+  @include border-radius(5px);
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: normal;
+  text-shadow: none;
+  padding: 2px 5px;
+  color: #fff;
+  background: #6cc8ee;
+  border: 1px solid #fff;
+}
+
+
 /* General styles
 -----------------------------------------------------------------------------*/
 
@@ -121,22 +148,8 @@ body {
 
 /* Forms */
 .new-object-fieldset {
-  @include border-radius(5px);
-  @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-  
-  background: #ffffff;
-  margin: 20px 0 0 0;
-  display: block;
+  @include text-input;
   position: relative;
-  
-  font-weight: normal;
-  font-size: 14px;
-  height: 20px;
-  background-color: #fff;
-  color: #6cff14;
-  border: 1px solid #a1a1a1;
-  text-shadow: none;
-  
   label {
     display: none;
   }
@@ -147,22 +160,23 @@ body {
     color: #808080;
     font-size: 14px;
     line-height: 16px;
-    height: 16px;
   }
   
   .new-object-text-box {
-    margin: 2px 0 0 5px;
-    width: 163px;
+    color: #fff;
+    background: #6cc8ee;
     border: none;
+    font-size: 13px;
+    line-height: 16px;
   }
   
   .submit-button {
     position: absolute;
-    bottom: 1px;
-    right: 0px;
+    bottom: 5px;
+    right: 5px;
     padding: 0;
     
-    color: #D7D7D7;
+    color: #fff;
     font: 12px $web_symbols_font_family;
     line-height: 14px;
     cursor: pointer;
@@ -172,13 +186,9 @@ body {
 } // .new-object-fieldset
 
 .update-object-fieldset {
-  @include border-radius(5px);
-  @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-  
-  height: 24px;
+  @include text-input;
   width: 380px;
   
-  background-color: #fff;
   
   legend, label {
     display: none;
@@ -186,45 +196,30 @@ body {
   
   input {
     font-family: $default_font_family;
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 13px;
+    line-height: 16px;
     font-weight: normal;
-    color: #808080;
-    height: 22px;
-    
+    color: #fff;
+    background: #6cc8ee;    
     border: none;
-    margin-left: 6px;
     width: 370px;
   } // input
   
   button {
-    @include border-radius(5px);
-    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-      
-    border: none;
-    color: #808080;
-    display: block;
-    padding: 0 3px 1px 5px;
-    text-decoration: none;
-    cursor: pointer;
-    font-size: 14px;
-    line-height: 14px;
-    height: 24px;
+    @include button-standard;
       
     position: absolute;
-    top: 0px;
+    top: -2px;
     left: 400px;
-      
-    background-color: #fff;
-      
+            
     &:hover{
-      background-color: #eee;
-      color: #464646;
+      background-color: #d4eef9;
+      border: 1px solid #666;
+      color: #666;
       @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.3));
     }
     &:active{
-      top: 1px;
-      background-color: #ddd;
+      top: -1px;
     }
   } // button
 } // .update-object-fieldset
@@ -257,33 +252,20 @@ body {
   }
   
   button {
-    @include border-radius(5px);
-    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-      
-    border: none;
-    color: #808080;
-    display: block;
-    padding: 0 3px 1px 5px;
-    text-decoration: none;
-    cursor: pointer;
-    font-size: 14px;
-    line-height: 14px;
-    height: 24px;
+    @include button-standard;
     float: right;
     
     margin-top: 17px;
     margin-right: 3px;
       
-    background-color: #fff;
-      
     &:hover{
-      background-color: #eee;
-      color: #464646;
+      background-color: #d4eef9;
+      border: 1px solid #666;
+      color: #666;
       @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.3));
     }
     &:active{
       top: 1px;
-      background-color: #ddd;
     }
   } // button
 } // .delete-object-fieldset
@@ -419,9 +401,16 @@ textarea:focus, input:focus{
       font-size: 14px;
       line-height: 16px;
       
+      &:nth-child(4){
+        margin: 11px 0 0 11px;
+      }
+      
+      &:nth-child(3){
+        margin: 11px 10px 0 0;
+      }
+      
       a {
         color: #fff;
-        font-family: $web_symbols_font_family;
         text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
         text-decoration: none;
         
@@ -431,6 +420,19 @@ textarea:focus, input:focus{
         &:active{
           text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
           line-height: 20px;
+        }
+        
+        &.logout{
+          text-decoration: underline;
+          text-shadow: none;
+          &:hover{
+            text-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+          }
+        }
+        
+        &.user-settings{
+          font-family: $web_symbols_font_family;
+          margin-right: 10px;
         }
         
         &.help {
@@ -515,7 +517,7 @@ textarea:focus, input:focus{
   min-width: 1000px;
   margin: 0 auto;
   top: 112px;
-  left: 25px;
+  left: 15px;
 
   li {
     a {
@@ -540,11 +542,11 @@ textarea:focus, input:focus{
     &#project-view-selector {
       position: absolute;
       top: 0;
-      left: 118px;
+      left: 108px;
     }
     &.active a {
       background-color: white;
-      color: black;
+      color: #555;
       position: absolute;
       z-index: 200;
     }
@@ -644,18 +646,30 @@ textarea:focus, input:focus{
       }
       
       #new-team-member-form {
-      	margin-left: 6px;
+      	width: 13.3333%;
+      	padding: 0 5px;
+      	box-sizing: border-box;
         
         legend {
         
           display: none;
         }
         .new-object-fieldset {
-          width: 115px;
+          width: 100%;
+          margin-top: 10px; 
           margin-bottom: 12px;
+          @include button-standard;
+          padding: 0;
+          
+          .submit-button{
+            color: #909090;
+            right: 2px;
+            bottom: 2px;
+          }
           
           .new-object-text-box {
-            width: 103px;
+            background-color: #fff;
+            color: #808080;
           }
         }
       }
@@ -1215,18 +1229,20 @@ textarea:focus, input:focus{
   }
   
   .new-object-fieldset {
-    border: none;
     padding: 1px;
     margin-top: 0;
     margin-bottom: 15px;
+    position: relative;
     
     .submit-button{
+      position: absolute;
       right: 2px;
       bottom: 3px;
     }
     
     .new-object-text-box {
       width: 455px;
+      margin-left: 5px;
     }
   } // .new-object-fieldset
   
@@ -1252,12 +1268,24 @@ textarea:focus, input:focus{
       clear: both;
       
       li {
-        margin-bottom: 10px;
+        margin-bottom: 20px;
       } // li
       
       a {
-        color: #ffffff;
+        @include button-standard;
         text-decoration: none;
+        display: block;
+        
+        &:hover{
+          background-color: #d4eef9;
+          border: 1px solid #666;
+          color: #666;
+          @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.3));
+        }
+        &:active{
+          top: -1px;
+        }
+        
       } // a
     } // ul
   } // #switch-teams
