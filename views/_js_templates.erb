@@ -258,12 +258,11 @@
           <% date = (@monday_date - 1.day) + work_day.day %>
           <td class="{{ rowClass }} <%= "col#{work_day + prev_cols}" %>" data-date="<%= date %>">
 
-            {% var projectTeamMembers = []; %}
-            {% _.each(teamMembers, function(teamMember) { %}
-              {% var ttItems = teamMember.get("timetable_items"); %}
+            {% _.each(userTimetables, function(userTimetable) { %}
+              {% var ttItems = userTimetable.get("timetable_items"); %}
               {% _.each(ttItems, function(ttItem) { %}
                 {% if ((ttItem["date"] == "<%= date %>") && (ttItem["project_id"] === project.get("id"))) { %}
-                  <div class="team-member-name">{{ teamMember.get("name") }}</div>
+                  <div class="team-member-name">{{ userTimetable.userName() }}</div>
                 {% } %} 
               {% }); %}
             {% }); %}
