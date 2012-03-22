@@ -702,30 +702,53 @@ end
 # Users
 # ----------------------------------------------------------------------------
 
+# Update user
+post '/:team_id/users/:user_id' do
+  protected!
+  require_team_user!(params[:team_id])
+  
+  @team = Team.find(params[:team_id])
+  if @team.present?
+    user = User.find(params[:user_id])
+    if user.present?
+      new_name = params[:name]
+      if new_name.present?
+        user.name = new_name
+          
+        if user.save
+          flash[:success] = "Successfully updated user name."
+        else
+          flash[:warning] = "Something went wrong with saving user name. Please try again another time."
+        end
+      else
+        flash[:warning] = "Please specify a user name."
+      end
+    else
+      flash[:warning] = "Invalid user."
+    end
+  end
 
-# post '/team-member/:team_member_id/edit' do
-#   protected!
-  
-#   team_member = TeamMember.find(params[:team_member_id])
-#   if team_member.present?
-#     new_name = params[:name]
-#     if new_name.present?
-#       team_member.name = new_name
+  redirect back
+
+  if team_member.present?
+    new_name = params[:name]
+    if new_name.present?
+      team_member.name = new_name
         
-#       if team_member.save
-#         flash[:success] = "Successfully updated team member name."
-#       else
-#         flash[:warning] = "Something went wrong with saving team member name. Please try again another time."
-#       end
-#     else
-#       flash[:warning] = "Please specify a team member name."
-#     end
-#   else
-#     flash[:warning] = "Invalid team member."
-#   end
+      if team_member.save
+        flash[:success] = "Successfully updated team member name."
+      else
+        flash[:warning] = "Something went wrong with saving team member name. Please try again another time."
+      end
+    else
+      flash[:warning] = "Please specify a team member name."
+    end
+  else
+    flash[:warning] = "Invalid team member."
+  end
   
-#   redirect back
-# end
+  redirect back
+end
 
 post '/:team_id/users/:user_id/delete' do
   protected!

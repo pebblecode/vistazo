@@ -151,7 +151,7 @@
       </a>
       
       <div id="edit-tm-{{ userId }}" class="edit-team-member-dialog" title="Edit team member name">
-        <form action="/team-member/{{ userId }}/edit" method="post">
+        <form action="/{{ teamId }}/users/{{ userId }}" method="post">
           <fieldset class="update-object-fieldset" title="Edit team member">
             <legend>Edit team member</legend>
             <label for="name">Name</label>
