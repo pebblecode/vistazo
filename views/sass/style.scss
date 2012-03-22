@@ -1329,15 +1329,15 @@ textarea:focus, input:focus{
 -----------------------------------------------------------------------------*/
 
 .homepage {
+
   #top-nav{
     margin-bottom: 60px;
-  }
-  h1 {
-    float: none;
-    text-align: center;
-    font-size: 4.5em;
-    line-height: 0.8em;
-    margin: 15px 0 10px 0;
+    
+    a{
+      color: #fff;
+      float: right;
+      margin: 8px 15px;
+    }
   }
   
   #flash {
@@ -1347,113 +1347,141 @@ textarea:focus, input:focus{
   #main {
     width: 770px;
     min-width: 770px;
-    padding: 10px;
-    min-height: 510px;
+    padding: 0% 0% 10px;
     
-    #screenshot {
-      @include border-radius(5px);
-      @include box-shadow(0, 2px, 5px, rgba(0, 0, 0, 0.1));
-      
-      float: left;
-      background-image: url(../img/screenshot.png);
-      height: 210px;
-      width: 350px;
-      margin: 20px 15px 20px 20px;
-    }
-    
-    p{
-      line-height: 1.2em;
+    #screenshot{
+      margin: 20px;
     }
     
     #intro{
-      float: left;
-      margin: 20px 20px 20px 15px ;
-      width: 350px;
-      height: 200px;
-      color: #999;
-      
-      #vistazo-is{
-        font-size: 1.17em;
-        line-height: 1.1em;
-        font-weight: 700;
-        color: #a0a0a0;
-      }
-      
-      #to-start{
-        margin: 20px 0 10px 0;
-      }
-      
-      span{
-        color: $vistazo_blue;
-      }
-    }
-    #start-btn{
-      @include border-radius(5px);
-      @include box-shadow(0, 2px, 5px, rgba(0, 0, 0, 0.2));
-      
-      background-color: $vistazo_blue;
-      color: #fff;
-      height: 38px;
-      text-align: center;
-      font-family: 'MenschBold';
-      font-size: 2.2em;
-      letter-spacing: 0;
-      padding: 8px 0 1px 0;
-      text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-      border: 1px solid #259acb;
-      cursor: pointer;
-      
-      display: block;
-      text-decoration: none;
-      
-      &:hover{
-        text-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
-        @include emboss-box-shadow;
-      }
-      
-      &:active{
-        margin: 1px 0 -1px 0;
-        background-color: #28a6db;
-      }
-      
-      span{
-        font-size: 15px;
-      }
-    }
-    hr{
-      float: left;
-      width: 740px;
-      margin: 10px 20px;
-      border: 0;
-      border-top: 1px dotted #eee;
-    }
-    .www{
-      float: left;
-      width: 223px;
+      margin: 15px 0 40px;
       color: #bbb;
-      font-size: 0.9em;
-      width: 180px;
-      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+      font-size: 40px;
+      
+      a{
+        text-decoration: none;
+        color: #e74679;
+      }
     }
     
-    .www-icon{
-      float: left;
-      margin: 20px;
-    }
-    h1 {
-      color: #999999;
-      float: none;
-      margin-bottom: 20px;
-      margin-left: 0;
-    }
-    ul {
-      list-style: disc;
-      margin: 10px 0 0 30px;
+    #glance{
+      height: 200px;
+      background-color: #f4fbfe;
       
-      li {
-        margin-bottom: 5px;
+      img{
+        margin: 40px 0 0 75px;
+      }
+      
+      .home-right{
+        margin: 55px 20px 0 0;
+        
+        p{
+          margin: 0 20px 0 10px;
+        }
       }
     }
+    
+    #abc{
+      height: 200px;
+      
+      img{
+        margin: 65px 0 0 85px;
+      }
+      
+      .home-right{
+        margin: 40px 20px 0 0;
+        
+        span{
+          color: $vistazo_blue;
+        }
+      }
+    }
+    
+    #day{
+      height: 200px;
+      background-color: #f4fbfe;
+      
+      img{
+        margin: 20px 0 0 110px;
+      }
+      
+      .home-right{
+        margin: 50px 20px 0 0;
+      }
+    }
+    
+    #demo{
+      height: 200px;
+      
+      img{
+        margin: 20px 0 0 105px;
+      }
+      
+      .home-right{
+        margin: 50px 20px 0 0;
+      }
+    }
+    
+    .home-right{
+      width: 350px;
+      float: right;
+      
+      h2{
+        float: none;
+        font-family: 'MenschBold';
+        color: $vistazo_blue;
+        font-size: 40px;
+        text-shadow: none;
+      }
+      
+      p{
+        color: #999;
+        margin: 0 0 0 10px;
+      }
+    }
+    
+    #outro{
+      margin: 20px 40px;
+      
+      p{
+        color: #bbb;
+        font-weight: bold;
+        font-size: 26px;
+        width: 440px;
+      }
+      
+      a{
+        @include border-radius(5px);
+        @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+        
+        background-color: rgba(41, 171, 226, 1);
+        text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+        color: #fff;
+        font-size: 26px;
+        line-height: 20px;
+        font-weight: bold;
+        margin: -55px 0 0 0;
+        border: 1px solid #259acb;
+        padding: 10px;
+        
+        float: right;
+        
+        text-decoration: none;
+        
+        &:hover{
+          text-shadow: 0 2px 1px rgba(0, 0, 0, 0.25);
+          @include emboss-box-shadow-small;
+        }
+        &:active {
+          margin: 6px 5px 4px 5px;
+          background-color: #28a6db;
+        }
+        
+      }
+    }
+  
   } // #main
 }
 

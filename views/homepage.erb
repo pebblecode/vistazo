@@ -27,33 +27,46 @@
 <body class="homepage">
   <div id="top-nav">
     <h1>VISTAZO</h1>
+    <a href="/auth/google_oauth2/">Sign in</a>
   </div>
   
   <%= styled_flash %>
   
   <div id="main">
-    <div id="screenshot"></div>
-    <div id="intro">
-      <p id="vistazo-is">Vistazo is a simple, lightweight tool for small teams to see <span>who</span> is working on <span>what</span>, <span>when</span>.</p>
-      <br />
-      <br />
-      <p id="to-start">To start, just sign in with your Google mail account with the button below:</p>
-      <a href="/auth/google_oauth2/" id="start-btn">Start using Vistazo<span> </span>!</a>
+    <img id="screenshot" src="img/pixel-vistazo.png" alt="" />
+    <div id="intro">Free team management from the fine folks at <a href="http://">pebble {code}</a></div>
+    <div id="glance">
+      <img src="img/glance.png" alt="" />
+      <div class="home-right">
+        <h2>At a glance</h2>
+        <p>Quickly see who on your team is working on what, when.</p>
+      </div>
     </div>
-    <hr />
-    <img src="/img/who.png" alt="who" class="www-icon"/>
-    <div class="www">
-      <p>Add people to your Vistazo team. Then you can invite them to create a Vistazo acount and view &amp; edit your team.</p><br /><p>Soon everyone you work with will be able to see your teams workload at a glance.</p>
+    <div id="abc">
+      <img src="img/abc.png" alt="" />
+      <div class="home-right">
+        <h2>As easy as...</h2>
+        <p><span>1.</span> Add people to your team. <span>2.</span> Add projects to team members. <span>3.</span> Profit. Yup that’s it. Super simple team management even your nan could understand.</p>
+      </div>
     </div>
-    <img src="/img/what.png" alt="what" class="www-icon"/>
-    <div class="www">
-      <p>Vistazo makes it super simple to add projects to anyone on your team.</p><br /><p>Projects can be easily moved between people and times. So when priorities change quickly, it's a breeze to update Vistazo.</p>
+    <div id="day">
+      <img src="img/day.png" alt="" />
+      <div class="home-right">
+        <h2>Day by day</h2>
+        <p>Vistazo works with days, not hours, not minutes. Cut out the micro management and let your team structure their own workdays.</p>
+      </div>
     </div>
-    <img src="/img/when.png" alt="when" class="www-icon"/>
-    <div class="www">
-      <p>Vistazo works with days. Not hours. Not minutes.</p><br /><p>This gives everyone in your team the freedom to manage their own workload.</p><br /><p>Working in days also lets you see the weeks workload really easily and quickly.</p>
+    <div id="demo">
+      <img src="img/demo.png" alt="" />
+      <div class="home-right">
+        <h2>Democratic</h2>
+        <p>In Vistazo everyone is equal. All users can view & edit any element within a team.</p>
+      </div>
     </div>
-    
+    <div id="outro">
+      <p>Vistazo is free, easy to use, and mind-alteringly awesome. All you need is a Google acount.</p>
+      <a href="/auth/google_oauth2/">Start using vistazo</a>
+    </div>
   </div>
   <footer>
     <ul>
