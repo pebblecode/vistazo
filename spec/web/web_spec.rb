@@ -104,6 +104,47 @@ describe "Teams:" do
   
 end
 
+describe "Users:" do
+  before do
+    http_authorization!
+    @session = init_omniauth_session
+
+    create_normal_user(@session)
+    @user = User.first
+    @team = @user.teams.first
+
+    login_normal_user_with_session!(@session)
+  end
+  
+  after do
+    clean_db!
+    @session = nil
+  end
+
+  describe "delete user" do
+    before do
+      new_user_params = { 
+        :name => "Karen O", 
+        :email => "karen.o@gmail.com"
+      }
+      post_params! team_add_user(@team), new_user_params, @session
+      @team.reload
+
+      @new_user = User.find_by_email(new_user_params[:email])
+    end
+
+    it "should delete" do
+      User.find(@new_user.id).present?.should == true
+      @team.has_user_timetable?(@new_user).should == true
+      post_params! team_delete_user(@team, @new_user), nil, @session
+
+      @team.reload
+      User.find(@new_user.id).present?.should == false
+      @team.has_user_timetable?(@new_user).should == false
+    end
+  end
+end
+
 describe "Timetable items:" do
   before do
     http_authorization!
@@ -127,10 +168,7 @@ describe "Timetable items:" do
   
   describe "Delete timetable items" do
     it "should delete" do
-      debugger
       post_params! delete_timetable_item_path(@team, @user, @timetable_item), nil, @session
-
-      debugger
     end
   end
 

@@ -759,8 +759,8 @@ post '/:team_id/users/:user_id/delete' do
     user = User.find(params[:user_id])
     if user.present?
       name = user.name
-      user.delete
       @team.delete_user(user)
+      User.delete user.id
 
       flash[:success] = "Successfully deleted '#{name}'."
     else
