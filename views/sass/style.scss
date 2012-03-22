@@ -1552,46 +1552,73 @@ textarea:focus, input:focus{
 
 /* Help text
 -----------------------------------------------------------------------------*/
+.first-row.col2{
+  position: relative;
+}
+
+.last-row.col1{
+  position: relative;
+}
 
 .help-on {
   #help-nav{
     position: absolute;
     z-index: 1100;
-    top: 3px;
-    right: 0;
+    top: 15px;
+    right: 20px;
     height: 197px;
-    width: 888px;
-    background: url('/img/help-nav.png');
+    width: 186px;
+    background: url('/img/help-nav.png') no-repeat;
+  }
+  
+  #help-edit{
+    position: absolute;
+    z-index: 1100;
+    top: 62px;
+    left: -10px;
+    height: 197px;
+    width: 186px;
+    background: url('/img/help-edit.png') no-repeat;
+  }
+  
+  #help-close{
+    position: absolute;
+    z-index: 1100;
+    bottom: 100px;
+    right: 100px;
+    height: 46px;
+    width: 181px;
+    background: url('/img/help-close.png') no-repeat;
   }
   
   #help-week{
     position: absolute;
-    top: 42px;
-    left: 14%;
+    top: -37px;
+    left: -10px;
     z-index: 1100;
     height: 171px;
     width: 280px;
-    background: url('/img/help-week.png');
+    background: url('/img/help-week.png') no-repeat;
   }
   
   #help-new{
     position: absolute;
-    top: 45px;
-    left: 35px;
+    top: 25px;
+    left: 15px;
     z-index: 1100;
     height: 120px;
     width: 315px;
-    background: url('/img/help-new.png');
+    background: url('/img/help-new.png') no-repeat;
   }
   
   #help-team{
     position: absolute;
     z-index: 1100;
-    top: 25px;
+    top: 30px;
     left: 40px;
     height: 112px;
-    width: 206px;
-    background: url('/img/help-team.png');
+    width: 306px;
+    background: url('/img/help-team.png') no-repeat;
   }
   
   #help-project-container {
@@ -1600,11 +1627,11 @@ textarea:focus, input:focus{
     #help-project{
       position: absolute;
       z-index: 1100;
-      left: 40%;
-      bottom: -242px;
-      height: 238px;
-      width: 316px;
-      background: url('/img/help-project.png');
+      left: 20%;
+      top: -12px;
+      height: 145px;
+      width: 200px;
+      background: url('/img/help-project.png') no-repeat;
       pointer-events: none;
     }
   }
