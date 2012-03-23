@@ -133,13 +133,18 @@ describe "Users:" do
       @new_user = User.find_by_email(new_user_params[:email])
     end
 
-    it "should delete" do
+    it "should delete user" do
       User.find(@new_user.id).present?.should == true
-      @team.has_user_timetable?(@new_user).should == true
       post_params! team_delete_user(@team, @new_user), nil, @session
 
-      @team.reload
       User.find(@new_user.id).present?.should == false
+    end
+
+    it "should delete user timetable" do
+      @team.has_user_timetable?(@new_user).should == true
+      post_params! team_delete_user(@team, @new_user), nil, @session
+      @team.reload
+      
       @team.has_user_timetable?(@new_user).should == false
     end
   end
