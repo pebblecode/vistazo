@@ -692,25 +692,6 @@ post '/:team_id/users/:user_id' do
   end
 
   redirect back
-
-  if team_member.present?
-    new_name = params[:name]
-    if new_name.present?
-      team_member.name = new_name
-        
-      if team_member.save
-        flash[:success] = "Successfully updated team member name."
-      else
-        flash[:warning] = "Something went wrong with saving team member name. Please try again another time."
-      end
-    else
-      flash[:warning] = "Please specify a team member name."
-    end
-  else
-    flash[:warning] = "Invalid team member."
-  end
-  
-  redirect back
 end
 
 post '/:team_id/users/:user_id/delete' do
