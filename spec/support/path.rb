@@ -40,7 +40,14 @@ module PathSpecHelper
   def user_team_path(user)
     team_path(user.teams.first)
   end
+
+  def team_add_user(team)
+    "/#{team.id}/user-timetables/new-user.json"
+  end
   
+  def team_delete_user(team, user)
+    "/#{team.id}/users/#{user.id}/delete"
+  end
   
   ############################################################################
   # Projects
