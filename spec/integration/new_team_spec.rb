@@ -35,7 +35,7 @@ feature "Create new team" do
       
     scenario "should have user as the first team member" do
       pending("Check in js")
-      # find(".team-member-name").text.should include(OmniAuth.config.mock_auth[:normal_user]["info"]["name"])
+      # find(".user-name").text.should include(OmniAuth.config.mock_auth[:normal_user]["info"]["name"])
     end
   
     scenario "should allow user to switch between teams" do

@@ -149,31 +149,34 @@
     <td colspan="9"><hr/></td>
   </tr>  <!--the divider-->
   <tr class="team-member {{ oddOrEvenClass }}" data-team-member-id="{{ userId }}">
-    <td class="{{ rowClass }} col1" title="{{ userName }}">
-      <a href="#edit-tm-{{ userId }}" class="team-member-name">
+    <td class="{{ rowClass }} col1" title="{{ userName }} <{{ userEmail }}>">
+      <a href="#edit-tm-{{ userId }}" class="user-name">
         {{ userName.substring(0, 40) }}
       </a>
       
-      <div id="edit-tm-{{ userId }}" class="edit-team-member-dialog" title="Edit team member name">
+      <div id="edit-tm-{{ userId }}" class="edit-user-dialog" title="Manage user">
+        <h4>Name</h4>
         <form action="/{{ teamId }}/users/{{ userId }}" method="post">
           <fieldset class="update-object-fieldset" title="Edit team member">
-            <legend>Edit team member</legend>
             <label for="name">Name</label>
             <input type="text" name="name" class="new-object-text-box" value="{{ userName }}"/>
             <button type="submit" class="submit-button">update</button>
           </fieldset> <!-- Edit team member -->
         </form>
 
-        <div class="user-email">Email: {{ userEmail }}</div>
+        <div class="user-email">
+          <h4>Email</h4>
+          <p>{{ userEmail }}</p>
+        </div>
         
         <form action="/{{ teamId }}/users/{{ userId }}/delete" method="post">
           <fieldset class="delete-object-fieldset" title="Delete user">
-            <legend>Delete user</legend>
+            <legend>Delete</legend>
             <p class="warning-icon">W</p><p class="warning-msg">All timetable items associated with '{{ userName }}' will also be deleted.</p>
             <button type="submit" class="submit-button">delete</button>
           </fieldset> <!-- Edit team member -->
         </form>
-      </div> <!-- .edit-team-member-dialog -->
+      </div> <!-- .edit-user-dialog -->
     </td>
     
     <% prev_cols = 1 %>
@@ -268,7 +271,7 @@
               {% var ttItems = userTimetable.get("timetable_items"); %}
               {% _.each(ttItems, function(ttItem) { %}
                 {% if ((ttItem["date"] == "<%= date %>") && (ttItem["project_id"] === project.get("id"))) { %}
-                  <div class="team-member-name">{{ userTimetable.userName() }}</div>
+                  <div class="user-name">{{ userTimetable.userName() }}</div>
                 {% } %} 
               {% }); %}
             {% }); %}

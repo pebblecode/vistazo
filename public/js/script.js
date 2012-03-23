@@ -871,7 +871,7 @@ function setupNewProjectDialog() {
 
 function setupEditUserDialog() {
   // Team member edit
-  $( ".edit-team-member-dialog" ).each(function() {
+  $( ".edit-user-dialog" ).each(function() {
     // Create dialog with id instead of class
     $(this).dialog({
       modal: true,
@@ -883,7 +883,7 @@ function setupEditUserDialog() {
       closeText: "'"
     })
   });
-  $("#main .team-member-name").click(function() {
+  $("#main .user-name").click(function() {
     var dialog_id = $(this).attr("href");
     $(dialog_id).dialog('open');
     overlayCloseOnClick();
