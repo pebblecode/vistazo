@@ -273,11 +273,10 @@ end
 # Team
 # ----------------------------------------------------------------------------
 
-post '/team/new' do
+post '/teams/new' do
   if params[:new_team_name].present?
     @team = Team.create_for_user(current_user)
-    # Add the user as the first team member
-    @team.team_members << TeamMember.create(:name => current_user.name)
+    
     @team.name = params[:new_team_name]
     if @team.save
       flash[:success] = "Successfully created team."

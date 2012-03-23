@@ -13,6 +13,8 @@ class Team
   # Class methods
   #############################################################################
   
+  # Create a team for a user. Adds the user to the team, and adds
+  # the team to the user
   def self.create_for_user(user)
     new_user_team = Team.create(:name => "#{user.name}'s team")
     new_user_team.add_user(user)
