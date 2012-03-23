@@ -35,6 +35,8 @@ class Team
     self.save
   end
 
+  # Delete the user from the team, both in the user team ids and the
+  # team user timetables
   def delete_user(user)
     user.team_ids.delete_if { |tid| tid == self.id }
     user.save
