@@ -15,7 +15,7 @@ feature "Team name" do
   
   it "Default team name, should be called \"User name's team\"" do
     visit "/"
-    click_link "start-btn"
+    click_link "Start using vistazo"
     
     default_normal_user_name = OmniAuth.config.mock_auth[:normal_user]["info"]["name"]
     page.should have_content("#{default_normal_user_name}'s team")
@@ -27,7 +27,7 @@ feature "Team name" do
     team.save
     
     visit "/"
-    click_link "start-btn"
+    click_link "Start using vistazo"
     page.should have_content("Cat's team")
     
     within_fieldset("Team name") do
@@ -44,7 +44,7 @@ feature "Team name" do
   
   scenario "Updating to an empty name" do
     visit "/"
-    click_link "start-btn"
+    click_link "Start using vistazo"
     
     within_fieldset("Team name") do
       fill_in 'team_name', :with => ''

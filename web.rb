@@ -390,7 +390,8 @@ def send_join_team_email_return_error_messages(inviter, to_user, team)
   output
 end
 
-post '/:team_id/update' do
+# Update team
+post '/:team_id' do
   protected!
   require_team_user!(params[:team_id])
     

@@ -42,6 +42,9 @@ describe "Teams:" do
     @session = nil
   end
   
+  # New team: see new_team_spec.rb
+  # Edit team: see team_name_spec.rb
+
   describe "Teams page" do
     it "should redirect to the home page and show an error if it is an invalid team" do
       create_normal_user(@session)
@@ -68,7 +71,6 @@ describe "Teams:" do
       last_response.body.should include("Start using vistazo")
     end
   end
-  pending "Can't have multiple people with the same email address"
 
   describe "User going into the wrong team" do
     it "should redirect them to their team week view and show an error message" do
@@ -143,7 +145,7 @@ describe "Users:" do
       @team.has_user_timetable?(@new_user).should == true
       post_params! team_delete_user(@team, @new_user), nil, @session
       @team.reload
-      
+
       @team.has_user_timetable?(@new_user).should == false
     end
   end
