@@ -24,6 +24,10 @@ App.UserTimetable = Backbone.Model.extend({
   userName: function() {
     return App.users.get(this.get("user_id")).get("name");
   },
+  // Convenience method fo getting access to the user email
+  userEmail: function() {
+    return App.users.get(this.get("user_id")).get("email");
+  },
   addTimetableItem: function(ttItem) {
     var newTimetableItems = this.get("timetable_items");
     newTimetableItems.push(ttItem);
@@ -343,8 +347,7 @@ App.UserListingView = Backbone.View.extend({
     var oddOrEvenClass = rowNum % 2 == 0 ? "even" : "odd";
     var weekTemplateVars = {
       teamId: TEAM_ID,
-      userId: userTimetable.get("user_id"),
-      userName: userTimetable.userName(),
+      userTimetable: userTimetable,
       oddOrEvenClass: oddOrEvenClass,
       rowClass: rowClass,
       timetableItems: userTimetable.get("timetable_items"),

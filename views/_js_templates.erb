@@ -141,6 +141,10 @@
 </script>
 
 <script type="text/template" id="team-member-template">
+  {% var userId = userTimetable.get("user_id") %}
+  {% var userName = userTimetable.userName() %}
+  {% var userEmail = userTimetable.userEmail() %}
+
   <tr class="row-divider">
     <td colspan="9"><hr/></td>
   </tr>  <!--the divider-->
@@ -159,6 +163,8 @@
             <button type="submit" class="submit-button">update</button>
           </fieldset> <!-- Edit team member -->
         </form>
+
+        <div class="user-email">Email: {{ userEmail }}</div>
         
         <form action="/{{ teamId }}/users/{{ userId }}/delete" method="post">
           <fieldset class="delete-object-fieldset" title="Delete user">
