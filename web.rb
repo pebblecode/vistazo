@@ -153,9 +153,6 @@ get '/auth/:provider/callback' do
         @user.save
         
         if @user.valid?
-          if @user.teams.present?
-            @user.teams.each {|t| t.update_user_cache(@user)}
-          end
           flash[:success] = "Welcome to Vistazo! You've successfully registered."
         else
           flash[:warning] = "Could not register user."
