@@ -1,6 +1,6 @@
 <% if @team %>
   <div id="team-name-dialog" title="Team name">
-    <form id="team-name-form" action="/<%= @team.url_slug %>/update" method="post">
+    <form id="team-name-form" action="/<%= @team.url_slug %>" method="post">
       <fieldset class="update-object-fieldset">
         <legend>Team name</legend>
         <label for="team_name">Team name</label>
@@ -22,7 +22,7 @@
     
     <div id="new-team">
       <h4>New team</h4>
-      <form id="new-team-form" action="/team/new" method="post">
+      <form id="new-team-form" action="/teams/new" method="post">
         <fieldset class="new-object-fieldset" title="New team">
           <legend>New team</legend>
           <input type="text" name="new_team_name" title="Add new team" class="new-object-text-box" /> 

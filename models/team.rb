@@ -13,6 +13,8 @@ class Team
   # Class methods
   #############################################################################
   
+  # Create a team for a user. Adds the user to the team, and adds
+  # the team to the user
   def self.create_for_user(user)
     new_user_team = Team.create(:name => "#{user.name}'s team")
     new_user_team.add_user(user)
@@ -27,14 +29,16 @@ class Team
   # Public methods
   #############################################################################
 
-  def add_user(user)
+  def add_user(user, is_visible = true)
     user.teams << self
     user.save
 
-    self.user_timetables << UserTimetable.new(:user => user, :team => self)
+    self.user_timetables << UserTimetable.new(:user => user, :team => self, :is_visible => is_visible)
     self.save
   end
 
+  # Delete the user from the team, both in the user team ids and the
+  # team user timetables
   def delete_user(user)
     user.team_ids.delete_if { |tid| tid == self.id }
     user.save
@@ -44,7 +48,7 @@ class Team
   end
   
   def has_user_timetable?(user)
-    self.user_timetables.select { |ut| ut.user == user }
+    self.user_timetables.select { |ut| ut.user == user }.length > 0
   end
 
   def user_timetable(user)
@@ -53,23 +57,21 @@ class Team
     u_timetable.present? ? u_timetable.first : nil
   end
 
+  def set_user_timetable_is_visible(user, is_visible)
+    user_timetable = self.user_timetables.select { |ut| ut.user == user }.first
+    user_timetable.is_visible = is_visible
+
+    self.user_timetables.delete_if { |ut| ut.user == user }
+    self.user_timetables << user_timetable
+
+    self.save
+  end
+
   # Convenience method to access a users timetable items(user)
   def user_timetable_items(user)
     user = user_timetable(user)
     user.timetable_items
   end
-
-  # def activate_user(user)
-  #   self.pending_users.delete_if {|u| u["id"] == user.id.to_s}
-    
-  #   self.active_users.delete_if {|u| u["id"] == user.id.to_s} # Delete it, so it can be re-added
-  #   self.active_users << user.to_hash
-    
-  #   user.teams << self
-  #   user.save
-    
-  #   self.save
-  # end
   
   # Returns the timetable item added, or nil if it isn't saved properly
   def add_timetable_item(user, project, date)
