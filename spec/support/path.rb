@@ -14,7 +14,7 @@ module PathSpecHelper
   end
   
   ############################################################################
-  # Teams/users
+  # Teams
   ############################################################################
   
   def team_id_path(team_id)
@@ -33,6 +33,10 @@ module PathSpecHelper
     "/#{team_id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
   end
   
+  ############################################################################
+  # Teams/users
+  ############################################################################
+
   def user_team_current_week_path(user)
     team_current_week_path(user.teams.first)
   end
@@ -45,9 +49,14 @@ module PathSpecHelper
     "/#{team.id}/user-timetables/new-user.json"
   end
   
+  def team_update_user(team, user)
+    "/#{team.id}/users/#{user.id}"
+  end
+
   def team_delete_user(team, user)
     "/#{team.id}/users/#{user.id}/delete"
   end
+
   
   ############################################################################
   # Projects

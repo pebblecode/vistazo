@@ -320,6 +320,7 @@ post '/:team_id/user-timetables/new-user.json' do
   if team
     user_name = params[:name]
     user_email = params[:email]
+    is_visible = params_is_visible_value(params)
   
     if user_name.present? and user_email.present?
       user = User.find_by_email(user_email)
@@ -335,7 +336,7 @@ post '/:team_id/user-timetables/new-user.json' do
           status HTTP_STATUS_BAD_REQUEST_CONFLICT
           output = { :message => error_message }
         else
-          team.add_user(user)
+          team.add_user(user, is_visible)
 
           error_msgs = send_join_team_email_return_error_messages(current_user, user, team)
           if error_msgs.nil?
@@ -349,7 +350,7 @@ post '/:team_id/user-timetables/new-user.json' do
         end
       else # Create new user
         new_user = User.create(:name => user_name, :email => user_email)
-        team.add_user(new_user) # Creates new user timetable too
+        team.add_user(new_user, is_visible) # Creates new user and timetable too
 
         error_msgs = send_join_team_email_return_error_messages(current_user, new_user, team)
         if error_msgs.nil?
@@ -665,23 +666,34 @@ end
 # Users
 # ----------------------------------------------------------------------------
 
-# Update user
+# Check the value of is_visible in the passed parameters.
+# True if :is_visible is present and the value is "true" (note the
+# string value)
+def params_is_visible_value(parameters)
+  (parameters[:is_visible].present? and (parameters[:is_visible] == "true")) ? true : false
+end
+
+# Update user and user timetable
 post '/:team_id/users/:user_id' do
   protected!
   require_team_user!(params[:team_id])
   
+  logger.info "Update user: #{params}"
+
   @team = Team.find(params[:team_id])
   if @team.present?
     user = User.find(params[:user_id])
     if user.present?
       new_name = params[:name]
       if new_name.present?
+        is_visible = params_is_visible_value(params)
+        @team.set_user_timetable_is_visible(user, is_visible)
         user.name = new_name
           
         if user.save
-          flash[:success] = "Successfully updated user name."
+          flash[:success] = "Successfully updated user."
         else
-          flash[:warning] = "Something went wrong with saving user name. Please try again another time."
+          flash[:warning] = "Something went wrong with saving user. Please try again another time."
         end
       else
         flash[:warning] = "Please specify a user name."

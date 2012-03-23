@@ -29,11 +29,11 @@ class Team
   # Public methods
   #############################################################################
 
-  def add_user(user)
+  def add_user(user, is_visible = true)
     user.teams << self
     user.save
 
-    self.user_timetables << UserTimetable.new(:user => user, :team => self)
+    self.user_timetables << UserTimetable.new(:user => user, :team => self, :is_visible => is_visible)
     self.save
   end
 
@@ -55,6 +55,16 @@ class Team
     u_timetable = self.user_timetables.select { |ut| ut.user == user }
 
     u_timetable.present? ? u_timetable.first : nil
+  end
+
+  def set_user_timetable_is_visible(user, is_visible)
+    user_timetable = self.user_timetables.select { |ut| ut.user == user }.first
+    user_timetable.is_visible = is_visible
+
+    self.user_timetables.delete_if { |ut| ut.user == user }
+    self.user_timetables << user_timetable
+
+    self.save
   end
 
   # Convenience method to access a users timetable items(user)

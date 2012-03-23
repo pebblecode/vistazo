@@ -144,6 +144,7 @@
   {% var userId = userTimetable.get("user_id") %}
   {% var userName = userTimetable.userName() %}
   {% var userEmail = userTimetable.userEmail() %}
+  {% var isVisible = userTimetable.get("is_visible") %}
 
   <tr class="row-divider">
     <td colspan="9"><hr/></td>
@@ -156,18 +157,25 @@
       
       <div id="edit-tm-{{ userId }}" class="edit-user-dialog" title="Manage user">
         <h4>Name</h4>
-        <form action="/{{ teamId }}/users/{{ userId }}" method="post">
+        <form action="/{{ teamId }}/users/{{ userId }}" method="post" class="edit-user-form">
           <fieldset class="update-object-fieldset" title="Edit team member">
             <label for="name">Name</label>
             <input type="text" name="name" class="new-object-text-box" value="{{ userName }}"/>
-            <button type="submit" class="submit-button">update</button>
-          </fieldset> <!-- Edit team member -->
-        </form>
+          </fieldset> <!-- Edit user name -->
 
-        <div class="user-email">
-          <h4>Email</h4>
-          <p>{{ userEmail }}</p>
-        </div>
+          <div class="user-email">
+            <h4>Email</h4>
+            <p>{{ userEmail }}</p>
+          </div>
+
+          <div class="visible-on-timetable">
+            <h4>Visibility on timetable</h4>
+            <input id="new-user-visible" type="checkbox" name="is_visible" value="true" {{ isVisible ? "checked='checked'" : "" }} />
+            <label for="new-user-visible">Appear on timetable</label>
+          </div>
+          
+          <button type="submit" class="submit-button">update</button>
+        </form>
         
         <form action="/{{ teamId }}/users/{{ userId }}/delete" method="post">
           <fieldset class="delete-object-fieldset" title="Delete user">
@@ -236,7 +244,7 @@
             <input id="add-user-email" type="text" name="email"/>
           </li>
           <li>
-            <input id="new-user-visible" type="checkbox" name="visible" value="true" checked="checked" />
+            <input id="new-user-visible" type="checkbox" name="is_visible" value="true" checked="checked" />
             <label for="new-user-visible">Appear on timetable</label>
           </li>
         </ol>

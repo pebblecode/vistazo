@@ -122,6 +122,68 @@ describe "Users:" do
     @session = nil
   end
 
+  describe "update user" do
+    it "should update user name" do
+      params = {
+        :name => "New face",
+        :is_visible => true
+      }
+      post_params! team_update_user(@team, @user), params, @session
+      @user.reload
+
+      @user.name.should == "New face"
+    end
+
+    describe "is_visible status" do
+      before do
+        @team.user_timetable(@user).is_visible.should == true
+      end
+
+      it "should not update if name is not sent as well" do
+        params = {
+          :is_visible => false
+        }
+        post_params! team_update_user(@team, @user), params, @session
+        @team.reload
+
+        # Should not change
+        @team.user_timetable(@user).is_visible.should == true
+      end
+
+      it "should update for true" do
+        params = {
+          :name => "Something",
+          :is_visible => true
+        }
+        post_params! team_update_user(@team, @user), params, @session
+        @team.reload
+
+        @team.user_timetable(@user).is_visible.should == true
+      end
+
+      it "should update for false (but param of false is not actually passed in html in practice)" do
+        params = {
+          :name => "Something",
+          :is_visible => false
+        }
+        post_params! team_update_user(@team, @user), params, @session
+        @team.reload
+
+        @team.user_timetable(@user).is_visible.should == false
+      end
+
+      it "should update to false if is_visible is not passed in params" do
+        params = {
+          :name => "Something"
+        }
+        post_params! team_update_user(@team, @user), params, @session
+        @team.reload
+
+        @team.user_timetable(@user).is_visible.should == false
+      end
+    end
+  end
+
   describe "delete user" do
     before do
       new_user_params = { 
