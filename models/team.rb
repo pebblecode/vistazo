@@ -62,18 +62,6 @@ class Team
     user = user_timetable(user)
     user.timetable_items
   end
-
-  # def activate_user(user)
-  #   self.pending_users.delete_if {|u| u["id"] == user.id.to_s}
-    
-  #   self.active_users.delete_if {|u| u["id"] == user.id.to_s} # Delete it, so it can be re-added
-  #   self.active_users << user.to_hash
-    
-  #   user.teams << self
-  #   user.save
-    
-  #   self.save
-  # end
   
   # Returns the timetable item added, or nil if it isn't saved properly
   def add_timetable_item(user, project, date)
