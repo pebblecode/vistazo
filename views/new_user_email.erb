@@ -1,10 +1,10 @@
-Hi,
+Hi<%= @to_user_name.empty? ? "" : " #{@to_user_name.titleize}" %>,
 
-You've been invited to Vistazo.
+<%= @inviter_name.empty? ? "You've been invited to team" : "#{@inviter_name.titleize} invited you to team" %> "<%= @team_name %>" on vistazoapp.com.
 
-To register, click on this link: <%= @signup_link %>
+Click on this link to join: <%= @team_link %>
 
 
-Thanks and welcome!
+Welcome!
 
 Vistazo team

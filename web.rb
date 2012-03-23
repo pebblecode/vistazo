@@ -338,16 +338,29 @@ post '/:team_id/user-timetables/new-user.json' do
         else
           team.add_user(user)
 
-          status HTTP_STATUS_OK
-          output = { :user => user, :user_timetable => team.user_timetable(user) }
+          error_msgs = send_join_team_email_return_error_messages(current_user, user, team)
+          if error_msgs.nil?
+            logger.info("Added user: #{user_name} (#{user_email})")
+            status HTTP_STATUS_OK
+            output = { :user => user, :user_timetable => team.user_timetable(user) }
+          else
+            status HTTP_STATUS_INTERNAL_SERVER_ERROR    
+            output = error_msgs
+          end
         end
       else # Create new user
         new_user = User.create(:name => user_name, :email => user_email)
         team.add_user(new_user) # Creates new user timetable too
 
-        logger.info("Added user: #{user_name} (#{user_email})")
-        status HTTP_STATUS_OK
-        output = { :user => new_user, :user_timetable => team.user_timetable(new_user) }
+        error_msgs = send_join_team_email_return_error_messages(current_user, new_user, team)
+        if error_msgs.nil?
+          logger.info("Added user: #{user_name} (#{user_email})")
+          status HTTP_STATUS_OK
+          output = { :user => new_user, :user_timetable => team.user_timetable(new_user) }
+        else
+          status HTTP_STATUS_INTERNAL_SERVER_ERROR    
+          output = error_msgs
+        end
       end
     else
       logger.warn("Invalid input")
@@ -364,72 +377,17 @@ post '/:team_id/user-timetables/new-user.json' do
   return output.to_json
 end
 
-# get '/:team_id/users/:user_id/register' do
-#   protected!
-  
-#   @team = Team.find(params[:team_id])
-#   if @team.present?
-#     @user = User.find(params[:user_id])
-#     if @user.present?
-#       @activation_link = "#{APP_CONFIG['base_url']}/#{@team.id}/users/#{@user.id}/activate"
-#       erb :new_user_registration, :layout => false
-#     else
-#       flash[:warning] = "Invalid user"
-#       redirect '/'
-#     end
-#   else
-#     flash[:warning] = "Invalid team"
-#     redirect '/'
-#   end
-# end
-
-# get '/:team_id/users/:user_id/activate' do
-#   protected!
-  
-#   @team = Team.find(params[:team_id])
-#   if @team.present?
-#     @user = User.find(params[:user_id])
-#     if @user.present?
-#       @team.activate_user(@user)
-      
-#       # Login
-#       redirect "/auth/google_oauth2/"
-#     else
-#       flash[:warning] = "Invalid user"
-#       redirect '/'
-#     end
-#   else
-#     flash[:warning] = "Invalid team"
-#     redirect '/'
-#   end
-# end
-
-# post '/:team_id/users/:user_id/resend' do
-#   protected!
-  
-#   @team = Team.find(params[:team_id])
-#   if @team.present?
-#     @user = User.find(params[:user_id])
-#     send_registration_email_for_params(@user, params)
-#   else
-#     flash[:warning] = "Invalid team"
-#   end
-  
-#   redirect back
-# end
-
-def send_registration_email_for_params(user, params)
+def send_join_team_email_return_error_messages(inviter, to_user, team)
+  output = nil
   begin
-    if user.present?
-      send_registration_email_to user
-      flash[:success] = "Invitation email has been sent to #{user.email}"
-    else
-      flash[:warning] = "Invalid user to send email to."
-    end
+    send_join_team_email_with_team_link(inviter, to_user, team)
   rescue Exception => e
     logger.warn "Email error: #{e}"
-    flash[:warning] = "It looks like something went wrong while attempting to send your email. Please try again another time. Error: #{e}"
+    logger.warn e.backtrace.join("\n")
+    output = { :message =>  "It looks like something went wrong while attempting to send your email. Please try again another time. Error: #{e}" }
   end
+
+  output
 end
 
 post '/:team_id/update' do
@@ -452,9 +410,14 @@ post '/:team_id/update' do
   redirect back
 end
 
-def send_registration_email_to(user)
-  @signup_link = "#{APP_CONFIG['base_url']}/#{params[:team_id]}/users/#{user.id}/register"
+def send_join_team_email_with_team_link(inviter, to_user, team)
+  @inviter_name = inviter.name
+  @to_user_name = to_user.name
+  @team_name = team.name
+  @team_link = "#{APP_CONFIG['base_url']}/#{team.id}"
   
+  logger.info("#{@inviter_name}, #{@to_user_name}")
+
   send_from_email = settings.send_from_email
   subject = "You are invited to Vistazo"
   
@@ -471,7 +434,7 @@ def send_registration_email_to(user)
   if ENV['RACK_ENV'] == "development"
     logger.info "DEVELOPMENT MODE: email not actually sent, but this is what it'd look like..."
     logger.info "send_from_email: #{send_from_email}"
-    logger.info "send_to_email: #{user.email}"
+    logger.info "send_to_email: #{to_user.email}"
     logger.info "params: #{email_params}"
     logger.info "subject: #{subject}"
             
@@ -480,14 +443,14 @@ def send_registration_email_to(user)
     if ENV['RACK_ENV'] == "staging"
       logger.info "STAGING MODE: this email should be sent:"
       logger.info "send_from_email: #{send_from_email}"
-      logger.info "send_to_email: #{user.email}"
+      logger.info "send_to_email: #{to_user.email}"
       logger.info "params: #{email_params}"
       logger.info "subject: #{subject}"
       
       logger.info erb(:new_user_email, :layout => false)
     end
     
-    send_email(send_from_email, user.email, subject, erb(:new_user_email, :layout => false), email_params)
+    send_email(send_from_email, to_user.email, subject, erb(:new_user_email, :layout => false), email_params)
   end
 end
 

@@ -35,6 +35,7 @@ describe "Team model" do
       @team.add_user(@user)
       @team.delete_user(@user)
       @team.reload
+      @user.reload
     end
 
     it "should delete user team from user" do
