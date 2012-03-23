@@ -27,7 +27,7 @@ describe "Homepage" do
   
   it "should have 'Start using Vistazo'" do
     get '/'
-    last_response.body.should include("Start using Vistazo")
+    last_response.body.should include("Start using vistazo")
   end
 end
 
@@ -65,10 +65,9 @@ describe "Teams:" do
       follow_redirect_with_session_login!(@session)
       
       last_response.body.should include("You must be logged in")
-      last_response.body.should include("Start using Vistazo")
+      last_response.body.should include("Start using vistazo")
     end
   end
-  
   pending "Can't have multiple people with the same email address"
 
   describe "User going into the wrong team" do
