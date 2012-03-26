@@ -43,7 +43,7 @@
 </script>
 
 <script type="text/template" id="existing-project-template">
-  <div class='project' data-team-member-id='{{ tmId }}' data-team-member-project-id='{{ tmProjId }}' data-date='{{ projDate }}'>
+  <div class='project' data-user-id='{{ tmId }}' data-user-project-id='{{ tmProjId }}' data-date='{{ projDate }}'>
     <div class='handle-container'>
       <div class='{{ projHandleCssClass }}'></div>
     </div>
@@ -153,7 +153,7 @@
   <tr class="row-divider">
     <td colspan="9"><hr/></td>
   </tr>  <!--the divider-->
-  <tr class="team-member {{ oddOrEvenClass }}" data-team-member-id="{{ userId }}">
+  <tr class="user {{ oddOrEvenClass }}" data-user-id="{{ userId }}">
     <td class="col1" title="{{ userName }} <{{ userEmail }}>">
       <a href="#" class="user-name">
         {{ userName.substring(0, 40) }}
@@ -163,17 +163,17 @@
     <% prev_cols = 1 %>
     <% (MONDAY..SUNDAY).each do |work_day| %>
       <%#
-        data-date: Used for update to know the date moving to, and the date when adding a project
-        data-team-member-id: Used for adding a new project to know the team member to add to
+        data-date: Used for update to know the date moving to, and the date when adding a timetable item
+        data-user-id: Used for adding a new timetable item to know the team member to add to
       %>
       <% date = (@monday_date - 1.day) + work_day.day %>
-      <td class="box <%= "col#{work_day + prev_cols}" %>" data-date="<%= date %>" data-team-member-id="{{ userId }}">
+      <td class="box <%= "col#{work_day + prev_cols}" %>" data-date="<%= date %>" data-user-id="{{ userId }}">
 
         {% _.each(timetableItems, function(ti) { %}
           {% if (ti["date"] == "<%= date %>") { %}
-            <div class="project" data-team-member-id="{{ userId }}" data-team-member-project-id="{{ ti['id'] }}" data-date="<%= date %>"> 
+            <div class="project" data-user-id="{{ userId }}" data-user-project-id="{{ ti['id'] }}" data-date="<%= date %>"> 
               <div class="handle-container"><div class="handle project-{{ ti['project_id'] }}"></div></div> <p class="project-title" title="{{ ti['project_name'] }}">{{ ti['project_name'].substring(0, 40) }}</p>
-              <form class="delete-tm-project-form" action="/team-member/{{ userId }}/project/{{ ti['id'] }}/delete" method="post">
+              <form class="delete-tm-project-form" action="#" method="post">
                 <button name="delete_project" type="submit" value="true">×</button>
               </form>
             </div>
@@ -201,7 +201,7 @@
         <ol>
           {% _.each(userTimetables, function(ut) { %}
             {% var comma = (ut === _.last(userTimetables)) ? "" : ","; %}
-            <li class="user-name team-member" data-team-member-id="{{ ut.get("user_id") }}"><a href="#">{{ ut.userName() }}</a>{{ comma }}</li>
+            <li class="user" data-user-id="{{ ut.get("user_id") }}"><a class="user-name" href="#">{{ ut.userName() }}</a>{{ comma }}</li>
           {% }); %}
         </ol>
       </td>

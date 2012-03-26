@@ -643,35 +643,6 @@ textarea:focus, input:focus{
           top: -3px;
         }
       }
-      
-      #new-team-member-form {
-      	width: 13.3333%;
-      	padding: 0 5px;
-      	box-sizing: border-box;
-        
-        legend {
-        
-          display: none;
-        }
-        .new-object-fieldset {
-          width: 100%;
-          margin-top: 10px; 
-          margin-bottom: 12px;
-          @include button-standard;
-          padding: 0;
-          
-          .submit-button{
-            color: #909090;
-            right: 2px;
-            bottom: 2px;
-          }
-          
-          .new-object-text-box {
-            background-color: #fff;
-            color: #808080;
-          }
-        }
-      }
     } // .last-row
 
     tr {
@@ -691,7 +662,7 @@ textarea:focus, input:focus{
         }
       } // &.odd
 
-      &.team-member {
+      &.user {
         padding-bottom: 20px;
         
         .box {
@@ -780,14 +751,14 @@ textarea:focus, input:focus{
           }
           
         } // .project
-      } // &.team-member
+      } // &.user
 
       &.project-row {
         .project-title-container {
           @include project-button;
           width: 95%;
         }
-      } // &.team-member    
+      } // &.project-row    
     } // tr
   } // #timetable
 
@@ -879,7 +850,7 @@ textarea:focus, input:focus{
     text-decoration: none;
     outline: none;
   } // .user-name
-  .team-member .user-name { // On team view 1st col
+  .user .user-name { // On team view 1st col
     background: rgba(41, 171, 226, 1) url('/img/people-arrow.png') no-repeat 100% 5px;
 
     &:hover{
@@ -890,7 +861,7 @@ textarea:focus, input:focus{
       margin: 6px 5px 4px 5px;
       background-color: #28a6db;
     }
-  } // .team-member .user-name
+  } // .user .user-name
 
   .highlight {
     height: 1px;

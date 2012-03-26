@@ -575,28 +575,6 @@ end
 # Delete timetable items
 ############################################
 
-# Not used: Use json version
-# post '/team-member/:team_member_id/project/:tm_project_id/delete' do
-#   protected!
-
-#   team_member = TeamMember.find(params[:team_member_id])
-  
-#   if team_member.present?
-#     did_delete = team_member.timetable_items.reject! { |proj| proj.id.to_s == params[:tm_project_id] }
-#     team_member.save
-
-#     if did_delete
-#       flash[:success] = "Successfully deleted team member project for #{team_member.name}."
-#     else
-#       flash[:warning] = "Something went wrong when trying to delete a team member project for #{team_member.name}. Please try again later."
-#     end
-#   else
-#     flash[:warning] = "Something went wrong when trying to delete a team member project. Please refresh and try again later."
-#   end
-
-#   redirect back
-# end
-
 post '/:team_id/users/:user_id/timetable-items/:timetable_item_id/delete.json' do
   protected!
   require_team_user!(params[:team_id])

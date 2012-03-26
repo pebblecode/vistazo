@@ -105,8 +105,7 @@ App.User = Backbone.Model.extend({
 });
 
 App.Users = Backbone.Collection.extend({
-  model: App.User,
-  url: "/" + TEAM_ID + "/team-members"
+  model: App.User
 });
 
 App.TimetableItem = Backbone.Model.extend({
@@ -137,8 +136,7 @@ App.Project = Backbone.Model.extend({
 });
 
 App.Projects = Backbone.Collection.extend({
-  model: App.Project,
-  url: "/" + TEAM_ID + "/projects"
+  model: App.Project
 });
 
 
@@ -279,14 +277,15 @@ App.AddUserDialogView = Backbone.View.extend({
 });
 
 App.EditUserDialogView = Backbone.View.extend({
-  events: { 
+  events: {
+    // For both visible and other user timetables
     "click #main .user-name": "render"
   },
   render: function(event) {
     var nameButton = event.target;
     var editUserDialogId = "#edit-user-dialog";
 
-    var userId = $(nameButton).parents(".team-member").first().attr("data-team-member-id");
+    var userId = $(nameButton).parents(".user").first().attr("data-user-id");
     var userTimetable = App.userTimetables.get(userId);
     var editUserVars = {
       userTimetable: userTimetable
@@ -416,7 +415,7 @@ App.UserListingView = Backbone.View.extend({
   _renderVisibleUserTimetable: function(userTimetable) {
     // console.log("Render team member row for: " + JSON.stringify(user) + " (" + user.get("id") + "): " + user.get("name"));
     
-    var rowNum = $(this.el).find(".team-member").length + 1 + 1; // 1 to increment and 1 for header row
+    var rowNum = $(this.el).find(".user").length + 1 + 1; // 1 to increment and 1 for header row
     var oddOrEvenClass = rowNum % 2 == 0 ? "even" : "odd";
     var userTemplateVars = {
       userTimetable: userTimetable,
@@ -510,7 +509,7 @@ App.ExistingProjectsView = Backbone.View.extend({
       projDate: projDate,
       projName: projName
     });
-    var projContainer = $(".box[data-team-member-id=" + userId + "][data-date='" + projDate + "']");
+    var projContainer = $(".box[data-user-id=" + userId + "][data-date='" + projDate + "']");
 
     $(projContainer).append(tempProject);      
     var newProj = $(projContainer).find(".project").last();
@@ -562,7 +561,7 @@ App.ProjectDialogView = Backbone.View.extend({
     this.render(box);
 
     $("#new-project-dialog form input[name=date]").val($(box).attr("data-date"));
-    $("#new-project-dialog form input[name=team_member_id]").val($(box).attr("data-team-member-id"));
+    $("#new-project-dialog form input[name=team_member_id]").val($(box).attr("data-user-id"));
     
     // If clicked on weekend add class for weekend, and place dialog on the left
     // Otherwise, place dialog on the right
@@ -694,7 +693,7 @@ App.ProjectDialogView = Backbone.View.extend({
           projDate: projDate,
           projName: projName
         });
-        var projContainer = $(".box[data-team-member-id=" + userId + "][data-date='" + projDate + "']");
+        var projContainer = $(".box[data-user-id=" + userId + "][data-date='" + projDate + "']");
 
         $(projContainer).append(tempProject);      
         var newProj = $(projContainer).find(".project").last();
@@ -933,10 +932,10 @@ function setupNewProjectDialog() {
       opacity: 0.4,
       stop: function(event, ui) {
         var project = ui.item;
-        var projectUserId = $(project).attr("data-team-member-id");
+        var projectUserId = $(project).attr("data-user-id");
         var projectDate = $(project).attr("data-date");
         
-        var containerUserId = $(project).parents(".team-member").first().attr("data-team-member-id");
+        var containerUserId = $(project).parents(".user").first().attr("data-user-id");
         var containerDate = $(project).parents(".box").first().attr("data-date");
         
         if ((projectUserId != containerUserId) || (projectDate != containerDate)) {
@@ -952,9 +951,9 @@ function setupNewProjectDialog() {
 
 // Update team member project
 function updateTimetableItem(proj) {
-  var fromUserId = $(proj).attr("data-team-member-id");
-  var toUserId = $(proj).parents('.team-member').first().attr("data-team-member-id");
-  var timetableItemId = $(proj).attr("data-team-member-project-id");
+  var fromUserId = $(proj).attr("data-user-id");
+  var toUserId = $(proj).parents('.user').first().attr("data-user-id");
+  var timetableItemId = $(proj).attr("data-user-project-id");
   var toDate = $(proj).parents('.box').first().attr("data-date");
     
   var url = "/" + TEAM_ID + "/timetable-items/" + timetableItemId + "/update.json";
@@ -962,7 +961,7 @@ function updateTimetableItem(proj) {
   $.post(url, { from_user_id: fromUserId, to_user_id: toUserId, to_date: toDate })
     .success(function(response) {
       // Update team member project info in data attributes
-      $(proj).attr("data-team-member-id", toUserId);
+      $(proj).attr("data-user-id", toUserId);
       $(proj).attr("data-date", toDate);
       
       // Update delete link
@@ -983,7 +982,7 @@ function updateTimetableItem(proj) {
     .error(function(data) {
       // Move team member project back
       var fromDate = $(proj).attr("data-date");
-      var fromLocation = $(".team-member[data-team-member-id=" + fromUserId + "]").find(".box[data-date=" + fromDate + "]");
+      var fromLocation = $(".user[data-user-id=" + fromUserId + "]").find(".box[data-date=" + fromDate + "]");
       
       $(proj).remove();
       $(fromLocation).append(proj);
@@ -1012,8 +1011,8 @@ function deleteTimetableItem(proj) {
   var deleteButton = $(proj).find(".delete-tm-project-form button");
 
   if ($(deleteButton).is(":enabled")) {
-    var userId = $(proj).attr("data-team-member-id");
-    var timetableItemId = $(proj).attr("data-team-member-project-id");
+    var userId = $(proj).attr("data-user-id");
+    var timetableItemId = $(proj).attr("data-user-project-id");
       
     var url = "/" + TEAM_ID + "/users/" + userId + "/timetable-items/" + timetableItemId + "/delete.json";
     $(proj).addClass('is_loading');
