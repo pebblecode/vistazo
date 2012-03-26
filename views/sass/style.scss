@@ -1339,7 +1339,7 @@ textarea:focus, input:focus{
   }
 } // #team-name-dialog
 
-.edit-user-dialog {
+#edit-user-dialog {
   display: none; /* Don't display by default */
   margin-top: 20px;
   position: relative;
@@ -1353,7 +1353,7 @@ textarea:focus, input:focus{
     margin-bottom: 15px;
   }
 
-  .edit-user-form button {
+  form button {
     @include button-standard;
     
     margin: 10px 0 30px 0;
