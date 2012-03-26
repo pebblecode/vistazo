@@ -43,7 +43,7 @@
 </script>
 
 <script type="text/template" id="existing-project-template">
-  <div class='project' data-user-id='{{ tmId }}' data-user-project-id='{{ tmProjId }}' data-date='{{ projDate }}'>
+  <div class='project' data-user-id='{{ tmId }}' data-timetable-item-id='{{ tmProjId }}' data-date='{{ projDate }}'>
     <div class='handle-container'>
       <div class='{{ projHandleCssClass }}'></div>
     </div>
@@ -171,7 +171,7 @@
 
         {% _.each(timetableItems, function(ti) { %}
           {% if (ti["date"] == "<%= date %>") { %}
-            <div class="project" data-user-id="{{ userId }}" data-user-project-id="{{ ti['id'] }}" data-date="<%= date %>"> 
+            <div class="project" data-user-id="{{ userId }}" data-timetable-item-id="{{ ti['id'] }}" data-date="<%= date %>"> 
               <div class="handle-container"><div class="handle project-{{ ti['project_id'] }}"></div></div> <p class="project-title" title="{{ ti['project_name'] }}">{{ ti['project_name'].substring(0, 40) }}</p>
               <form class="delete-tm-project-form" action="#" method="post">
                 <button name="delete_project" type="submit" value="true">×</button>

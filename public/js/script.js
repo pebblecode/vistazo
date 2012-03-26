@@ -953,7 +953,7 @@ function setupNewProjectDialog() {
 function updateTimetableItem(proj) {
   var fromUserId = $(proj).attr("data-user-id");
   var toUserId = $(proj).parents('.user').first().attr("data-user-id");
-  var timetableItemId = $(proj).attr("data-user-project-id");
+  var timetableItemId = $(proj).attr("data-timetable-item-id");
   var toDate = $(proj).parents('.box').first().attr("data-date");
     
   var url = "/" + TEAM_ID + "/timetable-items/" + timetableItemId + "/update.json";
@@ -1012,7 +1012,7 @@ function deleteTimetableItem(proj) {
 
   if ($(deleteButton).is(":enabled")) {
     var userId = $(proj).attr("data-user-id");
-    var timetableItemId = $(proj).attr("data-user-project-id");
+    var timetableItemId = $(proj).attr("data-timetable-item-id");
       
     var url = "/" + TEAM_ID + "/users/" + userId + "/timetable-items/" + timetableItemId + "/delete.json";
     $(proj).addClass('is_loading');
