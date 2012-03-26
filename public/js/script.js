@@ -311,10 +311,7 @@ App.UserListingView = Backbone.View.extend({
     var url = "/" + TEAM_ID + "/user-timetables/new-user.json";
     var listingView = this;
 
-    $.post(url, { 
-      name: user.get("name"), 
-      email: user.get("email") 
-    })
+    $.post(url, $("#add-user-form").serialize())
     .success(function(response) {
       var user = new App.User(response["user"]);
       App.users.add(user);
