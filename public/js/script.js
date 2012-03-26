@@ -69,7 +69,20 @@ App.UserTimetables = Backbone.Collection.extend({
   updateTimetableItemForUser: function(ttItem, fromUserId, toUserId) {
     this.removeTimetableItemIdFromUser(ttItem["id"], fromUserId);
     this.addTimetableItemForUser(ttItem, toUserId);
-  }
+  },
+
+  // Array of timetables that are visible
+  visibleTimetables: function() {
+    return _.filter(this.models, function(tt) {
+      return tt.get("is_visible") === true;
+    });
+  },
+  // Array of other timetables that are not visible
+  otherTimetables: function() {
+    return _.filter(this.models, function(tt) {
+      return tt.get("is_visible") !== true;
+    });
+  }  
 });
 
 App.User = Backbone.Model.extend({
@@ -358,11 +371,9 @@ App.UserListingView = Backbone.View.extend({
     $("#timetable").append(newUserRow);
     labelifyTextBoxes();
     
-    // Add team members
-    var listingView = this;
-    App.userTimetables.each(function(userTimetable) {
-      listingView._renderUserTimetable(userTimetable);
-    });
+    // Show users
+    this._renderVisibleUserTimetables();
+    this._renderOtherUsers();
 
     return this;
   },
@@ -378,6 +389,7 @@ App.UserListingView = Backbone.View.extend({
       var userTimetable = new App.UserTimetable(response["user_timetable"]);
       App.userTimetables.add(userTimetable);
 
+      // TODO: Change this
       listingView._renderUserTimetable(userTimetable);
       App.flashView.render("success", "Successfully added '<em>" + user.get('name') + "</em>'.");
     })
@@ -395,7 +407,13 @@ App.UserListingView = Backbone.View.extend({
       }
     });
   },
-  _renderUserTimetable: function(userTimetable) {
+  _renderVisibleUserTimetables: function() {
+    thisView = this;
+    _.each(App.userTimetables.visibleTimetables(), function(userTimetable) {
+      thisView._renderVisibleUserTimetable(userTimetable);
+    });
+  },
+  _renderVisibleUserTimetable: function(userTimetable) {
     // console.log("Render team member row for: " + JSON.stringify(user) + " (" + user.get("id") + "): " + user.get("name"));
     
     var rowNum = $(this.el).find(".team-member").length + 1 + 1; // 1 to increment and 1 for header row
@@ -410,6 +428,19 @@ App.UserListingView = Backbone.View.extend({
 
     setupNewProjectDialog();
     setupProjectEvents();
+  },
+
+  _renderOtherUsers: function() {
+    var otherUsersVars = {
+      userTimetables: App.userTimetables.otherTimetables()
+    };
+    var otherUsersHtml = _.template($("#other-users-template").html(), otherUsersVars);
+
+    if ($("#other-users").length > 0) {
+      $("#other-users").replaceWith(otherUsersHtml);
+    } else {
+      $("#new-user-row").after(otherUsersHtml);  
+    }
   }
 });
 

@@ -193,6 +193,22 @@
   </tr>
 </script>
 
+<script type="text/template" id="other-users-template">
+  {% if (userTimetables.length > 0) { %}
+    <tr id="other-users">
+      <td colspan="9" class="last-row col1">
+        Other users: 
+        <ol>
+          {% _.each(userTimetables, function(ut) { %}
+            {% var comma = (ut === _.last(userTimetables)) ? "" : ","; %}
+            <li class="user-name team-member" data-team-member-id="{{ ut.get("user_id") }}"><a href="#">{{ ut.userName() }}</a>{{ comma }}</li>
+          {% }); %}
+        </ol>
+      </td>
+    </tr>
+  {% } %}
+</script>
+
 <script type="text/template" id="edit-user-dialog-template">
   {% var teamId = userTimetable.get("team_id") %}
   {% var userId = userTimetable.get("user_id") %}
