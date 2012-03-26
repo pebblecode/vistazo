@@ -11,6 +11,7 @@ $flash_green: #57A957;
 $flash_black: #404040;
 $flash_yellow: #EEDC94;
 $vistazo_blue: #29ABE2;
+$vistazo_gray: #cccccc;
 
 $warning_bg_color: #EEDC94;
 $warning_color: #000000;
@@ -603,11 +604,10 @@ textarea:focus, input:focus{
       vertical-align: bottom;
     }
     
-    .last-row {
+    .content-footer {
       border-right: none; /* Cancel out border on last column */
-      padding: 15px 0 10px;
       
-      #add-user-button{
+      #add-user-button {
         text-decoration: none;
         color: #999;
         padding: 2px 5px;
@@ -620,7 +620,7 @@ textarea:focus, input:focus{
         background: #fff;
         
         
-        &:hover{
+        &:hover {
           color: #777;
         
           &:after{
@@ -628,12 +628,12 @@ textarea:focus, input:focus{
           }
         }
         
-        &:active{
+        &:active {
           top: 1px;
           background: #eee;
         }
         
-        &:after{
+        &:after {
           content: "+";
           font-family: $web_symbols_font_family;
           font-size: 12px;
@@ -643,7 +643,7 @@ textarea:focus, input:focus{
           top: -3px;
         }
       }
-    } // .last-row
+    } // .content-footer
 
     tr {
       &.even {
@@ -785,7 +785,7 @@ textarea:focus, input:focus{
   .col-last {
     width: 2%;
   }
-  
+
   .today{
     background-image: url(../img/hatch3.png);
     width: 13.3333%;
@@ -832,37 +832,6 @@ textarea:focus, input:focus{
     text-transform: uppercase;
   }
 
-  .user-name {
-    @include border-radius(5px);
-    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-    
-    background-color: rgba(41, 171, 226, 1);
-    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-    color: #fff;
-    font-size: 14px;
-    line-height: 20px;
-    font-weight: bold;
-    margin: 5px;
-    border: 1px solid #259acb;
-    padding: 0px 5px;
-    
-    display: block;
-    text-decoration: none;
-    outline: none;
-  } // .user-name
-  .user .user-name { // On team view 1st col
-    background: rgba(41, 171, 226, 1) url('/img/people-arrow.png') no-repeat 100% 5px;
-
-    &:hover{
-      text-shadow: 0 2px 1px rgba(0, 0, 0, 0.25);
-      @include emboss-box-shadow-small;
-    }
-    &:active {
-      margin: 6px 5px 4px 5px;
-      background-color: #28a6db;
-    }
-  } // .user .user-name
-
   .highlight {
     height: 1px;
     background-color: rgba(255, 255, 255, 0.2);
@@ -878,6 +847,80 @@ textarea:focus, input:focus{
     color: #e6e6e6;
   }
   
+  #content .user-name {
+    @include border-radius(5px);
+    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+    
+    
+    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+    color: #fff;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: bold;
+    margin: 5px;
+    border: 1px solid #259acb;
+    padding: 0px 5px;
+    
+    display: block;
+    text-decoration: none;
+    outline: none;
+
+    background: rgba(41, 171, 226, 1) url('/img/people-arrow.png') no-repeat 100% 5px;
+
+    &:hover {
+      text-shadow: 0 2px 1px rgba(0, 0, 0, 0.25);
+      @include emboss-box-shadow-small;
+    }
+    
+    &:active {
+      margin: 6px 5px 4px 5px;
+      background-color: #28a6db;
+    }
+  } // #content .user-name
+
+  #new-user-row {
+    td {
+      padding: 25px 0 10px;
+    }
+  }
+
+  #other-users {
+    td {
+      padding: 10px 0 0;  
+    }
+
+    h3 {
+      float: left;
+      margin-right: 5px;
+      margin-left: 7px;
+      color: $vistazo_gray;
+
+      font-size: 14px;
+      line-height: 16px;
+    }
+
+    li {
+      color: $vistazo_gray;
+
+      font-size: 14px;
+      line-height: 16px;
+    }
+
+    .user {
+      float: left;
+      margin-right: 5px;
+
+      .user-name {
+        color: $vistazo_gray;
+        font-size: 14px;
+        line-height: 16px;
+
+        &:hover {
+          color: $vistazo_blue;
+        }
+      } // .user-name
+    } // .user
+  } // #other-users
 } // #main
 
 /* @end */
@@ -1547,7 +1590,7 @@ textarea:focus, input:focus{
   position: relative;
 }
 
-.last-row.col1{
+.content-footer.col1{
   position: relative;
 }
 
