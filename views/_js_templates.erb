@@ -142,16 +142,19 @@
   </table>
 </script>
 
-<script type="text/template" id="team-member-template">
+<script type="text/template" id="user-template">
+  {% var teamId = userTimetable.get("team_id") %}
   {% var userId = userTimetable.get("user_id") %}
   {% var userName = userTimetable.userName() %}
   {% var userEmail = userTimetable.userEmail() %}
+  {% var timetableItems = userTimetable.get("timetable_items") %}
+  {% var isFirst = (App.userTimetables.first() === userTimetable) %}
 
   <tr class="row-divider">
     <td colspan="9"><hr/></td>
   </tr>  <!--the divider-->
   <tr class="team-member {{ oddOrEvenClass }}" data-team-member-id="{{ userId }}">
-    <td class="{{ rowClass }} col1" title="{{ userName }} <{{ userEmail }}>">
+    <td class="col1" title="{{ userName }} <{{ userEmail }}>">
       <a href="#" class="user-name">
         {{ userName.substring(0, 40) }}
       </a>
@@ -164,7 +167,7 @@
         data-team-member-id: Used for adding a new project to know the team member to add to
       %>
       <% date = (@monday_date - 1.day) + work_day.day %>
-      <td class="box {{ rowClass }} <%= "col#{work_day + prev_cols}" %>" data-date="<%= date %>" data-team-member-id="{{ userId }}">
+      <td class="box <%= "col#{work_day + prev_cols}" %>" data-date="<%= date %>" data-team-member-id="{{ userId }}">
 
         {% _.each(timetableItems, function(ti) { %}
           {% if (ti["date"] == "<%= date %>") { %}
@@ -186,7 +189,7 @@
         <% end %>
       </td>
     <% end %>
-    <td class="{{ rowClass }} col-last" %></td>
+    <td class="col-last" %></td>
   </tr>
 </script>
 

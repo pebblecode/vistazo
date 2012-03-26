@@ -399,17 +399,12 @@ App.UserListingView = Backbone.View.extend({
     // console.log("Render team member row for: " + JSON.stringify(user) + " (" + user.get("id") + "): " + user.get("name"));
     
     var rowNum = $(this.el).find(".team-member").length + 1 + 1; // 1 to increment and 1 for header row
-    var rowClass = "row" + rowNum;
     var oddOrEvenClass = rowNum % 2 == 0 ? "even" : "odd";
     var weekTemplateVars = {
-      teamId: TEAM_ID,
       userTimetable: userTimetable,
-      oddOrEvenClass: oddOrEvenClass,
-      rowClass: rowClass,
-      timetableItems: userTimetable.get("timetable_items"),
-      isFirst: (App.userTimetables.first() == userTimetable)
+      oddOrEvenClass: oddOrEvenClass
     };
-    var week = _.template($("#team-member-template").html(), weekTemplateVars);
+    var week = _.template($("#user-template").html(), weekTemplateVars);
     
     $(this.el).find('#content').append(week);
 
