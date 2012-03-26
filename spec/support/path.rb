@@ -14,7 +14,7 @@ module PathSpecHelper
   end
   
   ############################################################################
-  # Teams/users
+  # Teams
   ############################################################################
   
   def team_id_path(team_id)
@@ -33,6 +33,10 @@ module PathSpecHelper
     "/#{team_id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
   end
   
+  ############################################################################
+  # Teams/users
+  ############################################################################
+
   def user_team_current_week_path(user)
     team_current_week_path(user.teams.first)
   end
@@ -40,7 +44,19 @@ module PathSpecHelper
   def user_team_path(user)
     team_path(user.teams.first)
   end
+
+  def team_add_user(team)
+    "/#{team.id}/user-timetables/new-user.json"
+  end
   
+  def team_update_user(team, user)
+    "/#{team.id}/users/#{user.id}"
+  end
+
+  def team_delete_user(team, user)
+    "/#{team.id}/users/#{user.id}/delete"
+  end
+
   
   ############################################################################
   # Projects
@@ -68,18 +84,6 @@ module PathSpecHelper
 
   def delete_timetable_item_path(team, user, timetable_item)
     "/#{team.id}/users/#{user.id}/timetable-items/#{timetable_item.id}/delete.json"
-  end
-  
-  ############################################################################
-  # Registration
-  ############################################################################
-  
-  def registration_with_team_id_and_user_id_path(team_id, user_id)
-    "/#{team_id}/users/#{user_id}/register"
-  end
-  
-  def activation_with_team_id_and_user_id_path(team_id, user_id)
-    "/#{team_id}/users/#{user_id}/activate"
   end
   
 end

@@ -24,6 +24,10 @@ App.UserTimetable = Backbone.Model.extend({
   userName: function() {
     return App.users.get(this.get("user_id")).get("name");
   },
+  // Convenience method fo getting access to the user email
+  userEmail: function() {
+    return App.users.get(this.get("user_id")).get("email");
+  },
   addTimetableItem: function(ttItem) {
     var newTimetableItems = this.get("timetable_items");
     newTimetableItems.push(ttItem);
@@ -343,8 +347,7 @@ App.UserListingView = Backbone.View.extend({
     var oddOrEvenClass = rowNum % 2 == 0 ? "even" : "odd";
     var weekTemplateVars = {
       teamId: TEAM_ID,
-      userId: userTimetable.get("user_id"),
-      userName: userTimetable.userName(),
+      userTimetable: userTimetable,
       oddOrEvenClass: oddOrEvenClass,
       rowClass: rowClass,
       timetableItems: userTimetable.get("timetable_items"),
@@ -372,7 +375,7 @@ App.ProjectListingView = Backbone.View.extend({
 
     var projectListingVars = {
       projects: App.teamProjects.toArray(),
-      users: App.users.toArray()
+      userTimetables: App.userTimetables.toArray()
     };
     var projectListing = _.template($("#project-listing-template").html(), projectListingVars);
     $("#content").append(projectListing);
@@ -868,7 +871,7 @@ function setupNewProjectDialog() {
 
 function setupEditUserDialog() {
   // Team member edit
-  $( ".edit-team-member-dialog" ).each(function() {
+  $( ".edit-user-dialog" ).each(function() {
     // Create dialog with id instead of class
     $(this).dialog({
       modal: true,
@@ -880,7 +883,7 @@ function setupEditUserDialog() {
       closeText: "'"
     })
   });
-  $("#main .team-member-name").click(function() {
+  $("#main .user-name").click(function() {
     var dialog_id = $(this).attr("href");
     $(dialog_id).dialog('open');
     overlayCloseOnClick();

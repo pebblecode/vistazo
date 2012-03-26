@@ -861,7 +861,7 @@ textarea:focus, input:focus{
     text-transform: uppercase;
   }
 
-  .team-member-name {
+  .user-name {
     @include border-radius(5px);
     @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
     
@@ -878,8 +878,8 @@ textarea:focus, input:focus{
     display: block;
     text-decoration: none;
     outline: none;
-  } // .team-member-name
-  .team-member .team-member-name { // On team view 1st col
+  } // .user-name
+  .team-member .user-name { // On team view 1st col
     background: rgba(41, 171, 226, 1) url('/img/people-arrow.png') no-repeat 100% 5px;
 
     &:hover{
@@ -890,7 +890,7 @@ textarea:focus, input:focus{
       margin: 6px 5px 4px 5px;
       background-color: #28a6db;
     }
-  } // .team-member .team-member-name
+  } // .team-member .user-name
 
   .highlight {
     height: 1px;
@@ -1261,15 +1261,6 @@ textarea:focus, input:focus{
     } // li
   } // .listing
   
-  .pending-users-title, .add-new-user-title, .current-users-title {
-    margin-top: 20px;
-    margin-bottom: 5px;
-  }
-  
-  .add-new-user-title{
-    margin-bottom: 10px;
-  }
-  
   .new-object-fieldset {
     padding: 1px;
     margin-top: 0;
@@ -1290,7 +1281,7 @@ textarea:focus, input:focus{
   
 } // #team-users-dialog
 
-#team-name-dialog, .edit-team-member-dialog {
+#team-name-dialog {
   display: none; /* Don't display by default */
   margin-top: 20px;
   position: relative;
@@ -1331,11 +1322,7 @@ textarea:focus, input:focus{
       } // a
     } // ul
   } // #switch-teams
-  
-  .add-new-user-title {
-    @include dialog-title;
-  }
-  
+
   #new-team {
     legend {
       display: none;
@@ -1351,6 +1338,39 @@ textarea:focus, input:focus{
     }
   }
 } // #team-name-dialog
+
+.edit-user-dialog {
+  display: none; /* Don't display by default */
+  margin-top: 20px;
+  position: relative;
+
+  h4 {
+    display: block;
+    @include dialog-title;
+  }
+  
+  .user-email {
+    margin-bottom: 15px;
+  }
+
+  .edit-user-form button {
+    @include button-standard;
+    
+    margin: 10px 0 30px 0;
+      
+    &:hover{
+      background-color: #d4eef9;
+      border: 1px solid #666;
+      color: #666;
+      @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.3));
+    }
+    &:active{
+      top: 1px;
+    }
+  } // button
+} // .edit-user-dialog
+
+
 
 #add-user-dialog {
   ol {

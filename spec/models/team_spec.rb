@@ -30,11 +30,29 @@ describe "Team model" do
     end
   end
 
+  describe "add user, user timetable is_visible" do
+    it "should set is_visible to true by default" do
+      @team.add_user(@user)
+      @team.user_timetable(@user).is_visible.should == true
+    end
+
+    it "should set is_visible to true if explicitly passed" do
+      @team.add_user(@user, true)
+      @team.user_timetable(@user).is_visible.should == true
+    end
+
+    it "should set is_visible to false if explicitly passed" do
+      @team.add_user(@user, false)
+      @team.user_timetable(@user).is_visible.should == false
+    end
+  end
+
   describe "delete user" do
     before do
       @team.add_user(@user)
       @team.delete_user(@user)
       @team.reload
+      @user.reload
     end
 
     it "should delete user team from user" do
@@ -58,6 +76,26 @@ describe "Team model" do
 
       user_timetable.user.should == @user
       user_timetable.timetable_items.should == [@timetable_item]
+    end
+  end
+
+  describe "set_user_timetable_is_visible" do
+    before do
+      @team.add_user(@user)
+    end
+
+    it "should set it for true" do
+      @team.set_user_timetable_is_visible(@user, true)
+      @team.reload
+
+      @team.user_timetable(@user).is_visible.should == true
+    end
+
+    it "should set it for false" do
+      @team.set_user_timetable_is_visible(@user, false)
+      @team.reload
+
+      @team.user_timetable(@user).is_visible.should == false
     end
   end
 

@@ -27,7 +27,7 @@ describe "Homepage" do
   
   it "should have 'Start using Vistazo'" do
     get '/'
-    last_response.body.should include("Start using Vistazo")
+    last_response.body.should include("Start using vistazo")
   end
 end
 
@@ -42,6 +42,9 @@ describe "Teams:" do
     @session = nil
   end
   
+  # New team: see new_team_spec.rb
+  # Edit team: see team_name_spec.rb
+
   describe "Teams page" do
     it "should redirect to the home page and show an error if it is an invalid team" do
       create_normal_user(@session)
@@ -65,11 +68,9 @@ describe "Teams:" do
       follow_redirect_with_session_login!(@session)
       
       last_response.body.should include("You must be logged in")
-      last_response.body.should include("Start using Vistazo")
+      last_response.body.should include("Start using vistazo")
     end
   end
-  
-  pending "Can't have multiple people with the same email address"
 
   describe "User going into the wrong team" do
     it "should redirect them to their team week view and show an error message" do
@@ -104,6 +105,114 @@ describe "Teams:" do
   
 end
 
+describe "Users:" do
+  before do
+    http_authorization!
+    @session = init_omniauth_session
+
+    create_normal_user(@session)
+    @user = User.first
+    @team = @user.teams.first
+
+    login_normal_user_with_session!(@session)
+  end
+  
+  after do
+    clean_db!
+    @session = nil
+  end
+
+  describe "update user" do
+    it "should update user name" do
+      params = {
+        :name => "New face",
+        :is_visible => true
+      }
+      post_params! team_update_user(@team, @user), params, @session
+      @user.reload
+
+      @user.name.should == "New face"
+    end
+
+    describe "is_visible status" do
+      before do
+        @team.user_timetable(@user).is_visible.should == true
+      end
+
+      it "should not update if name is not sent as well" do
+        params = {
+          :is_visible => false
+        }
+        post_params! team_update_user(@team, @user), params, @session
+        @team.reload
+
+        # Should not change
+        @team.user_timetable(@user).is_visible.should == true
+      end
+
+      it "should update for true" do
+        params = {
+          :name => "Something",
+          :is_visible => true
+        }
+        post_params! team_update_user(@team, @user), params, @session
+        @team.reload
+
+        @team.user_timetable(@user).is_visible.should == true
+      end
+
+      it "should update for false (but param of false is not actually passed in html in practice)" do
+        params = {
+          :name => "Something",
+          :is_visible => false
+        }
+        post_params! team_update_user(@team, @user), params, @session
+        @team.reload
+
+        @team.user_timetable(@user).is_visible.should == false
+      end
+
+      it "should update to false if is_visible is not passed in params" do
+        params = {
+          :name => "Something"
+        }
+        post_params! team_update_user(@team, @user), params, @session
+        @team.reload
+
+        @team.user_timetable(@user).is_visible.should == false
+      end
+    end
+  end
+
+  describe "delete user" do
+    before do
+      new_user_params = { 
+        :name => "Karen O", 
+        :email => "karen.o@gmail.com"
+      }
+      post_params! team_add_user(@team), new_user_params, @session
+      @team.reload
+
+      @new_user = User.find_by_email(new_user_params[:email])
+    end
+
+    it "should delete user" do
+      User.find(@new_user.id).present?.should == true
+      post_params! team_delete_user(@team, @new_user), nil, @session
+
+      User.find(@new_user.id).present?.should == false
+    end
+
+    it "should delete user timetable" do
+      @team.has_user_timetable?(@new_user).should == true
+      post_params! team_delete_user(@team, @new_user), nil, @session
+      @team.reload
+
+      @team.has_user_timetable?(@new_user).should == false
+    end
+  end
+end
+
 describe "Timetable items:" do
   before do
     http_authorization!
@@ -127,10 +236,7 @@ describe "Timetable items:" do
   
   describe "Delete timetable items" do
     it "should delete" do
-      debugger
       post_params! delete_timetable_item_path(@team, @user, @timetable_item), nil, @session
-
-      debugger
     end
   end
 
