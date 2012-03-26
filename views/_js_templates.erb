@@ -3,7 +3,7 @@
 <script type="text/template" id="new-project-dialog-template">
   <div id="new-project-dialog">
     <a href="#" class="close">'</a>
-    <form id="new-tm-project-form" action="/" method="post">
+    <form id="new-timetable-item-form" action="/" method="post">
       <input type="hidden" name="date" value=""/>
       <input type="hidden" name="team_member_id" value=""/>
       
@@ -48,7 +48,7 @@
       <div class='{{ projHandleCssClass }}'></div>
     </div>
     <p class='project-title' title='{{ projName }}'>{{ projName.substring(0, 40) }}</p>
-    <form class='delete-tm-project-form' action='#' method='post'>
+    <form class='delete-timetable-item-form' action='#' method='post'>
       <button name='delete_project' type='submit' value='true'>×</button>
     </form>
   </div>
@@ -173,7 +173,7 @@
           {% if (ti["date"] == "<%= date %>") { %}
             <div class="project" data-user-id="{{ userId }}" data-timetable-item-id="{{ ti['id'] }}" data-date="<%= date %>"> 
               <div class="handle-container"><div class="handle project-{{ ti['project_id'] }}"></div></div> <p class="project-title" title="{{ ti['project_name'] }}">{{ ti['project_name'].substring(0, 40) }}</p>
-              <form class="delete-tm-project-form" action="#" method="post">
+              <form class="delete-timetable-item-form" action="#" method="post">
                 <button name="delete_project" type="submit" value="true">×</button>
               </form>
             </div>

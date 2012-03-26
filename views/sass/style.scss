@@ -718,13 +718,13 @@ textarea:focus, input:focus{
               }
             } // .handle-container
             
-            .delete-tm-project-form {
+            .delete-timetable-item-form {
               display: none; /* Hide delete form if loading */
-            } // .delete-tm-project-form
+            } // .delete-timetable-item-form
             
           } // &.is_loading
           
-          .delete-tm-project-form {
+          .delete-timetable-item-form {
             display: inline;
             
             button {
@@ -980,7 +980,7 @@ textarea:focus, input:focus{
       background-image: url("/img/point-right.png");
     }
   }
-} // #new-tm-project-form
+} // #new-timetable-item-form
 
 /* Generic jquery-ui styles */
 .ui-dialog {

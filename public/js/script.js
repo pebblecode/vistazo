@@ -485,9 +485,9 @@ App.ExistingProjectsView = Backbone.View.extend({
     // TODO: Figure out how to DRY this up
     var projectTemplate = _.template($("#existing-project-template").html());
 
-    var userId = $(button).parents('#new-tm-project-form').find("input[name=team_member_id]").val();
+    var userId = $(button).parents('#new-timetable-item-form').find("input[name=team_member_id]").val();
     var projId = $(button).val();
-    var projDate = $(button).parents('#new-tm-project-form').find("input[name=date]").val();
+    var projDate = $(button).parents('#new-timetable-item-form').find("input[name=date]").val();
     var projName = $(button).attr("title");
     var projHandleCssClass = $(button).parent().find(".handle").attr("class");
     
@@ -666,8 +666,8 @@ App.ProjectDialogView = Backbone.View.extend({
 
     // AJAX-ify add new project
     $("#new-project-dialog .new-object-fieldset .submit-button").click(function() {
-      var userId = $(this).parents('#new-tm-project-form').find("input[name=team_member_id]").val();
-      var projDate = $(this).parents('#new-tm-project-form').find("input[name=date]").val();
+      var userId = $(this).parents('#new-timetable-item-form').find("input[name=team_member_id]").val();
+      var projDate = $(this).parents('#new-timetable-item-form').find("input[name=date]").val();
       var projNameTextbox = $(this).parent().find("input[name=project_name]");
       var projName = projNameTextbox.val();
       
@@ -893,23 +893,23 @@ function setupProjectEvents() {
 
   // Timetable item delete button
   // Only show on hover
-  $(".project .delete-tm-project-form button").hide();
+  $(".project .delete-timetable-item-form button").hide();
   $(".project").hover(
     function() {
-      $(this).find(".delete-tm-project-form button").fadeIn(200);
+      $(this).find(".delete-timetable-item-form button").fadeIn(200);
     },
     function() {
-      $(this).find(".delete-tm-project-form button").fadeOut(100);
+      $(this).find(".delete-timetable-item-form button").fadeOut(100);
     }
   );
   
   // AJAX-ify delete
-  $(".project .delete-tm-project-form button").click(
+  $(".project .delete-timetable-item-form button").click(
     function(event) {
       deleteTimetableItem($(this).first().parents(".project").first());
       return false;
     }
-  ); // $(".project .delete-tm-project-form button").click
+  ); // $(".project .delete-timetable-item-form button").click
 
   // Hide project add button on .project hover
   $(".project").hover(
@@ -965,11 +965,11 @@ function updateTimetableItem(proj) {
       $(proj).attr("data-date", toDate);
       
       // Update delete link
-      var delete_url = $(proj).find(".delete-tm-project-form").attr("action");
+      var delete_url = $(proj).find(".delete-timetable-item-form").attr("action");
       // Should be in the form /users/[user id]/project/[timetable id]/delete
       var old_user_id = delete_url.split("/")[2];
       var new_delete_url = delete_url.replace(old_user_id, toUserId);
-      $(proj).find(".delete-tm-project-form").attr("action", new_delete_url);
+      $(proj).find(".delete-timetable-item-form").attr("action", new_delete_url);
 
       setupProjectEvents();
 
@@ -1008,7 +1008,7 @@ function updateTimetableItem(proj) {
 
 // Delete team member project
 function deleteTimetableItem(proj) {
-  var deleteButton = $(proj).find(".delete-tm-project-form button");
+  var deleteButton = $(proj).find(".delete-timetable-item-form button");
 
   if ($(deleteButton).is(":enabled")) {
     var userId = $(proj).attr("data-user-id");
