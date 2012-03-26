@@ -404,7 +404,7 @@ App.UserListingView = Backbone.View.extend({
       userTimetable: userTimetable,
       oddOrEvenClass: oddOrEvenClass
     };
-    var userTimetableHtml = _.template($("#user-template").html(), userTemplateVars);
+    var userTimetableHtml = _.template($("#visible-user-template").html(), userTemplateVars);
     
     $(this.el).find('#content').append(userTimetableHtml);
 
