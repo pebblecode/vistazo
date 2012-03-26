@@ -400,13 +400,13 @@ App.UserListingView = Backbone.View.extend({
     
     var rowNum = $(this.el).find(".team-member").length + 1 + 1; // 1 to increment and 1 for header row
     var oddOrEvenClass = rowNum % 2 == 0 ? "even" : "odd";
-    var weekTemplateVars = {
+    var userTemplateVars = {
       userTimetable: userTimetable,
       oddOrEvenClass: oddOrEvenClass
     };
-    var week = _.template($("#user-template").html(), weekTemplateVars);
+    var userTimetableHtml = _.template($("#user-template").html(), userTemplateVars);
     
-    $(this.el).find('#content').append(week);
+    $(this.el).find('#content').append(userTimetableHtml);
 
     setupNewProjectDialog();
     setupProjectEvents();
