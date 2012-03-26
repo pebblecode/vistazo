@@ -122,6 +122,49 @@ describe "Users:" do
     @session = nil
   end
 
+  describe "create user" do
+    before do
+      @valid_params = {
+        :name => "Johnny Cash",
+        :email => "johnny@folsom.com",
+        :is_visible => true
+      }
+    end
+
+    it "should work" do
+      post_params! team_add_user(@team), @valid_params, @session
+      @team.reload
+      @new_user = User.find_by_email(@valid_params[:email])
+      
+      @new_user.name.should == @valid_params[:name]
+      @new_user.email.should == @valid_params[:email]
+
+      @team.user_timetable(@new_user).is_visible.should == true
+    end
+
+    describe "should work for users where users are not visible" do
+      it "when :is_visible is false" do
+        @valid_params[:is_visible] = false
+
+        post_params! team_add_user(@team), @valid_params, @session
+        @team.reload
+        @new_user = User.find_by_email(@valid_params[:email])
+
+        @team.user_timetable(@new_user).is_visible.should == false
+      end
+
+      it "when :is_visible is not present in params" do
+        @valid_params.delete(:is_visible)
+
+        post_params! team_add_user(@team), @valid_params, @session
+        @team.reload
+        @new_user = User.find_by_email(@valid_params[:email])
+
+        @team.user_timetable(@new_user).is_visible.should == false
+      end
+    end
+  end
+
   describe "update user" do
     it "should update user name" do
       params = {
