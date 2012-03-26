@@ -22,11 +22,25 @@ App.UserTimetable = Backbone.Model.extend({
   idAttribute: "user_id",
   // Convenience method fo getting access to the user name
   userName: function() {
-    return App.users.get(this.get("user_id")).get("name");
+    var user = App.users.get(this.get("user_id"));
+
+    if (user === undefined) {
+      console.log("Undefined user (for userName): " + this.get("user_id"));
+      return "";
+    } else {
+      return user.get("name");  
+    }
   },
   // Convenience method fo getting access to the user email
   userEmail: function() {
-    return App.users.get(this.get("user_id")).get("email");
+    var user = App.users.get(this.get("user_id"));
+
+    if (user === undefined) {
+      console.log("Undefined user (for userEmail): " + this.get("user_id"));
+      return "";
+    } else {
+      return user.get("email");
+    }
   },
   addTimetableItem: function(ttItem) {
     var newTimetableItems = this.get("timetable_items");
