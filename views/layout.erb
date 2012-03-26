@@ -47,9 +47,12 @@
       // Set up backbone
       ///////////////////////////////////////////////////////////////
       App.flashView = new App.FlashView({el: "#main"});
+
+      // Dialogs
       App.projectDialogView = new App.ProjectDialogView({el: "body"});
       App.teamDialogView = new App.TeamDialogView({el: "body"});
       App.addUserDialogView = new App.AddUserDialogView({el: "body"});
+      App.editUserDialogView = new App.EditUserDialogView({el: "body"});
 
       App.teamProjects = new App.Projects;
       App.teamProjects.reset(<%= @projects.to_json %>);

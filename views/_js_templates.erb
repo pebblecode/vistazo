@@ -146,47 +146,15 @@
   {% var userId = userTimetable.get("user_id") %}
   {% var userName = userTimetable.userName() %}
   {% var userEmail = userTimetable.userEmail() %}
-  {% var isVisible = userTimetable.get("is_visible") %}
 
   <tr class="row-divider">
     <td colspan="9"><hr/></td>
   </tr>  <!--the divider-->
   <tr class="team-member {{ oddOrEvenClass }}" data-team-member-id="{{ userId }}">
     <td class="{{ rowClass }} col1" title="{{ userName }} <{{ userEmail }}>">
-      <a href="#edit-tm-{{ userId }}" class="user-name">
+      <a href="#" class="user-name">
         {{ userName.substring(0, 40) }}
       </a>
-      
-      <div id="edit-tm-{{ userId }}" class="edit-user-dialog" title="Edit user">
-        <h4>Name</h4>
-        <form action="/{{ teamId }}/users/{{ userId }}" method="post" class="edit-user-form">
-          <fieldset class="update-object-fieldset" title="Edit team member">
-            <label for="name">Name</label>
-            <input type="text" name="name" class="new-object-text-box" value="{{ userName }}"/>
-          </fieldset> <!-- Edit user name -->
-
-          <div class="user-email">
-            <h4>Email</h4>
-            <p>{{ userEmail }}</p>
-          </div>
-
-          <div class="visible-on-timetable">
-            <h4>Visibility on timetable</h4>
-            <input id="new-user-visible" type="checkbox" name="is_visible" value="true" {{ isVisible ? "checked='checked'" : "" }} />
-            <label for="new-user-visible">Appear on timetable</label>
-          </div>
-          
-          <button type="submit" class="submit-button">update</button>
-        </form>
-        
-        <form action="/{{ teamId }}/users/{{ userId }}/delete" method="post">
-          <fieldset class="delete-object-fieldset" title="Delete user">
-            <legend>Delete</legend>
-            <p class="warning-icon">W</p><p class="warning-msg">All timetable items associated with '{{ userName }}' will also be deleted.</p>
-            <button type="submit" class="submit-button">delete</button>
-          </fieldset> <!-- Edit team member -->
-        </form>
-      </div> <!-- .edit-user-dialog -->
     </td>
     
     <% prev_cols = 1 %>
@@ -220,6 +188,45 @@
     <% end %>
     <td class="{{ rowClass }} col-last" %></td>
   </tr>
+</script>
+
+<script type="text/template" id="edit-user-dialog-template">
+  {% var teamId = userTimetable.get("team_id") %}
+  {% var userId = userTimetable.get("user_id") %}
+  {% var userName = userTimetable.userName() %}
+  {% var userEmail = userTimetable.userEmail() %}
+  {% var isVisible = userTimetable.get("is_visible") %}
+
+  <div id="edit-user-dialog" title="Edit user">
+    <h4>Name</h4>
+    <form action="/{{ teamId }}/users/{{ userId }}" method="post" class="edit-user-form">
+      <fieldset class="update-object-fieldset" title="Edit team member">
+        <label for="name">Name</label>
+        <input type="text" name="name" class="new-object-text-box" value="{{ userName }}"/>
+      </fieldset> <!-- Edit user name -->
+
+      <div class="user-email">
+        <h4>Email</h4>
+        <p>{{ userEmail }}</p>
+      </div>
+
+      <div class="visible-on-timetable">
+        <h4>Visibility on timetable</h4>
+        <input id="new-user-visible" type="checkbox" name="is_visible" value="true" {{ isVisible ? "checked='checked'" : "" }} />
+        <label for="new-user-visible">Appear on timetable</label>
+      </div>
+
+      <button type="submit" class="submit-button">update</button>
+    </form>
+
+    <form action="/{{ teamId }}/users/{{ userId }}/delete" method="post">
+      <fieldset class="delete-object-fieldset" title="Delete user">
+        <legend>Delete</legend>
+        <p class="warning-icon">W</p><p class="warning-msg">All timetable items associated with '{{ userName }}' will also be deleted.</p>
+        <button type="submit" class="submit-button">delete</button>
+      </fieldset> <!-- Edit team member -->
+    </form>
+  </div>
 </script>
 
 <script type="text/template" id="new-user-row-template">

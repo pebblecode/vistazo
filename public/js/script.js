@@ -265,6 +265,51 @@ App.AddUserDialogView = Backbone.View.extend({
   }
 });
 
+App.EditUserDialogView = Backbone.View.extend({
+  events: { 
+    "click #main .user-name": "render"
+  },
+  render: function(event) {
+    var nameButton = event.target;
+    var editUserDialogId = "#edit-user-dialog";
+
+    var userId = $(nameButton).parents(".team-member").first().attr("data-team-member-id");
+    var userTimetable = App.userTimetables.get(userId);
+    var editUserVars = {
+      userTimetable: userTimetable
+    };
+
+    // Create dialog
+    var editUserDialog = _.template($("#edit-user-dialog-template").html(), editUserVars);
+
+    if ($(editUserDialogId).length <= 0) {
+      $(this.el).append(editUserDialog);
+    } else {
+      $(editUserDialogId).replaceWith(editUserDialog);
+    }
+
+    $(editUserDialogId).dialog({
+      modal: true,
+      closeOnEscape: true,
+      minWidth: 470,
+      minHeight: 85,
+      autoOpen: true,
+      position: 'top',
+      closeText: "'",
+      open: function() {
+        overlayCloseOnClick();
+      },
+      close: function() {
+        $(editUserDialogId).remove();
+      }
+    });
+
+    event.preventDefault();
+  }
+});
+
+
+
 App.UserListingView = Backbone.View.extend({
   events: { 
     "click #add-user-dialog .submit-button": "handleNewUser"
@@ -368,7 +413,6 @@ App.UserListingView = Backbone.View.extend({
     
     $(this.el).find('#content').append(week);
 
-    setupEditUserDialog();
     setupNewProjectDialog();
     setupProjectEvents();
   }
@@ -879,30 +923,6 @@ function setupNewProjectDialog() {
   })
   .disableSelection();
 }
-
-function setupEditUserDialog() {
-  // Team member edit
-  $( ".edit-user-dialog" ).each(function() {
-    // Create dialog with id instead of class
-    $(this).dialog({
-      modal: true,
-      closeOnEscape: true,
-      minWidth: 470,
-      minHeight: 85,
-      autoOpen: false,
-      position: 'top',
-      closeText: "'"
-    })
-  });
-  $("#main .user-name").click(function() {
-    var dialog_id = $(this).attr("href");
-    $(dialog_id).dialog('open');
-    overlayCloseOnClick();
-    
-    return false;
-  });
-}
-
 
 // Update team member project
 function updateTimetableItem(proj) {
