@@ -53,4 +53,22 @@ feature "Team name" do
     
     page.should have_content("Updated team name failed. Team name was empty.")
   end
+
+  scenario "Updating to a malicious <script> tag name should be sanitized" do
+    visit "/"
+    click_link "start-btn"
+    
+    within_fieldset("Team name") do
+      fill_in 'team_name', :with => "Ha! <script type='text/javascript'>alert('hello!');</script>"
+      click_button 'update'
+    end
+
+    within("#team-name h2") do
+      # Note: it is sanitized with &lt; and &gt; in `page` output,
+      # but is shown as as < and > in `have_content`. If the script tags 
+      # are in the content of the tests, they are stripped out
+      # See https://github.com/pebblecode/vistazo/issues/215
+      page.should have_content("Ha! <script type='text/javascript'>alert('hello!');</script>")
+    end
+  end
 end 
