@@ -388,8 +388,7 @@ App.UserListingView = Backbone.View.extend({
       var userTimetable = new App.UserTimetable(response["user_timetable"]);
       App.userTimetables.add(userTimetable);
 
-      // TODO: Change this
-      listingView._renderUserTimetable(userTimetable);
+      listingView._renderVisibleUserTimetable(userTimetable);
       App.flashView.render("success", "Successfully added '<em>" + user.get('name') + "</em>'.");
     })
     .error(function(data) {
