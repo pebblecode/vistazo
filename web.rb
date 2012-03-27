@@ -73,23 +73,6 @@ helpers do
   # More methods in /helpers/*
 end
 
-# Constants
-
-MONDAY = 1
-TUESDAY = 2
-WEDNESDAY = 3
-THURSDAY = 4
-FRIDAY = 5
-SATURDAY = 6
-SUNDAY = 7
-START_YEAR = 2010
-NUM_WEEKS_IN_A_YEAR = 52
-
-HTTP_STATUS_OK = 200
-HTTP_STATUS_BAD_REQUEST = 400
-HTTP_STATUS_BAD_REQUEST_CONFLICT = 409
-HTTP_STATUS_INTERNAL_SERVER_ERROR = 500
-
 require_relative 'models/init'
 require_relative 'helpers/init'
 
