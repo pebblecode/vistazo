@@ -142,6 +142,23 @@ describe "Users:" do
       @team.user_timetable(@new_user).is_visible.should == true
     end
 
+    it "should fail for invalid emails" do
+      @invalid_params = @valid_params.merge({
+        :email => "johnny_no_good"
+      })
+      post_params! team_add_user(@team), @invalid_params, @session
+      @team.reload
+
+      last_response.status.should == 400
+      response_hash = ActiveSupport::JSON.decode(last_response.body)
+      response_hash["message"].should == "Invalid user"
+
+      @new_user = User.find_by_email(@valid_params[:email])
+      @new_user.should == nil
+
+      @team.has_user_timetable?(@new_user).should == false
+    end
+
     describe "should work for users where users are not visible" do
       it "when :is_visible is false" do
         @valid_params[:is_visible] = false

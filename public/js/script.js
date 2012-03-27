@@ -96,8 +96,14 @@ App.User = Backbone.Model.extend({
     if (_.isEmpty(this.get("name"))) {
       errors["name"] = "Name can't be blank";
     }
-    if (_.isEmpty(this.get("email"))) {
+
+    var email = this.get("email");
+    // Regex from http://www.regular-expressions.info/email.html
+    var valid_email = email.match(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/i);
+    if (_.isEmpty(email)) {
       errors["email"] = "Email can't be blank";
+    } else if (!valid_email) {
+      errors["email"] = "Email is invalid";
     }
 
     return _.any(errors) ? errors : null;
@@ -388,8 +394,7 @@ App.UserListingView = Backbone.View.extend({
       var userTimetable = new App.UserTimetable(response["user_timetable"]);
       App.userTimetables.add(userTimetable);
 
-      // TODO: Change this
-      listingView._renderUserTimetable(userTimetable);
+      listingView._renderVisibleUserTimetable(userTimetable);
       App.flashView.render("success", "Successfully added '<em>" + user.get('name') + "</em>'.");
     })
     .error(function(data) {
@@ -832,36 +837,6 @@ $(function () {
       overlayCloseOnClick();
       
       return false;
-    });
-  }
-  
-  // Add user email checking
-  {
-    $("#invite-user-form").submit(function() {
-      var error_form_classname = "errors-on-form";
-      var error_field_msg_classname = "error-field-msg";
-      var email = $(this).find(".new-object-text-box").val();
-      
-      // Regex from http://www.regular-expressions.info/email.html
-      var valid_email = email.match(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/i);
-      if (!valid_email) {
-        // Set invalid class and append message
-        $(this).addClass(error_form_classname);
-        if ($(this).find("." + error_field_msg_classname).length <= 0) {
-          $(this).append("<p class='" + error_field_msg_classname + "'>Invalid email address</p>")
-        }
-        
-        // Flash the error message
-        $(this).find("." + error_field_msg_classname).hide(0, function() {
-          $(this).fadeIn(500);
-        });
-        
-        // Don't send the form
-        return false;
-      } else {
-        $(this).find("." + error_field_msg_classname).remove();
-        $(this).removeClass(error_form_classname);
-      }
     });
   }
   

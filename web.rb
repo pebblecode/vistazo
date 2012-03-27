@@ -73,23 +73,6 @@ helpers do
   # More methods in /helpers/*
 end
 
-# Constants
-
-MONDAY = 1
-TUESDAY = 2
-WEDNESDAY = 3
-THURSDAY = 4
-FRIDAY = 5
-SATURDAY = 6
-SUNDAY = 7
-START_YEAR = 2010
-NUM_WEEKS_IN_A_YEAR = 52
-
-HTTP_STATUS_OK = 200
-HTTP_STATUS_BAD_REQUEST = 400
-HTTP_STATUS_BAD_REQUEST_CONFLICT = 409
-HTTP_STATUS_INTERNAL_SERVER_ERROR = 500
-
 require_relative 'models/init'
 require_relative 'helpers/init'
 
@@ -341,22 +324,27 @@ post '/:team_id/user-timetables/new-user.json' do
             status HTTP_STATUS_OK
             output = { :user => user, :user_timetable => team.user_timetable(user) }
           else
-            status HTTP_STATUS_INTERNAL_SERVER_ERROR    
+            status HTTP_STATUS_INTERNAL_SERVER_ERROR
             output = error_msgs
           end
         end
       else # Create new user
         new_user = User.create(:name => user_name, :email => user_email)
-        team.add_user(new_user, is_visible) # Creates new user and timetable too
+        if new_user.save
+          team.add_user(new_user, is_visible) # Creates new user and timetable too
 
-        error_msgs = send_join_team_email_return_error_messages(current_user, new_user, team)
-        if error_msgs.nil?
-          logger.info("Added user: #{user_name} (#{user_email})")
-          status HTTP_STATUS_OK
-          output = { :user => new_user, :user_timetable => team.user_timetable(new_user) }
+          error_msgs = send_join_team_email_return_error_messages(current_user, new_user, team)
+          if error_msgs.nil?
+            logger.info("Added user: #{user_name} (#{user_email})")
+            status HTTP_STATUS_OK
+            output = { :user => new_user, :user_timetable => team.user_timetable(new_user) }
+          else
+            status HTTP_STATUS_INTERNAL_SERVER_ERROR
+            output = error_msgs
+          end
         else
-          status HTTP_STATUS_INTERNAL_SERVER_ERROR    
-          output = error_msgs
+          status HTTP_STATUS_BAD_REQUEST
+          output = { :message => "Invalid user", :errors => new_user.errors }
         end
       end
     else
