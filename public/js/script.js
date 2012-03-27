@@ -358,6 +358,9 @@ App.UserListingView = Backbone.View.extend({
         $("#add-user-form").prepend(errorsHtml);
       }
 
+      $("#add-user-form-errors").hide(0, function() {
+        $(this).fadeIn(1000);
+      });
       $("#add-user-form input[name=name]").focus();
     }
 
