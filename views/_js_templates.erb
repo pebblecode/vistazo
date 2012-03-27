@@ -222,6 +222,7 @@
       <fieldset class="update-object-fieldset" title="Edit team member">
         <label for="name">Name</label>
         <input type="text" name="name" class="new-object-text-box" value="{{ userName }}"/>
+        <button type="submit" class="submit-button">update</button>
       </fieldset> <!-- Edit user name -->
 
       <div class="user-email">
@@ -230,12 +231,11 @@
       </div>
 
       <div class="visible-on-timetable">
-        <h4>Visibility on timetable</h4>
+        <h4>Show on timetable</h4>
         <input id="new-user-visible" type="checkbox" name="is_visible" value="true" {{ isVisible ? "checked='checked'" : "" }} />
-        <label for="new-user-visible">Appear on timetable</label>
+        <button type="submit" class="submit-button">update</button>
       </div>
-
-      <button type="submit" class="submit-button">update</button>
+      
     </form>
 
     <form action="/{{ teamId }}/users/{{ userId }}/delete" method="post">

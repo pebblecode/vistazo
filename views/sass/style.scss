@@ -204,14 +204,15 @@ body {
     background: #6cc8ee;    
     border: none;
     width: 370px;
+    
   } // input
   
   button {
     @include button-standard;
       
     position: absolute;
-    top: -2px;
-    left: 400px;
+    top: 30px;
+    left: 410px;
             
     &:hover{
       background-color: #d4eef9;
@@ -1359,12 +1360,21 @@ textarea:focus, input:focus{
   position: relative;
 
   h4 {
-    display: block;
+    display: inline-block;
     @include dialog-title;
+    width: 155px;
+  }
+  
+  .visible-on-timetable input{
+    margin:  0 237px 0 0;
   }
   
   .user-email {
     margin-bottom: 15px;
+    
+    p{
+      font-size: 16px;
+    }
   }
 
   form button {
