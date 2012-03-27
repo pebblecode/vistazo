@@ -400,7 +400,7 @@ def send_join_team_email_with_team_link(inviter, to_user, team)
   @inviter_name = inviter.name
   @to_user_name = to_user.name
   @team_name = team.name
-  @team_link = "#{APP_CONFIG['base_url']}/#{team.id}"
+  @team_link = "#{APP_CONFIG['base_url']}"
   
   logger.info("#{@inviter_name}, #{@to_user_name}")
 
