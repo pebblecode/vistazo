@@ -222,6 +222,7 @@
       <fieldset class="update-object-fieldset" title="Edit team member">
         <label for="name">Name</label>
         <input type="text" name="name" class="new-object-text-box" value="{{ userName }}"/>
+        <button type="submit" class="submit-button">update</button>
       </fieldset> <!-- Edit user name -->
 
       <div class="user-email">
@@ -230,12 +231,11 @@
       </div>
 
       <div class="visible-on-timetable">
-        <h4>Visibility on timetable</h4>
+        <h4>Show on timetable</h4>
         <input id="new-user-visible" type="checkbox" name="is_visible" value="true" {{ isVisible ? "checked='checked'" : "" }} />
-        <label for="new-user-visible">Appear on timetable</label>
+        <button type="submit" class="submit-button">update</button>
       </div>
-
-      <button type="submit" class="submit-button">update</button>
+      
     </form>
 
     <form action="/{{ teamId }}/users/{{ userId }}/delete" method="post">
@@ -259,7 +259,7 @@
 
 <script type="text/template" id="add-user-dialog-template">
   <div id="add-user-dialog" title="Add user">
-    <h4>Enter a Google mail account to add someone to your team.</h4>
+    <h4>Enter a Google mail account to add someone to your team. They will be sent an email wiht instructions on how to join your team.</h4>
     <form id="add-user-form" action="#" method="post">
       <fieldset>
         <legend>New user</legend>
@@ -273,8 +273,8 @@
             <input id="add-user-email" type="text" name="email"/>
           </li>
           <li>
+            <label for="new-user-visible">Show on timetable</label>
             <input id="new-user-visible" type="checkbox" name="is_visible" value="true" checked="checked" />
-            <label for="new-user-visible">Appear on timetable</label>
           </li>
         </ol>
         <button type="submit" name="new_user" value="new_user" class="submit-button">Add user</button>
