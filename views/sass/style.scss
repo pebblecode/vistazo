@@ -1707,7 +1707,7 @@ textarea:focus, input:focus{
 footer{
   margin: 0 auto;
   padding-top: 100px; /* Use padding instead of margin, so that dialog positions don't screw up */
-  width: 350px;
+  width: 300px;
   color: #ccc;
   ul{
     
@@ -1729,6 +1729,19 @@ footer{
           color: $vistazo_blue;
         }
       }
+    }
+  }
+  
+  .press-kit{
+    text-decoration: none;
+    color: #B4DBF3;
+    text-align: center;
+    font-size: 13px;
+    margin-left: 80px;
+        
+    &:hover{
+      text-decoration: underline;
+      color: $vistazo_blue;
     }
   }
 }
