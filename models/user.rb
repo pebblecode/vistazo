@@ -13,7 +13,7 @@ class User
   many :teams, :in => :team_ids
 
   # Validations
-  validates_format_of :email, :with => /\b[a-zA-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i
+  validates_format_of :email, :with => /\b[a-zA-Z0-9._%-\+]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i
 
 
   #############################################################################
