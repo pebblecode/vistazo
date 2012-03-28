@@ -17,6 +17,22 @@ class User
 
 
   #############################################################################
+  # Override to_json to sanitize output
+  #############################################################################
+
+  def serializable_hash(options = {})
+    pre_sanitized_hash = super({ 
+      :only => [:id, :name, :email] 
+    }.merge(options))
+
+    # Sanitize
+    pre_sanitized_hash.merge({
+      "name" => Rack::Utils.escape_html(self.name), 
+      "email" => Rack::Utils.escape_html(self.email)
+    })
+  end
+
+  #############################################################################
   # Public methods
   #############################################################################
 

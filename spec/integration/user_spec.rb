@@ -43,10 +43,11 @@ feature "User" do
       visit "/"
       click_link "start-btn"
       visit "/"
-      
-      users = backbone_collection_on_page(:users, page)
 
-      users.last["name"].should == "Ha! <script type='text/javascript'>alert('hello!');</script>"
+      users = backbone_collection_on_page(:users, page)
+      user = users.select { |u| u["email"] == @user.email }.first
+      
+      user["name"].should == Rack::Utils.escape_html("Ha! <script type='text/javascript'>alert('hello!');</script>")
     end
   end
   
