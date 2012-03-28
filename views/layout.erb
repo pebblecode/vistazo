@@ -61,7 +61,7 @@
       App.users.reset(<%= @users.to_json %>);
 
       App.userTimetables = new App.UserTimetables;
-      App.userTimetables.reset(<%= @team.user_timetables.to_json %>)
+      App.userTimetables.reset(<%= @team.user_timetables.to_json if @team %>)
 
       App.timetableViewSelector = new App.TimetableViewSelector({el: $("#view-selector")})
     });
@@ -114,10 +114,12 @@
   
   <%= styled_flash %>
   
-  <ul id="view-selector">
-    <li id="team-view-selector" class="active"><a href="#" title="View team member listing">Team view</a></li>
-    <li id="project-view-selector"><a href="#" title="View project listing">Project view</a></li>
-  </ul>
+  <% unless @is_error %>
+    <ul id="view-selector">
+      <li id="team-view-selector" class="active"><a href="#" title="View team member listing">Team view</a></li>
+      <li id="project-view-selector"><a href="#" title="View project listing">Project view</a></li>
+    </ul>
+  <% end %>
 
   <div id="main">
     <%= yield %>
