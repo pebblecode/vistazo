@@ -433,10 +433,8 @@ describe "Projects:" do
     login_normal_user_with_session!(@session)
       
     User.count.should == 1
-    @team = User.first.teams.first
-      
-    TeamMember.count.should == 1
-    @team_member = TeamMember.first
+    @user = User.first
+    @team = @user.teams.first
   end
   
   after do
@@ -448,55 +446,51 @@ describe "Projects:" do
   
   describe "Create new project" do
     before do
-      @valid_params = {
-          "new_project_name" => "Business time",
-          "team_id" => @team.id,
-          "team_member_id" => @team_member.id,
-          "date" => "2011-12-16",
-          "new_project" => "true"
-        }
+      @params = {
+        "project_name" => "Business time",
+        "date" => "2011-12-16"
+      }
     end
     
     it "should require login" do
-      params = @valid_params
-      post add_project_path(@team, @team_member), @valid_params
+      post add_project_path(@team, @user), @valid_params
       
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("You must be logged in.")
     end
     
     it "should show success message if passing valid parameters" do
-      params = @valid_params
-      pending("Check in js")
-      post_params! add_project_path(@team, @team_member), @valid_params, @session
-      flash_message = last_request.session[:flash]
-      flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
+      post_params! add_project_path(@team, @user), @params.to_json, @session
       Project.count.should == 1
-      @team_member.reload.timetable_items.count.should == 1
+
+      last_response.body.should include("Successfully added '<em>Business time</em>' project for #{@user.name} on 2011-12-16.")
+      
+      @team.reload
+      @team.user_timetable_items(@user).count.should == 1
     end
     
-    it "should show error message if new project name is not present or empty" do
-      params = @valid_params.merge({ "new_project_name" => "" })
-      pending("Check in js")
-      post_params! add_project_path(@team, @team_member), params, @session
-      flash_message = last_request.session[:flash]
-      flash_message[:warning].should include("Please specify a project name.")
+    it "should show error message if project name is empty string or nil" do
+      invalid_params = @params.merge({ 
+        "project_name" => "" 
+      })
+      post_params! add_project_path(@team, @user), invalid_params.to_json, @session
+
+      last_response.body.should include("Please specify a project name.")
+
       Project.count.should == 0
-      @team_member.reload.timetable_items.count.should == 0
+      @team.reload
+      @team.user_timetable_items(@user).count.should == 0
       
-      params = @valid_params.merge({ "new_project_name" => nil })
-      post_params! add_project_path(@team, @team_member), params, @session
-      flash_message = last_request.session[:flash]
-      flash_message[:warning].should include("Please specify a project name.")
-      Project.count.should == 0
-      @team_member.reload.timetable_items.count.should == 0
+      invalid_params = @params.merge({ 
+        "project_name" => nil 
+      })
+      post_params! add_project_path(@team, @user), invalid_params.to_json, @session
       
-      params = @valid_params.reject { |k,v| k == "new_project_name" }
-      post_params! add_project_path(@team, @team_member), params, @session
-      flash_message = last_request.session[:flash]
-      flash_message[:warning].should include("Please specify a project name.")
+      last_response.body.should include("Please specify a project name.")
+
       Project.count.should == 0
-      @team_member.reload.timetable_items.count.should == 0
+      @team.reload
+      @team.user_timetable_items(@user).count.should == 0
     end
   end
   

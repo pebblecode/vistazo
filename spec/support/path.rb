@@ -62,8 +62,8 @@ module PathSpecHelper
   # Projects
   ############################################################################
   
-  def add_project_path(team, team_member)
-    "/#{team.id}/team-member/#{team_member.id}/timetable-items/new.json"
+  def add_project_path(team, user)
+    "/#{team.id}/users/#{user.id}/timetable-items/new.json"
   end
   
   def update_project_path(team, timetable_item)
