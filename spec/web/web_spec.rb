@@ -297,6 +297,8 @@ describe "Timetable items:" do
   describe "Delete timetable items" do
     it "should delete" do
       post_params! delete_timetable_item_path(@team, @user, @timetable_item), nil, @session
+
+      pending
     end
   end
 
@@ -308,9 +310,15 @@ describe "Delete project:" do
     @session = init_omniauth_session
     
     create_normal_user(@session)
-    @team = User.first.teams.first
+    @user = User.first
+    @team = @user.teams.first
   end
   
+  after do
+    clean_db!
+    @session = nil
+  end
+
   it "should require login" do
     @project = Project.create(:name => "New project", :team_id => @team.id)
     post_params! delete_project_path(@team, @project), nil, @session
@@ -324,6 +332,72 @@ describe "Delete project:" do
       login_normal_user_with_session!(@session)
     end
     
+    describe "with a valid project" do
+      before do
+        @project = Project.create(:name => "Business time", :team => @team)
+      end
+
+      it "should delete project from all projects" do
+        post_params! delete_project_path(@team, @project), nil, @session
+
+        Project.find(@project.id).nil?.should == true
+      end
+
+      describe "delete from all team timetables" do
+        before do
+          @date = Time.now
+        end
+
+        it "should delete for 1 timetable item" do
+          
+          @timetable_item = @team.add_timetable_item(@user, @project, @date)
+          @team.user_timetable_items(@user).length.should == 1
+
+          post_params! delete_project_path(@team, @project), nil, @session
+          @team.reload
+
+          @team.user_timetable_items(@user).length.should == 0
+        end
+
+        it "should delete for multiple timetable items" do
+          @timetable_item = @team.add_timetable_item(@user, @project, @date)
+          @timetable_item = @team.add_timetable_item(@user, @project, @date + 1.day)
+          @timetable_item = @team.add_timetable_item(@user, @project, @date + 5.day)
+          @team.user_timetable_items(@user).length.should == 3
+
+          post_params! delete_project_path(@team, @project), nil, @session
+          @team.reload
+
+          @team.user_timetable_items(@user).length.should == 0
+        end
+
+        it "should delete for different users" do
+          @other_user = Factory(:user)
+          @team.add_user(@other_user)
+
+          @timetable_item = @team.add_timetable_item(@user, @project, @date)
+          @timetable_item = @team.add_timetable_item(@other_user, @project, @date)
+
+          @team.user_timetable_items(@user).length.should == 1
+          @team.user_timetable_items(@other_user).length.should == 1
+
+          post_params! delete_project_path(@team, @project), nil, @session
+          @team.reload
+
+          @team.user_timetable_items(@user).length.should == 0
+          @team.user_timetable_items(@other_user).length.should == 0
+        end
+      end
+
+      it "should show successful flash message" do
+        @project = Project.create(:name => "Business time", :team => @team)
+        post_params! delete_project_path(@team, @project), nil, @session
+
+        flash_message = last_request.session[:flash]
+        flash_message[:success].should include("Successfully deleted project 'Business time'.")
+      end
+    end
+
     describe "from a different team" do
       it "should give you an error message" do
         @user = User.first
@@ -331,7 +405,6 @@ describe "Delete project:" do
         @project = Project.create(:name => "Business time", :team_id => @team.id)
         @other_team = Team.create(:name => "Monday-itis")
         @other_team.add_user(@user)
-        @other_team.activate_user(@user)
         
         post_params! delete_project_path(@other_team, @project), nil, @session
         

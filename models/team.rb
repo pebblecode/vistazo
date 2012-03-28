@@ -96,6 +96,14 @@ class Team
     self.save
   end
 
+  def delete_project_in_timetables!(project)
+    self.user_timetables.each do |user_timetable|
+      user_timetable.timetable_items.reject! { |ttItem| ttItem.project_id == project.id }
+    end
+
+    self.save
+  end
+
   def update_timetable_item(timetable_item, from_user, to_user, to_date)
     # puts "Update from #{from_user.name} (#{timetable_item.to_s}) to #{to_user.name} (#{to_date})"
     project_id = timetable_item.project_id

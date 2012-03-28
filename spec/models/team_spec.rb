@@ -179,6 +179,21 @@ describe "Team model" do
     end
   end
 
+  describe "delete project in timetables" do
+    before do
+      @timetable_item = @team.add_timetable_item(@user, @project, Time.now)
+    end
+
+    it "should remove project from user_timetable" do
+      ut = @team.user_timetable(@user)
+      ut.timetable_items.length.should == 1
+
+      @team.delete_project_in_timetables!(@project)
+      ut.timetable_items.length.should == 0
+
+    end
+  end
+
   describe "user_timetable" do
     it "should reference the user" do
       tti = @team.add_timetable_item(@user, @project, Time.now)
