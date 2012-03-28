@@ -26,6 +26,21 @@ class Team
   end
 
   #############################################################################
+  # Override to_json to sanitize output
+  #############################################################################
+
+  def serializable_hash(options = {})
+    pre_sanitized_hash = super({ 
+      :only => [:id, :name] 
+    }.merge(options))
+
+    # Sanitize
+    pre_sanitized_hash.merge({
+      "name" => Rack::Utils.escape_html(self.name)
+    })
+  end
+
+  #############################################################################
   # Public methods
   #############################################################################
 

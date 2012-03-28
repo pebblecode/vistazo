@@ -15,6 +15,16 @@ class UserTimetable
   def css_class
     get_project_css_class(self.project_id.to_s)
   end
+
+  #############################################################################
+  # Override to_json to sanitize output
+  #############################################################################
+
+  def serializable_hash(options = {})
+    pre_sanitized_hash = super({ 
+      :only => [:id, :is_visible, :user_id, :team_id, :timetable_items]
+    }.merge(options))
+  end
   
   private
   

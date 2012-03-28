@@ -22,6 +22,22 @@ class Project
     get_project_css_class(self.id.to_s)
   end
 
+
+  #############################################################################
+  # Override to_json to sanitize output
+  #############################################################################
+
+  def serializable_hash(options = {})
+    pre_sanitized_hash = super({ 
+      :only => [:id, :name] 
+    }.merge(options))
+
+    # Sanitize
+    pre_sanitized_hash.merge({
+      "name" => Rack::Utils.escape_html(self.name)
+    })
+  end
+
   private
 
   def save_hex_colour
