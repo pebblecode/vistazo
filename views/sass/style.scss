@@ -132,6 +132,12 @@ $warning_color: #000000;
 
 body {
   background: #f4fbfe url('/img/bg.png') repeat-x;
+  
+  button::-moz-focus-inner {
+      border:0;
+      padding:0;
+  }
+  
 }
 
 .circle {
@@ -183,6 +189,7 @@ body {
     cursor: pointer;
     background: none;
     border: none;
+    letter-spacing: 0;
   }
 } // .new-object-fieldset
 
@@ -324,6 +331,7 @@ textarea:focus, input:focus{
         color: #666;
         bottom: 1px;
         right: 1px;
+        letter-spacing: 0;
       }
     }
       
@@ -1183,6 +1191,7 @@ textarea:focus, input:focus{
     background: #fff;
     cursor: pointer;
     float: right;
+    letter-spacing: 0;
     
     &:hover{
       color: #777;
@@ -1286,6 +1295,7 @@ textarea:focus, input:focus{
       position: absolute;
       right: 2px;
       bottom: 3px;
+      letter-spacing: 0;
     }
     
     .new-object-text-box {
@@ -1305,6 +1315,7 @@ textarea:focus, input:focus{
     position: absolute;
     top: -2px;
     left: 410px;
+    letter-spacing: 0;
     
     &:active{
       top: -1px;
@@ -1376,7 +1387,9 @@ textarea:focus, input:focus{
   }
   
   .visible-on-timetable input{
-    margin:  0 237px 0 0;
+    margin:  0 232px 0 0;
+    padding: 0;
+    width: 15px;
   }
   
   .user-email {
@@ -1389,6 +1402,7 @@ textarea:focus, input:focus{
 
   form button {
     @include button-standard;
+    letter-spacing: 0;
     
     margin: 10px 0 30px 0;
       
@@ -1707,7 +1721,7 @@ textarea:focus, input:focus{
 footer{
   margin: 0 auto;
   padding-top: 100px; /* Use padding instead of margin, so that dialog positions don't screw up */
-  width: 300px;
+  width: 330px;
   color: #ccc;
   ul{
     
