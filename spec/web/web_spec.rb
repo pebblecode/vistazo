@@ -469,7 +469,7 @@ describe "Projects:" do
       @team.user_timetable_items(@user).count.should == 1
     end
     
-    it "should show error message if project name is empty string or nil" do
+    it "should return error message if project name is empty string or nil" do
       invalid_params = @params.merge({ 
         "project_name" => "" 
       })
@@ -496,46 +496,29 @@ describe "Projects:" do
   
   describe "Add existing project" do
     before do
-      params = {
-          "new_project_name" => "Business time",
-          "team_id" => @team.id,
-          "team_member_id" => @team_member.id,
-          "date" => "2011-12-16",
-          "new_project" => "true"
-        }
-      pending("Check in js")
-      post_params! add_project_path(@team, @team_member), params, @session
-      flash_message = last_request.session[:flash]
-      flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
-      Project.count.should == 1
-      @project = Project.first
-      @team_member.reload.timetable_items.count.should == 1
-      
-      @date_to_add = "2012-01-15"
-      @existing_project_params_to_add = {
+      @project = Factory(:project, :team => @team)
+      @date_to_add = "2012-02-01"
+      @params = {
         "project_id" => @project.id,
-        "team_id" => @team.id,
-        "team_member_id" => @team_member.id,
         "date" => @date_to_add
       }
     end
     
     it "should require login" do
-      pending("Check in js")
-      post add_project_path(@team, @team_member), @existing_project_params_to_add
+      post add_project_path(@team, @user), @params
       
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("You must be logged in.")
     end
     
     it "should show success message if passing valid parameters" do
-      pending("Check in js")
-      post_params! add_project_path(@team, @team_member), @existing_project_params_to_add, @session
+      post_params! add_project_path(@team, @user), @params.to_json, @session
       
-      flash_message = last_request.session[:flash]
-      flash_message[:success].should include("Successfully added '<em>#{@project.name}</em>' project for #{@team_member.name} on #{@date_to_add}.")
+      last_response.body.should include("Successfully added '<em>#{@project.name}</em>' project for #{@user.name} on #{@date_to_add}.")
       Project.count.should == 1
-      @team_member.reload.timetable_items.count.should == 2   # Added another project
+
+      @team.reload
+      @team.user_timetable_items(@user).count.should == 1
     end
   end
   
