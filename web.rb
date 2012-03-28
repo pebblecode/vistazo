@@ -254,6 +254,8 @@ end
 # ----------------------------------------------------------------------------
 
 post '/teams/new' do
+  protected!
+  
   if params[:new_team_name].present?
     @team = Team.create_for_user(current_user)
     
