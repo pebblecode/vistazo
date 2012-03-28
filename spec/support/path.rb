@@ -67,11 +67,11 @@ module PathSpecHelper
   end
   
   def update_project_path(team, timetable_item)
-    "/#{team.id}/team-member-project/#{timetable_item.id}/update.json"
+    "/#{team.id}/timetable-items/#{timetable_item.id}/update.json"
   end
   
   def update_project_with_team_id_path(team_id, timetable_item)
-    "/#{team_id}/team-member-project/#{timetable_item.id}/update.json"
+    "/#{team_id}/timetable-items/#{timetable_item.id}/update.json"
   end
   
   def delete_project_path(team, project)

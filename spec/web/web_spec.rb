@@ -522,124 +522,167 @@ describe "Projects:" do
     end
   end
   
-  describe "Update with json call" do
+  describe "Update timetable item" do
     before do
-      @project_params = {
-          "new_project_name" => "Business time",
-          "team_id" => @team.id,
-          "team_member_id" => @team_member.id,
-          "date" => "2011-12-16",
-          "new_project" => "true"
-        }
-      pending("Check in js")
-      post_params! add_project_path(@team, @team_member), @project_params, @session
-      flash_message = last_request.session[:flash]
-      flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")  
-      Project.count.should == 1
-      @project = Project.first
-      @team_member.reload.timetable_items.count.should == 1
-      @tm_project = @team_member.timetable_items.first
+      @from_user = @user
+      @to_user = Factory(:user)
+      @project = Factory(:project, :name => "Business time", :team => @team)
       
-      new_date = "2011-12-13"
-      @valid_params = {
-        "from_team_member_id" => @team_member.id,
-        "to_team_member_id" => @team_member.id,
-        "tm_project_id" => @tm_project.id,
-        "to_date" => new_date
-      }
+      @team.add_user(@from_user)
+      @team.add_user(@to_user)
+
+      @from_date = Time.now
+      @timetable_item = @team.add_timetable_item(@user, @project, @from_date)
+      @team.reload
+
+      @to_date = Time.now + 1.day
+      
     end
     
     it "should require login" do
-      post update_project_path(@team, @tm_project), @valid_params
-      
+      post update_project_path(@team, @timetable_item), nil
+
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("You must be logged in.")
     end
     
-    it "should return 200 status with message if successfully moved to another date" do
-      new_date = "2011-12-15"
-      params = @valid_params.merge("to_date" => new_date)
-      post_params! update_project_path(@team, @tm_project), params, @session
-      
-      # Shouldn't of created a new project
-      Project.count.should == 1
-      
-      # Shouldn't of created a new timetable item
-      @team_member.reload.timetable_items.count.should == 1
-      
-      last_response.status.should == 200
-      last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{@team_member.name} on #{new_date}.")
+    describe "to different date and same user" do
+      before do
+        @params = {
+          "from_user_id" => @from_user.id,
+          "to_user_id" => @from_user.id,
+          "project_id" => @project.id,
+          "date" => @to_date
+        }
+
+        post_params! update_project_path(@team, @timetable_item), @params, @session
+        @team.reload
+
+        pending "TODO: params: {} for some reason"
+      end
+
+      it "should not create any new projects" do
+        Project.count.should == 1
+      end
+
+      it "should not create any new timetable items" do
+        @team.user_timetable_items(@from_user).count.should == 1
+      end
+
+      it "should return 200 status" do
+        debugger
+        last_response.status.should == 200
+      end
+
+      it "should return a success message" do
+        last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{@params["name"]} on #{@params["date"]}.")
+      end
     end
     
-    it "should return 200 status with message if successfully moved to another team member" do
-      another_team_member = Factory(:team_member, :team => @team)
-      params = @valid_params.merge(
-        "to_team_member_id" => another_team_member.id,
-        "to_date" => @project_params["date"]
-      )
-      post_params! update_project_path(@team, @tm_project), params, @session
-      
-      last_response.status.should == 200
-      last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{another_team_member.name} on #{@project_params["date"]}.")
+    describe "to same date and different user" do
+      before do
+        @params = {
+          "timetable_item_id" => @timetable_item,
+          "from_user_id" => @from_user.id,
+          "to_user_id" => @to_user.id,
+          "project_id" => @project.id,
+          "date" => @from_date
+        }
+
+        post_params! update_project_path(@team, @timetable_item), @params, @session
+        @team.reload
+
+        pending "TODO: params: {} for some reason"
+      end
+
+      it "should return 200 status" do
+        debugger
+        last_response.status.should == 200
+      end
+
+      it "should return a success message" do
+        last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{@params["name"]} on #{@params["date"]}.")
+      end
     end
 
-    it "should return 200 status with message if successfully moved to another person and another date" do
-      another_team_member = Factory(:team_member, :team => @team)
-      new_date = "2011-12-18"
-      params = @valid_params.merge(
-        "to_team_member_id" => another_team_member.id,
-        "to_date" => new_date
-      )
-      post_params! update_project_path(@team, @tm_project), params, @session
-      
-      last_response.status.should == 200
-      last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{another_team_member.name} on #{new_date}.")
+    describe "to different date and different user" do
+      before do
+        @params = {
+          "timetable_item_id" => @timetable_item,
+          "from_user_id" => @from_user.id,
+          "to_user_id" => @to_user.id,
+          "project_id" => @project.id,
+          "date" => @to_date
+        }
+
+        post_params! update_project_path(@team, @timetable_item), @params, @session
+        @team.reload
+
+        pending "TODO: params: {} for some reason"
+      end
+
+      it "should return 200 status" do
+        last_response.status.should == 200
+      end
+
+      it "should return a success message" do
+        last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{@params["name"]} on #{@params["date"]}.")
+      end
     end
     
-    it "should return 400 error with message if moving to an invalid user" do
-      error_team_member_id = "not_an_id"
-      params = @valid_params.merge(
-        "to_team_member_id" => error_team_member_id
-      )
-      post_params! update_project_path(@team, @tm_project), params, @session
-      
-      last_response.status.should == 400
-      last_response.body.should include("Something went wrong with the input when updating timetable item.")
+    describe "to invalid user" do
+      before do
+        @params = {
+          "timetable_item_id" => @timetable_item,
+          "from_user_id" => @from_user.id,
+          "to_user_id" => "not_an_id",
+          "project_id" => @project.id,
+          "date" => @to_date
+        }
+
+        post_params! update_project_path(@team, @timetable_item), @params, @session
+        @team.reload
+
+        pending "TODO: params: {} for some reason"
+      end
+
+      it "should return 400 status" do
+        last_response.status.should == 400
+      end
+
+      it "should return error message" do
+        last_response.body.should include("Something went wrong with the input when updating timetable item.")
+      end
     end
-    
-    it "should return 400 error with message if it is moved to a team member in another team" do
-      another_team = Factory(:team)
-      tm_in_another_team = Factory(:team_member, :team => another_team)
-      params = @valid_params.merge(
-        "to_team_member_id" => tm_in_another_team.id
-      )
-      post_params! update_project_path(@team, @tm_project), params, @session
-      
-      last_response.status.should == 400
-      last_response.body.should include("Invalid team.")
+
+    describe "to a user in another team" do
+      before do
+        @another_team = Factory(:team)
+        @another_user = Factory(:user)
+        @another_team.add_user(@another_user)
+
+        @params = {
+          "timetable_item_id" => @timetable_item,
+          "from_user_id" => @from_user.id,
+          "to_user_id" => @another_user.id,
+          "project_id" => @project.id,
+          "date" => @to_date
+        }
+
+        post_params! update_project_path(@team, @timetable_item), @params, @session
+        @team.reload
+
+        pending "TODO: params: {} for some reason"
+      end
+
+      it "should return 400 status" do
+        last_response.status.should == 400
+      end
+
+      it "should return error message" do
+        last_response.body.should include("Invalid team.")
+      end
     end
-    
-    pending "should return 400 error with message if it is moved from a team member in another team" do
-      another_team = Factory(:team)
-      tm_in_another_team = Factory(:team_member, :team => another_team)
-      params = @valid_params.merge(
-        "from_team_member_id" => tm_in_another_team.id
-      )
-      post_params! update_project_path(@team, @tm_project), params, @session
-      
-      last_response.status.should == 400
-      last_response.body.should include("Invalid team.")
-    end
-    
-    pending "should return 400 error with message if it is moved in an invalid team" do
-      params = @valid_params
-      post_params! update_project_with_team_id_path("invalid_team_id", @tm_project), params, @session
-      
-      last_response.status.should == 400
-      last_response.body.should include("Invalid team.")
-    end
-    
-    pending "should return 500 error with message if there is an internal error"
   end
 end
 
