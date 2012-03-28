@@ -601,6 +601,10 @@ App.ProjectDialogView = Backbone.View.extend({
       // Add project to existing project list
       this.existingProjectsView().render();
 
+      // Set up delete project dialog view - only gets called 
+      // when needed
+      this.deleteProjectDialogView();
+
       this.setupNewProjectDialog(box, this);
 
       // Enter key for new project submits the form
@@ -624,6 +628,10 @@ App.ProjectDialogView = Backbone.View.extend({
     return new App.ExistingProjectsView({el: $("#existing-projects-listing")});
   },
 
+  deleteProjectDialogView: function() {
+    return new App.DeleteProjectDialogView({ el: $("#new-project-dialog") });
+  },
+
   setupNewProjectDialog: function(box, projectDialog) {
     // Hide if clicking outside #new-project-dialog
     $('html').click(function() {
@@ -638,35 +646,6 @@ App.ProjectDialogView = Backbone.View.extend({
       $("#new-project-dialog").hide();
       return false;
     });
-
-
-
-    // Delete project link
-    $("#new-project-dialog .delete").click(function() {
-      $( "#delete-project-dialog" ).dialog('open');
-      $("#new-project-dialog").hide();
-      overlayCloseOnClick();
-
-      // Fill in form
-      var deleteProjectDialog = _.template($("#delete-project-dialog-template").html());
-
-      $("#main").append(deleteProjectDialog({
-        teamId: TEAM_ID, 
-        projectId: $(this).parent().find("button[name=project_id]").val(),
-        projectName: $(this).parent().find("button[name=project_id]").text()
-      }));
-      $( "#delete-project-dialog" ).dialog({
-        modal: true,
-        closeOnEscape: true,
-        minWidth: 480,
-        minHeight: 70,
-        position: 'top',
-        autoOpen: true,
-        closeText: "'"
-      });
-      
-      return false;
-    }); // $("#new-project-dialog .delete")
 
     // AJAX-ify add existing project
     var projectTemplate = _.template($("#existing-project-template").html());
@@ -760,9 +739,43 @@ App.ProjectDialogView = Backbone.View.extend({
     }); // $("#new-project-dialog .new-object-fieldset .submit-button").click
 
     setupProjectEvents();
+
   } // setupNewProjectDialog
 });
 
+App.DeleteProjectDialogView = Backbone.View.extend({
+  events: {
+    "click #new-project-dialog .delete": "render"
+  },
+  render: function(event) {
+    var button = event.target;
+    var deleteProjectDialog = _.template($("#delete-project-dialog-template").html());
+
+    $("#main").append(deleteProjectDialog({
+      teamId: TEAM_ID, 
+      projectId: $(button).parent().find("button[name=project_id]").val(),
+      projectName: $(button).parent().find("button[name=project_id]").text()
+    }));
+    $("#delete-project-dialog").dialog({
+      modal: true,
+      closeOnEscape: true,
+      minWidth: 480,
+      minHeight: 70,
+      position: 'top',
+      autoOpen: true,
+      closeText: "'",
+      open: function() {
+        overlayCloseOnClick();
+      },
+      close: function() {
+        $("#delete-project-dialog").remove();
+      }
+    });
+
+    event.preventDefault();
+  } // render
+
+});
 
 ///////////////////////////////////////////////////////////////
 // Setup
