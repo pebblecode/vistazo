@@ -43,7 +43,7 @@ feature "User" do
       visit "/"
       click_link "start-btn"
       visit "/"
-      debugger
+      
       users = backbone_collection_on_page(:users, page)
 
       users.last["name"].should == "Ha! <script type='text/javascript'>alert('hello!');</script>"
