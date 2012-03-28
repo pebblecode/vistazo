@@ -940,7 +940,7 @@ function setupNewProjectDialog() {
   .disableSelection();
 }
 
-// Update team member project
+// Update timetable item
 function updateTimetableItem(proj) {
   var fromUserId = $(proj).attr("data-user-id");
   var toUserId = $(proj).parents('.user').first().attr("data-user-id");
@@ -951,7 +951,7 @@ function updateTimetableItem(proj) {
   $(proj).addClass('is_loading');
   $.post(url, { from_user_id: fromUserId, to_user_id: toUserId, to_date: toDate })
     .success(function(response) {
-      // Update team member project info in data attributes
+      // Update timetable item info in data attributes
       $(proj).attr("data-user-id", toUserId);
       $(proj).attr("data-date", toDate);
       
@@ -971,7 +971,7 @@ function updateTimetableItem(proj) {
       $(proj).removeClass('is_loading');
     })
     .error(function(data) {
-      // Move team member project back
+      // Move timetable item back
       var fromDate = $(proj).attr("data-date");
       var fromLocation = $(".user[data-user-id=" + fromUserId + "]").find(".box[data-date=" + fromDate + "]");
       
@@ -997,7 +997,7 @@ function updateTimetableItem(proj) {
   
 }
 
-// Delete team member project
+// Delete timetable item
 function deleteTimetableItem(proj) {
   var deleteButton = $(proj).find(".delete-timetable-item-form button");
 

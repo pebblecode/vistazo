@@ -472,8 +472,8 @@ post '/:team_id/users/:user_id/timetable-items/new.json' do
       status HTTP_STATUS_OK
       output = { :message => outputMsg, :timetable_item => timetable_item }
     else
-      logger.warn "ERROR: Add existing team member project: user: #{user}, project: #{project}, date: #{date}"
-      outputMsg = "Something went wrong when adding a team member project. Please refresh and try again later."
+      logger.warn "ERROR: Add existing timetable item: user: #{user}, project: #{project}, date: #{date}"
+      outputMsg = "Something went wrong when adding a timetable item. Please refresh and try again later."
 
       status HTTP_STATUS_BAD_REQUEST
       output = { :message => outputMsg }
@@ -541,7 +541,7 @@ post '/:team_id/timetable-items/:timetable_item_id/update.json' do
           output = { :message => "Successfully moved '<em>#{timetable_item.project_name}</em>' project to #{to_user.name} on #{to_date}.", timetable_item: timetable_item }
         else
           status HTTP_STATUS_INTERNAL_SERVER_ERROR
-          output = { :message => "Something went wrong with saving the changes when updating team member project. Please refresh and try again later.", timetable_item: timetable_item }
+          output = { :message => "Something went wrong with saving the changes when updating timetable item. Please refresh and try again later.", timetable_item: timetable_item }
         end
       else
         status HTTP_STATUS_BAD_REQUEST
@@ -549,7 +549,7 @@ post '/:team_id/timetable-items/:timetable_item_id/update.json' do
       end
     else
       status HTTP_STATUS_BAD_REQUEST
-      output = { :message => "Something went wrong with the input when updating team member project. Please refresh and try again later.", timetable_item: timetable_item }
+      output = { :message => "Something went wrong with the input when updating timetable item. Please refresh and try again later.", timetable_item: timetable_item }
     end
   else
     status HTTP_STATUS_BAD_REQUEST
@@ -581,14 +581,14 @@ post '/:team_id/users/:user_id/timetable-items/:timetable_item_id/delete.json' d
 
     if did_delete
       status HTTP_STATUS_OK
-      output = { :message => "Successfully deleted team member project for #{user.name}.", :timetable_item_id => params[:timetable_id] }
+      output = { :message => "Successfully deleted timetable item for #{user.name}.", :timetable_item_id => params[:timetable_id] }
     else
       status HTTP_STATUS_INTERNAL_SERVER_ERROR
-      output = { :message => "Something went wrong when trying to delete a team member project for #{user.name}. Please try again later.", :timetable_item_id => params[:timetable_id] }
+      output = { :message => "Something went wrong when trying to delete a timetable item for #{user.name}. Please try again later.", :timetable_item_id => params[:timetable_id] }
     end
   else
     status HTTP_STATUS_BAD_REQUEST
-    output = { :message => "Something went wrong when trying to delete a team member project. Please refresh and try again later.", :timetable_item_id => params[:timetable_id] }
+    output = { :message => "Something went wrong when trying to delete a timetable item. Please refresh and try again later.", :timetable_item_id => params[:timetable_id] }
   end
 
   content_type :json 

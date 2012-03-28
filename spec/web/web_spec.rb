@@ -581,7 +581,7 @@ describe "Projects:" do
       # Shouldn't of created a new project
       Project.count.should == 1
       
-      # Shouldn't of created a new team member project
+      # Shouldn't of created a new timetable item
       @team_member.reload.timetable_items.count.should == 1
       
       last_response.status.should == 200
@@ -621,7 +621,7 @@ describe "Projects:" do
       post_params! update_project_path(@team, @tm_project), params, @session
       
       last_response.status.should == 400
-      last_response.body.should include("Something went wrong with the input when updating team member project.")
+      last_response.body.should include("Something went wrong with the input when updating timetable item.")
     end
     
     it "should return 400 error with message if it is moved to a team member in another team" do
