@@ -1,3 +1,18 @@
+# 0.10.0
+
+* Major architectural change in user/team members/teams. Combine the
+  concept of user and team members, and calling them all users. Removed
+  users dialog (manage it through the user name button)
+* Ability to show and hide users from the timetable (visible users vs
+  other users)
+* Add form validation on front end
+* Homepage updates
+* Add press kit
+* Update form styles
+* Security enhancements: sanitize output, filter out non-necessary
+  model attributes in `to_json`
+* Fixed up most tests
+
 # 0.9.0
 
 * Project view
