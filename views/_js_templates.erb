@@ -33,7 +33,7 @@
         {% _.each(projects, function(project) { %}
           <li>
             <div class="handle {{ project.css_class() }}"></div>
-            <button name="project_id" type="submit" value="{{ project.get("id") }}" title="{{ project.get("name") }}">{{ project.get("name").substring(0, 40) }}</button>
+            <button name="project_id" type="submit" value="{{ project.escape("id") }}" title="{{ project.escape("name") }}">{{ project.escape("name").substring(0, 40) }}</button>
             <a class="delete" title="Delete project" href="#">×</a>
           </li>
         {% }); %}
@@ -143,8 +143,8 @@
 </script>
 
 <script type="text/template" id="visible-user-template">
-  {% var teamId = userTimetable.get("team_id") %}
-  {% var userId = userTimetable.get("user_id") %}
+  {% var teamId = userTimetable.escape("team_id") %}
+  {% var userId = userTimetable.escape("user_id") %}
   {% var userName = userTimetable.userName() %}
   {% var userEmail = userTimetable.userEmail() %}
   {% var timetableItems = userTimetable.get("timetable_items") %}
@@ -201,7 +201,7 @@
         <ol>
           {% _.each(userTimetables, function(ut) { %}
             {% var comma = (ut === _.last(userTimetables)) ? "" : ","; %}
-            <li class="user" data-user-id="{{ ut.get("user_id") }}"><a class="user-name" href="#">{{ ut.userName() }}</a>{{ comma }}</li>
+            <li class="user" data-user-id="{{ ut.escape("user_id") }}"><a class="user-name" href="#">{{ ut.userName() }}</a>{{ comma }}</li>
           {% }); %}
         </ol>
       </td>
@@ -210,8 +210,8 @@
 </script>
 
 <script type="text/template" id="edit-user-dialog-template">
-  {% var teamId = userTimetable.get("team_id") %}
-  {% var userId = userTimetable.get("user_id") %}
+  {% var teamId = userTimetable.escape("team_id") %}
+  {% var userId = userTimetable.escape("user_id") %}
   {% var userName = userTimetable.userName() %}
   {% var userEmail = userTimetable.userEmail() %}
   {% var isVisible = userTimetable.get("is_visible") %}
@@ -292,10 +292,10 @@
         <td colspan="9"><hr/></td>
       </tr>  <!--the divider-->
       <tr class="project-row {{ oddOrEvenClass }}">
-        <td class="{{ rowClass }} col1" title="{{ project.get("name") }}">
+        <td class="{{ rowClass }} col1" title="{{ project.escape("name") }}">
           <div class="project-title-container">
             <div class="handle {{ project.css_class() }}"></div>
-            <p class="project-title" title="{{ project.get("name") }}">{{ project.get("name").substring(0, 40) }}</p>
+            <p class="project-title" title="{{ project.escape("name") }}">{{ project.escape("name").substring(0, 40) }}</p>
           </div>
         </td>
         
@@ -307,7 +307,7 @@
             {% _.each(userTimetables, function(userTimetable) { %}
               {% var ttItems = userTimetable.get("timetable_items"); %}
               {% _.each(ttItems, function(ttItem) { %}
-                {% if ((ttItem["date"] == "<%= date %>") && (ttItem["project_id"] === project.get("id"))) { %}
+                {% if ((ttItem["date"] == "<%= date %>") && (ttItem["project_id"] === project.escape("id"))) { %}
                   <div class="user-name">{{ userTimetable.userName() }}</div>
                 {% } %} 
               {% }); %}

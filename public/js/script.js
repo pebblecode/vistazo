@@ -25,10 +25,10 @@ App.UserTimetable = Backbone.Model.extend({
     var user = App.users.get(this.get("user_id"));
 
     if (user === undefined) {
-      console.log("Undefined user (for userName): " + this.get("user_id"));
+      console.log("Undefined user (for userName): " + this.escape("user_id"));
       return "";
     } else {
-      return user.get("name");  
+      return user.escape("name");  
     }
   },
   // Convenience method fo getting access to the user email
@@ -36,10 +36,10 @@ App.UserTimetable = Backbone.Model.extend({
     var user = App.users.get(this.get("user_id"));
 
     if (user === undefined) {
-      console.log("Undefined user (for userEmail): " + this.get("user_id"));
+      console.log("Undefined user (for userEmail): " + this.escape("user_id"));
       return "";
     } else {
-      return user.get("email");
+      return user.escape("email");
     }
   },
   addTimetableItem: function(ttItem) {
@@ -398,7 +398,7 @@ App.UserListingView = Backbone.View.extend({
       App.userTimetables.add(userTimetable);
 
       listingView._renderVisibleUserTimetable(userTimetable);
-      App.flashView.render("success", "Successfully added '<em>" + user.get('name') + "</em>'.");
+      App.flashView.render("success", "Successfully added '<em>" + user.escape('name') + "</em>'.");
     })
     .error(function(data) {
       if (data) {
@@ -421,7 +421,7 @@ App.UserListingView = Backbone.View.extend({
     });
   },
   _renderVisibleUserTimetable: function(userTimetable) {
-    // console.log("Render team member row for: " + JSON.stringify(user) + " (" + user.get("id") + "): " + user.get("name"));
+    // console.log("Render team member row for: " + JSON.stringify(user) + " (" + user.escape("id") + "): " + user.escape("name"));
     
     var rowNum = $(this.el).find(".user").length + 1 + 1; // 1 to increment and 1 for header row
     var oddOrEvenClass = rowNum % 2 == 0 ? "even" : "odd";
@@ -541,7 +541,7 @@ App.ExistingProjectsView = Backbone.View.extend({
       // Update model
       App.userTimetables.addTimetableItemForUser(ttItem, userId);
 
-      App.flashView.render("success", resp.get("message"));
+      App.flashView.render("success", resp.escape("message"));
     });
     timetableItem.on("error", function(data) {
       $(newProj).remove();
@@ -695,7 +695,7 @@ App.ProjectDialogView = Backbone.View.extend({
           App.teamProjects.add(retProj);
 
           var projectCssSel = '.' + retProj.css_class();
-          var projectCssStyle = 'background-color: ' + retProj.get("hex_colour") + ';';
+          var projectCssStyle = 'background-color: ' + retProj.escape("hex_colour") + ';';
           var projectStyles = document.createStyleSheet();
           projectStyles.addRule(projectCssSel, projectCssStyle);
           
@@ -717,7 +717,7 @@ App.ProjectDialogView = Backbone.View.extend({
           // Update model
           App.userTimetables.addTimetableItemForUser(ttItem, userId);
 
-          App.flashView.render("success", resp.get("message"));
+          App.flashView.render("success", resp.escape("message"));
         });
         timetableItem.on("error", function(data) {
           $(newProj).remove();
