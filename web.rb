@@ -43,7 +43,7 @@ class VistazoApp < Sinatra::Application
   ##############################################################################
   [:production, :staging].each do |env|
     configure env do
-      setup_mongo_connection(ENV['MONGOLAB_URI'])
+      setup_mongo(env)
     end
   end
 
@@ -52,14 +52,14 @@ class VistazoApp < Sinatra::Application
   end
 
   configure :development do
-    setup_mongo_connection('mongomapper://localhost:27017/vistazo-development')
+    setup_mongo(:development)
     set :session_secret, "wj-Sf/sdf_P49usi#sn132_sdnfij3"
     
     enable :logging
   end
 
   configure :test do
-    setup_mongo_connection('mongomapper://localhost:27017/vistazo-test')
+    setup_mongo(:test)
   end
 
   ##############################################################################
