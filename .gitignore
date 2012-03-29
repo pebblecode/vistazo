@@ -2,6 +2,7 @@
 .bundle
 tmp/**/*
 tmp/*.json
+tmp/*.zip
 .sass-cache
 vendor/bundle
 capybara-*.html
