@@ -137,7 +137,7 @@ App.Project = Backbone.Model.extend({
   // Same logic as lib/css_classes.rb > get_project_css_class
   css_class: function() {
     var formattedId = this.get("id").toLowerCase().replace(/W/g, '-');
-    return "project-" + formattedId;
+    return "project-" + _.escape(formattedId);
   }
 });
 

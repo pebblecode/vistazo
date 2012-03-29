@@ -43,11 +43,11 @@
 </script>
 
 <script type="text/template" id="existing-project-template">
-  <div class='project' data-user-id='{{ tmId }}' data-timetable-item-id='{{ tmProjId }}' data-date='{{ projDate }}'>
+  <div class='project' data-user-id='{{ _.escape(tmId) }}' data-timetable-item-id='{{ _.escape(tmProjId) }}' data-date='{{ _.escape(projDate) }}'>
     <div class='handle-container'>
-      <div class='{{ projHandleCssClass }}'></div>
+      <div class='{{ _.escape(projHandleCssClass) }}'></div>
     </div>
-    <p class='project-title' title='{{ projName }}'>{{ projName.substring(0, 40) }}</p>
+    <p class='project-title' title='{{ _.escape(projName) }}'>{{ _.escape(projName.substring(0, 40)) }}</p>
     <form class='delete-timetable-item-form' action='#' method='post'>
       <button name='delete_project' type='submit' value='true'>×</button>
     </form>
@@ -56,9 +56,9 @@
 
 
 <script type="text/template" id="delete-project-dialog-template">
-  <div id='delete-project-dialog' title='Delete &ldquo;{{ projectName }}&rdquo; project'>
+  <div id='delete-project-dialog' title='Delete &ldquo;{{ _.escape(projectName) }}&rdquo; project'>
     <p class='warning-icon'>W</p><p class='warning-msg'>All items added to the weekly timetable will also be deleted.</p>
-    <form method='post' action='/{{ teamId }}/project/{{ projectId }}/delete'>
+    <form method='post' action='/{{ _.escape(teamId) }}/project/{{ _.escape(projectId) }}/delete'>
       <fieldset class='delete-object-fieldset' title='Delete project'>
       <button class='delete' value='delete' name='delete' type='submit'>delete</button>
       </fieldset>
@@ -153,7 +153,7 @@
   <tr class="row-divider">
     <td colspan="9"><hr/></td>
   </tr>  <!--the divider-->
-  <tr class="user {{ oddOrEvenClass }}" data-user-id="{{ userId }}">
+  <tr class="user {{ _.escape(oddOrEvenClass) }}" data-user-id="{{ userId }}">
     <td class="col1" title="{{ userName }} <{{ userEmail }}>">
       <a href="#" class="user-name">
         {{ userName.substring(0, 40) }}
@@ -171,8 +171,8 @@
 
         {% _.each(timetableItems, function(ti) { %}
           {% if (ti["date"] == "<%= date %>") { %}
-            <div class="project" data-user-id="{{ userId }}" data-timetable-item-id="{{ ti['id'] }}" data-date="<%= date %>"> 
-              <div class="handle-container"><div class="handle project-{{ ti['project_id'] }}"></div></div> <p class="project-title" title="{{ ti['project_name'] }}">{{ ti['project_name'].substring(0, 40) }}</p>
+            <div class="project" data-user-id="{{ userId }}" data-timetable-item-id="{{ _.escape(ti['id']) }}" data-date="<%= date %>"> 
+              <div class="handle-container"><div class="handle project-{{ _.escape(ti['project_id']) }}"></div></div> <p class="project-title" title="{{ _.escape(ti['project_name']) }}">{{ _.escape(ti['project_name'].substring(0, 40)) }}</p>
               <form class="delete-timetable-item-form" action="#" method="post">
                 <button name="delete_project" type="submit" value="true">×</button>
               </form>
@@ -324,9 +324,9 @@
 <script type="text/template" id="errors-template">
   {% var errorKeys = _.keys(errors); %}
   {% if (errorKeys.length > 0) { %}
-    <ul id="{{ id }}" class="errors">
+    <ul id="{{ _.escape(id) }}" class="errors">
       {% _.each(errorKeys, function(key) { %}
-        <li>{{ errors[key] }}</li>
+        <li>{{ _.escape(errors[key]) }}</li>
       {% }); %}
     </ul>
   {% } %}
