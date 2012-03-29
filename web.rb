@@ -316,7 +316,7 @@ post '/:team_id/user-timetables/new-user.json' do
           end
 
           status HTTP_STATUS_BAD_REQUEST_CONFLICT
-          output = { :message => error_message }
+          output = { :message => (h error_message) }
         else
           team.add_user(user, is_visible)
 
@@ -371,7 +371,7 @@ def send_join_team_email_return_error_messages(inviter, to_user, team)
   rescue Exception => e
     logger.warn "Email error: #{e}"
     logger.warn e.backtrace.join("\n")
-    output = { :message =>  "It looks like something went wrong while attempting to send your email. Please try again another time. Error: #{e}" }
+    output = { :message =>  "It looks like something went wrong while attempting to send your email. Please try again another time. Error: #{h e}" }
   end
 
   output
@@ -538,7 +538,7 @@ post '/:team_id/timetable-items/:timetable_item_id/update.json' do
 
         if successful_update
           status HTTP_STATUS_OK
-          output = { :message => "Successfully moved '<em>#{timetable_item.project_name}</em>' project to #{to_user.name} on #{to_date}.", timetable_item: timetable_item }
+          output = { :message => "Successfully moved '<em>#{h timetable_item.project_name}</em>' project to #{h to_user.name} on #{h to_date}.", timetable_item: timetable_item }
         else
           status HTTP_STATUS_INTERNAL_SERVER_ERROR
           output = { :message => "Something went wrong with saving the changes when updating timetable item. Please refresh and try again later.", timetable_item: timetable_item }
@@ -581,10 +581,10 @@ post '/:team_id/users/:user_id/timetable-items/:timetable_item_id/delete.json' d
 
     if did_delete
       status HTTP_STATUS_OK
-      output = { :message => "Successfully deleted timetable item for #{user.name}.", :timetable_item_id => params[:timetable_id] }
+      output = { :message => "Successfully deleted timetable item for #{h user.name}.", :timetable_item_id => params[:timetable_id] }
     else
       status HTTP_STATUS_INTERNAL_SERVER_ERROR
-      output = { :message => "Something went wrong when trying to delete a timetable item for #{user.name}. Please try again later.", :timetable_item_id => params[:timetable_id] }
+      output = { :message => "Something went wrong when trying to delete a timetable item for #{ h user.name}. Please try again later.", :timetable_item_id => params[:timetable_id] }
     end
   else
     status HTTP_STATUS_BAD_REQUEST
