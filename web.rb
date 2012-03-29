@@ -613,7 +613,7 @@ post "/:team_id/project/:project_id/delete" do
 
       team.delete_project_in_timetables!(project)
       Project.delete project.id
-      flash[:success] = "Successfully deleted project '#{project_name}'."
+      flash[:success] = "Successfully deleted project '#{h project_name}'."
     else
       logger.warn "Deleting project failed, not in right team. Project: #{project.team_id}. Got #{params[:team_id]}"
       flash[:warning] = "Invalid team."
@@ -682,7 +682,7 @@ post '/:team_id/users/:user_id/delete' do
       @team.delete_user(user)
       User.delete user.id
 
-      flash[:success] = "Successfully deleted '#{name}'."
+      flash[:success] = "Successfully deleted '#{h name}'."
     else
       flash[:warning] = "Invalid user."
     end
