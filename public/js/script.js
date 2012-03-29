@@ -345,6 +345,7 @@ App.UserListingView = Backbone.View.extend({
 
       $('input[name=name]').val('');
       $('input[name=email]').val('');
+      $('input[name=is_visible]').prop("checked", true);
 
       $("#add-user-dialog").dialog('close');
     } else {
