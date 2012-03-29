@@ -303,7 +303,7 @@ Import files, eg:
     
     mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c users -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-users.json
     mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c teams -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-teams.json
-    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c users -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-users.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c team_members -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-team-members.json
     mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c projects -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-projects.json
     mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c colour_settings -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-colour_settings.json
 
