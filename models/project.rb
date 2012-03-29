@@ -29,7 +29,7 @@ class Project
 
   def serializable_hash(options = {})
     pre_sanitized_hash = super({ 
-      :only => [:id, :name] 
+      :only => [:id, :name, :hex_colour] 
     }.merge(options))
 
     # Sanitize
