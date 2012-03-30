@@ -263,6 +263,22 @@ This is deployed at: http://vistazo.herokuapp.com/
 
 ## Mongo
 
+### Reset database
+
+Development
+
+    rake db:reset:dev   # or rake db:reset:development
+
+Staging
+
+    rake db:reset:staging
+
+Production
+
+    # Uncomment rake task first (done to prevent stupidity)
+    rake db:reset:production
+
+
 ### Import/Export
 
 #### Development import
