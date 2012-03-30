@@ -31,6 +31,30 @@ describe "Homepage" do
   end
 end
 
+describe "Week view" do
+  before do
+    http_authorization!
+    @session = init_omniauth_session
+  end
+  
+  after do
+    clean_db!
+    @session = nil
+  end
+
+  it "should require login" do
+    create_normal_user(@session)
+    
+    # Find added user
+    team = User.first.teams.first
+    get_with_session_login! team_current_week_path(team), @session
+    follow_redirect_with_session_login!(@session)
+    
+    last_response.body.should include("You must be logged in")
+    last_response.body.should include("Start using vistazo")
+  end
+end
+
 describe "Teams:" do
   before do
     http_authorization!
@@ -55,20 +79,6 @@ describe "Teams:" do
       
       last_request.path.should == "/"
       last_response.body.should include("Invalid team.")
-    end
-  end
-  
-  describe "Week view" do
-    it "should require login" do
-      create_normal_user(@session)
-      
-      # Find added user
-      team = User.first.teams.first
-      get_with_session_login! team_current_week_path(team), @session
-      follow_redirect_with_session_login!(@session)
-      
-      last_response.body.should include("You must be logged in")
-      last_response.body.should include("Start using vistazo")
     end
   end
 
