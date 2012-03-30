@@ -1,11 +1,20 @@
 # Rake file to help with Vistazo development
 require 'fileutils'
 
+#####################################################################
+# Server
+#####################################################################
+
 desc "Start the server using the development Procfile."
 task "server" do
   start_server_cmd = "foreman start -f Procfile_development"
   sh start_server_cmd
 end
+
+
+#####################################################################
+# Deploy to staging/production
+#####################################################################
 
 desc "Merge branches, and push to remote server."
 namespace "merge_push_to" do
@@ -81,7 +90,11 @@ namespace "shipit" do
   
 end
 
-# Test rake tasks
+
+#####################################################################
+# Testing
+#####################################################################
+
 require 'rspec/core/rake_task'
 desc "Run specs"
 task :spec do
@@ -110,5 +123,56 @@ begin
 rescue LoadError
   task :jasmine do
     abort "Jasmine is not available. In order to run jasmine, you must: (sudo) gem install jasmine"
+  end
+end
+
+
+#####################################################################
+# Database
+#####################################################################
+require 'mongo_mapper'
+require_relative "lib/mongo_helper"
+
+def ask_are_you_sure?
+  confirmation_word = "YES"
+
+  STDOUT.flush
+  puts "Are you sure? (#{confirmation_word} to continue)"
+
+  input = STDIN.gets.chomp
+  
+  input == confirmation_word
+end 
+
+
+namespace "db" do
+  namespace "reset" do
+    desc "Reset the development database"
+    task :development do
+      setup_mongo(:development)
+      delete_all_collections
+    end
+    desc "Reset the development database (shorthand)"
+    task :dev => :development
+
+    desc "Reset the staging database (Note: needs to be run on the staging server)."
+    task :staging do
+      if ask_are_you_sure?
+        setup_mongo(:staging)
+        delete_all_collections
+      else
+        puts "\nExiting..."
+      end
+    end
+
+    desc "Reset the production database (Note: needs to be run on the production server)."
+    task :production do
+      if ask_are_you_sure?
+        setup_mongo(:production)
+        delete_all_collections
+      else
+        puts "\nExiting..."
+      end
+    end
   end
 end

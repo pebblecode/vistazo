@@ -15,3 +15,17 @@ def setup_mongo_connection(mongo_url)
   MongoMapper.database = url.path.gsub(/^\//, '')
   MongoMapper.database.authenticate(url.user, url.password) if url.user && url.password
 end
+
+def delete_all_collections
+	MongoMapper.database.collections.each do |coll|
+    unless coll.name.match /^system\..+/
+      if defined? logger
+      	logger.warn "Deleting #{coll.name}"
+      else
+      	puts "Deleting #{coll.name}"
+      end
+
+      coll.drop
+    end
+  end
+end
