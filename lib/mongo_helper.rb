@@ -4,7 +4,9 @@ def setup_mongo(env)
 		setup_mongo_connection('mongomapper://localhost:27017/vistazo-development')
 	when :test
 		setup_mongo_connection('mongomapper://localhost:27017/vistazo-test')
-	when :staging || :production
+	when :staging
+		setup_mongo_connection(ENV['MONGOLAB_URI'])
+	when :production
 		setup_mongo_connection(ENV['MONGOLAB_URI'])
 	end
 end
