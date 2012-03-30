@@ -283,9 +283,6 @@ describe "Timetable items:" do
     @team = @user.teams.first
 
     @project = Project.create(:name => "Take over world", :team => @team)
-    @date = Time.new(2012, 3, 26)
-    @another_date = (@date + 1.day)
-    @timetable_item = @team.add_timetable_item(@user, @project, @date)
 
     login_normal_user_with_session!(@session)
   end
@@ -295,8 +292,16 @@ describe "Timetable items:" do
     @session = nil
   end
   
+  describe "Add timetable item" do
+    # Tested in add existing and new projects
+  end
+
   describe "Update timetable item" do
     before do
+      @date = Time.new(2012, 3, 26)
+      @another_date = (@date + 1.day)
+      @timetable_item = @team.add_timetable_item(@user, @project, @date)
+
       @another_user = Factory(:user)
       @team.add_user(@another_user)
 
@@ -306,7 +311,7 @@ describe "Timetable items:" do
     end
     
     it "should require login" do
-      post update_project_path(@team, @timetable_item), nil
+      post update_timetable_item_path(@team, @timetable_item), nil
 
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("You must be logged in.")
@@ -322,7 +327,7 @@ describe "Timetable items:" do
           "to_date" => @to_date
         }
 
-        post_params! update_project_path(@team, @timetable_item), @params, @session
+        post_params! update_timetable_item_path(@team, @timetable_item), @params, @session
         @team.reload
       end
 
@@ -353,7 +358,7 @@ describe "Timetable items:" do
           "to_date" => @from_date
         }
 
-        post_params! update_project_path(@team, @timetable_item), @params, @session
+        post_params! update_timetable_item_path(@team, @timetable_item), @params, @session
         @team.reload
       end
 
@@ -376,7 +381,7 @@ describe "Timetable items:" do
           "to_date" => @to_date
         }
 
-        post_params! update_project_path(@team, @timetable_item), @params, @session
+        post_params! update_timetable_item_path(@team, @timetable_item), @params, @session
         @team.reload
       end
 
@@ -398,7 +403,7 @@ describe "Timetable items:" do
           "to_date" => @to_date
         }
 
-        post_params! update_project_path(@team, @timetable_item), @params, @session
+        post_params! update_timetable_item_path(@team, @timetable_item), @params, @session
         @team.reload
       end
 
@@ -426,7 +431,7 @@ describe "Timetable items:" do
           "to_date" => @to_date
         }
 
-        post_params! update_project_path(@team, @timetable_item), @params, @session
+        post_params! update_timetable_item_path(@team, @timetable_item), @params, @session
         @team.reload
       end
 
@@ -441,6 +446,12 @@ describe "Timetable items:" do
   end
 
   describe "Delete timetable items" do
+    before do
+      @date = Time.new(2012, 3, 26)
+      @another_date = (@date + 1.day)
+      @timetable_item = @team.add_timetable_item(@user, @project, @date)
+    end
+
     it "should delete" do
       post_params! delete_timetable_item_path(@team, @user, @timetable_item), nil, @session
       @team.reload
@@ -599,14 +610,14 @@ describe "Projects:" do
     end
     
     it "should require login" do
-      post add_project_path(@team, @user), @valid_params
+      post add_timetable_item_path(@team, @user), @valid_params
       
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("You must be logged in.")
     end
     
     it "should show success message if passing valid parameters" do
-      post_params! add_project_path(@team, @user), @params.to_json, @session
+      post_params! add_timetable_item_path(@team, @user), @params.to_json, @session
       Project.count.should == 1
 
       last_response.body.should include("Successfully added '<em>Business time</em>' project for #{@user.name} on 2011-12-16.")
@@ -619,7 +630,7 @@ describe "Projects:" do
       invalid_params = @params.merge({ 
         "project_name" => "" 
       })
-      post_params! add_project_path(@team, @user), invalid_params.to_json, @session
+      post_params! add_timetable_item_path(@team, @user), invalid_params.to_json, @session
 
       last_response.body.should include("Please specify a project name.")
 
@@ -630,7 +641,7 @@ describe "Projects:" do
       invalid_params = @params.merge({ 
         "project_name" => nil 
       })
-      post_params! add_project_path(@team, @user), invalid_params.to_json, @session
+      post_params! add_timetable_item_path(@team, @user), invalid_params.to_json, @session
       
       last_response.body.should include("Please specify a project name.")
 
@@ -651,14 +662,14 @@ describe "Projects:" do
     end
     
     it "should require login" do
-      post add_project_path(@team, @user), @params
+      post add_timetable_item_path(@team, @user), @params
       
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("You must be logged in.")
     end
     
     it "should show success message if passing valid parameters" do
-      post_params! add_project_path(@team, @user), @params.to_json, @session
+      post_params! add_timetable_item_path(@team, @user), @params.to_json, @session
       
       last_response.body.should include("Successfully added '<em>#{@project.name}</em>' project for #{@user.name} on #{@date_to_add}.")
       Project.count.should == 1

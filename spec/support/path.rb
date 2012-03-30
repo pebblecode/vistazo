@@ -59,20 +59,25 @@ module PathSpecHelper
 
   
   ############################################################################
-  # Projects
+  # Timetable items
   ############################################################################
-  
-  def add_project_path(team, user)
+
+  def add_timetable_item_path(team, user)
     "/#{team.id}/users/#{user.id}/timetable-items/new.json"
   end
   
-  def update_project_path(team, timetable_item)
+  def update_timetable_item_path(team, timetable_item)
     "/#{team.id}/timetable-items/#{timetable_item.id}/update.json"
   end
-  
-  def update_project_with_team_id_path(team_id, timetable_item)
-    "/#{team_id}/timetable-items/#{timetable_item.id}/update.json"
+
+  def delete_timetable_item_path(team, user, timetable_item)
+    "/#{team.id}/users/#{user.id}/timetable-items/#{timetable_item.id}/delete.json"
   end
+  
+
+  ############################################################################
+  # Projects
+  ############################################################################
   
   def delete_project_path(team, project)
     delete_project_path_with_project_id(team, project.id)
@@ -80,10 +85,6 @@ module PathSpecHelper
   
   def delete_project_path_with_project_id(team, project_id)
     "/#{team.id}/project/#{project_id}/delete"
-  end
-
-  def delete_timetable_item_path(team, user, timetable_item)
-    "/#{team.id}/users/#{user.id}/timetable-items/#{timetable_item.id}/delete.json"
   end
   
 end
