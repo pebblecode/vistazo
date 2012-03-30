@@ -110,6 +110,40 @@ describe "Team model" do
     end
   end
 
+  describe "user_timetable_in_week" do
+    before do
+      @team.add_user(@user)
+
+      @date = Time.new(2012, 3, 26) # Some arbitrary Monday
+      @date_week = @date.strftime("%U")
+      @timetable_item = @team.add_timetable_item(@user, @project, @date)
+
+      @next_week_date = @date + 7.days
+      @next_week_date_week = @next_week_date.strftime("%U")
+      @next_week_timetable_item = @team.add_timetable_item(@user, @project, @next_week_date)
+      @team.reload
+    end
+
+    it "should return the timetable item in the week" do
+      user_timetables = @team.user_timetables_in_week(@date_week)
+      user_timetables.length.should == 1
+      timetable_items = user_timetables.first.timetable_items
+      timetable_items.length.should == 1
+
+      timetable_items.include?(@timetable_item).should == true
+    end
+
+    it "should not return the timetable item in the next week" do
+      user_timetables = @team.user_timetables_in_week(@next_week_date_week)
+      user_timetables.length.should == 1
+      timetable_items = user_timetables.first.timetable_items
+      timetable_items.length.should == 1
+
+      timetable_items.include?(@timetable_item).should == false
+      timetable_items.include?(@next_week_timetable_item).should == true
+    end
+  end
+
   describe "add timetable item" do
     it "should create user_timetables" do
       @team.add_timetable_item(@user, @project, Time.now)

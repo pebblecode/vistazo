@@ -25,6 +25,10 @@ module PathSpecHelper
     team_id_path(team.id)
   end
   
+  def team_week_path(team, year, week)
+    "/#{team.id}/#{year}/week/#{week}"
+  end
+
   def team_current_week_path(team)
     "/#{team.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
   end
@@ -73,7 +77,7 @@ module PathSpecHelper
   def delete_timetable_item_path(team, user, timetable_item)
     "/#{team.id}/users/#{user.id}/timetable-items/#{timetable_item.id}/delete.json"
   end
-  
+
 
   ############################################################################
   # Projects

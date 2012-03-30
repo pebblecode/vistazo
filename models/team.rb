@@ -61,6 +61,16 @@ class Team
     self.user_timetables.delete_if { |ut| ut.user_id == user.id } 
     self.save
   end
+
+  def user_timetables_in_week(week_num)
+    user_timetables = self.user_timetables
+
+    user_timetables.each do |ut|
+      ut.timetable_items = ut.timetable_items.select { |ti| ti.date.strftime("%U") == week_num }
+    end
+
+    user_timetables.clone
+  end
   
   def has_user_timetable?(user)
     self.user_timetables.select { |ut| ut.user == user }.length > 0

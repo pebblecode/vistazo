@@ -40,32 +40,34 @@
       $(['/img/loading.gif']).preload();
     });
   </script>
-  <script src="/js/script.js" type="text/javascript"></script>
-  <script type="text/javascript">
-    $(function () {
-      ///////////////////////////////////////////////////////////////
-      // Set up backbone
-      ///////////////////////////////////////////////////////////////
-      App.flashView = new App.FlashView({el: "#main"});
+  <% unless @is_error %>
+    <script src="/js/script.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      $(function () {
+        ///////////////////////////////////////////////////////////////
+        // Set up backbone
+        ///////////////////////////////////////////////////////////////
+        App.flashView = new App.FlashView({el: "#main"});
 
-      // Dialogs
-      App.projectDialogView = new App.ProjectDialogView({el: "body"});
-      App.teamDialogView = new App.TeamDialogView({el: "body"});
-      App.addUserDialogView = new App.AddUserDialogView({el: "body"});
-      App.editUserDialogView = new App.EditUserDialogView({el: "body"});
+        // Dialogs
+        App.projectDialogView = new App.ProjectDialogView({el: "body"});
+        App.teamDialogView = new App.TeamDialogView({el: "body"});
+        App.addUserDialogView = new App.AddUserDialogView({el: "body"});
+        App.editUserDialogView = new App.EditUserDialogView({el: "body"});
 
-      App.teamProjects = new App.Projects;
-      App.teamProjects.reset(<%= @projects.to_json %>);
+        App.teamProjects = new App.Projects;
+        App.teamProjects.reset(<%= @projects.to_json %>);
 
-      App.users = new App.Users;
-      App.users.reset(<%= @users.to_json %>);
+        App.users = new App.Users;
+        App.users.reset(<%= @users.to_json %>);
 
-      App.userTimetables = new App.UserTimetables;
-      App.userTimetables.reset(<%= @team.user_timetables.to_json if @team %>)
+        App.userTimetables = new App.UserTimetables;
+        App.userTimetables.reset(<%= @user_timetables.to_json if @user_timetables %>)
 
-      App.timetableViewSelector = new App.TimetableViewSelector({el: $("#view-selector")})
-    });
-  </script>
+        App.timetableViewSelector = new App.TimetableViewSelector({el: $("#view-selector")})
+      });
+    </script>
+  <% end %>
 </head>
 <%
   body_classes = []

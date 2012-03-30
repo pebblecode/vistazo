@@ -213,6 +213,7 @@ get '/:team_id/:year/week/:week_num' do
 
       @projects = Project.where(:team_id => @team.id).sort(:name)
       @users = User.where(:team_ids => @team.id).sort(:name)
+      @user_timetables = @team.user_timetables_in_week(week_num)
 
       erb :timetable
     else
