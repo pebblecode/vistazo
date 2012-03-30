@@ -69,7 +69,6 @@
 </head>
 <%
   body_classes = []
-  body_classes << 'is-super-admin' if is_super_admin?
   body_classes << 'first-signon' if @first_signon
 %>
 <body class='<%= body_classes.join(" ") %>'>
@@ -85,17 +84,6 @@
         <h2><%= h @team.name %></h2>
       </div>
     <% end %>
-    
-    <% if is_super_admin? %>
-      <ul id="modify-data" style="<%= (settings.environment == "production") ? "display: none" : "" %>">
-        <li>
-          <form action="/reset" method="post">
-            <button name="reset_database" type="submit" value="submit">Reset database</button>
-          </form>
-        </li>
-      </ul>
-    <% end %>
-    
     
     <!-- <p class="top-symbols">U</p> 
     <div class="top-spacer right"></div> 

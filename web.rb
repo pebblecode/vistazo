@@ -91,26 +91,6 @@ end
 
 
 # ----------------------------------------------------------------------------
-# Admin testing
-# ----------------------------------------------------------------------------
-
-post '/reset' do
-  protected!
-
-  # Delete everything except system collections
-  MongoMapper.database.collections.each do |coll|
-    unless coll.name.match /^system\..+/
-      logger.warn "Deleting #{coll.name}"
-      coll.drop
-    end
-  end
-
-  flash[:success] = "Successfully cleared out the database. All nice and clean now."
-  redirect '/'
-end
-
-
-# ----------------------------------------------------------------------------
 # Authentication
 # NOTE: This must be loaded first
 # ----------------------------------------------------------------------------

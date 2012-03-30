@@ -1779,14 +1779,6 @@ footer{
   }
 }
 
-/* Super admin
------------------------------------------------------------------------------*/
-
-.is-super-admin {
-  .logged-in-as {
-    background-color: #FF7C69;
-  }
-}
 
 /* Misc
 -----------------------------------------------------------------------------*/
@@ -1794,21 +1786,6 @@ footer{
 .help-on {
   #overlay-bg{
     @include overlay;
-  }
-}
-
-/* For debugging - to seed/reset db */
-#modify-data {
-  display: block;
-  position: absolute;
-  top: 42px;
-  left: 0px;
-  
-  a {
-    padding: 5px;
-    color: white;
-    display: block;
-    text-decoration: none;
   }
 }
 
