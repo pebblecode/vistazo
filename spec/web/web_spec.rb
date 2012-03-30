@@ -283,7 +283,8 @@ describe "Timetable items:" do
     @team = @user.teams.first
 
     @project = Project.create(:name => "Take over world", :team => @team)
-    @date = Time.now
+    @date = Time.new(2012, 3, 26)
+    @another_date = (@date + 1.day)
     @timetable_item = @team.add_timetable_item(@user, @project, @date)
 
     login_normal_user_with_session!(@session)
@@ -294,14 +295,159 @@ describe "Timetable items:" do
     @session = nil
   end
   
-  describe "Delete timetable items" do
-    it "should delete" do
-      post_params! delete_timetable_item_path(@team, @user, @timetable_item), nil, @session
+  describe "Update timetable item" do
+    before do
+      @another_user = Factory(:user)
+      @team.add_user(@another_user)
 
-      pending
+      @from_user = @user
+      @from_date = @date
+      @team.reload
+    end
+    
+    it "should require login" do
+      post update_project_path(@team, @timetable_item), nil
+
+      flash_message = last_request.session[:flash]
+      flash_message[:warning].should include("You must be logged in.")
+    end
+    
+    describe "to different date and same user" do
+      before do
+        @to_user = @user
+        @to_date = @another_date
+        @params = {
+          "from_user_id" => @from_user.id,
+          "to_user_id" => @to_user.id,
+          "to_date" => @to_date
+        }
+
+        post_params! update_project_path(@team, @timetable_item), @params, @session
+        @team.reload
+      end
+
+      it "should not create any new projects" do
+        Project.count.should == 1
+      end
+
+      it "should not create any new timetable items" do
+        @team.user_timetable_items(@from_user).count.should == 1
+      end
+
+      it "should return 200 status" do
+        last_response.status.should == 200
+      end
+
+      it "should return a success message" do
+        last_response.body.should include("Successfully moved '<em>#{@project.name}</em>' project to #{@to_user.name} on #{@to_date.strftime("%F")}.")
+      end
+    end
+    
+    describe "to same date and different user" do
+      before do
+        @to_user = @another_user
+        @to_date = @date
+        @params = {
+          "from_user_id" => @from_user.id,
+          "to_user_id" => @to_user.id,
+          "to_date" => @from_date
+        }
+
+        post_params! update_project_path(@team, @timetable_item), @params, @session
+        @team.reload
+      end
+
+      it "should return 200 status" do
+        last_response.status.should == 200
+      end
+
+      it "should return a success message" do
+        last_response.body.should include("Successfully moved '<em>#{@project.name}</em>' project to #{@to_user.name} on #{@to_date.strftime("%F")}.")
+      end
+    end
+
+    describe "to different date and different user" do
+      before do
+        @to_user = @another_user
+        @to_date = @another_date
+        @params = {
+          "from_user_id" => @from_user.id,
+          "to_user_id" => @to_user.id,
+          "to_date" => @to_date
+        }
+
+        post_params! update_project_path(@team, @timetable_item), @params, @session
+        @team.reload
+      end
+
+      it "should return 200 status" do
+        last_response.status.should == 200
+      end
+
+      it "should return a success message" do
+        last_response.body.should include("Successfully moved '<em>#{@project.name}</em>' project to #{@to_user.name} on #{@to_date.strftime("%F")}.")
+      end
+    end
+    
+    describe "to invalid user" do
+      before do
+        @to_date = @date
+        @params = {
+          "from_user_id" => @from_user.id,
+          "to_user_id" => "not_a_valid_user",
+          "to_date" => @to_date
+        }
+
+        post_params! update_project_path(@team, @timetable_item), @params, @session
+        @team.reload
+      end
+
+      it "should return 400 status" do
+        last_response.status.should == 400
+      end
+
+      it "should return error message" do
+        last_response.body.should include("Something went wrong with the input when updating timetable item.")
+      end
+    end
+
+    describe "to a user in another team" do
+      before do
+        @another_team = Factory(:team)
+        @another_team_user = Factory(:user)
+        @another_team.add_user(@another_team_user)
+        
+        @to_user = @another_team_user
+        @to_date = @another_date
+
+        @params = {
+          "from_user_id" => @from_user.id,
+          "to_user_id" => @to_user.id,
+          "to_date" => @to_date
+        }
+
+        post_params! update_project_path(@team, @timetable_item), @params, @session
+        @team.reload
+      end
+
+      it "should return 400 status" do
+        last_response.status.should == 400
+      end
+
+      it "should return error message" do
+        last_response.body.should include("Invalid team.")
+      end
     end
   end
 
+  describe "Delete timetable items" do
+    it "should delete" do
+      post_params! delete_timetable_item_path(@team, @user, @timetable_item), nil, @session
+      @team.reload
+
+      @team.user_timetable_items(@user).count.should == 0
+    end
+  end
 end
 
 describe "Delete project:" do
@@ -519,169 +665,6 @@ describe "Projects:" do
 
       @team.reload
       @team.user_timetable_items(@user).count.should == 1
-    end
-  end
-  
-  describe "Update timetable item" do
-    before do
-      @from_user = @user
-      @to_user = Factory(:user)
-      @project = Factory(:project, :name => "Business time", :team => @team)
-      
-      @team.add_user(@from_user)
-      @team.add_user(@to_user)
-
-      @from_date = Time.now
-      @timetable_item = @team.add_timetable_item(@user, @project, @from_date)
-      @team.reload
-
-      @to_date = Time.now + 1.day
-      
-    end
-    
-    it "should require login" do
-      post update_project_path(@team, @timetable_item), nil
-
-      flash_message = last_request.session[:flash]
-      flash_message[:warning].should include("You must be logged in.")
-    end
-    
-    describe "to different date and same user" do
-      before do
-        @params = {
-          "from_user_id" => @from_user.id,
-          "to_user_id" => @from_user.id,
-          "project_id" => @project.id,
-          "date" => @to_date
-        }
-
-        post_params! update_project_path(@team, @timetable_item), @params, @session
-        @team.reload
-
-        pending "TODO: params: {} for some reason"
-      end
-
-      it "should not create any new projects" do
-        Project.count.should == 1
-      end
-
-      it "should not create any new timetable items" do
-        @team.user_timetable_items(@from_user).count.should == 1
-      end
-
-      it "should return 200 status" do
-        debugger
-        last_response.status.should == 200
-      end
-
-      it "should return a success message" do
-        last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{@params["name"]} on #{@params["date"]}.")
-      end
-    end
-    
-    describe "to same date and different user" do
-      before do
-        @params = {
-          "timetable_item_id" => @timetable_item,
-          "from_user_id" => @from_user.id,
-          "to_user_id" => @to_user.id,
-          "project_id" => @project.id,
-          "date" => @from_date
-        }
-
-        post_params! update_project_path(@team, @timetable_item), @params, @session
-        @team.reload
-
-        pending "TODO: params: {} for some reason"
-      end
-
-      it "should return 200 status" do
-        debugger
-        last_response.status.should == 200
-      end
-
-      it "should return a success message" do
-        last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{@params["name"]} on #{@params["date"]}.")
-      end
-    end
-
-    describe "to different date and different user" do
-      before do
-        @params = {
-          "timetable_item_id" => @timetable_item,
-          "from_user_id" => @from_user.id,
-          "to_user_id" => @to_user.id,
-          "project_id" => @project.id,
-          "date" => @to_date
-        }
-
-        post_params! update_project_path(@team, @timetable_item), @params, @session
-        @team.reload
-
-        pending "TODO: params: {} for some reason"
-      end
-
-      it "should return 200 status" do
-        last_response.status.should == 200
-      end
-
-      it "should return a success message" do
-        last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{@params["name"]} on #{@params["date"]}.")
-      end
-    end
-    
-    describe "to invalid user" do
-      before do
-        @params = {
-          "timetable_item_id" => @timetable_item,
-          "from_user_id" => @from_user.id,
-          "to_user_id" => "not_an_id",
-          "project_id" => @project.id,
-          "date" => @to_date
-        }
-
-        post_params! update_project_path(@team, @timetable_item), @params, @session
-        @team.reload
-
-        pending "TODO: params: {} for some reason"
-      end
-
-      it "should return 400 status" do
-        last_response.status.should == 400
-      end
-
-      it "should return error message" do
-        last_response.body.should include("Something went wrong with the input when updating timetable item.")
-      end
-    end
-
-    describe "to a user in another team" do
-      before do
-        @another_team = Factory(:team)
-        @another_user = Factory(:user)
-        @another_team.add_user(@another_user)
-
-        @params = {
-          "timetable_item_id" => @timetable_item,
-          "from_user_id" => @from_user.id,
-          "to_user_id" => @another_user.id,
-          "project_id" => @project.id,
-          "date" => @to_date
-        }
-
-        post_params! update_project_path(@team, @timetable_item), @params, @session
-        @team.reload
-
-        pending "TODO: params: {} for some reason"
-      end
-
-      it "should return 400 status" do
-        last_response.status.should == 400
-      end
-
-      it "should return error message" do
-        last_response.body.should include("Invalid team.")
-      end
     end
   end
 end
