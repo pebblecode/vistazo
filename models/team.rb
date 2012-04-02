@@ -66,10 +66,10 @@ class Team
     user_timetables = self.user_timetables
 
     user_timetables.each do |ut|
-      ut.timetable_items = ut.timetable_items.select { |ti| ti.date.strftime("%U") == week_num }
+      ut.timetable_items = ut.timetable_items.select { |ti| ti.date.strftime("%U") == week_num.to_s }
     end
 
-    user_timetables.clone
+    user_timetables
   end
   
   def has_user_timetable?(user)
