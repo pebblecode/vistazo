@@ -354,7 +354,7 @@ describe "Timetable items:" do
       end
 
       it "should return a success message" do
-        last_response.body.should include("Successfully moved '<em>#{@project.name}</em>' project to #{@to_user.name} on #{@to_date.strftime("%F")}.")
+        last_response.body.should include("Successfully moved '#{@project.name}' project to #{@to_user.name} on #{@to_date.strftime("%F")}.")
       end
     end
     
@@ -377,7 +377,7 @@ describe "Timetable items:" do
       end
 
       it "should return a success message" do
-        last_response.body.should include("Successfully moved '<em>#{@project.name}</em>' project to #{@to_user.name} on #{@to_date.strftime("%F")}.")
+        last_response.body.should include("Successfully moved '#{@project.name}' project to #{@to_user.name} on #{@to_date.strftime("%F")}.")
       end
     end
 
@@ -400,7 +400,7 @@ describe "Timetable items:" do
       end
 
       it "should return a success message" do
-        last_response.body.should include("Successfully moved '<em>#{@project.name}</em>' project to #{@to_user.name} on #{@to_date.strftime("%F")}.")
+        last_response.body.should include("Successfully moved '#{@project.name}' project to #{@to_user.name} on #{@to_date.strftime("%F")}.")
       end
     end
     
@@ -630,7 +630,7 @@ describe "Projects:" do
       post_params! add_timetable_item_path(@team, @user), @params.to_json, @session
       Project.count.should == 1
 
-      last_response.body.should include("Successfully added '<em>Business time</em>' project for #{@user.name} on 2011-12-16.")
+      last_response.body.should include("Successfully added 'Business time' project for #{@user.name} on 2011-12-16.")
       
       @team.reload
       @team.user_timetable_items(@user).count.should == 1
@@ -681,7 +681,7 @@ describe "Projects:" do
     it "should show success message if passing valid parameters" do
       post_params! add_timetable_item_path(@team, @user), @params.to_json, @session
       
-      last_response.body.should include("Successfully added '<em>#{@project.name}</em>' project for #{@user.name} on #{@date_to_add}.")
+      last_response.body.should include("Successfully added '#{@project.name}' project for #{@user.name} on #{@date_to_add}.")
       Project.count.should == 1
 
       @team.reload

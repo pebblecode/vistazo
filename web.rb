@@ -448,7 +448,7 @@ post '/:team_id/users/:user_id/timetable-items/new.json' do
     if (user.present? and project.present? and date.present?)
       timetable_item = team.add_timetable_item(user, project, date)
       
-      outputMsg = "Successfully added '<em>#{project.name}</em>' project for #{user.name} on #{date}."
+      outputMsg = "Successfully added '#{project.name}' project for #{user.name} on #{date}."
 
       status HTTP_STATUS_OK
       output = { :message => outputMsg, :timetable_item => timetable_item }
@@ -467,7 +467,7 @@ post '/:team_id/users/:user_id/timetable-items/new.json' do
         project = Project.create(:name => project_name, :team => team)
         timetable_item = team.add_timetable_item(user, project, date)
         
-        outputMsg = "Successfully added '<em>#{project.name}</em>' project for #{user.name} on #{date}."
+        outputMsg = "Successfully added '#{project.name}' project for #{user.name} on #{date}."
 
         status HTTP_STATUS_OK
         output = { :message => outputMsg, :timetable_item => timetable_item, :project => project }
@@ -519,7 +519,7 @@ post '/:team_id/timetable-items/:timetable_item_id/update.json' do
 
         if successful_update
           status HTTP_STATUS_OK
-          output = { :message => "Successfully moved '<em>#{h timetable_item.project_name}</em>' project to #{h to_user.name} on #{h to_date}.", timetable_item: timetable_item }
+          output = { :message => "Successfully moved '#{h timetable_item.project_name}' project to #{h to_user.name} on #{h to_date}.", timetable_item: timetable_item }
         else
           status HTTP_STATUS_INTERNAL_SERVER_ERROR
           output = { :message => "Something went wrong with saving the changes when updating timetable item. Please refresh and try again later.", timetable_item: timetable_item }

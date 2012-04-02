@@ -404,7 +404,7 @@ App.UserListingView = Backbone.View.extend({
         listingView._renderOtherUsers(userTimetable);
       }
       
-      App.flashView.render("success", "Successfully added '<em>" + user.escape('name') + "</em>'.");
+      App.flashView.render("success", "Successfully added '" + user.escape('name') + "'.");
     })
     .error(function(data) {
       if (data) {
