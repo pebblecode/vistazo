@@ -240,23 +240,26 @@ get '/:team_id/:year/month/:month' do
 
   if @team.present?
     @year = params[:year].to_i
-    month = params[:month].to_i
+    @month = params[:month].to_i
 
-    if ((1..NUM_MONTHS_IN_A_YEAR).include? month) and (@year > START_YEAR)
-      prev_month = ((month - 1) <= 0) ? NUM_MONTHS_IN_A_YEAR : month - 1
-      prev_month_year = ((month - 1) <= 0) ? @year - 1 : @year
+    if ((1..NUM_MONTHS_IN_A_YEAR).include? @month) and (@year > START_YEAR)
+      prev_month = ((@month - 1) <= 0) ? NUM_MONTHS_IN_A_YEAR : @month - 1
+      prev_month_year = ((@month - 1) <= 0) ? @year - 1 : @year
       @prev_month_url = (prev_month_year > START_YEAR) ? "/#{params[:team_id]}/#{prev_month_year}/month/#{prev_month}" : nil
 
-      next_month = ((month + 1) > NUM_MONTHS_IN_A_YEAR) ? 1 : month + 1
-      next_month_year = ((month + 1) > NUM_MONTHS_IN_A_YEAR) ? @year + 1 : @year
-      @next_week_url = "/#{params[:team_id]}/#{next_month_year}/month/#{next_month}"
+      next_month = ((@month + 1) > NUM_MONTHS_IN_A_YEAR) ? 1 : @month + 1
+      next_month_year = ((@month + 1) > NUM_MONTHS_IN_A_YEAR) ? @year + 1 : @year
+      @next_month_url = "/#{params[:team_id]}/#{next_month_year}/month/#{next_month}"
 
       @projects = Project.where(:team_id => @team.id).sort(:name)
       @users = User.where(:team_ids => @team.id).sort(:name)
-      @user_timetables = @team.user_timetables_in_month(month)
+      @user_timetables = @team.user_timetables_in_month(@month)
 
       # This month
-      @month_link_url = "/#{params[:team_id]}/#{@year}/month/#{month}"
+      @month_link_url = "/#{params[:team_id]}/#{@year}/month/#{@month}"
+      @days_in_month = days_in_month(@year, @month)
+      @month_label = Date::MONTHNAMES[@month]
+      @is_month_view = true
 
       erb :timetable
     else

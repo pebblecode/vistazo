@@ -499,10 +499,42 @@ App.ProjectListingView = Backbone.View.extend({
 
 App.MonthListingView = Backbone.View.extend({
   render: function() {
-    console.log("month view");
+    // Put month scaffold on page
+    var monthTable = _.template($("#month-template").html());
+    if ($("#timetable").length <= 0) {
+      $(this.el).append(monthTable);
+    } else {
+      $("#timetable").replaceWith(monthTable);
+    }
+    // Show users
+    this._renderVisibleUserTimetables();
+    // this._renderOtherUsers(); // TODO
 
-    // Fetch month data
-  }
+    return this;
+  },
+  _renderVisibleUserTimetables: function() {
+    thisView = this;
+    _.each(App.userTimetables.visibleTimetables(), function(userTimetable) {
+      thisView._renderVisibleUserTimetable(userTimetable);
+    });
+  },
+  _renderVisibleUserTimetable: function(userTimetable) {
+    // console.log("Render team member row for: " + JSON.stringify(user) + " (" + user.escape("id") + "): " + user.escape("name"));
+    
+    var rowNum = $(this.el).find(".user").length + 1 + 1; // 1 to increment and 1 for header row
+    var oddOrEvenClass = rowNum % 2 == 0 ? "even" : "odd";
+    var userTemplateVars = {
+      userTimetable: userTimetable,
+      oddOrEvenClass: oddOrEvenClass
+    };
+    var userTimetableHtml = _.template($("#month-visible-user-template").html(), userTemplateVars);
+    
+    $(this.el).find('#content').append(userTimetableHtml);
+
+    // TODO
+    // setupNewProjectDialog();
+    // setupProjectEvents();
+  },
 });
 
 
