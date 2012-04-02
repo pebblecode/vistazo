@@ -72,13 +72,11 @@
       <tr>
         <th class="first-row col1"> 
           <% if @prev_week_url.present? %>
-            <a href="<%= @prev_week_url %>" class="arrows" title="Previous week">(</a>
+            <a href="<%= @prev_week_url %>" class="arrows" title="Previous week">( <div id="help-week"></div><div id="help-edit"></div></a>
           <% end %>
         </th>
       
         <th class="first-row col2">
-          <div id="help-week"></div>
-          <div id="help-edit"></div>
           <p class="day"><%= @monday_date.strftime("%a") %></p> <p class="date"><%= @monday_date.day.ordinalize %></p><p class="month"><%= @monday_date.strftime("%b") %></p>
           
           <% if is_today?(@monday_date) %>
