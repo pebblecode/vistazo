@@ -14,6 +14,10 @@ module Sinatra
     def is_today?(date)
       (date.year == Time.now.year) and (date.month == Time.now.month) and (date.day == Time.now.day)
     end
+
+    def team_id_current_week_link_url(team_id)
+      "/#{team_id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+    end
   end
   helpers HelperMethods
 end

@@ -210,8 +210,15 @@ App.TeamDialogView = Backbone.View.extend({
 
 App.TimetableViewSelector = Backbone.View.extend({
   initialize: function() {
-    // Show team view by default
-    this._showTeamView();
+    if (this._isMonthUrl()) {
+      this._showMonthView();
+      this._setActiveView("#view-selector #month-view-selector");
+    } else {
+      this._showTeamView();
+      this._setActiveView("#view-selector #team-view-selector");
+
+      // TODO: Do for project
+    }
   },
   events: { 
     "click #view-selector li a": "render"
@@ -222,19 +229,29 @@ App.TimetableViewSelector = Backbone.View.extend({
     var parentId = $(viewLink).parent().attr("id");
 
     if (parentId !== currentViewId) {
-      // Clear view
-      $('#content').empty();
-
       // Show relevant view
       if (parentId === "team-view-selector") {
-        this._showTeamView();
-      } else if (parentId === "project-view-selector") {
-        this._showProjectView();
-      }
-      this._setActiveView("#" + parentId);
-    }
+        $('#content').empty();
 
-    return false;
+        this._showTeamView();
+        this._setActiveView("#" + parentId);
+        event.preventDefault();
+      } else if (parentId === "project-view-selector") {
+        $('#content').empty();
+
+        this._showProjectView();
+        this._setActiveView("#" + parentId);
+        event.preventDefault();
+      } else if (parentId === "month-view-selector") {
+        // Do nothing, let it pass through to the link location
+        // Month view is shown on load
+      }
+    } else {
+      event.preventDefault();
+    }
+  },
+  _isMonthUrl: function() {
+    return window.location.pathname.split('/')[3] === "month";
   },
   _setActiveView: function(viewSelector) {
     $("#view-selector .active").each(function() {
@@ -249,6 +266,10 @@ App.TimetableViewSelector = Backbone.View.extend({
   _showProjectView: function() {
     App.projectListingView = App.projectListingView || new App.ProjectListingView({ el: $("#main") });
     App.projectListingView.render();
+  },
+  _showMonthView: function() {
+    App.monthListingView = App.monthListingView || new App.MonthListingView({ el: $("#main") });
+    App.monthListingView.render();
   }
 });
 
@@ -275,8 +296,6 @@ App.AddUserDialogView = Backbone.View.extend({
 
     $("#add-user-dialog").dialog('open');
     overlayCloseOnClick();
-
-    App.userListingView = new App.UserListingView({el: "body"});
 
     event.preventDefault();
   }
@@ -477,6 +496,15 @@ App.ProjectListingView = Backbone.View.extend({
     return this;
   }
 });
+
+App.MonthListingView = Backbone.View.extend({
+  render: function() {
+    console.log("month view");
+
+    // Fetch month data
+  }
+});
+
 
 App.ExistingProjectsView = Backbone.View.extend({
   events: {

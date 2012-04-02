@@ -529,6 +529,27 @@ textarea:focus, input:focus{
   left: 15px;
 
   li {
+    position: absolute;
+
+    &#team-view-selector {
+      top: 0;
+      left: 0;
+    }
+    &#project-view-selector {
+      top: 0;
+      left: 108px;
+    }
+    &#month-view-selector {
+      top: 0;
+      left: 216px;
+    }
+    &.active a {
+      background-color: white;
+      color: #555;
+      position: absolute;
+      z-index: 200;
+    }
+
     a {
       @include border-radius(5px);
       outline: none;
@@ -542,22 +563,6 @@ textarea:focus, input:focus{
       text-decoration: none;
       color: #bbbbbb;
       background-color: #E6E6E6;
-    }
-    &#team-view-selector {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-    &#project-view-selector {
-      position: absolute;
-      top: 0;
-      left: 108px;
-    }
-    &.active a {
-      background-color: white;
-      color: #555;
-      position: absolute;
-      z-index: 200;
     }
   }
 } // #view-selector

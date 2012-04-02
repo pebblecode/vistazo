@@ -176,7 +176,7 @@ get '/' do
   erb :homepage, :layout => false
 end
 
-# Vistazo timetable view - the crux of the app
+# Timetable week view
 get '/:team_id/:year/week/:week_num' do
   protected!
   require_team_user!(params[:team_id])
@@ -215,9 +215,52 @@ get '/:team_id/:year/week/:week_num' do
       @users = User.where(:team_ids => @team.id).sort(:name)
       @user_timetables = @team.user_timetables_in_week(week_num)
 
+      # The month from monday
+      month = @monday_date.month
+      @month_link_url = "/#{params[:team_id]}/#{year}/month/#{month}"
+
+      @is_week_view = true
+
       erb :timetable
     else
-      flash.next[:warning] = "Invalid week and year."
+      flash.next[:warning] = "Invalid week or year."
+      redirect "/#{params[:team_id]}"
+    end
+  else
+    flash.next[:warning] = "Invalid team."
+    redirect back
+  end
+end
+
+get '/:team_id/:year/month/:month' do
+  protected!
+  require_team_user!(params[:team_id])
+    
+  @team = Team.find(params[:team_id])
+
+  if @team.present?
+    @year = params[:year].to_i
+    month = params[:month].to_i
+
+    if ((1..NUM_MONTHS_IN_A_YEAR).include? month) and (@year > START_YEAR)
+      prev_month = ((month - 1) <= 0) ? NUM_MONTHS_IN_A_YEAR : month - 1
+      prev_month_year = ((month - 1) <= 0) ? @year - 1 : @year
+      @prev_month_url = (prev_month_year > START_YEAR) ? "/#{params[:team_id]}/#{prev_month_year}/month/#{prev_month}" : nil
+
+      next_month = ((month + 1) > NUM_MONTHS_IN_A_YEAR) ? 1 : month + 1
+      next_month_year = ((month + 1) > NUM_MONTHS_IN_A_YEAR) ? @year + 1 : @year
+      @next_week_url = "/#{params[:team_id]}/#{next_month_year}/month/#{next_month}"
+
+      @projects = Project.where(:team_id => @team.id).sort(:name)
+      @users = User.where(:team_ids => @team.id).sort(:name)
+      @user_timetables = @team.user_timetables_in_month(month)
+
+      # This month
+      @month_link_url = "/#{params[:team_id]}/#{@year}/month/#{month}"
+
+      erb :timetable
+    else
+      flash.next[:warning] = "Invalid month or year."
       redirect "/#{params[:team_id]}"
     end
   else
@@ -260,7 +303,7 @@ get '/:team_id' do
   @team = Team.find(params[:team_id])
   logger.info "Team page (#{@team}) with user: #{current_user}"
   if @team.present?
-    redirect "/#{params[:team_id]}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+    redirect team_id_current_week_link_url(@team.id)
   else
     flash.next[:warning] = "Invalid team."
     redirect '/'

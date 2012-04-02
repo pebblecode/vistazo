@@ -106,8 +106,9 @@
   
   <% unless @is_error %>
     <ul id="view-selector">
-      <li id="team-view-selector" class="active"><a href="#" title="View team member listing">Team view</a></li>
-      <li id="project-view-selector"><a href="#" title="View project listing">Project view</a></li>
+      <li id="team-view-selector"><a href="<%= team_id_current_week_link_url(@team.id) %>" title="View team member listing">Team view</a></li>
+      <li id="project-view-selector"><a href="<%= "#{team_id_current_week_link_url(@team.id)}?project-view" %>" title="View project listing">Project view</a></li>
+      <li id="month-view-selector"><a href="<%= @month_link_url %>" title="View month listing">Month view</a></li>
     </ul>
   <% end %>
 

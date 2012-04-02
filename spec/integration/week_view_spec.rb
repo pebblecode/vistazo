@@ -12,6 +12,7 @@ feature "Week view" do
   
   after do
     clean_db!
+    @session = nil
   end
   
   scenario "should show error message if there is an invalid team id" do
