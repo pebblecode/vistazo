@@ -539,6 +539,9 @@ textarea:focus, input:focus{
     &#project-view-selector {
       top: 0;
       left: 108px;
+      a{
+        background-color: #f3f3f3;
+      }
     }
     &#month-view-selector {
       top: 0;
@@ -546,7 +549,7 @@ textarea:focus, input:focus{
     }
     &.active a {
       background-color: white;
-      color: #555;
+      color: #666;
       position: absolute;
       z-index: 200;
     }
@@ -818,7 +821,7 @@ textarea:focus, input:focus{
           font-weight: bold;
           font-size: 10px;
           line-height: 12px;
-          color: #333;
+          color: #999;
           text-align: center;
         }
         .arrows {
@@ -832,9 +835,19 @@ textarea:focus, input:focus{
           text-align: center;
           position: relative;
         }
-        .is-weekend {
-          background-color: rgba(0, 0, 0, 0.1);
+        
+        &.even{
+          .is-weekend {
+            background: transparent url('/img/hatch1-desat.gif')
+          } 
         }
+        
+        &.odd{
+          .is-weekend {
+            background: transparent url('/img/hatch2-desat.gif')
+          } 
+        }
+        
         &.user {
           .project {
             background-color: transparent;
@@ -1908,10 +1921,11 @@ footer{
 #tiptip_content {
   @include border-radius(5px);
 
-  font-size: 1.5em;
+  font-size: 1em;
   font-weight: bold;
-  padding: 0.5em 0.6em;
+  padding: 0.4em 0.5em;
   background-color: hsl(0, 0%, 100%);
+  color: #808080;
 }
 
 #tiptip_arrow, #tiptip_arrow_inner {
