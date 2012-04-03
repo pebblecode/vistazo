@@ -15,6 +15,11 @@
         <%= ".#{project.css_class}" %> {
           background-color: <%= "#{project.hex_colour}" %>;
         }
+        /* For tooltips */
+        <%= "#tiptip_content.#{project.css_class}" %> {
+          color: <%= "#{project.hex_colour}" %>;
+          border: 3px solid <%= "#{project.hex_colour}" %>;
+        }
       <% end %>
     </style>
   <% end %>
@@ -22,6 +27,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
   <script src="/js/jquery.labelify.js" type="text/javascript"></script>
+  <script src="/js/jquery.tipTip.minified.js" type="text/javascript"></script>
   <script src="/js/underscore-min.js" type="text/javascript"></script>
   <script src="/js/backbone-min.js" type="text/javascript"></script>
   <script type="text/javascript">

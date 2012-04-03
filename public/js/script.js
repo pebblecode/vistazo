@@ -976,6 +976,28 @@ function setupProjectEvents() {
       $(this).parents(".box").removeClass("remove-add-img")
     }
   );
+
+  // Add tool tips (for month view only)
+  {
+    var projectRegex = /(project-.+)/;
+    $("#timetable.month-view .handle").tipTip({
+      delay: 25,
+      enter: function(event) {
+        var handleElem = event.target;
+        var handleClass = $(handleElem).attr("class");
+
+        // Add project class to tip tip content
+        if (projectRegex.test(handleClass)) {
+          var projectClass = handleClass.match(projectRegex)[1];
+          // Clear classes
+          $("#tiptip_content").attr("class", "");
+
+          // Add project class
+          $("#tiptip_content").addClass(projectClass);
+        }
+      }
+    });
+  }
 }
 
 function setupNewProjectDialog() {
