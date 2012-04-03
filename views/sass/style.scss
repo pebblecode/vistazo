@@ -671,7 +671,7 @@ textarea:focus, input:focus{
         background: transparent url('/img/hatch2.gif') repeat 0 0;
         .col7, .col8 {
           // Can't get hatch2 to work with transparent background for some reason
-/*           background: white url('/img/hatch2-desat.gif') repeat 0 0;*/
+          // background: white url('/img/hatch2-desat.gif') repeat 0 0;
           background: transparent url('/img/hatch2-desat.gif') repeat 0 0;
         }
       } // &.odd
@@ -774,6 +774,73 @@ textarea:focus, input:focus{
         }
       } // &.project-row    
     } // tr
+
+    // Month view overrides
+    &.month-view {
+      thead {
+        td {
+          height: 20px;
+          vertical-align: middle;
+        }
+        #month-title {
+          font-size: 16px;
+          line-height: 18px;
+          color: #666;
+          text-align: right;
+          margin: 10px 5px 0 0;
+        }
+        .day {
+          font-weight: bold;
+          font-size: 10px;
+          line-height: 12px;
+          color: #333;
+          text-align: center;
+        }
+        .arrows {
+          margin: 10px;
+        }
+      }
+
+      tr {
+        .box {
+          width: 2.7419%;
+          text-align: center;
+          position: relative;
+        }
+        &.user {
+          .project {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            margin: 0.3em auto;
+            @include box-shadow(0, 0, 0, rgba(0, 0, 0, 0));
+
+            &.is_loading .handle-container {
+              float: none;
+              margin: 0 auto;
+            }
+
+            .handle {
+              width: 17px;
+              height: 17px;
+
+              margin: 0 auto;
+              float: none;
+            }
+
+            // Hide title
+            .project-title {
+              display: none;
+            }
+
+            // Hide delete
+            .delete-timetable-item-form {
+              display: none;
+            }
+          } // .project
+        } // &.user
+      } // tr
+    } // &.month-view
   } // #timetable
 
   .col1, .col2, .col3, .col4, .col5, .col6{

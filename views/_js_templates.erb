@@ -69,19 +69,19 @@
 
 <% if @is_month_view %>
   <script type="text/template" id="month-template">
-    <table id="timetable" class="month">
+    <table id="timetable" class="month-view">
       <thead>
         <tr>
           <td>
             <% if @prev_month_url.present? %>
               <a href="<%= @prev_month_url %>" class="arrows" title="Previous month">(</a>
             <% end %>
-            <%= @month_label %>
+            <h3 id="month-title"><%= @month_label %></h3>
           </td>
           <% (1..@days_in_month).each do |day| %>
-            <td><%= day %></td>
+            <td class="day"><%= day %></td>
           <% end %>
-          <td>
+          <td class="col-last">
             <% if @next_month_url.present? %>
               <a href="<%= @next_month_url %>" class="arrows" title="Next month">)</a>
             <% end %>
@@ -103,7 +103,8 @@
     {% var isFirst = (App.userTimetables.first() === userTimetable) %}
 
     <tr class="row-divider">
-      <td colspan="9"><hr/></td>
+      <% extra_cols = 2 %>
+      <td colspan="<%= @days_in_month + extra_cols %>"><hr/></td>
     </tr>  <!--the divider-->
     <tr class="user {{ _.escape(oddOrEvenClass) }}" data-user-id="{{ userId }}">
       <td class="col1" title="{{ userName }} <{{ userEmail }}>">
@@ -112,14 +113,13 @@
         </a>
       </td>
 
-      <% prev_cols = 1 %>
       <% (1..@days_in_month).each do |day| %>
         <%#
           data-date: Used for update to know the date moving to, and the date when adding a timetable item
           data-user-id: Used for adding a new timetable item to know the team member to add to
         %>
         <% date = Date.new(@year, @month, day) %>
-        <td class="box <%= "col#{day + prev_cols}" %>" data-date="<%= date %>" data-user-id="{{ userId }}">
+        <td class="box" data-date="<%= date %>" data-user-id="{{ userId }}">
 
           {% _.each(timetableItems, function(ti) { %}
             {% if (ti["date"] == "<%= date %>") { %}
@@ -127,18 +127,20 @@
                 <div class="handle-container">
                   <div class="handle project-{{ _.escape(ti['project_id']) }}" title="{{ _.escape(ti['project_name']) }}"></div>
                 </div>
+                <p class="project-title" title="{{ _.escape(ti['project_name']) }}">{{ _.escape(ti['project_name'].substring(0, 40)) }}</p>
               </div>
             {% } %} 
           {% }); %}
         </td>
       <% end %>
+      <td class="col-last"></td>
     </tr>
   </script>
 <% end %>
 
 <% if @is_week_view %>
   <script type="text/template" id="week-template">
-    <table id="timetable" class="week">
+    <table id="timetable" class="week-view">
       <thead>
         <tr>
           <th class="first-row col1"> 
@@ -243,7 +245,10 @@
           {% _.each(timetableItems, function(ti) { %}
             {% if (ti["date"] == "<%= date %>") { %}
               <div class="project" data-user-id="{{ userId }}" data-timetable-item-id="{{ _.escape(ti['id']) }}" data-date="<%= date %>"> 
-                <div class="handle-container"><div class="handle project-{{ _.escape(ti['project_id']) }}"></div></div> <p class="project-title" title="{{ _.escape(ti['project_name']) }}">{{ _.escape(ti['project_name'].substring(0, 40)) }}</p>
+                <div class="handle-container">
+                  <div class="handle project-{{ _.escape(ti['project_id']) }}"></div>
+                </div>
+                <p class="project-title" title="{{ _.escape(ti['project_name']) }}">{{ _.escape(ti['project_name'].substring(0, 40)) }}</p>
                 <form class="delete-timetable-item-form" action="#" method="post">
                   <button name="delete_project" type="submit" value="true">×</button>
                 </form>
@@ -260,7 +265,7 @@
           <% end %>
         </td>
       <% end %>
-      <td class="col-last" %></td>
+      <td class="col-last"></td>
     </tr>
   </script>
 
