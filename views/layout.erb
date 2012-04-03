@@ -101,7 +101,7 @@
     <ul class="action-bar">
       <% if logged_in? %>
         <li><a class="help" title="Help" href="#">?</a></li>
-        <li><a class="logout" href="/logout" title="Log out">&nbsp;logout</a></li>
+        <li>&nbsp;<a class="logout" href="/logout" title="Log out">logout</a></li>
         <li class="logged-in-as"><%= h current_user.name %> /</li>
       <% end %>
     </ul>
