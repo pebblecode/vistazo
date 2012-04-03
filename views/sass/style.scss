@@ -935,6 +935,7 @@ textarea:focus, input:focus{
     color: $vistazo_blue;
     margin: 0px 6px 20px 6px;
     text-decoration: none;
+    position: relative;
     
     &:hover{
       color: #4EC9FC;
@@ -1748,12 +1749,9 @@ textarea:focus, input:focus{
 
 /* Help text
 -----------------------------------------------------------------------------*/
-.first-row.col2{
-  position: relative;
-}
-
 .content-footer.col1{
   position: relative;
+  display: block;
 }
 
 .help-on {
@@ -1770,8 +1768,8 @@ textarea:focus, input:focus{
   #help-edit{
     position: absolute;
     z-index: 1100;
-    top: 62px;
-    left: -10px;
+    top: 50px;
+    left: 10px;
     height: 197px;
     width: 186px;
     background: url('/img/help-edit.png') no-repeat;
@@ -1789,8 +1787,8 @@ textarea:focus, input:focus{
   
   #help-week{
     position: absolute;
-    top: -37px;
-    left: -10px;
+    top: -45px;
+    left: 11px;
     z-index: 1100;
     height: 171px;
     width: 280px;
