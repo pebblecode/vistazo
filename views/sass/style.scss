@@ -539,8 +539,11 @@ textarea:focus, input:focus{
     &#project-view-selector {
       top: 0;
       left: 108px;
-      a{
+      a {
         background-color: #f3f3f3;
+      }
+      &.active a {
+        background-color: white;
       }
     }
     &#month-view-selector {
