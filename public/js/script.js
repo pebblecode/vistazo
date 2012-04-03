@@ -531,9 +531,8 @@ App.MonthListingView = Backbone.View.extend({
     
     $(this.el).find('#content').append(userTimetableHtml);
 
-    // TODO
-    // setupNewProjectDialog();
-    // setupProjectEvents();
+    setupNewProjectDialog();
+    setupProjectEvents();
   },
 });
 

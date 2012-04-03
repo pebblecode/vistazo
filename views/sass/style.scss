@@ -807,12 +807,17 @@ textarea:focus, input:focus{
           text-align: center;
           position: relative;
         }
+        .is-weekend {
+          background-color: rgba(0, 0, 0, 0.1);
+        }
         &.user {
           .project {
             background-color: transparent;
             border: none;
             padding: 0;
             margin: 0.3em auto;
+            cursor: pointer;
+
             @include box-shadow(0, 0, 0, rgba(0, 0, 0, 0));
 
             &.is_loading .handle-container {
@@ -833,10 +838,15 @@ textarea:focus, input:focus{
               display: none;
             }
 
-            // Hide delete
             .delete-timetable-item-form {
-              display: none;
-            }
+              button {
+                float: none;
+                position: absolute;
+                top: 0;
+                left: 0;
+                margin: 0 auto;
+              } // button
+            } // .delete-timetable-item-form
           } // .project
         } // &.user
       } // tr

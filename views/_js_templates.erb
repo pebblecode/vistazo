@@ -119,7 +119,8 @@
           data-user-id: Used for adding a new timetable item to know the team member to add to
         %>
         <% date = Date.new(@year, @month, day) %>
-        <td class="box" data-date="<%= date %>" data-user-id="{{ userId }}">
+        <% is_weekend = (date.saturday? or date.sunday?) %>
+        <td class="box <%= is_weekend ? "is-weekend" : "" %>" data-date="<%= date %>" data-user-id="{{ userId }}">
 
           {% _.each(timetableItems, function(ti) { %}
             {% if (ti["date"] == "<%= date %>") { %}
@@ -128,6 +129,9 @@
                   <div class="handle project-{{ _.escape(ti['project_id']) }}" title="{{ _.escape(ti['project_name']) }}"></div>
                 </div>
                 <p class="project-title" title="{{ _.escape(ti['project_name']) }}">{{ _.escape(ti['project_name'].substring(0, 40)) }}</p>
+                <form class="delete-timetable-item-form" action="#" method="post">
+                  <button name="delete_project" type="submit" value="true">×</button>
+                </form>
               </div>
             {% } %} 
           {% }); %}
