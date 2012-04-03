@@ -321,6 +321,9 @@ App.AddUserDialogView = Backbone.View.extend({
     $("#add-user-dialog").dialog('open');
     overlayCloseOnClick();
 
+    // Create user listing here, so that the events can be set
+    App.userListingView = new App.UserListingView({el: "body"});
+
     event.preventDefault();
   }
 });
