@@ -210,14 +210,17 @@ App.TeamDialogView = Backbone.View.extend({
 
 App.TimetableViewSelector = Backbone.View.extend({
   initialize: function() {
-    if (this._isMonthUrl()) {
+    if (this._isMonthPage()) {
       this._showMonthView();
       this._setActiveView("#view-selector #month-view-selector");
-    } else {
+    } else if (this._isTeamPage()) {
       this._showTeamView();
       this._setActiveView("#view-selector #team-view-selector");
-
-      // TODO: Do for project
+    } else if (this._isProjectPage()) {
+      this._showProjectView();
+      this._setActiveView("#view-selector #project-view-selector");
+    } else {
+      console.log("Unknown timetable page");
     }
   },
   events: { 
@@ -229,29 +232,46 @@ App.TimetableViewSelector = Backbone.View.extend({
     var parentId = $(viewLink).parent().attr("id");
 
     if (parentId !== currentViewId) {
-      // Show relevant view
-      if (parentId === "team-view-selector") {
-        $('#content').empty();
-
-        this._showTeamView();
-        this._setActiveView("#" + parentId);
-        event.preventDefault();
-      } else if (parentId === "project-view-selector") {
-        $('#content').empty();
-
-        this._showProjectView();
-        this._setActiveView("#" + parentId);
-        event.preventDefault();
-      } else if (parentId === "month-view-selector") {
+      if (this._isMonthPage()) {
         // Do nothing, let it pass through to the link location
-        // Month view is shown on load
+      } else {
+        if (parentId === "team-view-selector") {
+          $('#content').empty();
+          window.location.hash = "";
+
+          this._showTeamView();
+          this._setActiveView("#" + parentId);
+          event.preventDefault();
+        } else if (parentId === "project-view-selector") {
+          $('#content').empty();
+          window.location.hash = this._projectPageHashValue;
+
+          this._showProjectView();
+          this._setActiveView("#" + parentId);
+          event.preventDefault();
+        } else if (parentId === "month-view-selector") {
+          // Do nothing, let it pass through to the link location
+        }
       }
     } else {
       event.preventDefault();
     }
   },
-  _isMonthUrl: function() {
+  _projectPageHashValue: "project-view",
+  _isMonthPage: function() {
     return window.location.pathname.split('/')[3] === "month";
+  },
+  _isTeamPage: function() {
+    var isWeekPage = (window.location.pathname.split('/')[3] === "week");
+    var notProjectView = !(window.location.hash.substring(1) === this._projectPageHashValue);
+
+    return (isWeekPage && notProjectView);
+  },
+  _isProjectPage: function() {
+    var isWeekPage = (window.location.pathname.split('/')[3] === "week");
+    var isProjectView = (window.location.hash.substring(1) === this._projectPageHashValue);
+
+    return (isWeekPage && isProjectView);
   },
   _setActiveView: function(viewSelector) {
     $("#view-selector .active").each(function() {
