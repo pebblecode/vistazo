@@ -779,8 +779,8 @@ textarea:focus, input:focus{
       } // &.project-row    
     } // tr
 
-    // Week view overrides
-    &.week-view {
+    // Week/Month view overrides
+    &.week-view, &.month-view {
       #content {
         .user-name {
           &:hover {
