@@ -327,8 +327,8 @@ App.AddUserDialogView = Backbone.View.extend({
 
 App.EditUserDialogView = Backbone.View.extend({
   events: {
-    // For both visible and other user timetables
-    "click .week-view .user-name": "render"
+    "click .week-view .user-name": "render",
+    "click .month-view .user-name": "render"
   },
   render: function(event) {
     var nameButton = event.target;
