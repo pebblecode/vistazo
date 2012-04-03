@@ -1,11 +1,20 @@
 # Rake file to help with Vistazo development
 require 'fileutils'
 
+#####################################################################
+# Server
+#####################################################################
+
 desc "Start the server using the development Procfile."
 task "server" do
   start_server_cmd = "foreman start -f Procfile_development"
   sh start_server_cmd
 end
+
+
+#####################################################################
+# Deploy to staging/production
+#####################################################################
 
 desc "Merge branches, and push to remote server."
 namespace "merge_push_to" do
@@ -81,12 +90,112 @@ namespace "shipit" do
   
 end
 
-# Test rake tasks
+
+#####################################################################
+# Testing
+#####################################################################
+
 require 'rspec/core/rake_task'
 desc "Run specs"
 task :spec do
   RSpec::Core::RakeTask.new(:spec) do |t|
     t.rspec_opts = ["--color"]
     t.pattern = './spec/**/*_spec.rb'
+  end
+end
+
+namespace "spec" do
+  desc "Run individual spec. Can also pass in a line number."
+  task :run, :spec_file, :line_number do |_, args|
+    run_spec_cmd =  if args.line_number.nil?
+                      "bundle exec ruby -S rspec --color #{args.spec_file}"
+                    else
+                      "bundle exec ruby -S rspec --color -l #{args.line_number} #{args.spec_file}"
+                    end
+    sh run_spec_cmd
+  end
+end
+
+# Jasmine rake task
+begin
+  require 'jasmine'
+  load 'jasmine/tasks/jasmine.rake'
+rescue LoadError
+  task :jasmine do
+    abort "Jasmine is not available. In order to run jasmine, you must: (sudo) gem install jasmine"
+  end
+end
+
+
+#####################################################################
+# Database
+#####################################################################
+require 'mongo_mapper'
+require_relative "lib/mongo_helper"
+
+def ask_question(question)
+  confirmation_word = "YES"
+
+  STDOUT.flush
+  puts "#{question} (#{confirmation_word} to continue)"
+
+  input = STDIN.gets.chomp
+  
+  input == confirmation_word
+end
+
+def get_mongolab_uri(app_name)
+  heroku_config_cmd = "heroku config --app #{app_name}"
+  config_output = `#{heroku_config_cmd}`
+  raise "Can't run #{heroku_config_cmd}" unless config_output
+  puts config_output
+  mongolab_uri_matches = /MONGOLAB_URI * => (.*mongolab\.com.*)$/.match(config_output)
+  raise "Can't find mongo lab uri for app '#{app_name}'" unless mongolab_uri_matches
+
+  mongolab_uri_matches[1]
+end
+
+namespace "db" do
+  namespace "reset" do
+    desc "Reset the development database"
+    task :development do
+      setup_mongo(:development)
+      delete_all_collections
+    end
+    desc "Reset the development database (shorthand)"
+    task :dev => :development
+
+    desc "Reset the staging database."
+    task :staging do
+      if ask_question "Are you sure you want to reset the STAGING database?"
+
+        url = get_mongolab_uri("vistazo-staging")
+        
+        puts "\n\nSetting up mongo connection with: #{url}"
+        setup_mongo_connection(url)
+        delete_all_collections
+      else
+        puts "\nExiting..."
+      end
+    end
+
+    # Commenting it out so that no one accidently resets production
+    # 
+    # desc "Reset the production database."
+    # task :production do
+    #   if ask_question "Are you sure you want to reset the PRODUCTION database?"
+    #     if ask_question "Are you seriously sure? Like, sure sure? It is PRODUCTION"
+    #       url = get_mongolab_uri("vistazo")
+          
+    #       puts "\n\nSetting up mongo connection with: #{url}"
+    #       setup_mongo_connection(url)
+    #       delete_all_collections
+    #     else
+    #       puts "\nExiting..."          
+    #     end
+    #   else
+    #     puts "\nExiting..."
+    #   end
+    # end
   end
 end

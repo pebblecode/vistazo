@@ -62,19 +62,33 @@ To run all specs manually
 
 To run an individual spec
 
-    bundle exec ruby -S rspec --color [filename]
+    bundle exec rake spec:run[filename]
     
     # eg,
-    bundle exec ruby -S rspec --color spec/models/team_spec.rb
+    bundle exec rake spec:run[spec/models/team_spec.rb]
 
 To run on a particular line number
 
     # eg, Run line 16 in spec/integration/invite_user_spec.rb
-    bundle exec ruby -S rspec --color -l 16 spec/integration/invite_user_spec.rb
+    bundle exec rake spec:run[spec/integration/invite_user_spec.rb,16]
+
+    # Note: there are no spaces between the commas
 
 To run specs automatically with [guard](https://github.com/guard/guard)
 
     bundle exec guard
+
+#### Javascript testing
+
+Using [jasmine](https://github.com/pivotal/jasmine-gem).
+
+To install (after adding `jasmine` gem in `Gemfile`):
+
+    bundle exec jasmine init
+
+To start jasmine server:
+
+    rake jasmine
 
 ### UX testing
 
@@ -249,7 +263,38 @@ This is deployed at: http://vistazo.herokuapp.com/
 
 ## Mongo
 
+### Reset database
+
+Development
+
+    rake db:reset:dev   # or rake db:reset:development
+
+Staging
+
+    rake db:reset:staging
+
+Production
+
+    # Uncomment rake task first (done to prevent stupidity)
+    rake db:reset:production
+
+
 ### Import/Export
+
+#### Development import
+
+Drop db first
+
+    mongo vistazo-development
+    > db.dropDatabase()
+
+Import files, eg:
+
+    mongoimport -d vistazo-development -c teams tmp/vistazo-production-teams.json
+    mongoimport -d vistazo-development -c users tmp/vistazo-production-users.json
+    mongoimport -d vistazo-development -c team_members tmp/vistazo-production-team_members.json
+    mongoimport -d vistazo-development -c colour_settings tmp/vistazo-production-colour_settings.json
+    mongoimport -d vistazo-development -c projects tmp/vistazo-production-projects.json
 
 #### Sandbox 2 export
 
@@ -272,10 +317,11 @@ This is deployed at: http://vistazo.herokuapp.com/
     # JSON file for a particular collection
     mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c <collection> -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o <output file>
     
-    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c users -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production-users.json
-    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c accounts -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production-accounts.json
-    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c team_members -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production-team_members.json
-    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c projects -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production-projects.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c users -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-users.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c teams -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-teams.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c team_members -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-team-members.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c projects -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-projects.json
+    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c colour_settings -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-colour_settings.json
 
 ### Add new team member
 

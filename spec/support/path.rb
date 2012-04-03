@@ -14,7 +14,7 @@ module PathSpecHelper
   end
   
   ############################################################################
-  # Teams/users
+  # Teams
   ############################################################################
   
   def team_id_path(team_id)
@@ -25,6 +25,18 @@ module PathSpecHelper
     team_id_path(team.id)
   end
   
+  def team_week_path(team, year, week)
+    "/#{team.id}/#{year}/week/#{week}"
+  end
+
+  def team_id_month_path(team_id, year, month)
+    "/#{team_id}/#{year}/month/#{month}"
+  end
+
+  def team_month_path(team, year, month)
+    team_id_month_path(team.id, year, month)
+  end
+
   def team_current_week_path(team)
     "/#{team.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
   end
@@ -33,6 +45,10 @@ module PathSpecHelper
     "/#{team_id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
   end
   
+  ############################################################################
+  # Teams/users
+  ############################################################################
+
   def user_team_current_week_path(user)
     team_current_week_path(user.teams.first)
   end
@@ -40,23 +56,40 @@ module PathSpecHelper
   def user_team_path(user)
     team_path(user.teams.first)
   end
+
+  def team_add_user(team)
+    "/#{team.id}/user-timetables/new-user.json"
+  end
   
+  def team_update_user(team, user)
+    "/#{team.id}/users/#{user.id}"
+  end
+
+  def team_delete_user(team, user)
+    "/#{team.id}/users/#{user.id}/delete"
+  end
+
   
+  ############################################################################
+  # Timetable items
+  ############################################################################
+
+  def add_timetable_item_path(team, user)
+    "/#{team.id}/users/#{user.id}/timetable-items/new.json"
+  end
+  
+  def update_timetable_item_path(team, timetable_item)
+    "/#{team.id}/timetable-items/#{timetable_item.id}/update.json"
+  end
+
+  def delete_timetable_item_path(team, user, timetable_item)
+    "/#{team.id}/users/#{user.id}/timetable-items/#{timetable_item.id}/delete.json"
+  end
+
+
   ############################################################################
   # Projects
   ############################################################################
-  
-  def add_project_path(team)
-    "/#{team.id}/team-member-project/add"
-  end
-  
-  def update_project_path(team, timetable_item)
-    "/#{team.id}/team-member-project/#{timetable_item.id}/update.json"
-  end
-  
-  def update_project_with_team_id_path(team_id, timetable_item)
-    "/#{team_id}/team-member-project/#{timetable_item.id}/update.json"
-  end
   
   def delete_project_path(team, project)
     delete_project_path_with_project_id(team, project.id)
@@ -64,18 +97,6 @@ module PathSpecHelper
   
   def delete_project_path_with_project_id(team, project_id)
     "/#{team.id}/project/#{project_id}/delete"
-  end
-  
-  ############################################################################
-  # Registration
-  ############################################################################
-  
-  def registration_with_team_id_and_user_id_path(team_id, user_id)
-    "/#{team_id}/user/#{user_id}/register"
-  end
-  
-  def activation_with_team_id_and_user_id_path(team_id, user_id)
-    "/#{team_id}/user/#{user_id}/activate"
   end
   
 end

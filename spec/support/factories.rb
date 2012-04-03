@@ -10,12 +10,17 @@ Factory.define :user do |f|
   # No teams by default
 end
 
-Factory.define :team_member do |f|
-  f.sequence(:name) { |n| "User #{n}" }
-  f.association :team
-end
-
 Factory.define :project do |f|
   f.sequence(:name) { |n| "Project #{n}" }
   f.association :team
+end
+
+Factory.define :user_timetable do |f|
+  f.association :user
+  f.association :team
+end
+
+Factory.define :timetable_item do |f|
+  f.date Time.now 
+  f.association :project
 end

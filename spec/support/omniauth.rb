@@ -12,6 +12,7 @@ module OmniauthSpecHelper
     }
   })
   DEFAULT_TEAM_NAME = "Vistazo Test's team"
+  SANITIZED_DEFAULT_TEAM_NAME = Rack::Utils.escape_html(DEFAULT_TEAM_NAME)
   OmniAuth.config.mock_auth[:karen_o] = OmniAuth.config.mock_auth[:default].merge({
     "uid" => '100001',
     "info" => {

@@ -27,7 +27,31 @@ describe "Homepage" do
   
   it "should have 'Start using Vistazo'" do
     get '/'
-    last_response.body.should include("Start using Vistazo")
+    last_response.body.should include("Start using vistazo")
+  end
+end
+
+describe "Week view" do
+  before do
+    http_authorization!
+    @session = init_omniauth_session
+  end
+  
+  after do
+    clean_db!
+    @session = nil
+  end
+
+  it "should require login" do
+    create_normal_user(@session)
+    
+    # Find added user
+    team = User.first.teams.first
+    get_with_session_login! team_current_week_path(team), @session
+    follow_redirect_with_session_login!(@session)
+    
+    last_response.body.should include("You must be logged in")
+    last_response.body.should include("Start using vistazo")
   end
 end
 
@@ -42,6 +66,9 @@ describe "Teams:" do
     @session = nil
   end
   
+  # New team: see new_team_spec.rb
+  # Edit team: see team_name_spec.rb
+
   describe "Teams page" do
     it "should redirect to the home page and show an error if it is an invalid team" do
       create_normal_user(@session)
@@ -54,22 +81,6 @@ describe "Teams:" do
       last_response.body.should include("Invalid team.")
     end
   end
-  
-  describe "Week view" do
-    it "should require login" do
-      create_normal_user(@session)
-      
-      # Find added user
-      team = User.first.teams.first
-      get_with_session_login! team_current_week_path(team), @session
-      follow_redirect_with_session_login!(@session)
-      
-      last_response.body.should include("You must be logged in")
-      last_response.body.should include("Start using Vistazo")
-    end
-  end
-  
-  pending "Can't have multiple people with the same email address"
 
   describe "User going into the wrong team" do
     it "should redirect them to their team week view and show an error message" do
@@ -104,16 +115,377 @@ describe "Teams:" do
   
 end
 
+describe "Users:" do
+  before do
+    http_authorization!
+    @session = init_omniauth_session
+
+    create_normal_user(@session)
+    @user = User.first
+    @team = @user.teams.first
+
+    login_normal_user_with_session!(@session)
+  end
+  
+  after do
+    clean_db!
+    @session = nil
+  end
+
+  describe "create user" do
+    before do
+      @valid_params = {
+        :name => "Johnny Cash",
+        :email => "johnny@folsom.com",
+        :is_visible => true
+      }
+    end
+
+    it "should work" do
+      post_params! team_add_user(@team), @valid_params, @session
+      @team.reload
+      @new_user = User.find_by_email(@valid_params[:email])
+      
+      @new_user.name.should == @valid_params[:name]
+      @new_user.email.should == @valid_params[:email]
+
+      @team.user_timetable(@new_user).is_visible.should == true
+    end
+
+    it "should fail for invalid emails" do
+      @invalid_params = @valid_params.merge({
+        :email => "johnny_no_good"
+      })
+      post_params! team_add_user(@team), @invalid_params, @session
+      @team.reload
+
+      last_response.status.should == 400
+      response_hash = ActiveSupport::JSON.decode(last_response.body)
+      response_hash["message"].should == "Invalid user"
+
+      @new_user = User.find_by_email(@valid_params[:email])
+      @new_user.should == nil
+
+      @team.has_user_timetable?(@new_user).should == false
+    end
+
+    describe "should work for users where users are not visible" do
+      it "when :is_visible is false" do
+        @valid_params[:is_visible] = false
+
+        post_params! team_add_user(@team), @valid_params, @session
+        @team.reload
+        @new_user = User.find_by_email(@valid_params[:email])
+
+        @team.user_timetable(@new_user).is_visible.should == false
+      end
+
+      it "when :is_visible is not present in params" do
+        @valid_params.delete(:is_visible)
+
+        post_params! team_add_user(@team), @valid_params, @session
+        @team.reload
+        @new_user = User.find_by_email(@valid_params[:email])
+
+        @team.user_timetable(@new_user).is_visible.should == false
+      end
+    end
+  end
+
+  describe "update user" do
+    it "should update user name" do
+      params = {
+        :name => "New face",
+        :is_visible => true
+      }
+      post_params! team_update_user(@team, @user), params, @session
+      @user.reload
+
+      @user.name.should == "New face"
+    end
+
+    describe "is_visible status" do
+      before do
+        @team.user_timetable(@user).is_visible.should == true
+      end
+
+      it "should not update if name is not sent as well" do
+        params = {
+          :is_visible => false
+        }
+        post_params! team_update_user(@team, @user), params, @session
+        @team.reload
+
+        # Should not change
+        @team.user_timetable(@user).is_visible.should == true
+      end
+
+      it "should update for true" do
+        params = {
+          :name => "Something",
+          :is_visible => true
+        }
+        post_params! team_update_user(@team, @user), params, @session
+        @team.reload
+
+        @team.user_timetable(@user).is_visible.should == true
+      end
+
+      it "should update for false (but param of false is not actually passed in html in practice)" do
+        params = {
+          :name => "Something",
+          :is_visible => false
+        }
+        post_params! team_update_user(@team, @user), params, @session
+        @team.reload
+
+        @team.user_timetable(@user).is_visible.should == false
+      end
+
+      it "should update to false if is_visible is not passed in params" do
+        params = {
+          :name => "Something"
+        }
+        post_params! team_update_user(@team, @user), params, @session
+        @team.reload
+
+        @team.user_timetable(@user).is_visible.should == false
+      end
+    end
+  end
+
+  describe "delete user" do
+    before do
+      new_user_params = { 
+        :name => "Karen O", 
+        :email => "karen.o@gmail.com"
+      }
+      post_params! team_add_user(@team), new_user_params, @session
+      @team.reload
+
+      @new_user = User.find_by_email(new_user_params[:email])
+    end
+
+    it "should delete user" do
+      User.find(@new_user.id).present?.should == true
+      post_params! team_delete_user(@team, @new_user), nil, @session
+
+      User.find(@new_user.id).present?.should == false
+    end
+
+    it "should delete user timetable" do
+      @team.has_user_timetable?(@new_user).should == true
+      post_params! team_delete_user(@team, @new_user), nil, @session
+      @team.reload
+
+      @team.has_user_timetable?(@new_user).should == false
+    end
+  end
+end
+
+describe "Timetable items:" do
+  before do
+    http_authorization!
+    @session = init_omniauth_session
+
+    create_normal_user(@session)
+    @user = User.first
+    @team = @user.teams.first
+
+    @project = Project.create(:name => "Take over world", :team => @team)
+
+    login_normal_user_with_session!(@session)
+  end
+  
+  after do
+    clean_db!
+    @session = nil
+  end
+  
+  describe "Add timetable item" do
+    # Tested in add existing and new projects
+  end
+
+  describe "Update timetable item" do
+    before do
+      @date = Time.new(2012, 3, 26)
+      @another_date = (@date + 1.day)
+      @timetable_item = @team.add_timetable_item(@user, @project, @date)
+
+      @another_user = Factory(:user)
+      @team.add_user(@another_user)
+
+      @from_user = @user
+      @from_date = @date
+      @team.reload
+    end
+    
+    it "should require login" do
+      post update_timetable_item_path(@team, @timetable_item), nil
+
+      flash_message = last_request.session[:flash]
+      flash_message[:warning].should include("You must be logged in.")
+    end
+    
+    describe "to different date and same user" do
+      before do
+        @to_user = @user
+        @to_date = @another_date
+        @params = {
+          "from_user_id" => @from_user.id,
+          "to_user_id" => @to_user.id,
+          "to_date" => @to_date
+        }
+
+        post_params! update_timetable_item_path(@team, @timetable_item), @params, @session
+        @team.reload
+      end
+
+      it "should not create any new projects" do
+        Project.count.should == 1
+      end
+
+      it "should not create any new timetable items" do
+        @team.user_timetable_items(@from_user).count.should == 1
+      end
+
+      it "should return 200 status" do
+        last_response.status.should == 200
+      end
+
+      it "should return a success message" do
+        last_response.body.should include("Successfully moved '#{@project.name}' project to #{@to_user.name} on #{@to_date.strftime("%F")}.")
+      end
+    end
+    
+    describe "to same date and different user" do
+      before do
+        @to_user = @another_user
+        @to_date = @date
+        @params = {
+          "from_user_id" => @from_user.id,
+          "to_user_id" => @to_user.id,
+          "to_date" => @from_date
+        }
+
+        post_params! update_timetable_item_path(@team, @timetable_item), @params, @session
+        @team.reload
+      end
+
+      it "should return 200 status" do
+        last_response.status.should == 200
+      end
+
+      it "should return a success message" do
+        last_response.body.should include("Successfully moved '#{@project.name}' project to #{@to_user.name} on #{@to_date.strftime("%F")}.")
+      end
+    end
+
+    describe "to different date and different user" do
+      before do
+        @to_user = @another_user
+        @to_date = @another_date
+        @params = {
+          "from_user_id" => @from_user.id,
+          "to_user_id" => @to_user.id,
+          "to_date" => @to_date
+        }
+
+        post_params! update_timetable_item_path(@team, @timetable_item), @params, @session
+        @team.reload
+      end
+
+      it "should return 200 status" do
+        last_response.status.should == 200
+      end
+
+      it "should return a success message" do
+        last_response.body.should include("Successfully moved '#{@project.name}' project to #{@to_user.name} on #{@to_date.strftime("%F")}.")
+      end
+    end
+    
+    describe "to invalid user" do
+      before do
+        @to_date = @date
+        @params = {
+          "from_user_id" => @from_user.id,
+          "to_user_id" => "not_a_valid_user",
+          "to_date" => @to_date
+        }
+
+        post_params! update_timetable_item_path(@team, @timetable_item), @params, @session
+        @team.reload
+      end
+
+      it "should return 400 status" do
+        last_response.status.should == 400
+      end
+
+      it "should return error message" do
+        last_response.body.should include("Something went wrong with the input when updating timetable item.")
+      end
+    end
+
+    describe "to a user in another team" do
+      before do
+        @another_team = Factory(:team)
+        @another_team_user = Factory(:user)
+        @another_team.add_user(@another_team_user)
+        
+        @to_user = @another_team_user
+        @to_date = @another_date
+
+        @params = {
+          "from_user_id" => @from_user.id,
+          "to_user_id" => @to_user.id,
+          "to_date" => @to_date
+        }
+
+        post_params! update_timetable_item_path(@team, @timetable_item), @params, @session
+        @team.reload
+      end
+
+      it "should return 400 status" do
+        last_response.status.should == 400
+      end
+
+      it "should return error message" do
+        last_response.body.should include("Invalid team.")
+      end
+    end
+  end
+
+  describe "Delete timetable items" do
+    before do
+      @date = Time.new(2012, 3, 26)
+      @another_date = (@date + 1.day)
+      @timetable_item = @team.add_timetable_item(@user, @project, @date)
+    end
+
+    it "should delete" do
+      post_params! delete_timetable_item_path(@team, @user, @timetable_item), nil, @session
+      @team.reload
+
+      @team.user_timetable_items(@user).count.should == 0
+    end
+  end
+end
+
 describe "Delete project:" do
   before do
     http_authorization!
     @session = init_omniauth_session
     
     create_normal_user(@session)
-    @team = User.first.teams.first
-    @team_member = TeamMember.first
+    @user = User.first
+    @team = @user.teams.first
   end
   
+  after do
+    clean_db!
+    @session = nil
+  end
+
   it "should require login" do
     @project = Project.create(:name => "New project", :team_id => @team.id)
     post_params! delete_project_path(@team, @project), nil, @session
@@ -127,6 +499,72 @@ describe "Delete project:" do
       login_normal_user_with_session!(@session)
     end
     
+    describe "with a valid project" do
+      before do
+        @project = Project.create(:name => "Business time", :team => @team)
+      end
+
+      it "should delete project from all projects" do
+        post_params! delete_project_path(@team, @project), nil, @session
+
+        Project.find(@project.id).nil?.should == true
+      end
+
+      describe "delete from all team timetables" do
+        before do
+          @date = Time.now
+        end
+
+        it "should delete for 1 timetable item" do
+          
+          @timetable_item = @team.add_timetable_item(@user, @project, @date)
+          @team.user_timetable_items(@user).length.should == 1
+
+          post_params! delete_project_path(@team, @project), nil, @session
+          @team.reload
+
+          @team.user_timetable_items(@user).length.should == 0
+        end
+
+        it "should delete for multiple timetable items" do
+          @timetable_item = @team.add_timetable_item(@user, @project, @date)
+          @timetable_item = @team.add_timetable_item(@user, @project, @date + 1.day)
+          @timetable_item = @team.add_timetable_item(@user, @project, @date + 5.day)
+          @team.user_timetable_items(@user).length.should == 3
+
+          post_params! delete_project_path(@team, @project), nil, @session
+          @team.reload
+
+          @team.user_timetable_items(@user).length.should == 0
+        end
+
+        it "should delete for different users" do
+          @other_user = Factory(:user)
+          @team.add_user(@other_user)
+
+          @timetable_item = @team.add_timetable_item(@user, @project, @date)
+          @timetable_item = @team.add_timetable_item(@other_user, @project, @date)
+
+          @team.user_timetable_items(@user).length.should == 1
+          @team.user_timetable_items(@other_user).length.should == 1
+
+          post_params! delete_project_path(@team, @project), nil, @session
+          @team.reload
+
+          @team.user_timetable_items(@user).length.should == 0
+          @team.user_timetable_items(@other_user).length.should == 0
+        end
+      end
+
+      it "should show successful flash message" do
+        @project = Project.create(:name => "Business time", :team => @team)
+        post_params! delete_project_path(@team, @project), nil, @session
+
+        flash_message = last_request.session[:flash]
+        flash_message[:success].should include("Successfully deleted project 'Business time'.")
+      end
+    end
+
     describe "from a different team" do
       it "should give you an error message" do
         @user = User.first
@@ -134,7 +572,6 @@ describe "Delete project:" do
         @project = Project.create(:name => "Business time", :team_id => @team.id)
         @other_team = Team.create(:name => "Monday-itis")
         @other_team.add_user(@user)
-        @other_team.activate_user(@user)
         
         post_params! delete_project_path(@other_team, @project), nil, @session
         
@@ -163,10 +600,8 @@ describe "Projects:" do
     login_normal_user_with_session!(@session)
       
     User.count.should == 1
-    @team = User.first.teams.first
-      
-    TeamMember.count.should == 1
-    @team_member = TeamMember.first
+    @user = User.first
+    @team = @user.teams.first
   end
   
   after do
@@ -178,215 +613,80 @@ describe "Projects:" do
   
   describe "Create new project" do
     before do
-      @valid_params = {
-          "new_project_name" => "Business time",
-          "team_id" => @team.id,
-          "team_member_id" => @team_member.id,
-          "date" => "2011-12-16",
-          "new_project" => "true"
-        }
+      @params = {
+        "project_name" => "Business time",
+        "date" => "2011-12-16"
+      }
     end
     
     it "should require login" do
-      params = @valid_params
-      post add_project_path(@team), @valid_params
+      post add_timetable_item_path(@team, @user), @valid_params
       
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("You must be logged in.")
     end
     
     it "should show success message if passing valid parameters" do
-      params = @valid_params
-      post_params! add_project_path(@team), @valid_params, @session
-      flash_message = last_request.session[:flash]
-      flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
+      post_params! add_timetable_item_path(@team, @user), @params.to_json, @session
       Project.count.should == 1
-      @team_member.reload.timetable_items.count.should == 1
+
+      last_response.body.should include("Successfully added 'Business time' project for #{@user.name} on 2011-12-16.")
+      
+      @team.reload
+      @team.user_timetable_items(@user).count.should == 1
     end
     
-    it "should show error message if new project name is not present or empty" do
-      params = @valid_params.merge({ "new_project_name" => "" })
-      post_params! add_project_path(@team), params, @session
-      flash_message = last_request.session[:flash]
-      flash_message[:warning].should include("Please specify a project name.")
+    it "should return error message if project name is empty string or nil" do
+      invalid_params = @params.merge({ 
+        "project_name" => "" 
+      })
+      post_params! add_timetable_item_path(@team, @user), invalid_params.to_json, @session
+
+      last_response.body.should include("Please specify a project name.")
+
       Project.count.should == 0
-      @team_member.reload.timetable_items.count.should == 0
+      @team.reload
+      @team.user_timetable_items(@user).count.should == 0
       
-      params = @valid_params.merge({ "new_project_name" => nil })
-      post_params! add_project_path(@team), params, @session
-      flash_message = last_request.session[:flash]
-      flash_message[:warning].should include("Please specify a project name.")
-      Project.count.should == 0
-      @team_member.reload.timetable_items.count.should == 0
+      invalid_params = @params.merge({ 
+        "project_name" => nil 
+      })
+      post_params! add_timetable_item_path(@team, @user), invalid_params.to_json, @session
       
-      params = @valid_params.reject { |k,v| k == "new_project_name" }
-      post_params! add_project_path(@team), params, @session
-      flash_message = last_request.session[:flash]
-      flash_message[:warning].should include("Please specify a project name.")
+      last_response.body.should include("Please specify a project name.")
+
       Project.count.should == 0
-      @team_member.reload.timetable_items.count.should == 0
+      @team.reload
+      @team.user_timetable_items(@user).count.should == 0
     end
   end
   
   describe "Add existing project" do
     before do
-      params = {
-          "new_project_name" => "Business time",
-          "team_id" => @team.id,
-          "team_member_id" => @team_member.id,
-          "date" => "2011-12-16",
-          "new_project" => "true"
-        }
-      post_params! add_project_path(@team), params, @session
-      flash_message = last_request.session[:flash]
-      flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")
-      Project.count.should == 1
-      @project = Project.first
-      @team_member.reload.timetable_items.count.should == 1
-      
-      @date_to_add = "2012-01-15"
-      @existing_project_params_to_add = {
+      @project = Factory(:project, :team => @team)
+      @date_to_add = "2012-02-01"
+      @params = {
         "project_id" => @project.id,
-        "team_id" => @team.id,
-        "team_member_id" => @team_member.id,
         "date" => @date_to_add
       }
     end
     
     it "should require login" do
-      post add_project_path(@team), @existing_project_params_to_add
+      post add_timetable_item_path(@team, @user), @params
       
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("You must be logged in.")
     end
     
     it "should show success message if passing valid parameters" do
-      post_params! add_project_path(@team), @existing_project_params_to_add, @session
+      post_params! add_timetable_item_path(@team, @user), @params.to_json, @session
       
-      flash_message = last_request.session[:flash]
-      flash_message[:success].should include("Successfully added '<em>#{@project.name}</em>' project for #{@team_member.name} on #{@date_to_add}.")
+      last_response.body.should include("Successfully added '#{@project.name}' project for #{@user.name} on #{@date_to_add}.")
       Project.count.should == 1
-      @team_member.reload.timetable_items.count.should == 2   # Added another project
-    end
-  end
-  
-  describe "Update with json call" do
-    before do
-      @project_params = {
-          "new_project_name" => "Business time",
-          "team_id" => @team.id,
-          "team_member_id" => @team_member.id,
-          "date" => "2011-12-16",
-          "new_project" => "true"
-        }
-      post_params! add_project_path(@team), @project_params, @session
-      flash_message = last_request.session[:flash]
-      flash_message[:success].should include("Successfully added '<em>Business time</em>' project for #{@team_member.name} on 2011-12-16.")  
-      Project.count.should == 1
-      @project = Project.first
-      @team_member.reload.timetable_items.count.should == 1
-      @tm_project = @team_member.timetable_items.first
-      
-      new_date = "2011-12-13"
-      @valid_params = {
-        "from_team_member_id" => @team_member.id,
-        "to_team_member_id" => @team_member.id,
-        "tm_project_id" => @tm_project.id,
-        "to_date" => new_date
-      }
-    end
-    
-    it "should require login" do
-      post update_project_path(@team, @tm_project), @valid_params
-      
-      flash_message = last_request.session[:flash]
-      flash_message[:warning].should include("You must be logged in.")
-    end
-    
-    it "should return 200 status with message if successfully moved to another date" do
-      new_date = "2011-12-15"
-      params = @valid_params.merge("to_date" => new_date)
-      post_params! update_project_path(@team, @tm_project), params, @session
-      
-      # Shouldn't of created a new project
-      Project.count.should == 1
-      
-      # Shouldn't of created a new team member project
-      @team_member.reload.timetable_items.count.should == 1
-      
-      last_response.status.should == 200
-      last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{@team_member.name} on #{new_date}.")
-    end
-    
-    it "should return 200 status with message if successfully moved to another team member" do
-      another_team_member = Factory(:team_member, :team => @team)
-      params = @valid_params.merge(
-        "to_team_member_id" => another_team_member.id,
-        "to_date" => @project_params["date"]
-      )
-      post_params! update_project_path(@team, @tm_project), params, @session
-      
-      last_response.status.should == 200
-      last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{another_team_member.name} on #{@project_params["date"]}.")
-    end
 
-    it "should return 200 status with message if successfully moved to another person and another date" do
-      another_team_member = Factory(:team_member, :team => @team)
-      new_date = "2011-12-18"
-      params = @valid_params.merge(
-        "to_team_member_id" => another_team_member.id,
-        "to_date" => new_date
-      )
-      post_params! update_project_path(@team, @tm_project), params, @session
-      
-      last_response.status.should == 200
-      last_response.body.should include("Successfully moved '<em>Business time</em>' project to #{another_team_member.name} on #{new_date}.")
+      @team.reload
+      @team.user_timetable_items(@user).count.should == 1
     end
-    
-    it "should return 400 error with message if moving to an invalid user" do
-      error_team_member_id = "not_an_id"
-      params = @valid_params.merge(
-        "to_team_member_id" => error_team_member_id
-      )
-      post_params! update_project_path(@team, @tm_project), params, @session
-      
-      last_response.status.should == 400
-      last_response.body.should include("Something went wrong with the input when updating team member project.")
-    end
-    
-    it "should return 400 error with message if it is moved to a team member in another team" do
-      another_team = Factory(:team)
-      tm_in_another_team = Factory(:team_member, :team => another_team)
-      params = @valid_params.merge(
-        "to_team_member_id" => tm_in_another_team.id
-      )
-      post_params! update_project_path(@team, @tm_project), params, @session
-      
-      last_response.status.should == 400
-      last_response.body.should include("Invalid team.")
-    end
-    
-    pending "should return 400 error with message if it is moved from a team member in another team" do
-      another_team = Factory(:team)
-      tm_in_another_team = Factory(:team_member, :team => another_team)
-      params = @valid_params.merge(
-        "from_team_member_id" => tm_in_another_team.id
-      )
-      post_params! update_project_path(@team, @tm_project), params, @session
-      
-      last_response.status.should == 400
-      last_response.body.should include("Invalid team.")
-    end
-    
-    pending "should return 400 error with message if it is moved in an invalid team" do
-      params = @valid_params
-      post_params! update_project_with_team_id_path("invalid_team_id", @tm_project), params, @session
-      
-      last_response.status.should == 400
-      last_response.body.should include("Invalid team.")
-    end
-    
-    pending "should return 500 error with message if there is an internal error"
   end
 end
 
@@ -420,7 +720,7 @@ describe "Authentication:" do
       team = User.first.teams.first # Only have 1 user, so find first works
       team.name.should == DEFAULT_TEAM_NAME
       
-      last_response.body.should include(DEFAULT_TEAM_NAME)
+      last_response.body.should include(SANITIZED_DEFAULT_TEAM_NAME)
       last_response.body.should include("Welcome to Vistazo")
     end
   end
@@ -485,7 +785,7 @@ describe "Authentication:" do
       
       login_normal_user_with_session!(@session)
       last_request.path.should == user_team_current_week_path(user_from_session(@session))
-      last_response.body.should include(DEFAULT_TEAM_NAME)
+      last_response.body.should include(SANITIZED_DEFAULT_TEAM_NAME)
     end
   end
   
@@ -497,75 +797,6 @@ describe "Authentication:" do
       logout_session!(@session)
       
       last_request.path.should == "/"
-    end
-  end
-end
-
-describe "Admin:" do
-  before do
-    http_authorization!
-    
-    # Super admin team - default omniauth team is super admin
-    @session = init_omniauth_session
-  end
-  
-  after do
-    clean_db!
-    @session = nil
-  end
-  
-  describe "Logged in super admin" do
-    it "should have 'is-super-admin' in the body class" do
-      login_super_admin_with_session!(@session)
-      last_response.body.should include("is-super-admin")
-    end
-  end
-  
-  describe "Logged in normal user" do
-    it "should not have 'is-super-admin' in the body class" do
-      login_normal_user_with_session!(@session)
-      last_response.body.should_not include("is-super-admin")
-    end
-  end
-  
-  describe "Reset database button" do
-    it "should not be shown by default" do
-      get '/'
-      last_response.body.should_not include('Reset database')
-    end
-    
-    it "should only show if a user with the email ttt@pebblecode.com is logged in" do       
-      User.count.should == 0
-      login_super_admin_with_session!(@session)
-      last_response.body.should include('Reset database')
-      User.count.should == 1
-      
-      # Change email
-      user = User.first
-      user.email.should == "ttt@pebblecode.com"
-      user.email = "fake.ttt@pebblecode.com"
-      user.save
-      user.should be_valid
-      
-      # Shouldn't see reset database anymore
-      user.email.should_not == "ttt@pebblecode.com"
-      login_super_admin_with_session!(@session)
-      last_response.body.should_not include('Reset database')
-      
-      logout_session!(@session)
-      
-      # Shouldn't see reset database as a normal user
-      login_normal_user_with_session!(@session)
-      last_response.body.should_not include('Reset database')
-      
-      # But if the email changes, then you will see it
-      normal_user = User.find_by_email("vistazo.test@gmail.com")
-      normal_user.email = "ttt@pebblecode.com" # Can have multiple people with the same email! Yikes!
-      normal_user.save
-      normal_user.should be_valid
-      
-      login_normal_user_with_session!(@session)
-      last_response.body.should include('Reset database')
     end
   end
 end

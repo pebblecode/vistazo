@@ -16,10 +16,26 @@ class Project
   timestamps!
 
   # Relationships
-  one :team
+  belongs_to :team
 
   def css_class
     get_project_css_class(self.id.to_s)
+  end
+
+
+  #############################################################################
+  # Override to_json to sanitize output
+  #############################################################################
+
+  def serializable_hash(options = {})
+    pre_sanitized_hash = super({ 
+      :only => [:id, :name, :hex_colour] 
+    }.merge(options))
+
+    # Sanitize
+    pre_sanitized_hash.merge({
+      "name" => Rack::Utils.escape_html(self.name)
+    })
   end
 
   private

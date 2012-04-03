@@ -13,9 +13,24 @@ class User
   many :teams, :in => :team_ids
 
   # Validations
-  validates_format_of :email, :with => /\b[a-zA-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i
-  # validates_presence_of :team_id  # Need it to be nil, so that a user can be created before the team is created
+  validates_format_of :email, :with => /\b[a-zA-Z0-9._%-\+]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i
 
+
+  #############################################################################
+  # Override to_json to sanitize output
+  #############################################################################
+
+  def serializable_hash(options = {})
+    pre_sanitized_hash = super({ 
+      :only => [:id, :name, :email] 
+    }.merge(options))
+
+    # Sanitize
+    pre_sanitized_hash.merge({
+      "name" => Rack::Utils.escape_html(self.name), 
+      "email" => Rack::Utils.escape_html(self.email)
+    })
+  end
 
   #############################################################################
   # Public methods

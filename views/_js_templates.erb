@@ -1,0 +1,414 @@
+<%# Javascript templates for backbone.js views %>
+
+<script type="text/template" id="new-project-dialog-template">
+  <div id="new-project-dialog">
+    <a href="#" class="close">'</a>
+    <form id="new-timetable-item-form" action="/" method="post">
+      <input type="hidden" name="date" value=""/>
+      <input type="hidden" name="team_member_id" value=""/>
+      
+      <%# Dummy div to be replaced by js %>
+      <div id="existing-projects-listing"></div>
+
+      <fieldset>
+        <legend>Add new project</legend>
+        <fieldset class="new-object-fieldset" title="New project">
+          <label for="project_name">Add new project</label>
+          <input type="text" name="project_name" title="Project name" class="new-object-text-box" /> <button type="submit" name="new_project" value="true" class="submit-button">+</button>
+        </fieldset> <!-- New project -->
+      </fieldset>
+    </form>
+    
+    <div id="dialog-arrow"></div>
+  </div>
+</script>
+
+<script type="text/template" id="existing-projects-listing-template">
+  {% if (projects.length <= 0) { %}
+    <div id="existing-projects-listing"></div>
+  {% } else { %}
+    <fieldset id="existing-projects-listing" title="Existing projects">
+      <legend>Add a project</legend>
+      <ul class="listing">
+        {% _.each(projects, function(project) { %}
+          <li>
+            <div class="handle {{ project.css_class() }}"></div>
+            <button name="project_id" type="submit" value="{{ project.escape("id") }}" title="{{ project.escape("name") }}">{{ project.escape("name").substring(0, 40) }}</button>
+            <a class="delete" title="Delete project" href="#">×</a>
+          </li>
+        {% }); %}
+      </ul>
+    </fieldset> <!-- Existing projects -->
+  {% } %}
+</script>
+
+<script type="text/template" id="existing-project-template">
+  <div class='project' data-user-id='{{ _.escape(tmId) }}' data-timetable-item-id='{{ _.escape(tmProjId) }}' data-date='{{ _.escape(projDate) }}'>
+    <div class='handle-container'>
+      <div class='{{ _.escape(projHandleCssClass) }}'></div>
+    </div>
+    <p class='project-title' title='{{ _.escape(projName) }}'>{{ _.escape(projName.substring(0, 40)) }}</p>
+    <form class='delete-timetable-item-form' action='#' method='post'>
+      <button name='delete_project' type='submit' value='true'>×</button>
+    </form>
+  </div>
+</script>
+
+
+<script type="text/template" id="delete-project-dialog-template">
+  <div id='delete-project-dialog' title='Delete &ldquo;{{ _.escape(projectName) }}&rdquo; project'>
+    <p class='warning-icon'>W</p><p class='warning-msg'>All items added to the weekly timetable will also be deleted.</p>
+    <form method='post' action='/{{ _.escape(teamId) }}/project/{{ _.escape(projectId) }}/delete'>
+      <fieldset class='delete-object-fieldset' title='Delete project'>
+      <button class='delete' value='delete' name='delete' type='submit'>delete</button>
+      </fieldset>
+    </form>
+  </div>
+</script>
+
+
+<% if @is_month_view %>
+  <script type="text/template" id="month-template">
+    <table id="timetable" class="month-view">
+      <thead>
+        <tr>
+          <td>
+            <% if @prev_month_url.present? %>
+              <a href="<%= @prev_month_url %>" class="arrows" title="Previous month">(</a>
+            <% end %>
+            <h3 id="month-title"><%= @month_label %></h3>
+          </td>
+          <% (1..@days_in_month).each do |day| %>
+            <td class="day"><%= day %></td>
+          <% end %>
+          <td class="col-last">
+            <% if @next_month_url.present? %>
+              <a href="<%= @next_month_url %>" class="arrows" title="Next month">)</a>
+            <% end %>
+          </td>
+        </tr>
+      </thead>
+      <tbody id="content">
+        <%# Updated using js %>
+      </tbody>
+    </table>
+  </script>
+
+  <script type="text/template" id="month-visible-user-template">
+    {% var teamId = userTimetable.escape("team_id") %}
+    {% var userId = userTimetable.escape("user_id") %}
+    {% var userName = userTimetable.userName() %}
+    {% var userEmail = userTimetable.userEmail() %}
+    {% var timetableItems = userTimetable.get("timetable_items") %}
+    {% var isFirst = (App.userTimetables.first() === userTimetable) %}
+
+    <tr class="row-divider">
+      <% extra_cols = 2 %>
+      <td colspan="<%= @days_in_month + extra_cols %>"><hr/></td>
+    </tr>  <!--the divider-->
+    <tr class="user {{ _.escape(oddOrEvenClass) }}" data-user-id="{{ userId }}">
+      <td class="col1" title="{{ userName }} <{{ userEmail }}>">
+        <a href="#" class="user-name">
+          {{ userName.substring(0, 40) }}
+        </a>
+      </td>
+
+      <% (1..@days_in_month).each do |day| %>
+        <%#
+          data-date: Used for update to know the date moving to, and the date when adding a timetable item
+          data-user-id: Used for adding a new timetable item to know the team member to add to
+        %>
+        <% date = Date.new(@year, @month, day) %>
+        <% is_weekend = (date.saturday? or date.sunday?) %>
+        <td class="box <%= is_weekend ? "is-weekend" : "" %>" data-date="<%= date %>" data-user-id="{{ userId }}">
+
+          {% _.each(timetableItems, function(ti) { %}
+            {% if (ti["date"] == "<%= date %>") { %}
+              <div class="project" data-user-id="{{ userId }}" data-timetable-item-id="{{ _.escape(ti['id']) }}" data-date="<%= date %>"> 
+                <div class="handle-container">
+                  <div class="handle project-{{ _.escape(ti['project_id']) }}" title="{{ _.escape(ti['project_name']) }}"></div>
+                </div>
+                <p class="project-title" title="{{ _.escape(ti['project_name']) }}">{{ _.escape(ti['project_name'].substring(0, 40)) }}</p>
+                <form class="delete-timetable-item-form" action="#" method="post">
+                  <button name="delete_project" type="submit" value="true">×</button>
+                </form>
+              </div>
+            {% } %} 
+          {% }); %}
+        </td>
+      <% end %>
+      <td class="col-last"></td>
+    </tr>
+  </script>
+<% end %>
+
+<% if @is_week_view %>
+  <script type="text/template" id="week-template">
+    <table id="timetable" class="week-view">
+      <thead>
+        <tr>
+          <th class="first-row col1"> 
+            <% if @prev_week_url.present? %>
+              <a href="<%= @prev_week_url %>" class="arrows" title="Previous week">(</a>
+            <% end %>
+          </th>
+        
+          <th class="first-row col2">
+            <div id="help-week"></div>
+            <div id="help-edit"></div>
+            <p class="day"><%= @monday_date.strftime("%a") %></p> <p class="date"><%= @monday_date.day.ordinalize %></p><p class="month"><%= @monday_date.strftime("%b") %></p>
+            
+            <% if is_today?(@monday_date) %>
+              <div class="today"></div>
+            <% end %>
+          </th>
+          <th class="first-row col3">
+            <p class="day"><%= @tuesday_date.strftime("%a") %></p> <p class="date"><%= @tuesday_date.day.ordinalize %></p><p class="month"><%= @tuesday_date.strftime("%b") %></p>
+            
+            <% if is_today?(@tuesday_date) %>
+              <div class="today"></div>
+            <% end %>
+          </th>
+          <th class="first-row col4">
+            <p class="day"><%= @wednesday_date.strftime("%a") %></p> <p class="date"><%= @wednesday_date.day.ordinalize %></p><p class="month"><%= @wednesday_date.strftime("%b") %></p>
+            
+            <% if is_today?(@wednesday_date) %>
+              <div class="today"></div>
+            <% end %>
+          </th>
+          <th class="first-row col5">
+            <p class="day"><%= @thursday_date.strftime("%a") %></p> <p class="date"><%= @thursday_date.day.ordinalize %></p><p class="month"><%= @thursday_date.strftime("%b") %></p>
+            
+            <% if is_today?(@thursday_date) %>
+              <div class="today"></div>
+            <% end %>
+          </th>
+          <th class="first-row col6">
+            <p class="day"><%= @friday_date.strftime("%a") %></p> <p class="date"><%= @friday_date.day.ordinalize %></p><p class="month"><%= @friday_date.strftime("%b") %></p>
+            
+            <% if is_today?(@friday_date) %>
+              <div class="today"></div>
+            <% end %>
+          </th>
+          
+          <th class="first-row col7">
+            <p class="day"><%= @saturday_date.strftime("%a") %></p> <p class="date"><%= @saturday_date.day.ordinalize %></p><p class="month"><%= @saturday_date.strftime("%b") %></p>
+            
+            <% if is_today?(@saturday_date) %>
+              <div class="today"></div>
+            <% end %>
+          </th>
+          
+          <th class="first-row col8">
+            <p class="day"><%= @sunday_date.strftime("%a") %></p> <p class="date"><%= @sunday_date.day.ordinalize %></p><p class="month"><%= @sunday_date.strftime("%b") %></p>
+            
+            <% if is_today?(@sunday_date) %>
+              <div class="today"></div>
+            <% end %>
+          </th>
+          
+          <th class="first-row col-last">
+            <a href="<%= @next_week_url %>" class="arrows" title="Next week">)</a>
+          </th>
+        </tr>
+      </thead>
+      
+      <tbody id="content">
+        <%# Updated using js %>
+      </tbody>
+    </table>
+  </script>
+
+  <script type="text/template" id="visible-user-template">
+    {% var teamId = userTimetable.escape("team_id") %}
+    {% var userId = userTimetable.escape("user_id") %}
+    {% var userName = userTimetable.userName() %}
+    {% var userEmail = userTimetable.userEmail() %}
+    {% var timetableItems = userTimetable.get("timetable_items") %}
+    {% var isFirst = (App.userTimetables.first() === userTimetable) %}
+
+    <tr class="row-divider">
+      <td colspan="9"><hr/></td>
+    </tr>  <!--the divider-->
+    <tr class="user {{ _.escape(oddOrEvenClass) }}" data-user-id="{{ userId }}">
+      <td class="col1" title="{{ userName }} <{{ userEmail }}>">
+        <a href="#" class="user-name">
+          {{ userName.substring(0, 40) }}
+        </a>
+      </td>
+      
+      <% prev_cols = 1 %>
+      <% (MONDAY..SUNDAY).each do |work_day| %>
+        <%#
+          data-date: Used for update to know the date moving to, and the date when adding a timetable item
+          data-user-id: Used for adding a new timetable item to know the team member to add to
+        %>
+        <% date = (@monday_date - 1.day) + work_day.day %>
+        <td class="box <%= "col#{work_day + prev_cols}" %>" data-date="<%= date %>" data-user-id="{{ userId }}">
+
+          {% _.each(timetableItems, function(ti) { %}
+            {% if (ti["date"] == "<%= date %>") { %}
+              <div class="project" data-user-id="{{ userId }}" data-timetable-item-id="{{ _.escape(ti['id']) }}" data-date="<%= date %>"> 
+                <div class="handle-container">
+                  <div class="handle project-{{ _.escape(ti['project_id']) }}"></div>
+                </div>
+                <p class="project-title" title="{{ _.escape(ti['project_name']) }}">{{ _.escape(ti['project_name'].substring(0, 40)) }}</p>
+                <form class="delete-timetable-item-form" action="#" method="post">
+                  <button name="delete_project" type="submit" value="true">×</button>
+                </form>
+              </div>
+            {% } %} 
+          {% }); %}
+
+          <% if (work_day == THURSDAY) %>
+            {% if (isFirst) { %}
+              <div id="help-project-container">
+                <div id="help-project"></div>
+              </div>
+            {% } %}
+          <% end %>
+        </td>
+      <% end %>
+      <td class="col-last"></td>
+    </tr>
+  </script>
+
+  <script type="text/template" id="project-listing-template">
+    {% if (projects.length > 0) { %}
+      {% _.each(projects, function(project, index) { %}
+        {% var rowClass = "row" + (index + 1 + 1); %}
+        {% var oddOrEvenClass = ((index % 2) === 0) ? "even" : "odd"; %}
+        <tr class="row-divider">
+          <td colspan="9"><hr/></td>
+        </tr>  <!--the divider-->
+        <tr class="project-row {{ oddOrEvenClass }}">
+          <td class="{{ rowClass }} col1" title="{{ project.escape("name") }}">
+            <div class="project-title-container">
+              <div class="handle {{ project.css_class() }}"></div>
+              <p class="project-title" title="{{ project.escape("name") }}">{{ project.escape("name").substring(0, 40) }}</p>
+            </div>
+          </td>
+          
+          <% prev_cols = 1 %>
+          <% (MONDAY..SUNDAY).each do |work_day| %>
+            <% date = (@monday_date - 1.day) + work_day.day %>
+            <td class="{{ rowClass }} <%= "col#{work_day + prev_cols}" %>" data-date="<%= date %>">
+
+              {% _.each(userTimetables, function(userTimetable) { %}
+                {% var ttItems = userTimetable.get("timetable_items"); %}
+                {% _.each(ttItems, function(ttItem) { %}
+                  {% if ((ttItem["date"] == "<%= date %>") && (ttItem["project_id"] === project.escape("id"))) { %}
+                    <div class="user-name">{{ userTimetable.userName() }}</div>
+                  {% } %} 
+                {% }); %}
+              {% }); %}
+
+            </td>
+          <% end %>
+          <td class="{{ rowClass }} col-last" %></td>
+        </tr>
+      {% }); %}
+    {% } %}
+  </script>
+<% end %>
+
+<script type="text/template" id="other-users-template">
+  {% if (userTimetables.length > 0) { %}
+    <tr id="other-users">
+      <td colspan="9" class="content-footer col1">
+        <h3>Other users:</h3>
+        <ol>
+          {% _.each(userTimetables, function(ut) { %}
+            {% var comma = (ut === _.last(userTimetables)) ? "" : ","; %}
+            <li class="user" data-user-id="{{ ut.escape("user_id") }}"><a class="user-name" href="#">{{ ut.userName() }}</a>{{ comma }}</li>
+          {% }); %}
+        </ol>
+      </td>
+    </tr>
+  {% } %}
+</script>
+
+<script type="text/template" id="edit-user-dialog-template">
+  {% var teamId = userTimetable.escape("team_id") %}
+  {% var userId = userTimetable.escape("user_id") %}
+  {% var userName = userTimetable.userName() %}
+  {% var userEmail = userTimetable.userEmail() %}
+  {% var isVisible = userTimetable.get("is_visible") %}
+
+  <div id="edit-user-dialog" title="Edit user">
+    <h4>Name</h4>
+    <form action="/{{ teamId }}/users/{{ userId }}" method="post" class="edit-user-form">
+      <fieldset class="update-object-fieldset" title="Edit team member">
+        <label for="name">Name</label>
+        <input type="text" name="name" class="new-object-text-box" value="{{ userName }}"/>
+        <button type="submit" class="submit-button">update</button>
+      </fieldset> <!-- Edit user name -->
+
+      <div class="user-email">
+        <h4>Email</h4>
+        <p>{{ userEmail }}</p>
+      </div>
+
+      <div class="visible-on-timetable">
+        <h4>Show on timetable</h4>
+        <input id="new-user-visible" type="checkbox" name="is_visible" value="true" {{ isVisible ? "checked='checked'" : "" }} />
+        <button type="submit" class="submit-button">update</button>
+      </div>
+      
+    </form>
+
+    <form action="/{{ teamId }}/users/{{ userId }}/delete" method="post">
+      <fieldset class="delete-object-fieldset" title="Delete user">
+        <legend>Delete</legend>
+        <p class="warning-icon">W</p><p class="warning-msg">All timetable items associated with '{{ userName }}' will also be deleted.</p>
+        <button type="submit" class="submit-button">delete</button>
+      </fieldset> <!-- Edit team member -->
+    </form>
+  </div>
+</script>
+
+<script type="text/template" id="new-user-row-template">
+  <tr id="new-user-row">
+    <td colspan="9" class="content-footer col1">
+      <a id="add-user-button" href="#">Add user</a>
+      <div id="help-new"></div>
+    </td>
+  </tr>
+</script>
+
+<script type="text/template" id="add-user-dialog-template">
+  <div id="add-user-dialog" title="Add user">
+    <h4>Enter a Google mail account to add someone to your team. They will be sent an email with instructions on how to join your team.</h4>
+    <form id="add-user-form" action="#" method="post">
+      <fieldset>
+        <legend>New user</legend>
+        <ol>
+          <li>
+            <label for="name">Name</label>
+            <input id="add-user-name" type="text" name="name"/>
+          </li>
+          <li>
+            <label for="email">Email</label>
+            <input id="add-user-email" type="text" name="email"/>
+          </li>
+          <li>
+            <label for="new-user-visible">Show on timetable</label>
+            <input id="new-user-visible" type="checkbox" name="is_visible" value="true" checked="checked" />
+          </li>
+        </ol>
+        <button type="submit" name="new_user" value="new_user" class="submit-button">Add user</button>
+      </fieldset> <!-- Invite new user -->
+    </form>
+  </div> <!-- #add-users-dialog -->
+</script>
+
+<script type="text/template" id="errors-template">
+  {% var errorKeys = _.keys(errors); %}
+  {% if (errorKeys.length > 0) { %}
+    <ul id="{{ _.escape(id) }}" class="errors">
+      {% _.each(errorKeys, function(key) { %}
+        <li>{{ _.escape(errors[key]) }}</li>
+      {% }); %}
+    </ul>
+  {% } %}
+</script>

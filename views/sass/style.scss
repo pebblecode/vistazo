@@ -11,6 +11,7 @@ $flash_green: #57A957;
 $flash_black: #404040;
 $flash_yellow: #EEDC94;
 $vistazo_blue: #29ABE2;
+$vistazo_gray: #cccccc;
 
 $warning_bg_color: #EEDC94;
 $warning_color: #000000;
@@ -50,7 +51,7 @@ $warning_color: #000000;
 
 @mixin overlay {
   position: absolute;
-  z-index: 100;
+  z-index: 1000;
   top: 0;
   left: 0;
   width: 100%;
@@ -82,11 +83,61 @@ $warning_color: #000000;
   line-height: 16px;
 }
 
+@mixin project-button {
+  @include border-radius(5px);
+  @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+
+  font-family: $default_font_family;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: normal;
+  text-shadow: none;
+  
+  color: #808080;
+  background-color: #fff;
+  
+  margin: 5px 0;
+  border: 1px solid #a1a1a1;
+}
+
+@mixin button-standard {
+  @include border-radius(5px);
+  @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: normal;
+  text-shadow: none;
+  padding: 5px;
+  color: #808080;
+  background-color: #fff;
+  border: 1px solid #a1a1a1;
+  cursor: pointer;
+}
+
+@mixin text-input{
+  @include border-radius(5px);
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: normal;
+  text-shadow: none;
+  padding: 2px 5px;
+  color: #fff;
+  background: #6cc8ee;
+  border: 1px solid #fff;
+}
+
+
 /* General styles
 -----------------------------------------------------------------------------*/
 
 body {
   background: #f4fbfe url('/img/bg.png') repeat-x;
+  
+  button::-moz-focus-inner {
+      border:0;
+      padding:0;
+  }
+  
 }
 
 .circle {
@@ -98,24 +149,14 @@ body {
   float: left;
 }
 
+  .handle {
+    @extend .circle;
+  }
+
 /* Forms */
 .new-object-fieldset {
-  @include border-radius(5px);
-  @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-  
-  background: #ffffff;
-  margin: 20px 0 0 0;
-  display: block;
+  @include text-input;
   position: relative;
-  
-  font-weight: normal;
-  font-size: 14px;
-  height: 20px;
-  background-color: #fff;
-  color: #6cff14;
-  border: 1px solid #a1a1a1;
-  text-shadow: none;
-  
   label {
     display: none;
   }
@@ -126,38 +167,36 @@ body {
     color: #808080;
     font-size: 14px;
     line-height: 16px;
-    height: 16px;
   }
   
   .new-object-text-box {
-    margin: 2px 0 0 5px;
-    width: 163px;
+    color: #fff;
+    background: #6cc8ee;
     border: none;
+    font-size: 13px;
+    line-height: 16px;
   }
   
   .submit-button {
     position: absolute;
-    bottom: 1px;
-    right: 0px;
+    bottom: 5px;
+    right: 5px;
     padding: 0;
     
-    color: #D7D7D7;
+    color: #fff;
     font: 12px $web_symbols_font_family;
     line-height: 14px;
     cursor: pointer;
     background: none;
     border: none;
+    letter-spacing: 0;
   }
 } // .new-object-fieldset
 
 .update-object-fieldset {
-  @include border-radius(5px);
-  @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-  
-  height: 24px;
+  @include text-input;
   width: 380px;
   
-  background-color: #fff;
   
   legend, label {
     display: none;
@@ -165,45 +204,31 @@ body {
   
   input {
     font-family: $default_font_family;
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 13px;
+    line-height: 16px;
     font-weight: normal;
-    color: #808080;
-    height: 22px;
-    
+    color: #fff;
+    background: #6cc8ee;    
     border: none;
-    margin-left: 6px;
     width: 370px;
+    
   } // input
   
   button {
-    @include border-radius(5px);
-    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-      
-    border: none;
-    color: #808080;
-    display: block;
-    padding: 0 3px 1px 5px;
-    text-decoration: none;
-    cursor: pointer;
-    font-size: 14px;
-    line-height: 14px;
-    height: 24px;
+    @include button-standard;
       
     position: absolute;
-    top: 0px;
-    left: 400px;
-      
-    background-color: #fff;
-      
+    top: 30px;
+    left: 410px;
+            
     &:hover{
-      background-color: #eee;
-      color: #464646;
+      background-color: #d4eef9;
+      border: 1px solid #666;
+      color: #666;
       @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.3));
     }
     &:active{
-      top: 1px;
-      background-color: #ddd;
+      top: 31px;
     }
   } // button
 } // .update-object-fieldset
@@ -236,36 +261,35 @@ body {
   }
   
   button {
-    @include border-radius(5px);
-    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-      
-    border: none;
-    color: #808080;
-    display: block;
-    padding: 0 3px 1px 5px;
-    text-decoration: none;
-    cursor: pointer;
-    font-size: 14px;
-    line-height: 14px;
-    height: 24px;
+    @include button-standard;
     float: right;
     
     margin-top: 17px;
     margin-right: 3px;
       
-    background-color: #fff;
-      
     &:hover{
-      background-color: #eee;
-      color: #464646;
+      background-color: #d4eef9;
+      border: 1px solid #666;
+      color: #666;
       @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.3));
     }
     &:active{
       top: 1px;
-      background-color: #ddd;
     }
   } // button
 } // .delete-object-fieldset
+
+.errors {
+  li {
+    @include border-radius(5px);
+    color: red;
+    text-shadow: none;
+    background-color: #fff;
+    margin-bottom: 10px;
+    font-weight: bold;
+    padding: 5px 10px;
+  }
+}
 
 .warning-msg {
   width: 300px;
@@ -307,13 +331,14 @@ textarea:focus, input:focus{
         color: #666;
         bottom: 1px;
         right: 1px;
+        letter-spacing: 0;
       }
     }
       
     .error-field-msg {
       margin-top: 5px;
     } // .error-field
-  } // .errors
+  } // .errors-on-form
 }
 
 
@@ -392,9 +417,20 @@ textarea:focus, input:focus{
       font-size: 14px;
       line-height: 16px;
       
+      &:first-child{
+        margin: 11px 15px 0 5px;
+      }
+      
+      &:nth-child(2){
+        margin: 11px 15px 0 0;
+      }
+      
+      &:nth-child(3){
+        margin: 11px 0 0 0;
+      }
+      
       a {
         color: #fff;
-        font-family: $web_symbols_font_family;
         text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
         text-decoration: none;
         
@@ -404,6 +440,14 @@ textarea:focus, input:focus{
         &:active{
           text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
           line-height: 20px;
+        }
+        
+        &.logout{
+          text-decoration: underline;
+          text-shadow: none;
+          &:hover{
+            text-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+          }
         }
         
         &.help {
@@ -480,6 +524,56 @@ textarea:focus, input:focus{
 } // #flash
 
 
+/* View selector
+-----------------------------------------------------------------------------*/
+
+#view-selector {
+  position: absolute;
+  min-width: 1000px;
+  margin: 0 auto;
+  top: 112px;
+  left: 15px;
+
+  li {
+    position: absolute;
+
+    &#team-view-selector {
+      top: 0;
+      left: 0;
+    }
+    &#project-view-selector {
+      top: 0;
+      left: 108px;
+    }
+    &#month-view-selector {
+      top: 0;
+      left: 216px;
+    }
+    &.active a {
+      background-color: white;
+      color: #555;
+      position: absolute;
+      z-index: 200;
+    }
+
+    a {
+      @include border-radius(5px);
+      outline: none;
+
+      font-size: 14px;
+      text-align: center;
+
+      display: block;
+      width: 90px;
+      padding: 7px 12px 10px;
+      text-decoration: none;
+      color: #bbbbbb;
+      background-color: #E6E6E6;
+    }
+  }
+} // #view-selector
+
+
 /* Main styles
 -----------------------------------------------------------------------------*/
 
@@ -490,6 +584,8 @@ textarea:focus, input:focus{
   @include box-shadow(0, 5px, 20px, rgba(0, 0, 0, 0.1));
   
   position: relative;
+  // z-index: 0; // Can't have z-index, otherwise help overlay items inside main can't show on top of the bg overlay
+
   width: 96%;
   min-width: 1000px;
   clear: both;
@@ -497,8 +593,8 @@ textarea:focus, input:focus{
   padding: 1%;
   background-color: #fff;
   margin-top: 0 auto;
-  
-  #week-view {
+
+  #timetable {
     width: 100%;
     td, .first-row.col1, .first-row.col6 {
       border-right: 1px dashed #b3b3b3;
@@ -528,133 +624,241 @@ textarea:focus, input:focus{
       vertical-align: bottom;
     }
     
-    .last-row {
+    .content-footer {
       border-right: none; /* Cancel out border on last column */
       
-      #new-team-member-form {
-      	margin-left: 6px;
+      #add-user-button {
+        text-decoration: none;
+        color: #999;
+        padding: 2px 5px;
+        font-size: 14px;
+        @include border-radius(5px);
+        border: 1px solid #a1a1a1;
+        @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.15));
+        margin-left: 6px;
+        position: relative;
+        background: #fff;
         
-        legend {
         
-          display: none;
-        }
-        .new-object-fieldset {
-          width: 115px;
-          margin-bottom: 12px;
-          
-          .new-object-text-box {
-            width: 103px;
+        &:hover {
+          color: #777;
+        
+          &:after{
+            color: #777;
           }
         }
-      }
-    } // .last-row
-
-    tr.team-member {
-      padding-bottom: 20px;
-      &.even {
-        background: transparent url('/img/hatch1.gif') repeat 0 0;
-        .col7, .col8, .col-last{
-          background: transparent url('/img/hatch1-desat.gif') repeat 0 0;
+        
+        &:active {
+          top: 1px;
+          background: #eee;
+        }
+        
+        &:after {
+          content: "+";
+          font-family: $web_symbols_font_family;
+          font-size: 12px;
+          color: #ddd;
+          margin-left: 10px;
+          position: relative;
+          top: -3px;
         }
       }
+    } // .content-footer
+
+    tr {
+      &.even {
+        background: transparent url('/img/hatch1.gif') repeat 0 0;
+        .col7, .col8 {
+          background: transparent url('/img/hatch1-desat.gif') repeat 0 0;
+        }
+      } // &.even
 
       &.odd {
         background: transparent url('/img/hatch2.gif') repeat 0 0;
-        .col7, .col8, .col-last{
+        .col7, .col8 {
           // Can't get hatch2 to work with transparent background for some reason
-/*           background: white url('/img/hatch2-desat.gif') repeat 0 0;*/
+          // background: white url('/img/hatch2-desat.gif') repeat 0 0;
           background: transparent url('/img/hatch2-desat.gif') repeat 0 0;
         }
-      }
-      
-      .box {
-        padding-bottom: 30px;
-        cursor: pointer;
-        position: relative;
-        
-        &:hover {
-          background: transparent url("/img/new-project.png") no-repeat center bottom;
-          z-index: 1;
-        }
-        &.remove-add-img {
-          background: none;
-        }
-      } // .box
-      
-      .project {
-        @include border-radius(5px);
-        @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.1));
-        
-        background-color: #fff;
-        margin: 5px 6px 0 8px;
-        font-size: 14px;
-        color: #808080;
-        border: 1px solid #cccccc;
-        padding-right: 2px;
-        padding-bottom: 3px;
-        position: relative;
-        
-        cursor: move;
-        
-        &:hover {
-          border: 1px solid #aaa;
-          @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-        }
-        
-        .project-title{
-          margin-top: 3px;
-          
-        }
-        
-        &.is_loading {
-          cursor: wait;
-          
-          .handle-container {
-            background: transparent url("/img/loading.gif") no-repeat 2px 2px;
-            width: 20px;
-            height: 20px;
-            float: left;
+      } // &.odd
 
-            .handle {
-              display: none;
-            }
-          } // .handle-container
-          
-          .delete-tm-project-form {
-            display: none; /* Hide delete form if loading */
-          } // .delete-tm-project-form
-          
-        } // &.is_loading
+      &.user {
+        padding-bottom: 20px;
         
-        .delete-tm-project-form {
-          display: inline;
+        .box {
+          padding-bottom: 30px;
+          cursor: pointer;
+          position: relative;
           
-          button {
-            color: #B0B0B0;
-            cursor: pointer;
+          &:hover {
+            background: transparent url("/img/new-project.png") no-repeat center bottom;
+            z-index: 1;
+          }
+          &.remove-add-img {
             background: none;
-            border: none;
+          }
+        } // .box
+        
+        .project {
+          @include border-radius(5px);
+          @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.1));
+          
+          background-color: #fff;
+          margin: 5px 6px 0 8px;
+          font-size: 14px;
+          color: #808080;
+          border: 1px solid #cccccc;
+          padding-right: 2px;
+          padding-bottom: 3px;
+          position: relative;
+          
+          cursor: move;
+          
+          &:hover {
+            border: 1px solid #aaa;
+            @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+          }
+          
+          .project-title{
+            margin-top: 3px;
             
-            font-family: $web_symbols_font_family;
-            font-size: 12px;
-            line-height: 12px;
-            vertical-align: center;
-            float: right;
-            padding: 2px 0 0 0;
+          }
+          
+          &.is_loading {
+            cursor: wait;
             
-            position: absolute;
-            right: 0;
-            top: 0;
+            .handle-container {
+              background: transparent url("/img/loading.gif") no-repeat 2px 2px;
+              width: 20px;
+              height: 20px;
+              float: left;
+
+              .handle {
+                display: none;
+              }
+            } // .handle-container
             
-            &:active {
-              color: #999999;
+            .delete-timetable-item-form {
+              display: none; /* Hide delete form if loading */
+            } // .delete-timetable-item-form
+            
+          } // &.is_loading
+          
+          .delete-timetable-item-form {
+            display: inline;
+            
+            button {
+              color: #B0B0B0;
+              cursor: pointer;
+              background: none;
+              border: none;
+              
+              font-family: $web_symbols_font_family;
+              font-size: 12px;
+              line-height: 12px;
+              vertical-align: center;
+              float: right;
+              padding: 2px 0 0 0;
+              
+              position: absolute;
+              right: 0;
+              top: 0;
+              
+              &:active {
+                color: #999999;
+              }
             }
           }
+          
+        } // .project
+      } // &.user
+
+      &.project-row {
+        .project-title-container {
+          @include project-button;
+          width: 95%;
         }
-        
-      } // .project
-    } // tr.team-member
-  } // #week-view
+      } // &.project-row    
+    } // tr
+
+    // Month view overrides
+    &.month-view {
+      thead {
+        td {
+          height: 20px;
+          vertical-align: middle;
+        }
+        #month-title {
+          font-size: 16px;
+          line-height: 18px;
+          color: #666;
+          text-align: right;
+          margin: 10px 5px 0 0;
+        }
+        .day {
+          font-weight: bold;
+          font-size: 10px;
+          line-height: 12px;
+          color: #333;
+          text-align: center;
+        }
+        .arrows {
+          margin: 10px;
+        }
+      }
+
+      tr {
+        .box {
+          width: 2.7419%;
+          text-align: center;
+          position: relative;
+        }
+        .is-weekend {
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+        &.user {
+          .project {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            margin: 0.3em auto;
+
+            @include box-shadow(0, 0, 0, rgba(0, 0, 0, 0));
+
+            &.is_loading .handle-container {
+              float: none;
+              margin: 0 auto;
+            }
+
+            .handle {
+              width: 17px;
+              height: 17px;
+
+              margin: 0 auto;
+              float: none;
+            }
+
+            // Hide title
+            .project-title {
+              display: none;
+            }
+
+            .delete-timetable-item-form {
+              display: none; // Hide delete button for now
+
+              button {
+                float: none;
+                position: absolute;
+                top: 0;
+                left: 0;
+                margin: 0 auto;
+              } // button
+            } // .delete-timetable-item-form
+          } // .project
+        } // &.user
+      } // tr
+    } // &.month-view
+  } // #timetable
 
   .col1, .col2, .col3, .col4, .col5, .col6{
     width: 13.33333%;
@@ -679,12 +883,12 @@ textarea:focus, input:focus{
   .col-last {
     width: 2%;
   }
-  
+
   .today{
     background-image: url(../img/hatch3.png);
     width: 13.3333%;
     min-width: 125px;
-    height: 90%;
+    height: 80%;
     position: absolute;
     top: 10px;
     border-radius: 10px;
@@ -726,36 +930,6 @@ textarea:focus, input:focus{
     text-transform: uppercase;
   }
 
-  .team-member-name {
-    @include border-radius(5px);
-    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-    
-    background: rgba(41, 171, 226, 1) url('/img/people-arrow.png') no-repeat;
-    background-position: 100% 50%;
-    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-    color: #fff;
-    font-size: 14px;
-    line-height: 20px;
-    font-weight: bold;
-    margin: 5px;
-    border: 1px solid #259acb;
-    padding: 0px 5px;
-    
-    display: block;
-    text-decoration: none;
-    outline: none;
-    
-    &:hover{
-      text-shadow: 0 2px 1px rgba(0, 0, 0, 0.25);
-      @include emboss-box-shadow-small;
-    }
-    
-    &:active {
-      margin: 6px 5px 4px 5px;
-      background-color: #28a6db;
-    }
-  }
-
   .highlight {
     height: 1px;
     background-color: rgba(255, 255, 255, 0.2);
@@ -771,10 +945,84 @@ textarea:focus, input:focus{
     color: #e6e6e6;
   }
   
-  .handle {
-    @extend .circle;
+  #content .user-name {
+    @include border-radius(5px);
+    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+    
+    
+    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+    color: #fff;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: bold;
+    margin: 5px;
+    border: 1px solid #259acb;
+    padding: 0px 5px;
+    
+    display: block;
+    text-decoration: none;
+    outline: none;
+
+    background: rgba(41, 171, 226, 1) url('/img/people-arrow.png') no-repeat 100% 5px;
+
+    &:hover {
+      text-shadow: 0 2px 1px rgba(0, 0, 0, 0.25);
+      @include emboss-box-shadow-small;
+    }
+    
+    &:active {
+      margin: 6px 5px 4px 5px;
+      background-color: #28a6db;
+    }
+  } // #content .user-name
+
+  #new-user-row {
+    td {
+      padding: 25px 0 10px;
+    }
   }
-  
+
+  #other-users {
+    td {
+      padding: 10px 0 0;  
+    }
+
+    h3 {
+      float: left;
+      margin-right: 5px;
+      margin-left: 7px;
+      color: $vistazo_gray;
+
+      font-size: 14px;
+      line-height: 16px;
+    }
+
+    ol {
+      margin-left: 7px;
+    }
+    
+    li {
+      color: $vistazo_gray;
+
+      font-size: 14px;
+      line-height: 16px;
+    }
+
+    .user {
+      float: left;
+      margin-right: 5px;
+
+      .user-name {
+        color: $vistazo_gray;
+        font-size: 14px;
+        line-height: 16px;
+
+        &:hover {
+          color: $vistazo_blue;
+        }
+      } // .user-name
+    } // .user
+  } // #other-users
 } // #main
 
 /* @end */
@@ -791,6 +1039,12 @@ textarea:focus, input:focus{
   @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
   background-color: #fff;
 } // #point
+
+#new-team-form {
+  .new-object-text-box {
+    width: 445px;
+  }
+}
 
 #new-project-dialog {
   legend {
@@ -871,7 +1125,7 @@ textarea:focus, input:focus{
       background-image: url("/img/point-right.png");
     }
   }
-} // #new-tm-project-form
+} // #new-timetable-item-form
 
 /* Generic jquery-ui styles */
 .ui-dialog {
@@ -922,22 +1176,9 @@ textarea:focus, input:focus{
     @include dialog-heading;
   }
   
-  .listing {
+  .listing      {
     li {
-      @include border-radius(5px);
-      @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
-
-      font-family: $default_font_family;
-      font-size: 14px;
-      line-height: 20px;
-      font-weight: normal;
-      text-shadow: none;
-      
-      color: #808080;
-      background-color: #fff;
-      
-      margin: 5px 0;
-      border: 1px solid #a1a1a1;
+      @include project-button;
     }
   } // .listing
   
@@ -1015,14 +1256,59 @@ textarea:focus, input:focus{
   }
 } // #new-project-form
 
-#invite-user-form {
+#add-user-form {
   @extend #team-users-dialog;
   display: block !important;
+} // #add-user-form
 
-}
-
-#team-users-dialog {
-  display: none; /* Hide by default */
+  #add-user-name, #add-user-email{
+    @include text-input;
+    display: block;
+    width: 460px;
+    margin: 5px 0 10px;
+  }
+  
+  #team-users-dialog {
+    display: none; /* Hide by default */
+  
+  .submit-button{
+    text-decoration: none;
+    color: #999;
+    padding: 2px 5px;
+    font-size: 14px;
+    @include border-radius(5px);
+    border: 1px solid #a1a1a1;
+    @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.15));
+    margin-left: 6px;
+    position: relative;
+    background: #fff;
+    cursor: pointer;
+    float: right;
+    letter-spacing: 0;
+    
+    &:hover{
+      color: #777;
+    
+      &:after{
+        color: #777;
+      }
+    }
+    
+    &:active{
+      top: 1px;
+      background: #eee;
+    }
+    
+    &:after{
+      content: "+";
+      font-family: $web_symbols_font_family;
+      font-size: 12px;
+      color: #ddd;
+      margin-left: 10px;
+      position: relative;
+      top: -1px;
+    }
+  }
   
   legend {
     display: none;
@@ -1092,40 +1378,42 @@ textarea:focus, input:focus{
     } // li
   } // .listing
   
-  .pending-users-title, .add-new-user-title, .current-users-title {
-    margin-top: 20px;
-    margin-bottom: 5px;
-  }
-  
-  .add-new-user-title{
-    margin-bottom: 10px;
-  }
-  
-  #invite-user-form {
-  } // #invite-user-form
-  
   .new-object-fieldset {
-    border: none;
     padding: 1px;
     margin-top: 0;
     margin-bottom: 15px;
+    position: relative;
     
     .submit-button{
+      position: absolute;
       right: 2px;
       bottom: 3px;
+      letter-spacing: 0;
     }
     
     .new-object-text-box {
       width: 455px;
+      margin-left: 5px;
     }
   } // .new-object-fieldset
   
 } // #team-users-dialog
 
-#team-name-dialog, .edit-team-member-dialog {
+#team-name-dialog {
   display: none; /* Don't display by default */
   margin-top: 20px;
   position: relative;
+  
+  #team-name-form .submit-button{
+    position: absolute;
+    top: -2px;
+    left: 410px;
+    letter-spacing: 0;
+    
+    &:active{
+      top: -1px;
+    }
+  }
   
   #switch-teams {
     margin-top: 20px;
@@ -1142,20 +1430,28 @@ textarea:focus, input:focus{
       clear: both;
       
       li {
-        margin-bottom: 10px;
+        margin-bottom: 20px;
       } // li
       
       a {
-        color: #ffffff;
+        @include button-standard;
         text-decoration: none;
+        display: block;
+        
+        &:hover{
+          background-color: #d4eef9;
+          border: 1px solid #666;
+          color: #666;
+          @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.3));
+        }
+        &:active{
+          top: -1px;
+        }
+        
       } // a
     } // ul
   } // #switch-teams
-  
-  .add-new-user-title {
-    @include dialog-title;
-  }
-  
+
   #new-team {
     legend {
       display: none;
@@ -1172,136 +1468,231 @@ textarea:focus, input:focus{
   }
 } // #team-name-dialog
 
+#edit-user-dialog {
+  display: none; /* Don't display by default */
+  margin-top: 20px;
+  position: relative;
+
+  h4 {
+    display: inline-block;
+    @include dialog-title;
+    width: 155px;
+  }
+  
+  .visible-on-timetable input{
+    margin:  0 232px 0 0;
+    padding: 0;
+    width: 15px;
+  }
+  
+  .user-email {
+    margin-bottom: 15px;
+    
+    p{
+      font-size: 16px;
+    }
+  }
+
+  form button {
+    @include button-standard;
+    letter-spacing: 0;
+    
+    margin: 10px 0 30px 0;
+      
+    &:hover{
+      background-color: #d4eef9;
+      border: 1px solid #666;
+      color: #666;
+      @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.3));
+    }
+    &:active{
+      top: 31px;
+    }
+  } // button
+} // .edit-user-dialog
+
+
+
+#add-user-dialog {
+  ol {
+    list-style: none;
+    margin-top: 20px;
+
+    li {
+      margin-bottom: 5px;
+    } // li
+  } // ol
+  
+} // #add-user-dialog
+
 
 /* Homepage
 -----------------------------------------------------------------------------*/
 
 .homepage {
+
   #top-nav{
     margin-bottom: 60px;
-  }
-  h1 {
-    float: none;
-    text-align: center;
-    font-size: 4.5em;
-    line-height: 0.8em;
-    margin: 15px 0 10px 0;
+    
+    a{
+      color: #fff;
+      float: right;
+      margin: 8px 15px;
+    }
   }
   
   #flash {
-    top: 95px;
+    top: 50px;
   }
   
   #main {
     width: 770px;
     min-width: 770px;
-    padding: 10px;
-    min-height: 510px;
+    padding: 0% 0% 10px;
     
-    #screenshot {
-      @include border-radius(5px);
-      @include box-shadow(0, 2px, 5px, rgba(0, 0, 0, 0.1));
-      
-      float: left;
-      background-image: url(../img/screenshot.png);
-      height: 210px;
-      width: 350px;
-      margin: 20px 15px 20px 20px;
-    }
-    
-    p{
-      line-height: 1.2em;
+    #screenshot{
+      margin: 20px;
     }
     
     #intro{
-      float: left;
-      margin: 20px 20px 20px 15px ;
-      width: 350px;
-      height: 200px;
-      color: #999;
-      
-      #vistazo-is{
-        font-size: 1.17em;
-        line-height: 1.1em;
-        font-weight: 700;
-        color: #a0a0a0;
-      }
-      
-      #to-start{
-        margin: 20px 0 10px 0;
-      }
-      
-      span{
-        color: $vistazo_blue;
-      }
-    }
-    #start-btn{
-      @include border-radius(5px);
-      @include box-shadow(0, 2px, 5px, rgba(0, 0, 0, 0.2));
-      
-      background-color: $vistazo_blue;
-      color: #fff;
-      height: 38px;
-      text-align: center;
-      font-family: 'MenschBold';
-      font-size: 2.2em;
-      letter-spacing: 0;
-      padding: 8px 0 1px 0;
-      text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-      border: 1px solid #259acb;
-      cursor: pointer;
-      
-      display: block;
-      text-decoration: none;
-      
-      &:hover{
-        text-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
-        @include emboss-box-shadow;
-      }
-      
-      &:active{
-        margin: 1px 0 -1px 0;
-        background-color: #28a6db;
-      }
-      
-      span{
-        font-size: 15px;
-      }
-    }
-    hr{
-      float: left;
-      width: 740px;
-      margin: 10px 20px;
-      border: 0;
-      border-top: 1px dotted #eee;
-    }
-    .www{
-      float: left;
-      width: 223px;
+      margin: 15px 40px 20px;
       color: #bbb;
-      font-size: 0.9em;
-      width: 180px;
-      margin-top: 15px;
+      font-weight: bold;
+      font-size: 40px;
+      
+      img{
+        margin-top: 4px;
+      }
     }
     
-    .www-icon{
-      float: left;
-      margin: 20px;
-    }
-    h1 {
-      color: #999999;
-      float: none;
-      margin-bottom: 20px;
-      margin-left: 0;
-    }
-    ul {
-      list-style: disc;
-      margin: 10px 0 0 30px;
+    #glance{
+      height: 200px;
+      background-color: #f4fbfe;
       
-      li {
-        margin-bottom: 5px;
+      img{
+        margin: 40px 0 0 75px;
+      }
+      
+      .home-right{
+        margin: 55px 20px 0 0;
+        
+        p{
+          margin: 0 20px 0 10px;
+        }
       }
     }
+    
+    #abc{
+      height: 200px;
+      
+      img{
+        margin: 65px 0 0 85px;
+      }
+      
+      .home-right{
+        margin: 40px 20px 0 0;
+        
+        span{
+          color: $vistazo_blue;
+        }
+      }
+    }
+    
+    #day{
+      height: 200px;
+      background-color: #f4fbfe;
+      
+      img{
+        margin: 20px 0 0 110px;
+      }
+      
+      .home-right{
+        margin: 50px 20px 0 0;
+      }
+    }
+    
+    #demo{
+      height: 200px;
+      
+      img{
+        margin: 20px 0 0 105px;
+      }
+      
+      .home-right{
+        margin: 50px 20px 0 0;
+      }
+    }
+    
+    .home-right{
+      width: 350px;
+      float: right;
+      
+      h2{
+        float: none;
+        font-family: 'MenschBold';
+        color: $vistazo_blue;
+        font-size: 40px;
+        text-shadow: none;
+      }
+      
+      p{
+        color: #999;
+        margin: 0 0 0 10px;
+      }
+    }
+    
+    #outro{
+      margin: 20px 40px;
+      
+      h3{
+        text-align: center;
+        font-weight: bold;
+        font-size: 20px;
+        color: $vistazo_blue;
+        margin: 40px 0 10px;
+        
+        img{
+          margin: 6px 10px ;
+        }
+      } 
+      
+      p{
+        color: #bbb;
+        font-weight: bold;
+        font-size: 26px;
+        width: 440px;
+        letter-spacing: 1px;
+      }
+      
+      a{
+        @include border-radius(5px);
+        @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+        
+        background-color: rgba(41, 171, 226, 1);
+        text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+        color: #fff;
+        font-size: 26px;
+        line-height: 20px;
+        font-weight: bold;
+        margin: -55px 0 0 0;
+        border: 1px solid #259acb;
+        padding: 10px;
+        
+        float: right;
+        
+        text-decoration: none;
+        
+        &:hover{
+          text-shadow: 0 2px 1px rgba(0, 0, 0, 0.25);
+          @include emboss-box-shadow-small;
+        }
+        &:active {
+          margin: -54px 0 0 0;
+          background-color: #28a6db;
+        }
+      }
+    }
+  
   } // #main
 }
 
@@ -1332,46 +1723,73 @@ textarea:focus, input:focus{
 
 /* Help text
 -----------------------------------------------------------------------------*/
+.first-row.col2{
+  position: relative;
+}
+
+.content-footer.col1{
+  position: relative;
+}
 
 .help-on {
   #help-nav{
     position: absolute;
-    z-index: 110;
-    top: 3px;
-    right: 0;
+    z-index: 1100;
+    top: 15px;
+    right: 20px;
     height: 197px;
-    width: 888px;
-    background: url('/img/help-nav.png');
+    width: 186px;
+    background: url('/img/help-nav.png') no-repeat;
+  }
+  
+  #help-edit{
+    position: absolute;
+    z-index: 1100;
+    top: 62px;
+    left: -10px;
+    height: 197px;
+    width: 186px;
+    background: url('/img/help-edit.png') no-repeat;
+  }
+  
+  #help-close{
+    position: absolute;
+    z-index: 1100;
+    bottom: 100px;
+    right: 100px;
+    height: 46px;
+    width: 181px;
+    background: url('/img/help-close.png') no-repeat;
   }
   
   #help-week{
     position: absolute;
-    top: 50px;
-    left: 15%;
-    z-index: 110;
+    top: -37px;
+    left: -10px;
+    z-index: 1100;
     height: 171px;
     width: 280px;
-    background: url('/img/help-week.png');
+    background: url('/img/help-week.png') no-repeat;
   }
   
   #help-new{
     position: absolute;
-    top: 10px;
-    left: 135px;
-    z-index: 110;
-    height: 57px;
+    top: 25px;
+    left: 15px;
+    z-index: 1100;
+    height: 120px;
     width: 315px;
-    background: url('/img/help-new.png');
+    background: url('/img/help-new.png') no-repeat;
   }
   
   #help-team{
     position: absolute;
-    z-index: 110;
-    top: 25px;
+    z-index: 1100;
+    top: 30px;
     left: 40px;
     height: 112px;
-    width: 206px;
-    background: url('/img/help-team.png');
+    width: 306px;
+    background: url('/img/help-team.png') no-repeat;
   }
   
   #help-project-container {
@@ -1379,12 +1797,12 @@ textarea:focus, input:focus{
     
     #help-project{
       position: absolute;
-      z-index: 110;
-      left: 40%;
-      bottom: -242px;
-      height: 238px;
-      width: 316px;
-      background: url('/img/help-project.png');
+      z-index: 1100;
+      left: 20%;
+      top: -12px;
+      height: 145px;
+      width: 200px;
+      background: url('/img/help-project.png') no-repeat;
       pointer-events: none;
     }
   }
@@ -1396,7 +1814,7 @@ textarea:focus, input:focus{
 footer{
   margin: 0 auto;
   padding-top: 100px; /* Use padding instead of margin, so that dialog positions don't screw up */
-  width: 350px;
+  width: 330px;
   color: #ccc;
   ul{
     
@@ -1420,6 +1838,19 @@ footer{
       }
     }
   }
+  
+  .press-kit{
+    text-decoration: none;
+    color: #B4DBF3;
+    text-align: center;
+    font-size: 13px;
+    margin-left: 80px;
+        
+    &:hover{
+      text-decoration: underline;
+      color: $vistazo_blue;
+    }
+  }
 }
 
 /* Error page
@@ -1437,14 +1868,53 @@ footer{
   }
 }
 
-/* Super admin
+/* TipTip CSS
 -----------------------------------------------------------------------------*/
 
-.is-super-admin {
-  .logged-in-as {
-    background-color: #FF7C69;
-  }
+#tiptip_holder {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99999;
 }
+
+#tiptip_holder.tip_top {
+  padding-bottom: 5px;
+}
+
+#tiptip_holder.tip_bottom {
+  padding-top: 5px;
+}
+
+#tiptip_holder.tip_right {
+  padding-left: 5px;
+}
+
+#tiptip_holder.tip_left {
+  padding-right: 5px;
+}
+
+// Text colour is set in javascript in layout file
+#tiptip_content {
+  @include border-radius(5px);
+
+  font-size: 1.5em;
+  font-weight: bold;
+  padding: 0.5em 0.6em;
+  background-color: hsl(0, 0%, 100%);
+}
+
+#tiptip_arrow, #tiptip_arrow_inner {
+  position: absolute;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 6px;
+  height: 0;
+  width: 0;
+}
+
+
 
 /* Misc
 -----------------------------------------------------------------------------*/
@@ -1452,21 +1922,6 @@ footer{
 .help-on {
   #overlay-bg{
     @include overlay;
-  }
-}
-
-/* For debugging - to seed/reset db */
-#modify-data {
-  display: block;
-  position: absolute;
-  top: 110px;
-  left: 0px;
-  
-  a {
-    padding: 5px;
-    color: white;
-    display: block;
-    text-decoration: none;
   }
 }
 

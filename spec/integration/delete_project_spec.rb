@@ -7,11 +7,11 @@ feature "Delete project" do
     # Create new user
     get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:normal_user] }
     @team = Team.first
-    @team_member = TeamMember.first
+    @user = User.first
     
     # Can't seem to create a project with factory girl, with team association (can't reference it even after creation)
     # @project = Factory.build(:project, :name => "Business time", :team => @team)
-    @project = Project.create(:name => "Business time", :team_id => @team.id)
+    @project = Project.create(:name => "Business time", :team => @team)
     Project.count.should == 1
   end
   
@@ -48,7 +48,7 @@ feature "Delete project" do
     #   click_button "delete"
     # end
     
-    # within("#week-view") do
+    # within("#timetable") do
     #   page.should_not have_content("Business time")
     # end
   end
@@ -64,12 +64,12 @@ feature "Delete project" do
     # # Check project was added
     # visit "/"
     # click_link "start-btn"
-    # within("#week-view") do
+    # within("#timetable") do
     #   page.should have_content("Business time")
     # end
     
     # click_link "Next week"
-    # within("#week-view") do
+    # within("#timetable") do
     #   page.should have_content("Business time")
     # end
     
@@ -80,12 +80,12 @@ feature "Delete project" do
     
     # # Check project was deleted from week views
     # visit "/"
-    # within("#week-view") do
+    # within("#timetable") do
     #   page.should_not have_content("Business time")
     # end
     
     # click_link "Next week"
-    # within("#week-view") do
+    # within("#timetable") do
     #   page.should_not have_content("Business time")
     # end
     
