@@ -816,7 +816,6 @@ textarea:focus, input:focus{
             border: none;
             padding: 0;
             margin: 0.3em auto;
-            cursor: pointer;
 
             @include box-shadow(0, 0, 0, rgba(0, 0, 0, 0));
 
