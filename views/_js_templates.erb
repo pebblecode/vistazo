@@ -124,7 +124,7 @@
 
           {% _.each(timetableItems, function(ti) { %}
             {% if (ti["date"] == "<%= date %>") { %}
-              <div class="project" data-user-id="{{ userId }}" data-timetable-item-id="{{ _.escape(ti['id']) }}" data-date="<%= date %>" title="{{ _.escape(ti['project_name']) }}"> 
+              <div class="project" data-user-id="{{ userId }}" data-timetable-item-id="{{ _.escape(ti['id']) }}" data-date="<%= date %>"> 
                 <div class="handle-container">
                   <div class="handle project-{{ _.escape(ti['project_id']) }}" title="{{ _.escape(ti['project_name']) }}"></div>
                 </div>
