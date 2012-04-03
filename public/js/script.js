@@ -237,14 +237,12 @@ App.TimetableViewSelector = Backbone.View.extend({
       } else {
         if (parentId === "team-view-selector") {
           $('#content').empty();
-          window.location.hash = "";
 
           this._showTeamView();
           this._setActiveView("#" + parentId);
           event.preventDefault();
         } else if (parentId === "project-view-selector") {
           $('#content').empty();
-          window.location.hash = this._projectPageHashValue;
 
           this._showProjectView();
           this._setActiveView("#" + parentId);
@@ -282,10 +280,16 @@ App.TimetableViewSelector = Backbone.View.extend({
   _showTeamView: function() {
     App.userListingView = App.userListingView || new App.UserListingView({ el: $("#main") });
     App.userListingView.render();
+
+    window.location.hash = "";
+    replaceClass("#timetable", "week-view");
   },
   _showProjectView: function() {
     App.projectListingView = App.projectListingView || new App.ProjectListingView({ el: $("#main") });
     App.projectListingView.render();
+
+    window.location.hash = this._projectPageHashValue;
+    replaceClass("#timetable", "project-view");
   },
   _showMonthView: function() {
     App.monthListingView = App.monthListingView || new App.MonthListingView({ el: $("#main") });
@@ -324,7 +328,7 @@ App.AddUserDialogView = Backbone.View.extend({
 App.EditUserDialogView = Backbone.View.extend({
   events: {
     // For both visible and other user timetables
-    "click #main .user-name": "render"
+    "click .week-view .user-name": "render"
   },
   render: function(event) {
     var nameButton = event.target;
@@ -1009,11 +1013,7 @@ function setupProjectEvents() {
         // Add project class to tip tip content
         if (projectRegex.test(handleClass)) {
           var projectClass = handleClass.match(projectRegex)[1];
-          // Clear classes
-          $("#tiptip_content").attr("class", "");
-
-          // Add project class
-          $("#tiptip_content").addClass(projectClass);
+          replaceClass("#tiptip_content", projectClass);
         }
       }
     });
@@ -1158,6 +1158,12 @@ function deleteTimetableItem(proj) {
 ///////////////////////////////////////////////////////////////
 // Helper functions
 ///////////////////////////////////////////////////////////////
+
+// Delete the class attribute and replace with new class
+function replaceClass(selector, newClass) {
+  $(selector).attr("class", "");
+  $(selector).addClass(newClass);
+}
 
 // Labelify new object text boxes
 function labelifyTextBoxes() {

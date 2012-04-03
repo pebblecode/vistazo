@@ -776,6 +776,30 @@ textarea:focus, input:focus{
       } // &.project-row    
     } // tr
 
+    // Week view overrides
+    &.week-view {
+      #content {
+        .user-name {
+          &:hover {
+            text-shadow: 0 2px 1px rgba(0, 0, 0, 0.25);
+            @include emboss-box-shadow-small;
+          }
+          
+          &:active {
+            margin: 6px 5px 4px 5px;
+            background-color: #28a6db;
+          }
+        } // .user-name
+      } // #content
+    } // &.week-view
+
+    // Project view overrides
+    &.project-view {
+      .user-name {
+        background-image: none;
+      }
+    } // &.project-view
+
     // Month view overrides
     &.month-view {
       thead {
@@ -959,16 +983,6 @@ textarea:focus, input:focus{
     outline: none;
 
     background: rgba(41, 171, 226, 1) url('/img/people-arrow.png') no-repeat 100% 5px;
-
-    &:hover {
-      text-shadow: 0 2px 1px rgba(0, 0, 0, 0.25);
-      @include emboss-box-shadow-small;
-    }
-    
-    &:active {
-      margin: 6px 5px 4px 5px;
-      background-color: #28a6db;
-    }
   } // #content .user-name
 
   #new-user-row {
