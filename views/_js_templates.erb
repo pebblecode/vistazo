@@ -358,8 +358,8 @@
 <script type="text/template" id="other-users-template">
   {% if (userTimetables.length > 0) { %}
     <tr id="other-users">
-      <td colspan="9" class="content-footer col1">
-        <h3>Other users:</h3>
+      <td colspan="9" class="content-footer">
+        <h3>Users not shown on timetable:</h3>
         <ol>
           {% _.each(userTimetables, function(ut) { %}
             {% var comma = (ut === _.last(userTimetables)) ? "" : ","; %}
