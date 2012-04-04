@@ -45,7 +45,7 @@
 <script type="text/template" id="existing-project-template">
   <div class='project' data-user-id='{{ _.escape(tmId) }}' data-timetable-item-id='{{ _.escape(tmProjId) }}' data-date='{{ _.escape(projDate) }}'>
     <div class='handle-container'>
-      <div class='{{ _.escape(projHandleCssClass) }}'></div>
+      <div class='{{ _.escape(projHandleCssClass) }}' title='{{ _.escape(projName) }}' }}"></div>
     </div>
     <p class='project-title' title='{{ _.escape(projName) }}'>{{ _.escape(projName.substring(0, 40)) }}</p>
     <form class='delete-timetable-item-form' action='#' method='post'>

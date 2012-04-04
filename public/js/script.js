@@ -812,10 +812,13 @@ App.ProjectDialogView = Backbone.View.extend({
           var retProj = new App.Project(resp.get("project"));
           App.teamProjects.add(retProj);
 
+          var projectStyles = document.createStyleSheet();
           var projectCssSel = '.' + retProj.css_class();
           var projectCssStyle = 'background-color: ' + retProj.escape("hex_colour") + ';';
-          var projectStyles = document.createStyleSheet();
           projectStyles.addRule(projectCssSel, projectCssStyle);
+          var tooltipCssSel = "#tiptip_content." + retProj.css_class();
+          var tooltipCssStyle = 'border: 3px solid' + retProj.escape("hex_colour") + ';';
+          projectStyles.addRule(tooltipCssSel, tooltipCssStyle);
           
           // Add project to existing project list
           projectDialog.existingProjectsView().render();
