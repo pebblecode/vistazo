@@ -17,7 +17,7 @@ require 'rack-force_domain'
 # Require all in lib directory
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
 
-set :version_string, "0.10.0 release"
+set :version_string, "0.11.0 release"
 
 class VistazoApp < Sinatra::Application
   

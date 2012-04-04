@@ -1,3 +1,10 @@
+# 0.11.0
+
+* Month view
+* Remove reset route and use rake task instead
+* Don't show javascript flashes
+* Bug fixes
+
 # 0.10.0
 
 * Major architectural change in user/team members/teams. Combine the
