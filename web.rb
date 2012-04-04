@@ -707,7 +707,11 @@ post '/:team_id/users/:user_id/delete' do
     if user.present?
       name = user.name
       @team.delete_user(user)
-      User.delete user.id
+
+      user.remove_team(@team)
+      unless user.has_a_team?
+        User.delete user.id
+      end
 
       flash[:success] = "Successfully deleted '#{h name}'."
     else

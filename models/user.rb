@@ -39,4 +39,13 @@ class User
   def to_hash
     { "id" => self.id.to_s, "uid" => self.uid, "name" => self.name, "email" => self.email }
   end
+
+  def has_a_team?
+    self.team_ids.length > 0
+  end
+
+  def remove_team(team)
+    self.teams = self.teams.delete_if { |t| t == team }
+    self.save
+  end
 end

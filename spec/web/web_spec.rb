@@ -266,11 +266,21 @@ describe "Users:" do
       @new_user = User.find_by_email(new_user_params[:email])
     end
 
-    it "should delete user" do
+    it "should delete user if the user has no more teams" do
       User.find(@new_user.id).present?.should == true
       post_params! team_delete_user(@team, @new_user), nil, @session
 
       User.find(@new_user.id).present?.should == false
+    end
+
+    it "should not delete user if the user is in another team" do
+      another_team = Factory(:team)
+      another_team.add_user(@new_user)
+      another_team.reload
+      @new_user.reload
+
+      post_params! team_delete_user(@team, @new_user), nil, @session
+      User.find(@new_user.id).present?.should == true
     end
 
     it "should delete user timetable" do
