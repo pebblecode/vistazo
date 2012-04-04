@@ -18,6 +18,19 @@ module Sinatra
     def team_id_current_week_link_url(team_id)
       "/#{team_id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
     end
+
+    # Works for any day in the week, but note that weeks start
+    # on Sunday
+    # http://www.ruby-doc.org/stdlib-1.9.3/libdoc/date/rdoc/Date.html#method-i-strftime
+    def week_for_day_url(team, year, month, day)
+      week = Date.new(year, month, day).strftime("%U")
+
+      week_url(team, year, week)
+    end
+
+    def week_url(team, year, week)
+      "/#{team.id}/#{year}/week/#{week}"
+    end
   end
   helpers HelperMethods
 end

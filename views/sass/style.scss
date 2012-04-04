@@ -813,6 +813,7 @@ textarea:focus, input:focus{
           height: 20px;
           vertical-align: middle;
         }
+
         #month-title {
           font-size: 16px;
           line-height: 18px;
@@ -820,6 +821,7 @@ textarea:focus, input:focus{
           text-align: right;
           margin: 10px 5px 0 0;
         }
+
         .day {
           font-weight: bold;
           font-size: 10px;
@@ -827,9 +829,50 @@ textarea:focus, input:focus{
           color: #999;
           text-align: center;
         }
+
         .arrows {
           margin: 10px;
         }
+
+        #week-links {
+          td {
+            font-weight: bold;
+            font-size: 10px;
+            line-height: 12px;
+            color: #999;
+            text-align: center;
+            border: none;
+
+            a {
+              text-decoration: none;
+              padding: 2px 0;
+              display: block;
+            }
+            &.odd {
+              background-color: #E5F6FF;
+              a {
+                color: #4DC3FF;
+              }
+            }
+            &.even {
+              background-color: #CEF;
+              a {
+                color: #3BF;
+              }
+            }
+          } // td
+        } // #week-links
+
+        .row-spacer {
+          td {
+            border: none;
+            height: auto;
+
+            div {
+              height: 0; // Sets the height of the td
+            }
+          } // td
+        } // .row-spacer
       }
 
       tr {

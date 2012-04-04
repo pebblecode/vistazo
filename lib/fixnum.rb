@@ -1,3 +1,5 @@
+require "date"
+
 class Fixnum
   def ordinalize
     if (11..13).include?(self % 100)
@@ -10,5 +12,9 @@ class Fixnum
         else    "#{self}th"
       end
     end
+  end
+
+  def to_abbr_month_name
+    Date.new(Time.now.year, self, Time.now.day).strftime("%b")
   end
 end

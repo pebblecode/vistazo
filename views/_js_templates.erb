@@ -70,6 +70,50 @@
   <script type="text/template" id="month-template">
     <table id="timetable" class="month-view">
       <thead>
+        <tr id="week-links">
+          <td><!-- Empty first column --></td>
+          <%
+            mondays = (1..@days_in_month).select { |d| Date.new(@year, @month, d).monday? }
+            month_abbr_name = @month.to_abbr_month_name
+            num_weeks = 0
+          %>
+          <% if mondays.first > 1 %>
+            <% days_before_first_monday = mondays.first - 1 %>
+            <td class="<%= ((num_weeks % 2) == 0) ? "odd" : "even" %>" colspan="<%= days_before_first_monday %>">
+              <%
+                first_date = Date.new(@year, @month, 1)
+                first_of_month_week = first_date.strftime("%U").to_i
+
+                # To take into consideration Sunday being the start of the
+                # week for week function, whereas Vistazo starts on Monday
+                first_of_month_actual_week = first_date.sunday? ? first_of_month_week - 1 : first_of_month_week
+                first_week_url = week_url(@team, @year, first_of_month_actual_week)
+              %>
+              <a href="<%= first_week_url %>"><%= "-#{(mondays.first - 1).ordinalize} #{month_abbr_name}" %></a>
+            </td>
+            <% num_weeks += 1 %>
+          <% end %>
+          <% mondays.each do |monday| %>
+            <% days_in_a_week = 7 %>
+            <% if (monday + days_in_a_week) <= @days_in_month %>
+              <td class="<%= ((num_weeks % 2) == 0) ? "odd" : "even" %>" colspan="<%= days_in_a_week %>">
+                <a href="<%= week_for_day_url(@team, @year, @month, monday) %>"><%= "#{monday.ordinalize}-#{(monday + (days_in_a_week - 1)).ordinalize} #{ month_abbr_name}" %></a>
+              </td>
+            <% else %>
+              <% days_in_last_week = (@days_in_month + 1) - monday %>
+              <td class="<%= ((num_weeks % 2) == 0) ? "odd" : "even" %>" colspan="<%= days_in_last_week %>">
+                <a href="<%= week_for_day_url(@team, @year, @month, monday) %>"><%= "#{monday.ordinalize} #{month_abbr_name} -" %></a>
+              </td>
+            <% end %>
+            <% num_weeks += 1 %>
+          <% end %>
+        </tr>
+        
+        <tr class="row-spacer">
+          <% extra_cols = 2 %>
+          <td colspan="<%= @days_in_month + extra_cols %>"><div></div></td>
+        </tr>
+
         <tr>
           <td>
             <% if @prev_month_url.present? %>
