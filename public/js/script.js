@@ -534,7 +534,7 @@ App.MonthListingView = Backbone.View.extend({
     }
     // Show users
     this._renderVisibleUserTimetables();
-    // this._renderOtherUsers(); // TODO
+    this._renderOtherUsers();
 
     return this;
   },
@@ -560,6 +560,18 @@ App.MonthListingView = Backbone.View.extend({
     setupNewProjectDialog();
     setupProjectEvents();
   },
+  _renderOtherUsers: function() {
+    var otherUsersVars = {
+      userTimetables: App.userTimetables.otherTimetables()
+    };
+    var otherUsersHtml = _.template($("#other-users-template").html(), otherUsersVars);
+
+    if ($("#other-users").length > 0) {
+      $("#other-users").replaceWith(otherUsersHtml);
+    } else {
+      $("#new-user-row").after(otherUsersHtml);  
+    }
+  }
 });
 
 
