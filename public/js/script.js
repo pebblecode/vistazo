@@ -214,8 +214,8 @@ App.TimetableViewSelector = Backbone.View.extend({
       this._showMonthView();
       this._setActiveView("#view-selector #month-view-selector");
     } else if (this.isTeamPage()) {
-      this._showTeamView();
-      this._setActiveView("#view-selector #team-view-selector");
+      this._showWeekView();
+      this._setActiveView("#view-selector #week-view-selector");
     } else if (this.isProjectPage()) {
       this._showProjectView();
       this._setActiveView("#view-selector #project-view-selector");
@@ -235,10 +235,10 @@ App.TimetableViewSelector = Backbone.View.extend({
       if (this.isMonthPage()) {
         // Do nothing, let it pass through to the link location
       } else {
-        if (parentId === "team-view-selector") {
+        if (parentId === "week-view-selector") {
           $('#content').empty();
 
-          this._showTeamView();
+          this._showWeekView();
           this._setActiveView("#" + parentId);
           event.preventDefault();
         } else if (parentId === "project-view-selector") {
@@ -277,7 +277,7 @@ App.TimetableViewSelector = Backbone.View.extend({
     });
     $(viewSelector).addClass("active");
   },
-  _showTeamView: function() {
+  _showWeekView: function() {
     App.userListingView = App.userListingView || new App.UserListingView({ el: $("#main") });
     App.userListingView.render();
 

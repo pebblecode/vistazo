@@ -532,11 +532,11 @@ textarea:focus, input:focus{
   li {
     position: absolute;
 
-    &#team-view-selector {
+    &#week-view-selector {
       top: 0;
       left: 0;
     }
-    &#project-view-selector {
+    &#month-view-selector {
       top: 0;
       left: 108px;
       a {
@@ -546,7 +546,7 @@ textarea:focus, input:focus{
         background-color: white;
       }
     }
-    &#month-view-selector {
+    &#project-view-selector {
       top: 0;
       left: 216px;
     }
