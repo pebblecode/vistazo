@@ -424,7 +424,6 @@ App.UserListingView = Backbone.View.extend({
     }
     var newUserRow = _.template($("#new-user-row-template").html());
     $("#timetable").append(newUserRow);
-    labelifyTextBoxes();
     
     // Show users
     this._renderVisibleUserTimetables();
