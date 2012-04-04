@@ -691,11 +691,15 @@ App.ProjectDialogView = Backbone.View.extend({
     
     // If clicked on weekend add class for weekend, and place dialog on the left
     // Otherwise, place dialog on the right
-    $( "#new-project-dialog" ).removeClass("is-weekend");
+    $( "#new-project-dialog" ).removeClass("is-flipped");
     var new_project_dialog_top_offset = -46;
     var new_project_dialog_left_offset = 0;
-    if ($(box).hasClass("col7") || $(box).hasClass("col8")) {
-      $( "#new-project-dialog" ).addClass("is-weekend");
+
+    var too_far_right_buffer = 50;
+    var is_too_far_right = ((event.pageX + $("#new-project-dialog").width() + too_far_right_buffer) > $(window).width());
+
+    if (is_too_far_right) {
+      $( "#new-project-dialog" ).addClass("is-flipped");
       new_project_dialog_left_offset = -220;
     } else {
       new_project_dialog_left_offset = 20;
