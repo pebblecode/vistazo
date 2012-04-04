@@ -210,13 +210,13 @@ App.TeamDialogView = Backbone.View.extend({
 
 App.TimetableViewSelector = Backbone.View.extend({
   initialize: function() {
-    if (this._isMonthPage()) {
+    if (this.isMonthPage()) {
       this._showMonthView();
       this._setActiveView("#view-selector #month-view-selector");
-    } else if (this._isTeamPage()) {
+    } else if (this.isTeamPage()) {
       this._showTeamView();
       this._setActiveView("#view-selector #team-view-selector");
-    } else if (this._isProjectPage()) {
+    } else if (this.isProjectPage()) {
       this._showProjectView();
       this._setActiveView("#view-selector #project-view-selector");
     } else {
@@ -232,7 +232,7 @@ App.TimetableViewSelector = Backbone.View.extend({
     var parentId = $(viewLink).parent().attr("id");
 
     if (parentId !== currentViewId) {
-      if (this._isMonthPage()) {
+      if (this.isMonthPage()) {
         // Do nothing, let it pass through to the link location
       } else {
         if (parentId === "team-view-selector") {
@@ -256,16 +256,16 @@ App.TimetableViewSelector = Backbone.View.extend({
     }
   },
   _projectPageHashValue: "project-view",
-  _isMonthPage: function() {
+  isMonthPage: function() {
     return window.location.pathname.split('/')[3] === "month";
   },
-  _isTeamPage: function() {
+  isTeamPage: function() {
     var isWeekPage = (window.location.pathname.split('/')[3] === "week");
     var notProjectView = !(window.location.hash.substring(1) === this._projectPageHashValue);
 
     return (isWeekPage && notProjectView);
   },
-  _isProjectPage: function() {
+  isProjectPage: function() {
     var isWeekPage = (window.location.pathname.split('/')[3] === "week");
     var isProjectView = (window.location.hash.substring(1) === this._projectPageHashValue);
 
@@ -299,7 +299,11 @@ App.TimetableViewSelector = Backbone.View.extend({
 
 App.AddUserDialogView = Backbone.View.extend({
   events: { 
-    "click #add-user-button": "render"
+    "click #add-user-button": "render",
+
+    // Event created after initialize when add user dialog
+    // is created
+    "click #add-user-dialog .submit-button": "handleNewUser"
   },
   initialize: function() {
     var addUserDialog = _.template($("#add-user-dialog-template").html());
@@ -325,7 +329,83 @@ App.AddUserDialogView = Backbone.View.extend({
     App.userListingView = new App.UserListingView({el: "body"});
 
     event.preventDefault();
-  }
+  },
+  handleNewUser: function() {
+    var newUser = new App.User({
+      name: $('input[name=name]').val(),
+      email: $('input[name=email]').val()
+    });
+
+    var errors = newUser.hasErrors();
+    if (!errors) {
+      this.addUserToUserTimetables(newUser);
+
+      $('input[name=name]').val('');
+      $('input[name=email]').val('');
+      $('input[name=is_visible]').prop("checked", true);
+
+      $("#add-user-dialog").dialog('close');
+    } else {
+      errorsHtml = _.template($("#errors-template").html(), {
+        id: "add-user-form-errors",
+        errors: errors
+      });
+      if ($("#add-user-form-errors").length > 0) {
+        $("#add-user-form-errors").replaceWith(errorsHtml);
+      } else {
+        $("#add-user-form").prepend(errorsHtml);
+      }
+
+      $("#add-user-form-errors").hide(0, function() {
+        $(this).fadeIn(1000);
+      });
+      $("#add-user-form input[name=name]").focus();
+    }
+
+    event.preventDefault();
+  },
+  addUserToUserTimetables: function(user) {
+    var url = "/" + TEAM_ID + "/user-timetables/new-user.json";
+    var listingView;
+    if (App.timetableViewSelector.isTeamPage()) {
+      listingView = App.userListingView;
+    } else if (App.timetableViewSelector.isMonthPage()) {
+      listingView = App.monthListingView;
+    } else {
+      console.log("Invalid view");
+      return;
+    }
+
+    $.post(url, $("#add-user-form").serialize())
+    .success(function(response) {
+      var user = new App.User(response["user"]);
+      App.users.add(user);
+
+      var userTimetable = new App.UserTimetable(response["user_timetable"]);
+      App.userTimetables.add(userTimetable);
+
+      if (userTimetable.get("is_visible") === true) {
+        listingView.renderVisibleUserTimetable(userTimetable);
+      } else {
+        listingView.renderOtherUsers(userTimetable);
+      }
+
+      App.flashView.render("success", "Successfully added '" + user.escape('name') + "'.");
+    })
+    .error(function(data) {
+      if (data) {
+        try {
+          response = JSON.parse(data.responseText);
+          App.flashView.render("warning", response["message"]);
+        } catch(error) {
+          console.log(error);
+          App.flashView.renderError();
+        }
+      } else {
+        App.flashView.renderError();
+      }
+    });
+  },
 });
 
 App.EditUserDialogView = Backbone.View.extend({
@@ -375,44 +455,6 @@ App.EditUserDialogView = Backbone.View.extend({
 
 
 App.UserListingView = Backbone.View.extend({
-  events: { 
-    "click #add-user-dialog .submit-button": "handleNewUser"
-  },
-  handleNewUser: function(event) {
-    var newUser = new App.User({
-      name: $('input[name=name]').val(),
-      email: $('input[name=email]').val()
-    });
-
-    var errors = newUser.hasErrors();
-    if (!errors) {
-      
-      this._addUserToUserTimetables(newUser);
-
-      $('input[name=name]').val('');
-      $('input[name=email]').val('');
-      $('input[name=is_visible]').prop("checked", true);
-
-      $("#add-user-dialog").dialog('close');
-    } else {
-      errorsHtml = _.template($("#errors-template").html(), {
-        id: "add-user-form-errors",
-        errors: errors
-      });
-      if ($("#add-user-form-errors").length > 0) {
-        $("#add-user-form-errors").replaceWith(errorsHtml);
-      } else {
-        $("#add-user-form").prepend(errorsHtml);
-      }
-
-      $("#add-user-form-errors").hide(0, function() {
-        $(this).fadeIn(1000);
-      });
-      $("#add-user-form input[name=name]").focus();
-    }
-
-    event.preventDefault();
-  },
   // Either add to #main or replace #timetable
   render: function() {
     // Put week scaffold on page
@@ -427,51 +469,17 @@ App.UserListingView = Backbone.View.extend({
     
     // Show users
     this._renderVisibleUserTimetables();
-    this._renderOtherUsers();
+    this.renderOtherUsers();
 
     return this;
-  },
-  _addUserToUserTimetables: function(user) {
-    var url = "/" + TEAM_ID + "/user-timetables/new-user.json";
-    var listingView = this;
-
-    $.post(url, $("#add-user-form").serialize())
-    .success(function(response) {
-      var user = new App.User(response["user"]);
-      App.users.add(user);
-
-      var userTimetable = new App.UserTimetable(response["user_timetable"]);
-      App.userTimetables.add(userTimetable);
-
-      if (userTimetable.get("is_visible") === true) {
-        listingView._renderVisibleUserTimetable(userTimetable);  
-      } else {
-        listingView._renderOtherUsers(userTimetable);
-      }
-      
-      App.flashView.render("success", "Successfully added '" + user.escape('name') + "'.");
-    })
-    .error(function(data) {
-      if (data) {
-        try {
-          response = JSON.parse(data.responseText);
-          App.flashView.render("warning", response["message"]);
-        } catch(error) {
-          console.log(error);
-          App.flashView.renderError();
-        }
-      } else {
-        App.flashView.renderError();
-      }
-    });
   },
   _renderVisibleUserTimetables: function() {
     thisView = this;
     _.each(App.userTimetables.visibleTimetables(), function(userTimetable) {
-      thisView._renderVisibleUserTimetable(userTimetable);
+      thisView.renderVisibleUserTimetable(userTimetable);
     });
   },
-  _renderVisibleUserTimetable: function(userTimetable) {
+  renderVisibleUserTimetable: function(userTimetable) {
     // console.log("Render team member row for: " + JSON.stringify(user) + " (" + user.escape("id") + "): " + user.escape("name"));
     
     var rowNum = $(this.el).find(".user").length + 1 + 1; // 1 to increment and 1 for header row
@@ -488,7 +496,7 @@ App.UserListingView = Backbone.View.extend({
     setupProjectEvents();
   },
 
-  _renderOtherUsers: function() {
+  renderOtherUsers: function() {
     var otherUsersVars = {
       userTimetables: App.userTimetables.otherTimetables()
     };
@@ -532,19 +540,22 @@ App.MonthListingView = Backbone.View.extend({
     } else {
       $("#timetable").replaceWith(monthTable);
     }
+    var newUserRow = _.template($("#new-user-row-template").html());
+    $("#timetable").append(newUserRow);
+
     // Show users
     this._renderVisibleUserTimetables();
-    this._renderOtherUsers();
+    this.renderOtherUsers();
 
     return this;
   },
   _renderVisibleUserTimetables: function() {
     thisView = this;
     _.each(App.userTimetables.visibleTimetables(), function(userTimetable) {
-      thisView._renderVisibleUserTimetable(userTimetable);
+      thisView.renderVisibleUserTimetable(userTimetable);
     });
   },
-  _renderVisibleUserTimetable: function(userTimetable) {
+  renderVisibleUserTimetable: function(userTimetable) {
     // console.log("Render team member row for: " + JSON.stringify(user) + " (" + user.escape("id") + "): " + user.escape("name"));
     
     var rowNum = $(this.el).find(".user").length + 1 + 1; // 1 to increment and 1 for header row
@@ -560,7 +571,7 @@ App.MonthListingView = Backbone.View.extend({
     setupNewProjectDialog();
     setupProjectEvents();
   },
-  _renderOtherUsers: function() {
+  renderOtherUsers: function() {
     var otherUsersVars = {
       userTimetables: App.userTimetables.otherTimetables()
     };
