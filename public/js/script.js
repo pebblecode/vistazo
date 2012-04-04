@@ -152,6 +152,10 @@ App.Projects = Backbone.Collection.extend({
 
 App.FlashView = Backbone.View.extend({
   render: function(flashType, msg) {
+    // Don't show for now
+    if (true) return this;
+
+    // Ignored...
     var flashMessage = "<div class='flash " + flashType + "'>" + msg + "</div>";
     
     if ($("#flash").length <= 0) {
