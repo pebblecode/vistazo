@@ -170,7 +170,21 @@ namespace "db" do
       if ask_question "Are you sure you want to reset the STAGING database?"
 
         url = get_mongolab_uri("vistazo-staging")
-        
+
+        puts "\n\nSetting up mongo connection with: #{url}"
+        setup_mongo_connection(url)
+        delete_all_collections
+      else
+        puts "\nExiting..."
+      end
+    end
+
+    desc "Reset the sandbox database."
+    task :sandbox do
+      if ask_question "Are you sure you want to reset the SANDBOX database?"
+
+        url = get_mongolab_uri("vistazo-sandbox")
+
         puts "\n\nSetting up mongo connection with: #{url}"
         setup_mongo_connection(url)
         delete_all_collections
