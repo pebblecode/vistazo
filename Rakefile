@@ -205,11 +205,51 @@ namespace "db" do
     #       setup_mongo_connection(url)
     #       delete_all_collections
     #     else
-    #       puts "\nExiting..."          
+    #       puts "\nExiting..."
     #     end
     #   else
     #     puts "\nExiting..."
     #   end
     # end
+  end
+
+  # Set up directory in tmp/backups folder
+  def setup_backup_directory(folder_prefix)
+    tmp_path = "tmp"
+    backups_folder = "backups"
+    backups_path = "#{tmp_path}/#{backups_folder}"
+    dir_path = "#{backups_path}/#{Time.now.strftime("#{folder_prefix}-%F-%H%M%S")}"
+
+    Dir.mkdir(tmp_path) unless File::directory?(tmp_path)
+    Dir.mkdir(backups_path) unless File::directory?(backups_path)
+    Dir.mkdir(dir_path) unless File::directory?(dir_path)
+
+    dir_path
+  end
+
+  namespace "backup" do
+    desc "Backup the production database into the tmp directory."
+    task :production do
+      heroku_app_name = "vistazo"
+      env_prefix = "vistazo-production"
+
+      dir_path = setup_backup_directory(env_prefix)
+      puts "Putting files in #{dir_path}"
+
+      url = get_mongolab_uri(heroku_app_name)
+      puts "\n\nSetting up mongo connection with: #{url}"
+      setup_mongo_connection(url)
+      mongo_credentials_regex = /mongodb:\/\/(.*):(.*)@(.+:.+)\/(.*)/
+      mongo_host = url.match(mongo_credentials_regex)[3]
+      mongo_database = url.match(mongo_credentials_regex)[1]
+      mongo_user = url.match(mongo_credentials_regex)[1]
+      mongo_password = url.match(mongo_credentials_regex)[2]
+
+      MongoMapper.database.collections.each do |coll|
+        mongo_export_cmd = "mongoexport -h #{mongo_host} -d #{mongo_database} -c #{coll.name} -u #{mongo_user} -p #{mongo_password} -o #{dir_path}/#{env_prefix}-#{coll.name}.json"
+        sh mongo_export_cmd
+        puts "\n"
+      end
+    end
   end
 end
