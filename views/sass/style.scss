@@ -1967,17 +1967,24 @@ footer{
 /* Error page
 -----------------------------------------------------------------------------*/
 
-.error-page {
-  h1 {
-    color: #999999;
-    float: none;
-    margin-bottom: 20px;
-    margin-left: 0;
-  }
-  p {
-    margin-bottom: 20px;
-  }
-}
+.is-error {
+  #main {
+    h1 {
+      color: #999999;
+      float: none;
+      margin-bottom: 20px;
+      margin-left: 0;
+    }
+    
+    p {
+      margin-bottom: 20px;
+    }
+
+    a {
+      color: $vistazo_blue;
+    }
+  } // #main
+} // .is-error
 
 /* TipTip CSS
 -----------------------------------------------------------------------------*/
