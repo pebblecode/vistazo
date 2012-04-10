@@ -276,7 +276,7 @@ Vistazo development client id and secret are stored in `config/config.yml`, whil
 
 ### For virtual machines
 
-Add the following to the `c:\windows\system32\drivers\etc\hosts` (for windows xp, or find equivalent on different versions of windows)
+Add the following to `c:\windows\system32\drivers\etc\hosts` (for windows xp, or find equivalent on different versions of windows)
 
     10.0.2.2    vistazodevelopment.com
 
