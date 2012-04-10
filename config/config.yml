@@ -1,8 +1,8 @@
 base: &base
   username: vistazo
   password: vistazo
-  client_id: 443819582294.apps.googleusercontent.com
-  google_secret: nBlfJxFwHbyOKN_PKSgTJtbt
+  client_id: 431161751732.apps.googleusercontent.com
+  google_secret: ESHRIGC6PHY15jbWwSCG0HcL
   email_service_username:
   email_service_password:
   email_service_domain:
