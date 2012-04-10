@@ -32,6 +32,7 @@ $warning_color: #000000;
   -o-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25),
               inset 0 3px 0 rgba(255, 255, 255, 0.15),
               inset 0 -3px 0 rgba(0, 0, 0, 0.05);
+  filter: none;
 }
 
 @mixin emboss-box-shadow-small {
@@ -47,6 +48,7 @@ $warning_color: #000000;
   -o-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05),
               inset 0 2px 0 rgba(255, 255, 255, 0.2),
               inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+  filter: none;
 }
 
 @mixin overlay {
@@ -91,7 +93,7 @@ $warning_color: #000000;
   line-height: 20px;
   font-weight: normal;
   text-shadow: none;
-  
+  filter: none;
   color: #808080;
   background-color: #fff;
   
@@ -111,6 +113,7 @@ $warning_color: #000000;
   background-color: #fff;
   border: 1px solid #a1a1a1;
   cursor: pointer;
+  filter: none;
 }
 
 @mixin text-input{
@@ -225,6 +228,7 @@ body {
       border: 1px solid #666;
       color: #666;
       @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.3));
+      filter: none;
     }
     &:active{
       top: 31px;
@@ -348,6 +352,7 @@ textarea:focus, input:focus{
 
 #top-nav {
   @include box-shadow(0, 3px, 0, rgba(0, 0, 0, 0.1));
+  filter: none;
   
   width: 100%;
   float: left;
@@ -582,7 +587,7 @@ textarea:focus, input:focus{
 #main {
   @include border-radius(10px);
   @include box-shadow(0, 5px, 20px, rgba(0, 0, 0, 0.1));
-  
+  filter: none;
   position: relative;
   // z-index: 0; // Can't have z-index, otherwise help overlay items inside main can't show on top of the bg overlay
 
@@ -638,7 +643,7 @@ textarea:focus, input:focus{
         margin-left: 6px;
         position: relative;
         background: #fff;
-        
+        filter: none;
         
         &:hover {
           color: #777;
@@ -703,6 +708,7 @@ textarea:focus, input:focus{
           @include border-radius(5px);
           @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.1));
           
+          
           background-color: #fff;
           margin: 5px 6px 0 8px;
           font-size: 14px;
@@ -711,12 +717,13 @@ textarea:focus, input:focus{
           padding-right: 2px;
           padding-bottom: 3px;
           position: relative;
-          
+          filter: none;
           cursor: move;
           
           &:hover {
             border: 1px solid #aaa;
             @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+            filter: none;
           }
           
           .project-title{
@@ -901,6 +908,7 @@ textarea:focus, input:focus{
             margin: 0.3em auto;
 
             @include box-shadow(0, 0, 0, rgba(0, 0, 0, 0));
+            filter: none;
 
             &.is_loading .handle-container {
               float: none;
@@ -1026,6 +1034,7 @@ textarea:focus, input:focus{
   #content .user-name {
     @include border-radius(5px);
     @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+    filter: none;
     
     
     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
@@ -1149,6 +1158,7 @@ textarea:focus, input:focus{
   width: 5px;
   margin: 7px 10px 5px 5px;
   @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+  filter: none;
   background-color: #fff;
 } // #point
 
@@ -1275,6 +1285,7 @@ textarea:focus, input:focus{
 .new-object-dialog {
   @include border-radius(8px);
   @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+  filter: none;
   
   color: #fff;
   font-size: 14px;
@@ -1391,6 +1402,7 @@ textarea:focus, input:focus{
     @include border-radius(5px);
     border: 1px solid #a1a1a1;
     @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.15));
+    filter: none;
     margin-left: 6px;
     position: relative;
     background: #fff;
@@ -1436,6 +1448,7 @@ textarea:focus, input:focus{
         width: 5px;
         margin: 9px 10px 5px 5px;
         @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+        filter: none;
         background-color: #d8eaf1;
       }
       
@@ -1461,6 +1474,7 @@ textarea:focus, input:focus{
       .resend {
         @include border-radius(5px);
         @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+        filter: none;
         
         float: left;
         padding: 0 3px 0 5px;
@@ -1555,6 +1569,7 @@ textarea:focus, input:focus{
           border: 1px solid #666;
           color: #666;
           @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.3));
+          filter: none;
         }
         &:active{
           top: -1px;
@@ -1616,6 +1631,7 @@ textarea:focus, input:focus{
       border: 1px solid #666;
       color: #666;
       @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.3));
+      filter: none;
     }
     &:active{
       top: 31px;
@@ -1779,6 +1795,7 @@ textarea:focus, input:focus{
       a{
         @include border-radius(5px);
         @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.2));
+        filter: none;
         
         background-color: rgba(41, 171, 226, 1);
         text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
