@@ -1,25 +1,5 @@
 require_relative '../spec_helper'
 
-describe "Http authentication" do
-  after do
-    clean_db!
-  end
-  
-  it "should work on all pages" do
-    
-    get "/"
-    last_response.status.should == 401
-    
-    user = Factory(:user, :teams => [Factory(:team)]) # Create a user using factory, so that session doesn't need to be set up
-    get user_team_path(user)
-    last_response.status.should == 401
-    
-    get user_team_current_week_path(user)
-    last_response.status.should == 401
-  end
-  
-end
-
 describe "Homepage" do
   before do
     http_authorization!
