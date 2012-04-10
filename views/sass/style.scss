@@ -1121,6 +1121,15 @@ textarea:focus, input:focus{
   a {
     color: $vistazo_blue;
   }
+
+  ul {
+    list-style: disc;
+    margin-bottom: 15px;
+
+    li {
+      margin-left: 20px;
+    }
+  }
 } // .static-page
 
 /* Dialogs
@@ -1904,12 +1913,14 @@ textarea:focus, input:focus{
 -----------------------------------------------------------------------------*/
 
 footer{
-  margin: 0 auto;
+  margin: 0 auto 20px;
   padding-top: 100px; /* Use padding instead of margin, so that dialog positions don't screw up */
   width: 330px;
   color: #ccc;
+
   ul{
-    
+    clear: both;
+
     li{
       float: left;
       margin: 10px;
@@ -1929,15 +1940,19 @@ footer{
         }
       }
     }
+    &.legal {
+      margin-left: 70px;
+    }
   }
   
   .press-kit{
     text-decoration: none;
     color: #B4DBF3;
-    text-align: center;
     font-size: 13px;
-    margin-left: 80px;
-        
+    margin: 40px 0 0 90px;
+    clear: both;
+    display: block;
+
     &:hover{
       text-decoration: underline;
       color: $vistazo_blue;
