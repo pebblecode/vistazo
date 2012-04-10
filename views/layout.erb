@@ -78,6 +78,8 @@
 <%
   body_classes = []
   body_classes << 'first-signon' if @first_signon
+  body_classes << 'is-error' if @is_error
+  body_classes << 'is-static' if @is_static
 %>
 <body class='<%= body_classes.join(" ") %>'>
   <div id="overlay-bg"></div>

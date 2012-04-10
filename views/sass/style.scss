@@ -1100,37 +1100,41 @@ textarea:focus, input:focus{
 /* Static pages
 -----------------------------------------------------------------------------*/
 
-.static-page {
-  h1.title {
-    color: $vistazo_blue;
-    float: none;
-    margin: 10px 0 20px;
-  }
+.is-static {
+  #main {
+    width: 700px;
 
-  h2 {
-    color: $vistazo_blue;
-    float: none;
-    margin: 10px 0 10px;
-  }
-
-  p {
-    margin: 0 0 20px;
-    line-height: 1.2em;
-  }
-
-  a {
-    color: $vistazo_blue;
-  }
-
-  ul {
-    list-style: disc;
-    margin-bottom: 15px;
-
-    li {
-      margin-left: 20px;
+    h1.title {
+      color: $vistazo_blue;
+      float: none;
+      margin: 10px 0 20px;
     }
-  }
-} // .static-page
+
+    h2 {
+      color: $vistazo_blue;
+      float: none;
+      margin: 10px 0 10px;
+    }
+
+    p {
+      margin: 0 0 20px;
+      line-height: 1.2em;
+    }
+
+    a {
+      color: $vistazo_blue;
+    }
+
+    ul {
+      list-style: disc;
+      margin-bottom: 15px;
+
+      li {
+        margin-left: 20px;
+      }
+    }
+  } // #main
+} // .is-static
 
 /* Dialogs
 -----------------------------------------------------------------------------*/
