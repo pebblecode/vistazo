@@ -409,7 +409,7 @@ App.AddUserDialogView = Backbone.View.extend({
         App.flashView.renderError();
       }
     });
-  },
+  }
 });
 
 App.EditUserDialogView = Backbone.View.extend({
