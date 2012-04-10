@@ -1117,6 +1117,10 @@ textarea:focus, input:focus{
     margin: 0 0 20px;
     line-height: 1.2em;
   }
+
+  a {
+    color: $vistazo_blue;
+  }
 } // .static-page
 
 /* Dialogs
