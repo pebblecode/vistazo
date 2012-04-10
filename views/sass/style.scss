@@ -1103,6 +1103,8 @@ textarea:focus, input:focus{
 .is-static {
   #main {
     width: 700px;
+    min-width: 700px;
+    padding: 15px 20px 1px;
 
     h1.title {
       color: $vistazo_blue;
@@ -1114,11 +1116,13 @@ textarea:focus, input:focus{
       color: $vistazo_blue;
       float: none;
       margin: 10px 0 10px;
+      text-shadow: none;
     }
 
     p {
       margin: 0 0 20px;
       line-height: 1.2em;
+      color: #808080;
     }
 
     a {
@@ -1128,6 +1132,7 @@ textarea:focus, input:focus{
     ul {
       list-style: disc;
       margin-bottom: 15px;
+      color: #666;
 
       li {
         margin-left: 20px;
