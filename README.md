@@ -261,6 +261,28 @@ To push to the production server
     
 This is deployed at: http://vistazo.herokuapp.com/
 
+## Google oauth
+
+To use Google oauth, a client id and client secret needs to be generated in the [Google APIs console](https://code.google.com/apis/console).
+
+The following are links to the respective API consoles:
+
+* [Vistazo development](https://code.google.com/apis/console/b/0/?pli=1#project:431161751732:access)
+* [Vistazo staging](https://code.google.com/apis/console/b/0/?pli=1#project:565404561857:access)
+* [Vistazo sandbox](https://code.google.com/apis/console/b/0/?pli=1#project:780676367024:access)
+* [Vistazo production](https://code.google.com/apis/console/b/0/?pli=1#project:139948808699:access)
+
+Vistazo development client id and secret are stored in `config/config.yml`, while the rest are stored in `ENV` variables (see respective sections in the readme so see how)
+
+### For virtual machines
+
+Add the following to the `c:\windows\system32\drivers\etc\hosts` (for windows xp, or find equivalent on different versions of windows)
+
+    10.0.2.2    vistazodevelopment.com
+
+`vistazodevelopment.com` is setup as an arbitrary url for development. I couldn't use `10.0.2.2` or `something.local` or anything similar for some reason.
+
+
 ## Mongo
 
 ### Reset database
