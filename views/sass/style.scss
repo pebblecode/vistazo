@@ -1940,16 +1940,15 @@ textarea:focus, input:focus{
 footer{
   margin: 0 auto 20px;
   padding-top: 100px; /* Use padding instead of margin, so that dialog positions don't screw up */
-  width: 330px;
+  width: 500px;
   color: #ccc;
 
   ul{
-    clear: both;
 
     li{
-      float: left;
       margin: 10px;
       font-size: 0.8em;
+      text-align: center;
       
       span{
         color: $vistazo_blue;
@@ -1965,16 +1964,12 @@ footer{
         }
       }
     }
-    &.legal {
-      margin-left: 70px;
-    }
   }
   
   .press-kit{
     text-decoration: none;
     color: #B4DBF3;
     font-size: 13px;
-    margin: 40px 0 0 90px;
     clear: both;
     display: block;
 
