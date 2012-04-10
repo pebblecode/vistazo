@@ -215,7 +215,7 @@ Project was created with (shouldn't need to be done again, but here just for ref
 
     heroku create vistazo --stack cedar --remote production
     heroku config:add RACK_ENV=production --app vistazo
-    heroku addons:add mongolab:starter --app vistazo
+    heroku addons:add mongolab:small --app vistazo # See [this](https://devcenter.heroku.com/articles/mongolab#upgrading_to_a_larger_mongolab_plan) for how to do upgrades
     heroku addons:add sendgrid:starter --app vistazo
     heroku config:add LOG_LEVEL=DEBUG --app vistazo
     heroku config:add GOOGLE_CLIENT_ID=[google client id] --app vistazo
@@ -318,32 +318,24 @@ Import files, eg:
     mongoimport -d vistazo-development -c colour_settings tmp/vistazo-production-colour_settings.json
     mongoimport -d vistazo-development -c projects tmp/vistazo-production-projects.json
 
-#### Sandbox 2 export
+To import from `mongodump` export
 
-    # Binary form
-    mongodump -h ds029267.mongolab.com:29267 -d heroku_app2178743 -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji -o sandbox2-export
-    
-    # JSON file for a particular collection
-    mongoexport -h ds029267.mongolab.com:29267 -d heroku_app2178743 -c <collection> -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji -o <output file>
-    
-    mongoexport -h ds029267.mongolab.com:29267 -d heroku_app2178743 -c users -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji -o vistazo-sandbox2-users.json
-    mongoexport -h ds029267.mongolab.com:29267 -d heroku_app2178743 -c teams -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji -o vistazo-sandbox2-teams.json
-    mongoexport -h ds029267.mongolab.com:29267 -d heroku_app2178743 -c team_members -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji -o vistazo-sandbox2-team_members.json
-    mongoexport -h ds029267.mongolab.com:29267 -d heroku_app2178743 -c projects -u heroku_app2178743 -p 36ogjrk80htfg0mcvcbllqp4ji -o vistazo-sandbox2-projects.json
+    mongorestore -h dbh85.mongolab.com:27857 -d heroku_app1810392 -u heroku_app1810392 -p <password> <folder>/*
 
 #### Production export
 
+There is a rake task that backs up production into the tmp/backups directory. To run it:
+
+    rake db:backup:production
+
+Or to back up production manually:
+
     # Binary form
-    mongodump -h dbh85.mongolab.com:27857 -d heroku_app1810392 -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o vistazo-production
+    mongodump -h ds031827.mongolab.com:31827 -d heroku_app1810392 -u heroku_app1810392 -p <password> -o vistazo-production
     
     # JSON file for a particular collection
     mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c <collection> -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o <output file>
-    
-    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c users -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-users.json
-    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c teams -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-teams.json
-    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c team_members -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-team-members.json
-    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c projects -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-projects.json
-    mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c colour_settings -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o tmp/vistazo-production-colour_settings.json
+
 
 ### Add new team member
 
