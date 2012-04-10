@@ -167,8 +167,6 @@ end
 # ----------------------------------------------------------------------------
 
 get '/' do
-  protected!
-  
   if current_user?
     logger.info "Homepage with user: #{current_user.name} with teams: #{current_user.teams}"
     redirect "/#{current_user.teams.first.url_slug}" if current_user.teams.present?
@@ -178,7 +176,6 @@ end
 
 # Timetable week view
 get '/:team_id/:year/week/:week_num' do
-  protected!
   require_team_user!(params[:team_id])
   
   if current_user.is_new
@@ -233,7 +230,6 @@ get '/:team_id/:year/week/:week_num' do
 end
 
 get '/:team_id/:year/month/:month' do
-  protected!
   require_team_user!(params[:team_id])
     
   @team = Team.find(params[:team_id])
@@ -281,8 +277,6 @@ end
 # ----------------------------------------------------------------------------
 
 post '/teams/new' do
-  protected!
-  
   if params[:new_team_name].present?
     @team = Team.create_for_user(current_user)
     
@@ -301,8 +295,6 @@ post '/teams/new' do
 end
 
 get '/:team_id' do
-  protected!
-  
   @team = Team.find(params[:team_id])
   logger.info "Team page (#{@team}) with user: #{current_user}"
   if @team.present?
@@ -318,7 +310,6 @@ end
 #
 # Returns the user timetable and the user object in json form
 post '/:team_id/user-timetables/new-user.json' do
-  protected!
   require_team_user!(params[:team_id])
 
   team = Team.find(params[:team_id])
@@ -406,7 +397,6 @@ end
 
 # Update team
 post '/:team_id' do
-  protected!
   require_team_user!(params[:team_id])
     
   @team = Team.find(params[:team_id])
@@ -479,7 +469,6 @@ end
 ############################################
 
 post '/:team_id/users/:user_id/timetable-items/new.json' do
-  protected!
   require_team_user!(params[:team_id])
   
   request_body = JSON.parse(request.body.read.to_s)
@@ -541,7 +530,6 @@ end
 ############################################
 
 post '/:team_id/timetable-items/:timetable_item_id/update.json' do
-  protected!
   team_id = params[:team_id]
   require_team_user!(team_id)
   
@@ -593,7 +581,6 @@ end
 ############################################
 
 post '/:team_id/users/:user_id/timetable-items/:timetable_item_id/delete.json' do
-  protected!
   require_team_user!(params[:team_id])
 
   team = Team.find(params[:team_id])
@@ -628,7 +615,6 @@ end
 ############################################
 
 post "/:team_id/project/:project_id/delete" do
-  protected!
   require_team_user!(params[:team_id])
   
   project = Project.find(params[:project_id])
@@ -666,7 +652,6 @@ end
 
 # Update user and user timetable
 post '/:team_id/users/:user_id' do
-  protected!
   require_team_user!(params[:team_id])
   
   logger.info "Update user: #{params}"
@@ -698,7 +683,6 @@ post '/:team_id/users/:user_id' do
 end
 
 post '/:team_id/users/:user_id/delete' do
-  protected!
   require_team_user!(params[:team_id])
 
   @team = Team.find(params[:team_id])
