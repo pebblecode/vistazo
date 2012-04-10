@@ -1097,6 +1097,28 @@ textarea:focus, input:focus{
 /* @end */
 
 
+/* Static pages
+-----------------------------------------------------------------------------*/
+
+.static-page {
+  h1.title {
+    color: $vistazo_blue;
+    float: none;
+    margin: 10px 0 20px;
+  }
+
+  h2 {
+    color: $vistazo_blue;
+    float: none;
+    margin: 10px 0 10px;
+  }
+
+  p {
+    margin: 0 0 20px;
+    line-height: 1.2em;
+  }
+} // .static-page
+
 /* Dialogs
 -----------------------------------------------------------------------------*/
 
