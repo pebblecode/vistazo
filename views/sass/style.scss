@@ -637,6 +637,7 @@ textarea:focus, input:focus{
         color: #999;
         padding: 2px 5px;
         font-size: 14px;
+        line-height: 20px;
         @include border-radius(5px);
         border: 1px solid #a1a1a1;
         @include box-shadow(0, 2px, 2px, rgba(0, 0, 0, 0.15));
@@ -662,10 +663,9 @@ textarea:focus, input:focus{
           content: "+";
           font-family: $web_symbols_font_family;
           font-size: 12px;
+          line-height: 12px;
           color: #ddd;
           margin-left: 10px;
-          position: relative;
-          top: -3px;
         }
       }
     } // .content-footer
