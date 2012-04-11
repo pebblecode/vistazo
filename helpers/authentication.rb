@@ -21,6 +21,9 @@ module Sinatra
     end
 
     def require_user!
+      # logger.info "current_user? (#{current_user?}):" 
+      # logger.info env.to_yaml
+      
       unless current_user?
         flash[:warning] = "You must be logged in."
         redirect "/"
