@@ -182,7 +182,7 @@ end
 
 get '/' do
   if current_user?
-    logger.info "Homepage with user: #{current_user.name} with teams: #{current_user.teams}"
+    # logger.info "Homepage with user: #{current_user.name} with teams: #{current_user.teams}"
     redirect "/#{current_user.teams.first.url_slug}" if current_user.teams.present?
   end
   erb :homepage, :layout => false
@@ -310,7 +310,7 @@ end
 
 get '/:team_id' do
   @team = Team.find(params[:team_id])
-  logger.info "Team page (#{@team}) with user: #{current_user}"
+  # logger.info "Team page (#{@team}) with user: #{current_user}"
   if @team.present?
     redirect team_id_current_week_link_url(@team.id)
   else
