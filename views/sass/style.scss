@@ -492,7 +492,7 @@ textarea:focus, input:focus{
   position: absolute;
   width: 100%;
   top: 65px;
-  color: #ffffff;
+  background-color: white;
   
   a {
     color: #ffffff;
@@ -501,22 +501,22 @@ textarea:focus, input:focus{
   .flash {
     text-align: center;
     padding: 10px;
-    background: $flash_blue;
+    background: white;
 
     &.info {
-      background: $flash_blue;
+      color: $vistazo_blue;
     }
     
     &.success {
-      background: $flash_green;
+      color: hsl(90, 80%, 60%);
     }
 
     &.warning {
-      color: $flash_black;
-      background: $flash_yellow;
+      color: red;
+      background: white;
       
       a {
-        color: $flash_black;
+        color: red;
       }
     }
   }
