@@ -19,6 +19,9 @@ Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
 
 set :version_string, "0.11.0 release"
 
+# Adding this to fix IE9 bug. See #237, and http://stackoverflow.com/q/10102893/111884
+set :protection, except: :session_hijacking
+
 class VistazoApp < Sinatra::Application
   
   APP_CONFIG = YAML.load_file("#{root}/config/config.yml")[settings.environment.to_s]
