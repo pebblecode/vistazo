@@ -334,7 +334,7 @@ App.AddUserDialogView = Backbone.View.extend({
 
     event.preventDefault();
   },
-  handleNewUser: function() {
+  handleNewUser: function(event) {
     var newUser = new App.User({
       name: $('input[name=name]').val(),
       email: $('input[name=email]').val()
