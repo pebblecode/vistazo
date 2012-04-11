@@ -1,3 +1,11 @@
+# 1.0.0
+
+* Remove http auth
+* Add terms of service and privacy pages
+* Update gems
+* Flash messages back in and styled
+* Bug fixes
+
 # 0.11.0
 
 * Month view
