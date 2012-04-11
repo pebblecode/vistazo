@@ -390,6 +390,7 @@ App.AddUserDialogView = Backbone.View.extend({
         listingView.renderOtherUsers(userTimetable);
       }
 
+      // Don't need to show flash
       App.flashView.render("success", "Successfully added '" + user.escape('name') + "'.");
     })
     .error(function(data) {
@@ -655,7 +656,8 @@ App.ExistingProjectsView = Backbone.View.extend({
       // Update model
       App.userTimetables.addTimetableItemForUser(ttItem, userId);
 
-      App.flashView.render("success", resp.escape("message"));
+      // Don't need to show flash
+      // App.flashView.render("success", resp.escape("message"));
     });
     timetableItem.on("error", function(data) {
       $(newProj).remove();
@@ -838,7 +840,8 @@ App.ProjectDialogView = Backbone.View.extend({
           // Update model
           App.userTimetables.addTimetableItemForUser(ttItem, userId);
 
-          App.flashView.render("success", resp.escape("message"));
+          // Don't need to show flash
+          // App.flashView.render("success", resp.escape("message"));
         });
         timetableItem.on("error", function(data) {
           $(newProj).remove();
@@ -1105,7 +1108,9 @@ function updateTimetableItem(proj) {
 
       // Update model
       App.userTimetables.updateTimetableItemForUser(response["timetable_item"], fromUserId, toUserId);
-      App.flashView.render("success", response["message"]);
+
+      // Don't need to show flash
+      // App.flashView.render("success", response["message"]);
       
       $(proj).removeClass('is_loading');
     })
@@ -1168,7 +1173,8 @@ function deleteTimetableItem(proj) {
         try {
           response = JSON.parse(data.responseText);
           if (status == "success") {
-            App.flashView.render("success", response["message"]);
+            // Don't need to show flash
+            // App.flashView.render("success", response["message"]);
           } else {
             if (response) {
               App.flashView.render("warning", response["message"]);
