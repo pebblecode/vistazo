@@ -4,11 +4,7 @@ gem 'sinatra'
 gem 'thin'
 gem 'sinatra-flash'
 gem 'json'
-
-# Fix rack version for now because of #156
-gem 'rack', '1.3.5'
-# Living on the edge!
-# gem 'rack'
+gem 'rack'
 
 
 # Views
@@ -18,8 +14,7 @@ gem 'sass'
 gem 'heroku'
 
 # Mongo db
-# gem 'mongo_mapper'
-gem 'mongo_mapper', :git => 'http://github.com/pebblecode/mongomapper.git'
+gem 'mongo_mapper'
 gem 'bson_ext'
 
 # Authentication
