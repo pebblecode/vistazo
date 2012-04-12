@@ -27,6 +27,7 @@ def send_email(from_email, to_email, subject, body, params)
             :via_options => extra_options
 end
 
+# Send email using google config if not in development mode.
 def send_google_email(from_email, to_email, subject, body)
   email_params = {
     :address => "smtp.gmail.com",
@@ -37,9 +38,21 @@ def send_google_email(from_email, to_email, subject, body)
     :password => APP_CONFIG["google_password"]
   }
 
-  send_email(from_email, to_email, subject, body, email_params)
+  if ENV['RACK_ENV'] == "development"
+    logger.info "DEVELOPMENT MODE: email not actually sent, but this is what it'd look like..."
+    logger.info "send_from_email: #{from_email}"
+    logger.info "send_to_email: #{to_email}"
+    logger.info "email_params: #{email_params}"
+    logger.info "subject: #{subject}"
+
+    logger.info body
+  else
+    send_email(from_email, to_email, subject, body, email_params)
+  end
 end
 
+# Send email using sendgrid config if not in development mode. Also show
+# email in logs if in staging mode.
 def send_sendgrid_email(from_email, to_email, subject, body)
   email_params = {
     :address => "smtp.sendgrid.net",
@@ -51,5 +64,25 @@ def send_sendgrid_email(from_email, to_email, subject, body)
     :enable_starttls_auto => true
   }
 
-  send_email(from_email, to_email, subject, body, email_params)
+  if ENV['RACK_ENV'] == "development"
+    logger.info "DEVELOPMENT MODE: email not actually sent, but this is what it'd look like..."
+    logger.info "send_from_email: #{from_email}"
+    logger.info "send_to_email: #{to_email}"
+    logger.info "email_params: #{email_params}"
+    logger.info "subject: #{subject}"
+            
+    logger.info body
+  else
+    if ENV['RACK_ENV'] == "staging"
+      logger.info "STAGING MODE: this email should be sent:"
+      logger.info "send_from_email: #{from_email}"
+      logger.info "send_to_email: #{to_email}"
+      logger.info "email_params: #{email_params}"
+      logger.info "subject: #{subject}"
+      
+      logger.info body
+    end
+    
+    send_email(from_email, to_email, subject, body, email_params)
+  end
 end

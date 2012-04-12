@@ -443,25 +443,7 @@ def send_join_team_email_with_team_link(inviter, to_user, team)
   send_from_email = settings.send_from_email
   subject = "You are invited to Vistazo"
     
-  if ENV['RACK_ENV'] == "development"
-    logger.info "DEVELOPMENT MODE: email not actually sent, but this is what it'd look like..."
-    logger.info "send_from_email: #{send_from_email}"
-    logger.info "send_to_email: #{to_user.email}"
-    logger.info "subject: #{subject}"
-            
-    logger.info erb(:new_user_email, :layout => false)
-  else
-    if ENV['RACK_ENV'] == "staging"
-      logger.info "STAGING MODE: this email should be sent:"
-      logger.info "send_from_email: #{send_from_email}"
-      logger.info "send_to_email: #{to_user.email}"
-      logger.info "subject: #{subject}"
-      
-      logger.info erb(:new_user_email, :layout => false)
-    end
-    
-    send_sendgrid_email(send_from_email, to_user.email, subject, erb(:new_user_email, :layout => false))
-  end
+  send_sendgrid_email(send_from_email, to_user.email, subject, erb(:new_user_email, :layout => false))
 end
 
 # ----------------------------------------------------------------------------
@@ -741,14 +723,5 @@ def send_error_email(exception)
   exception.backtrace.each { |e| @backtrace += "#{e}\n" }
   @exception = "#{exception.class}: #{exception.message}"
   
-  if ENV['RACK_ENV'] == "development"
-    logger.info "DEVELOPMENT MODE: email not actually sent, but this is what it'd look like..."
-    logger.info "send_from_email: #{send_from_email}"
-    logger.info "send_to_email: #{send_to_email}"
-    logger.info "subject: #{subject}"
-            
-    logger.info erb(:error_email, :layout => false)
-  else
-    send_google_email(send_from_email, send_to_email, subject, erb(:error_email, :layout => false))
-  end
+  send_google_email(send_from_email, send_to_email, subject, erb(:error_email, :layout => false))
 end
