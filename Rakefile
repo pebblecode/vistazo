@@ -254,27 +254,30 @@ namespace "db" do
   end
 
 
-  def show_mongo_stats
+  def mongo_stats
     require_relative 'models/team'
     require_relative 'models/user'
     require_relative 'models/user_timetable'
     require_relative 'models/timetable_item'
     require_relative 'models/project'
 
-    puts "#{Project.count} projects"
-    puts "#{Team.count} teams"
-    puts "#{User.count} users"
+    output = ""
+    output += "#{Project.count} projects\n"
+    output += "#{Team.count} teams\n"
+    output += "#{User.count} users\n"
     
     num_user_timetables = Team.all.inject(0) do |num_uts, team| num_uts + team.user_timetables.count 
     end
-    puts "#{num_user_timetables} user timetables"
+    output += "#{num_user_timetables} user timetables\n"
 
     num_timetable_items = Team.all.inject(0) do |num_uts, team|
       num_uts + team.user_timetables.inject(0) do |num_ts, ut|
         num_ts + ut.timetable_items.count 
       end
     end
-    puts "#{num_timetable_items} timetable items"
+    output += "#{num_timetable_items} timetable items\n"
+
+    output
   end
 
   namespace "stats" do
@@ -284,7 +287,7 @@ namespace "db" do
       setup_mongo_connection(url)
 
       puts "\nVistazo production stats for today (#{Time.now}):"
-      show_mongo_stats
+      puts mongo_stats
     end
   end
 end
