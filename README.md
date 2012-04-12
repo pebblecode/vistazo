@@ -261,6 +261,10 @@ To push to the production server
     
 This is deployed at: http://vistazo.herokuapp.com/
 
+### Usage statitics
+
+    rake db:stats:production
+
 ## Google oauth
 
 To use Google oauth, a client id and client secret needs to be generated in the [Google APIs console](https://code.google.com/apis/console).

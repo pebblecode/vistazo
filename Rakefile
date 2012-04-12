@@ -252,4 +252,39 @@ namespace "db" do
       end
     end
   end
+
+
+  def show_mongo_stats
+    require_relative 'models/team'
+    require_relative 'models/user'
+    require_relative 'models/user_timetable'
+    require_relative 'models/timetable_item'
+    require_relative 'models/project'
+
+    puts "#{Project.count} projects"
+    puts "#{Team.count} teams"
+    puts "#{User.count} users"
+    
+    num_user_timetables = Team.all.inject(0) do |num_uts, team| num_uts + team.user_timetables.count 
+    end
+    puts "#{num_user_timetables} user timetables"
+
+    num_timetable_items = Team.all.inject(0) do |num_uts, team|
+      num_uts + team.user_timetables.inject(0) do |num_ts, ut|
+        num_ts + ut.timetable_items.count 
+      end
+    end
+    puts "#{num_timetable_items} timetable items"
+  end
+
+  namespace "stats" do
+    desc "Gather statistics from the production database."
+    task :production do
+      url = get_mongolab_uri("vistazo")
+      setup_mongo_connection(url)
+
+      puts "\nVistazo production stats for today (#{Time.now}):"
+      show_mongo_stats
+    end
+  end
 end
