@@ -25,5 +25,31 @@ def send_email(from_email, to_email, subject, body, params)
 	    :charset => 'utf-8',
             :via => :smtp,
             :via_options => extra_options
+end
 
+def send_google_email(from_email, to_email, subject, body)
+  email_params = {
+    :address => "smtp.gmail.com",
+    :domain => "vistazoapp.com",
+    :port => '587',
+    :enable_starttls_auto => true,
+    :user_name => APP_CONFIG["google_user_name"],
+    :password => APP_CONFIG["google_password"]
+  }
+
+  send_email(send_from_email, send_to_email, subject, body, email_params)
+end
+
+def send_sendgrid_email(from_email, to_email, subject, body)
+  email_params = {
+    :address => "smtp.sendgrid.net",
+    :user_name => ENV['SENDGRID_USERNAME'] || APP_CONFIG['email_service_username'],
+    :password => ENV['SENDGRID_PASSWORD'] || APP_CONFIG['email_service_password'],
+    :domain => APP_CONFIG['email_service_domain'],
+    :port => '587',
+    :authentication => :plain,
+    :enable_starttls_auto => true
+  }
+
+  send_email(send_from_email, to_user.email, subject, body)
 end

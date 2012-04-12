@@ -442,17 +442,7 @@ def send_join_team_email_with_team_link(inviter, to_user, team)
 
   send_from_email = settings.send_from_email
   subject = "You are invited to Vistazo"
-  
-  email_params = {
-    :address => "smtp.sendgrid.net",
-    :user_name => ENV['SENDGRID_USERNAME'] || APP_CONFIG['email_service_username'],
-    :password => ENV['SENDGRID_PASSWORD'] || APP_CONFIG['email_service_password'],
-    :domain => APP_CONFIG['email_service_domain'],
-    :port => '587',
-    :authentication => :plain,
-    :enable_starttls_auto => true
-  }
-  
+    
   if ENV['RACK_ENV'] == "development"
     logger.info "DEVELOPMENT MODE: email not actually sent, but this is what it'd look like..."
     logger.info "send_from_email: #{send_from_email}"
@@ -472,7 +462,7 @@ def send_join_team_email_with_team_link(inviter, to_user, team)
       logger.info erb(:new_user_email, :layout => false)
     end
     
-    send_email(send_from_email, to_user.email, subject, erb(:new_user_email, :layout => false), email_params)
+    send_sendgrid_email(send_from_email, to_user.email, subject, erb(:new_user_email, :layout => false))
   end
 end
 
@@ -748,15 +738,6 @@ def send_error_email(exception)
   send_from_email = settings.send_from_email
   subject = "[#{settings.environment}] Vistazo: an error occurred"
   
-  email_params = {
-    :address => "smtp.gmail.com",
-    :domain => "vistazoapp.com",
-    :port => '587',
-    :enable_starttls_auto => true,
-    :user_name => "vistazoapp",
-    :password => "5gZ*pBirc"
-  }
-  
   @url = APP_CONFIG["base_url"]
   @backtrace = ""
   exception.backtrace.each { |e| @backtrace += "#{e}\n" }
@@ -771,6 +752,6 @@ def send_error_email(exception)
             
     logger.info erb(:error_email, :layout => false)
   else
-    send_email(send_from_email, send_to_email, subject, erb(:error_email, :layout => false), email_params)
+    send_google_email(send_from_email, send_to_email, subject, erb(:error_email, :layout => false))
   end
 end

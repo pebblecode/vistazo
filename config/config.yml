@@ -7,6 +7,8 @@ base: &base
   email_service_password:
   email_service_domain:
   send_from_email: info@vistazoapp.com
+  google_user_name: vistazoapp
+  google_password: 5gZ*pBirc
 development:
   email_service_domain: localhost
   base_url: http://localhost:6100
