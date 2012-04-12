@@ -447,7 +447,6 @@ def send_join_team_email_with_team_link(inviter, to_user, team)
     logger.info "DEVELOPMENT MODE: email not actually sent, but this is what it'd look like..."
     logger.info "send_from_email: #{send_from_email}"
     logger.info "send_to_email: #{to_user.email}"
-    logger.info "params: #{email_params}"
     logger.info "subject: #{subject}"
             
     logger.info erb(:new_user_email, :layout => false)
@@ -456,7 +455,6 @@ def send_join_team_email_with_team_link(inviter, to_user, team)
       logger.info "STAGING MODE: this email should be sent:"
       logger.info "send_from_email: #{send_from_email}"
       logger.info "send_to_email: #{to_user.email}"
-      logger.info "params: #{email_params}"
       logger.info "subject: #{subject}"
       
       logger.info erb(:new_user_email, :layout => false)
@@ -747,7 +745,6 @@ def send_error_email(exception)
     logger.info "DEVELOPMENT MODE: email not actually sent, but this is what it'd look like..."
     logger.info "send_from_email: #{send_from_email}"
     logger.info "send_to_email: #{send_to_email}"
-    logger.info "params: #{email_params}"
     logger.info "subject: #{subject}"
             
     logger.info erb(:error_email, :layout => false)

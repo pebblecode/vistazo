@@ -51,5 +51,5 @@ def send_sendgrid_email(from_email, to_email, subject, body)
     :enable_starttls_auto => true
   }
 
-  send_email(send_from_email, to_user.email, subject, body)
+  send_email(send_from_email, to_user.email, subject, body, email_params)
 end
