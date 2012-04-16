@@ -18,7 +18,6 @@ end
 
 desc "Merge branches, and push to remote server."
 namespace "merge_push_to" do
-  
   desc "Switch to branch, merge master branch and switch back to master branch. Defaults to 'staging' branch."
   task :branch, [:branch] do |t, args|
     args.with_defaults(:branch => "staging")
@@ -33,39 +32,36 @@ namespace "merge_push_to" do
       end
     end
   end
-  
+
   desc "Switch to staging branch, merge master branch and switch back to master branch."
   task :staging do |t, args|
     Rake::Task["merge_push_to:branch"].invoke("staging")
   end
-  
+
   desc "Switch to production branch, merge master branch and switch back to master branch."
   task :production do |t, args|
     Rake::Task["merge_push_to:branch"].invoke("production")
   end
-  
 end
 
 desc "Deploy branches to server."
 namespace "deploy" do
-  
   desc "Deploy branch to branch server. Defaults to staging branch."
   task :branch, [:branch] do |t, args|
     args.with_defaults(:branch => "staging")
     deploy_cmd = "git push #{args.branch} #{args.branch}:master"
     sh deploy_cmd
   end
-  
+
   desc "Deploy staging branch to http://vistazo-staging.herokuapp.com/"
   task :staging do
     Rake::Task["deploy:branch"].invoke("staging")
   end
-  
+
   desc "Deploy production branch to http://vistazo.herokuapp.com/"
   task :production do
     Rake::Task["deploy:branch"].invoke("production")
   end
-  
 end
 
 desc "Ship it! Merge and pushes branches to github, then deploy them to the server."
@@ -82,12 +78,12 @@ namespace "shipit" do
   task :staging do
     Rake::Task["shipit:branch"].invoke("staging")
   end
-  
+
   desc "Merge and push production branch to github, then deploy to http://vistazo.herokuapp.com/"
   task :production do
     Rake::Task["shipit:branch"].invoke("production")
   end
-  
+
 end
 
 
@@ -140,7 +136,7 @@ def ask_question(question)
   puts "#{question} (#{confirmation_word} to continue)"
 
   input = STDIN.gets.chomp
-  
+
   input == confirmation_word
 end
 
@@ -194,13 +190,13 @@ namespace "db" do
     end
 
     # Commenting it out so that no one accidently resets production
-    # 
+    #
     # desc "Reset the production database."
     # task :production do
     #   if ask_question "Are you sure you want to reset the PRODUCTION database?"
     #     if ask_question "Are you seriously sure? Like, sure sure? It is PRODUCTION"
     #       url = get_mongolab_uri("vistazo")
-          
+
     #       puts "\n\nSetting up mongo connection with: #{url}"
     #       setup_mongo_connection(url)
     #       delete_all_collections
@@ -265,14 +261,14 @@ namespace "db" do
     output += "#{Project.count} projects\n"
     output += "#{Team.count} teams\n"
     output += "#{User.count} users\n"
-    
-    num_user_timetables = Team.all.inject(0) do |num_uts, team| num_uts + team.user_timetables.count 
+
+    num_user_timetables = Team.all.inject(0) do |num_uts, team| num_uts + team.user_timetables.count
     end
     output += "#{num_user_timetables} user timetables\n"
 
     num_timetable_items = Team.all.inject(0) do |num_uts, team|
       num_uts + team.user_timetables.inject(0) do |num_ts, ut|
-        num_ts + ut.timetable_items.count 
+        num_ts + ut.timetable_items.count
       end
     end
     output += "#{num_timetable_items} timetable items\n"
@@ -288,6 +284,29 @@ namespace "db" do
 
       puts "\nVistazo production stats for today (#{Time.now}):"
       puts mongo_stats
+    end
+  end
+
+  def vistazo_users
+    require_relative 'models/user'
+
+    output = ""
+    User.all.each do |user|
+      output += "#{user.name} <#{user.email}>\n"
+    end
+    output += "\nTotal #{User.count} users\n\n"
+
+    output
+  end
+
+  namespace "users" do
+    desc "Show the users from the production database."
+    task :production do
+      url = get_mongolab_uri("vistazo")
+      setup_mongo_connection(url)
+
+      puts "\nVistazo users for today (#{Time.now}):\n"
+      puts vistazo_users
     end
   end
 end
