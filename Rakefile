@@ -285,6 +285,20 @@ namespace "db" do
       puts "\nVistazo production stats for today (#{Time.now}):"
       puts mongo_stats
     end
+
+    require 'tinder'
+    desc "Show production stats on campfire."
+    task "production_campfire" do
+      campfire = Tinder::Campfire.new 'pebbleit', :token => '200cd9edd594519bf230b0128c4f7d59257ae1a4', :ssl_options => { :verify => false }
+      room = campfire.find_room_by_id(447461)
+
+      url = get_mongolab_uri("vistazo")
+      setup_mongo_connection(url)
+      prod_db_stats = mongo_stats
+
+      room.speak "\nAllo! Vistazo production stats for today (#{Time.now}):"
+      room.paste prod_db_stats
+    end
   end
 
   def vistazo_users

@@ -53,5 +53,8 @@ group :development, :test do
 
   # Tux, console like
   gem 'tux'
+
+  # Connect to campfire
+  gem 'tinder'
 end
 
