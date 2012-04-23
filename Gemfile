@@ -30,6 +30,11 @@ gem 'newrelic_rpm'
 # Redirect domains
 gem "rack-force_domain"
 
+# For running on production
+gem 'rspec'
+gem 'jasmine'
+gem 'tinder'  # Connect to campfire
+
 group :development, :test do
   # Servers
   gem 'shotgun'
@@ -44,17 +49,12 @@ group :development, :test do
   gem 'guard-rspec'
   # gem 'guard-minitest'
   # gem 'minitest'
-  gem 'rspec'
   gem 'email_spec'
   gem 'rack-test'
   gem "factory_girl", "~> 2.1.0"
   gem 'capybara'
-  gem 'jasmine'
 
   # Tux, console like
   gem 'tux'
-
-  # Connect to campfire
-  gem 'tinder'
 end
 
