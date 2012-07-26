@@ -4,7 +4,7 @@
 # a document instead of an embedded document (see https://github.com/pebblecode/vistazo/issues/248)
 # Only need to run it once.
 #
-# Note: Models need to be in a certain state [TODO: Add commit where models changed]
+# Note: Models need to be in a certain state (commit 64374e8259245f6b85dfaef89c2bc30a2429a78b)
 #
 # To run it:
 #
