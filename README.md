@@ -38,7 +38,7 @@ To set up
 
 To run (using the development procfile)
 
-    rake server
+    bundle exec rake server
     # open http://localhost:6100/
 
 To ensure the Google OAuth callback is correct ensure you run the site from http://localhost:6100
