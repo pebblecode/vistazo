@@ -23,17 +23,17 @@ set :version_string, "1.0.0 release"
 set :protection, except: :session_hijacking
 
 class VistazoApp < Sinatra::Application
-  
+
   APP_CONFIG = YAML.load_file("#{root}/config/config.yml")[settings.environment.to_s]
-  
+
   set :environment, ENV["RACK_ENV"] || "development"
   set :send_from_email, APP_CONFIG["send_from_email"]
-  
+
   enable :sessions
-  
+
   # Redirect all urls on production (http://github.com/cwninja/rack-force_domain)
-  use Rack::ForceDomain, ENV["DOMAIN"]  
-  
+  use Rack::ForceDomain, ENV["DOMAIN"]
+
   use OmniAuth::Builder do
     provider :google_oauth2,
       (ENV['GOOGLE_CLIENT_ID']||APP_CONFIG['client_id']),
@@ -57,7 +57,7 @@ class VistazoApp < Sinatra::Application
   configure :development do
     setup_mongo(:development)
     set :session_secret, "wj-Sf/sdf_P49usi#sn132_sdnfij3"
-    
+
     enable :logging
   end
 
@@ -72,7 +72,7 @@ end
 helpers do
   include Rack::Utils
   alias_method :h, :escape_html
-  
+
   # More methods in /helpers/*
 end
 
@@ -114,7 +114,7 @@ end
 
 get '/auth/:provider/callback' do
   hash = request.env['omniauth.auth'].to_hash if request.env['omniauth.auth'].present?
-  
+
   if not(hash.present?)
     flash[:warning] = "Invalid login: No details."
   elsif not(hash["uid"].present?)
@@ -129,9 +129,9 @@ get '/auth/:provider/callback' do
       if @user.present?
         @user.uid = hash["uid"]
         @user.name = hash["info"]["name"]
-        
+
         @user.save
-        
+
         if @user.valid?
           flash[:success] = "Welcome to Vistazo! You've successfully registered."
         else
@@ -147,7 +147,7 @@ get '/auth/:provider/callback' do
         )
         if @user.valid?
           @team = Team.create_for_user(@user)
-          
+
           if @team.save
             flash[:success] = "Welcome to Vistazo! We're ready for you to add projects for yourself."
           else
@@ -155,18 +155,18 @@ get '/auth/:provider/callback' do
           end
         else
           flash[:warning] = "Could not retrieve user."
-          
+
           logger.warn "Error creating user:"
           @user.errors.each { |e| logger.warn "#{e}: #{@user.errors[e]}" }
-          
+
           @user = nil
         end
       end
     end
-  
+
     session['uid'] = @user.uid
   end
-  
+
   redirect '/'
 end
 
@@ -194,15 +194,15 @@ end
 # Timetable week view
 get '/:team_id/:year/week/:week_num' do
   require_team_user!(params[:team_id])
-  
+
   if current_user.is_new
     @first_signon = current_user.is_new
     current_user.is_new = false
     current_user.save
   end
-    
+
   @team = Team.find(params[:team_id])
-  
+
   if @team.present?
     year = params[:year].to_i
     week_num = params[:week_num].to_i
@@ -248,7 +248,7 @@ end
 
 get '/:team_id/:year/month/:month' do
   require_team_user!(params[:team_id])
-    
+
   @team = Team.find(params[:team_id])
 
   if @team.present?
@@ -296,7 +296,7 @@ end
 post '/teams/new' do
   if params[:new_team_name].present?
     @team = Team.create_for_user(current_user)
-    
+
     @team.name = params[:new_team_name]
     if @team.save
       flash[:success] = "Successfully created team."
@@ -306,7 +306,7 @@ post '/teams/new' do
   else
     flash[:warning] = "Create team failed. Team name empty."
   end
-  
+
   # Redirect to new team
   redirect @team.present? ? "/#{@team.id}" : back
 end
@@ -322,8 +322,8 @@ get '/:team_id' do
   end
 end
 
-# Add a new user to the user timetables. If it is a new user, the 
-# user is added as well. 
+# Add a new user to the user timetables. If it is a new user, the
+# user is added as well.
 #
 # Returns the user timetable and the user object in json form
 post '/:team_id/user-timetables/new-user.json' do
@@ -338,10 +338,10 @@ post '/:team_id/user-timetables/new-user.json' do
     user_name = params[:name]
     user_email = params[:email]
     is_visible = params_is_visible_value(params)
-  
+
     if user_name.present? and user_email.present?
       user = User.find_by_email(user_email)
-  
+
       if user.present?
         user_in_team = team.user_timetable(user)
         if user_in_team
@@ -415,20 +415,20 @@ end
 # Update team
 post '/:team_id' do
   require_team_user!(params[:team_id])
-    
+
   @team = Team.find(params[:team_id])
   if @team.present?
     team_name = params[:team_name]
     if team_name.present?
       @team.name = team_name
       @team.save
-      
+
       flash[:success] = "Updated team name successfully."
     else
       flash[:warning] = "Updated team name failed. Team name was empty."
     end
   end
-  
+
   redirect back
 end
 
@@ -437,12 +437,12 @@ def send_join_team_email_with_team_link(inviter, to_user, team)
   @to_user_name = to_user.name
   @team_name = team.name
   @team_link = "#{APP_CONFIG['base_url']}"
-  
+
   logger.info("#{@inviter_name}, #{@to_user_name}")
 
   send_from_email = settings.send_from_email
   subject = "You are invited to Vistazo"
-    
+
   send_sendgrid_email(send_from_email, to_user.email, subject, erb(:new_user_email, :layout => false))
 end
 
@@ -457,19 +457,19 @@ end
 
 post '/:team_id/users/:user_id/timetable-items/new.json' do
   require_team_user!(params[:team_id])
-  
+
   request_body = JSON.parse(request.body.read.to_s)
   team = Team.find(params[:team_id])
   user = User.find(params[:user_id])
   date = Date.parse(request_body["date"]) if request_body["date"]
-  
+
   logger.info "Add timetable item: #{params} | #{request_body}"
-  
+
   if request_body["project_id"].present?
     project = Project.find(request_body["project_id"])
     if (user.present? and project.present? and date.present?)
       timetable_item = team.add_timetable_item(user, project, date)
-      
+
       outputMsg = "Successfully added '#{project.name}' project for #{user.name} on #{date}."
 
       status HTTP_STATUS_OK
@@ -483,25 +483,25 @@ post '/:team_id/users/:user_id/timetable-items/new.json' do
     end
   else # New project if there is no project id
     project_name = request_body["project_name"]
-  
+
     if project_name.present?
       if team.present?
         project = Project.create(:name => project_name, :team => team)
         timetable_item = team.add_timetable_item(user, project, date)
-        
+
         outputMsg = "Successfully added '#{project.name}' project for #{user.name} on #{date}."
 
         status HTTP_STATUS_OK
         output = { :message => outputMsg, :timetable_item => timetable_item, :project => project }
       else
         outputMsg = "Invalid team."
-        
+
         status HTTP_STATUS_BAD_REQUEST
         output = { :message => outputMsg }
       end
     else
       outputMsg = "Please specify a project name."
-      
+
       status HTTP_STATUS_BAD_REQUEST
       output = { :message => outputMsg }
     end
@@ -519,7 +519,7 @@ end
 post '/:team_id/timetable-items/:timetable_item_id/update.json' do
   team_id = params[:team_id]
   require_team_user!(team_id)
-  
+
   output = ""
   team = Team.find(team_id)
   if team.present?
@@ -530,9 +530,9 @@ post '/:team_id/timetable-items/:timetable_item_id/update.json' do
     timetable_item = team.user_timetable_items(from_user).find(params[:timetable_item_id]) if from_user
 
     to_date = Date.parse(params[:to_date]) if params[:to_date]
-    
+
     logger.info "Update timetable item params: #{params}"
-    
+
     if (from_user.present? and to_user.present? and timetable_item.present? and to_date.present?)
 
       if ((from_user.team_ids.include? team.id) and (to_user.team_ids.include? team.id))
@@ -557,8 +557,8 @@ post '/:team_id/timetable-items/:timetable_item_id/update.json' do
     status HTTP_STATUS_BAD_REQUEST
     output = { :message => "Invalid team." }
   end
-  
-  content_type :json 
+
+  content_type :json
   output.to_json
 end
 
@@ -592,7 +592,7 @@ post '/:team_id/users/:user_id/timetable-items/:timetable_item_id/delete.json' d
     output = { :message => "Something went wrong when trying to delete a timetable item. Please refresh and try again later.", :timetable_item_id => params[:timetable_id] }
   end
 
-  content_type :json 
+  content_type :json
   output.to_json
 end
 
@@ -603,7 +603,7 @@ end
 
 post "/:team_id/project/:project_id/delete" do
   require_team_user!(params[:team_id])
-  
+
   project = Project.find(params[:project_id])
   if project.present?
     if project.team_id.to_s == params[:team_id]
@@ -622,7 +622,7 @@ post "/:team_id/project/:project_id/delete" do
     logger.warn "Deleting project failed, project not valid: #{project}"
     flash[:warning] = "Invalid project."
   end
-  
+
   redirect back
 end
 
@@ -652,7 +652,7 @@ post '/:team_id/users/:user_id' do
         is_visible = params_is_visible_value(params)
         @team.set_user_timetable_is_visible(user, is_visible)
         user.name = new_name
-          
+
         if user.save
           flash[:success] = "Successfully updated user."
         else
@@ -707,7 +707,7 @@ end
 # All errors
 error do
   send_error_email(env['sinatra.error'])
-  
+
   @is_error = true
   erb :error
 end
@@ -717,11 +717,11 @@ def send_error_email(exception)
   send_to_email = "dev@pebblecode.com"
   send_from_email = settings.send_from_email
   subject = "[#{settings.environment}] Vistazo: an error occurred"
-  
+
   @url = APP_CONFIG["base_url"]
   @backtrace = ""
   exception.backtrace.each { |e| @backtrace += "#{e}\n" }
   @exception = "#{exception.class}: #{exception.message}"
-  
+
   send_google_email(send_from_email, send_to_email, subject, erb(:error_email, :layout => false))
 end
