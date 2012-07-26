@@ -62,26 +62,6 @@ class Team
     self.save
   end
 
-  def user_timetables_in_week(week_num)
-    user_timetables = self.user_timetables
-
-    user_timetables.each do |ut|
-      ut.timetable_items = ut.timetable_items.select { |ti| ti.date.strftime("%U") == week_num.to_s }
-    end
-
-    user_timetables
-  end
-
-  def user_timetables_in_month(month)
-    user_timetables = self.user_timetables
-
-    user_timetables.each do |ut|
-      ut.timetable_items = ut.timetable_items.select { |ti| ti.date.month.to_s == month.to_s }
-    end
-
-    user_timetables
-  end
-
   def has_user_timetable?(user)
     self.user_timetables.select { |ut| ut.user == user }.length > 0
   end

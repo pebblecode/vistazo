@@ -23,4 +23,5 @@ end
 Factory.define :timetable_item do |f|
   f.date Time.now
   f.association :project
+  f.association :team
 end
