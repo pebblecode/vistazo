@@ -1,5 +1,5 @@
 class TimetableItem
-  include MongoMapper::EmbeddedDocument
+  include MongoMapper::Document
   plugin MongoMapper::Plugins::Timestamps
   
   before_save :cache_project_name

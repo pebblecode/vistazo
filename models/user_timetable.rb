@@ -1,5 +1,5 @@
 class UserTimetable
-  include MongoMapper::EmbeddedDocument
+  include MongoMapper::Document
   plugin MongoMapper::Plugins::Timestamps
   
 
