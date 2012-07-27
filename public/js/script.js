@@ -207,6 +207,20 @@ App.FlashView = Backbone.View.extend({
 
   renderError: function() {
     this.render("warning", "Something weird happened. Please contact support about it.");
+  },
+
+  renderErrorForResponseData: function(data) {
+    if (data) {
+      try {
+        response = JSON.parse(data.responseText);
+        this.render("warning", response["message"]);
+      } catch(error) {
+        console.log(error);
+        this.renderError();
+      }
+    } else {
+      this.renderError();
+    }
   }
 });
 
@@ -434,17 +448,7 @@ App.AddUserDialogView = Backbone.View.extend({
       App.flashView.render("success", "Successfully added '" + user.escape('name') + "'.");
     })
     .error(function(data) {
-      if (data) {
-        try {
-          response = JSON.parse(data.responseText);
-          App.flashView.render("warning", response["message"]);
-        } catch(error) {
-          console.log(error);
-          App.flashView.renderError();
-        }
-      } else {
-        App.flashView.renderError();
-      }
+      App.flashView.renderErrorForResponseData(data);
     });
   }
 });
@@ -703,7 +707,7 @@ App.ExistingProjectsView = Backbone.View.extend({
       $(newProj).remove();
       $(newProj).removeClass('is_loading');
 
-      App.flashView.render("warning", JSON.parse(data.responseText)["message"]);
+      App.flashView.renderErrorForResponseData(data);
     });
 
     // Hide dialog box
@@ -887,7 +891,7 @@ App.ProjectDialogView = Backbone.View.extend({
           $(newProj).remove();
           $(newProj).removeClass('is_loading');
 
-          App.flashView.render("warning", JSON.parse(data.responseText)["message"]);
+          App.flashView.renderErrorForResponseData(data);
         });
 
         // Clear new project name textbox
@@ -1165,18 +1169,7 @@ function updateTimetableItem(proj) {
       setupProjectEvents();
       $(proj).removeClass('is_loading');
 
-      try {
-        response = JSON.parse(data.responseText);
-        if (response) {
-          App.flashView.render("warning", respJson["message"]);
-        } else {
-          App.flashView.renderError();
-        }
-      } catch(error) {
-        console.log(error);
-        App.flashView.renderError();
-      }
-
+      App.flashView.renderErrorForResponseData(data);
     });
 
 }
@@ -1216,15 +1209,11 @@ function deleteTimetableItem(proj) {
             // Don't need to show flash
             // App.flashView.render("success", response["message"]);
           } else {
-            if (response) {
-              App.flashView.render("warning", response["message"]);
-            } else {
-              App.flashView.render("warning", "Something weird happened. Please contact support about it.");
-            }
+            App.flashView.renderErrorForResponseData(data);
           }
         } catch(error) {
           console.log(error);
-          App.flashView.renderError();
+          App.flashView.renderErrorForResponseData(data);
         }
       });
   }
