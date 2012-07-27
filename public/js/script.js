@@ -92,35 +92,37 @@ App.UserTimetable = Backbone.Model.extend({
     } else {
       return user.escape("email");
     }
-  },
-  addTimetableItem: function(ttItem) {
-    var newTimetableItems = this.get("timetable_items");
-    newTimetableItems.push(ttItem);
-    this.set("timetable_items", newTimetableItems);
-  },
-  removeTimetableItemId: function(ttItemId) {
-    var newTimetableItems = _.reject(this.get("timetable_items"),
-      function(ttItem) {
-        return ttItem["id"] === ttItemId;
-      });
-    this.set("timetable_items", newTimetableItems);
-  }
+  }//,
+  // TODO
+  // addTimetableItem: function(ttItem) {
+  //   var newTimetableItems = this.get("timetable_items");
+  //   newTimetableItems.push(ttItem);
+  //   this.set("timetable_items", newTimetableItems);
+  // },
+  // removeTimetableItemId: function(ttItemId) {
+  //   var newTimetableItems = _.reject(this.get("timetable_items"),
+  //     function(ttItem) {
+  //       return ttItem["id"] === ttItemId;
+  //     });
+  //   this.set("timetable_items", newTimetableItems);
+  // }
 });
 
 App.UserTimetables = Backbone.Collection.extend({
   model: App.UserTimetable,
-  addTimetableItemForUser: function(ttItem, userId) {
-    var userTimetable = this.get(userId);
-    userTimetable.addTimetableItem(ttItem);
-  },
-  removeTimetableItemIdFromUser: function(ttItemId, userId) {
-    var userTimetable = this.get(userId);
-    userTimetable.removeTimetableItemId(ttItemId);
-  },
-  updateTimetableItemForUser: function(ttItem, fromUserId, toUserId) {
-    this.removeTimetableItemIdFromUser(ttItem["id"], fromUserId);
-    this.addTimetableItemForUser(ttItem, toUserId);
-  },
+  // TODO
+  // addTimetableItemForUser: function(ttItem, userId) {
+  //   var userTimetable = this.get(userId);
+  //   userTimetable.addTimetableItem(ttItem);
+  // },
+  // removeTimetableItemIdFromUser: function(ttItemId, userId) {
+  //   var userTimetable = this.get(userId);
+  //   userTimetable.removeTimetableItemId(ttItemId);
+  // },
+  // updateTimetableItemForUser: function(ttItem, fromUserId, toUserId) {
+  //   this.removeTimetableItemIdFromUser(ttItem["id"], fromUserId);
+  //   this.addTimetableItemForUser(ttItem, toUserId);
+  // },
 
   // Array of timetables that are visible
   visibleTimetables: function() {
