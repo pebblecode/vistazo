@@ -30,12 +30,37 @@ describe "TimetableItem model" do
     end
   end
 
-  describe "team" do
-    it "should be able to be referenced" do
-      team = Factory(:team, :name => "Samurai Pizza Cats")
-      timetable_item = Factory(:timetable_item, :team => team)
+  describe "user timetable" do
+    it "should cache team on creation" do
+      user_timetable = Factory(:user_timetable)
+      timetable_item = Factory(:timetable_item, :user_timetable => user_timetable)
 
-      timetable_item.team.should == team
+      timetable_item.team_id.should == user_timetable.team_id
+    end
+
+    it "should cache team on save" do
+      timetable_item = Factory(:timetable_item)
+      user_timetable = Factory(:user_timetable)
+      timetable_item.user_timetable = user_timetable
+      timetable_item.save
+
+      timetable_item.team_id.should == user_timetable.team_id
+    end
+
+    it "should cache user on creation" do
+      user_timetable = Factory(:user_timetable)
+      timetable_item = Factory(:timetable_item, :user_timetable => user_timetable)
+
+      timetable_item.user.should == user_timetable.user
+    end
+
+    it "should cache user on save" do
+      timetable_item = Factory(:timetable_item)
+      user_timetable = Factory(:user_timetable)
+      timetable_item.user_timetable = user_timetable
+      timetable_item.save
+
+      timetable_item.user.should == user_timetable.user
     end
   end
 
@@ -71,12 +96,13 @@ describe "TimetableItem model" do
 
   describe "self.by_team_year_week" do
     before do
-      @team = Factory(:team)
+      user_timetable = Factory(:user_timetable)
+      @team = user_timetable.team
       @date = Date.parse("2012-07-26")
       @year = @date.year
       @week_num = @date.strftime("%U").to_i
 
-      @timetable_item = Factory(:timetable_item, :date => @date, :team => @team)
+      @timetable_item = Factory(:timetable_item, :date => @date, :user_timetable => user_timetable)
     end
 
     it "should find timetable item" do

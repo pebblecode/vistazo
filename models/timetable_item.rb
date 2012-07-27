@@ -2,7 +2,7 @@ class TimetableItem
   include MongoMapper::Document
   plugin MongoMapper::Plugins::Timestamps
 
-  before_save :cache_project_name, :cache_week_num, :cache_year
+  before_save :cache_project_name, :cache_week_num, :cache_year, :cache_user, :cache_team
 
   key :date, Date, :required => true
 
@@ -16,6 +16,8 @@ class TimetableItem
   # Relationships
   belongs_to :project
   belongs_to :user_timetable
+
+  # Cache relationships (derived from user_timetable)
   belongs_to :team
   belongs_to :user
 
@@ -73,5 +75,13 @@ class TimetableItem
 
   def cache_year
     self.year = self.date.year.to_i
+  end
+
+  def cache_user
+    self.user = self.user_timetable.user if self.user_timetable
+  end
+
+  def cache_team
+    self.team = self.user_timetable.team if self.user_timetable
   end
 end
