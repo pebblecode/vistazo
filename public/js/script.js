@@ -17,6 +17,47 @@ _.templateSettings = {
 // Model/Collection declarations
 ///////////////////////////////////////////////////////////////
 
+App.TimetableItem = Backbone.Model.extend({
+  // Convenience method fo getting access to the user name
+  userName: function() {
+    var user = App.users.get(this.get("user_id"));
+
+    if (user === undefined) {
+      console.log("Undefined user (for userName): " + this.escape("user_id"));
+      return "";
+    } else {
+      return user.escape("name");
+    }
+  },
+  // Convenience method fo getting access to the user email
+  userEmail: function() {
+    var user = App.users.get(this.get("user_id"));
+
+    if (user === undefined) {
+      console.log("Undefined user (for userEmail): " + this.escape("user_id"));
+      return "";
+    } else {
+      return user.escape("email");
+    }
+  }//,
+  // addTimetableItem: function(ttItem) {
+  //   var newTimetableItems = this.get("timetable_items");
+  //   newTimetableItems.push(ttItem);
+  //   this.set("timetable_items", newTimetableItems);
+  // },
+  // removeTimetableItemId: function(ttItemId) {
+  //   var newTimetableItems = _.reject(this.get("timetable_items"),
+  //     function(ttItem) {
+  //       return ttItem["id"] === ttItemId;
+  //     });
+  //   this.set("timetable_items", newTimetableItems);
+  // }
+});
+
+App.TimetableItems = Backbone.Collection.extend({
+  model: App.TimetableItem
+});
+
 App.UserTimetable = Backbone.Model.extend({
   // // Use user_id as the id
   idAttribute: "user_id",

@@ -267,7 +267,7 @@
     {% var userId = userTimetable.escape("user_id") %}
     {% var userName = userTimetable.userName() %}
     {% var userEmail = userTimetable.userEmail() %}
-    {% var timetableItems = userTimetable.get("timetable_items") %}
+    {% var timetableItems = App.timetableItems.where({user_id: userId}) %}
     {% var isFirst = (App.userTimetables.first() === userTimetable) %}
 
     <tr class="row-divider">
@@ -279,7 +279,7 @@
           {{ userName.substring(0, 40) }}
         </a>
       </td>
-      
+
       <% prev_cols = 1 %>
       <% (MONDAY..SUNDAY).each do |work_day| %>
         <%#
@@ -290,17 +290,17 @@
         <td class="box <%= "col#{work_day + prev_cols}" %>" data-date="<%= date %>" data-user-id="{{ userId }}">
 
           {% _.each(timetableItems, function(ti) { %}
-            {% if (ti["date"] == "<%= date %>") { %}
-              <div class="project" data-user-id="{{ userId }}" data-timetable-item-id="{{ _.escape(ti['id']) }}" data-date="<%= date %>"> 
+            {% if (ti.get("date") == "<%= date %>") { %}
+              <div class="project" data-user-id="{{ userId }}" data-timetable-item-id="{{ _.escape(ti.get('id')) }}" data-date="<%= date %>">
                 <div class="handle-container">
-                  <div class="handle project-{{ _.escape(ti['project_id']) }}"></div>
+                  <div class="handle project-{{ _.escape(ti.get('project_id')) }}"></div>
                 </div>
-                <p class="project-title" title="{{ _.escape(ti['project_name']) }}">{{ _.escape(ti['project_name'].substring(0, 40)) }}</p>
+                <p class="project-title" title="{{ _.escape(ti.get('project_name')) }}">{{ _.escape(ti.get('project_name').substring(0, 40)) }}</p>
                 <form class="delete-timetable-item-form" action="#" method="post">
                   <button name="delete_project" type="submit" value="true">×</button>
                 </form>
               </div>
-            {% } %} 
+            {% } %}
           {% }); %}
 
           <% if (work_day == THURSDAY) %>
