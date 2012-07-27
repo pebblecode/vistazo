@@ -51,7 +51,7 @@ class TimetableItem
 
   def serializable_hash(options = {})
     pre_sanitized_hash = super({
-      :only => [:id, :date, :project_name, :project_id, :user_id]
+      :only => [:id, :date, :project_name, :project_id, :user_id, :team_id, :user_timetable_id]
     }.merge(options))
 
     # Sanitize
