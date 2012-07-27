@@ -1,10 +1,11 @@
 #!/usr/bin/env ruby
 
 # Migration to make user timetables and timetable item
-# a document instead of an embedded document (see https://github.com/pebblecode/vistazo/issues/248)
+# a document instead of an embedded document (see https://github.com/pebblecode/vistazo/issues/248).
+# Also update timetable item with new cached values.
 # Only need to run it once.
 #
-# Note: Models need to be in a certain state (commit 64374e8259245f6b85dfaef89c2bc30a2429a78b)
+# Note: Models need to be in a certain state (commit [TODO])
 #
 # To run it:
 #
@@ -27,9 +28,14 @@ require_relative "../../web"
       timetable_items = ut["timetable_items"]
 
       unless timetable_items.nil?
-        timetable_items.each do |ti| 
+        timetable_items.each do |ti|
           newTI = TimetableItem.create(ti)
+
+          # Add cached values
           newTI["user_timetable_id"] = ut["_id"]
+          newTI["user_id"] = ut["user_id"]
+          newTI["team_id"] = ut["team_id"]
+
           newTI.save(:safe => true)
           puts "\tCreated timetable item: #{newTI.to_json}"
         end
