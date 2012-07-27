@@ -73,6 +73,8 @@ def backbone_collection_on_page(collection_name, page)
                   /App.projects.reset\((\[.*\])\)/.match(page.body)[1]
                 when :user_timetables
                   /App.userTimetables.reset\((\[.*\])\)/.match(page.body)[1]
+                when :timetable_items
+                  /App.timetableItems.reset\((\[.*\])\)/.match(page.body)[1]
                 end
 
   ActiveSupport::JSON.decode(coll_string)

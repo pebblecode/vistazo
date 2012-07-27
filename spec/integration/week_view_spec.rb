@@ -42,15 +42,15 @@ feature "Week view" do
       @team.reload
 
       visit team_week_path(@team, @year, @date_week)
-      uts = backbone_collection_on_page(:user_timetables, page)
+      timetable_items = backbone_collection_on_page(:timetable_items, page)
 
-      uts.first["timetable_items"].length.should == 1
-      uts.first["timetable_items"].first["id"].should == @timetable_item.id.to_s
+      timetable_items.length.should == 1
+      timetable_items.first["id"].should == @timetable_item.id.to_s
 
       visit team_week_path(@team, @year, next_week_date_week)
-      next_week_uts = backbone_collection_on_page(:user_timetables, page)
-      next_week_uts.first["timetable_items"].length == 1
-      next_week_uts.first["timetable_items"].first["id"].should == next_week_timetable_item.id.to_s
+      next_week_timetable_items = backbone_collection_on_page(:timetable_items, page)
+      next_week_timetable_items.length == 1
+      next_week_timetable_items.first["id"].should == next_week_timetable_item.id.to_s
     end
 
     scenario "should show correct timetable items for multiple users" do
@@ -58,18 +58,14 @@ feature "Week view" do
       another_user_week_timetable_item = @team.add_timetable_item(another_user, @project, @date)
 
       visit team_week_path(@team, @year, @date_week)
-      uts = backbone_collection_on_page(:user_timetables, page)
-      num_users = uts.length
+      timetable_items = backbone_collection_on_page(:timetable_items, page)
 
-      num_users.should == 2
-      uts.each do |ut|
-        ut["timetable_items"].length.should == 1
-      end
+      timetable_items.length.should == 2
 
-      user_timetable_item_id = uts.first["timetable_items"].first["id"]
+      user_timetable_item_id = timetable_items.first["id"]
       user_timetable_item_id.should == @timetable_item.id.to_s
 
-      another_timetable_item_id = uts.last["timetable_items"].first["id"]
+      another_timetable_item_id = timetable_items.last["id"]
       another_timetable_item_id.should == another_user_week_timetable_item.id.to_s
     end
   end
