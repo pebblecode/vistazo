@@ -21,14 +21,14 @@ require 'support/path'
 RSpec.configure do |conf|
   conf.include Rack::Test::Methods
   conf.mock_with :rspec
-  
+
   conf.include(EmailSpec::Helpers)
   conf.include(EmailSpec::Matchers)
-  
+
   conf.include OmniauthSpecHelper
   conf.include MongoDBSpecHelper
   conf.include PathSpecHelper
-  
+
   conf.before(:each) do
     do_not_send_email
   end
@@ -67,7 +67,7 @@ end
 # Return a hash of the collection
 def backbone_collection_on_page(collection_name, page)
   coll_string = case collection_name
-                when :users 
+                when :users
                   /App.users.reset\((\[.*\])\)/.match(page.body)[1]
                 when :projects
                   /App.projects.reset\((\[.*\])\)/.match(page.body)[1]
