@@ -18,6 +18,16 @@ _.templateSettings = {
 ///////////////////////////////////////////////////////////////
 
 App.TimetableItem = Backbone.Model.extend({
+  defaults: {
+    project_id: "",
+    project_name: "",
+    team_id: "",
+    user_id: "",
+    date: ""
+  },
+  url: function() {
+    return "/" + this.get("team_id") + "/users/" + this.get("user_id") + "/timetable-items/new.json";
+  },
   // Convenience method fo getting access to the user name
   userName: function() {
     var user = App.users.get(this.get("user_id"));
@@ -153,19 +163,6 @@ App.User = Backbone.Model.extend({
 
 App.Users = Backbone.Collection.extend({
   model: App.User
-});
-
-App.TimetableItem = Backbone.Model.extend({
-  defaults: {
-    project_id: "",
-    project_name: "",
-    team_id: "",
-    user_id: "",
-    date: ""
-  },
-  url: function() {
-    return "/" + this.get("team_id") + "/users/" + this.get("user_id") + "/timetable-items/new.json";
-  }
 });
 
 App.Project = Backbone.Model.extend({
