@@ -1116,7 +1116,8 @@ function updateTimetableItem(proj) {
       setupProjectEvents();
 
       // Update model
-      App.userTimetables.updateTimetableItemForUser(response["timetable_item"], fromUserId, toUserId);
+      var timetableItem = App.timetableItems.get(response["timetable_item"].id);
+      timetableItem.set(response["timetable_item"]);
 
       // Don't need to show flash
       // App.flashView.render("success", response["message"]);

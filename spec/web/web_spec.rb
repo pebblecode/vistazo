@@ -336,7 +336,7 @@ describe "Timetable items:" do
       end
 
       it "should not create any new timetable items" do
-        TimetableItem.find_by_user_id(@from_user.id).count.should == 1
+        TimetableItem.where({:user_id => @from_user.id}).count.should == 1
       end
 
       it "should return 200 status" do

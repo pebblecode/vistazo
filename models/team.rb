@@ -98,29 +98,6 @@ class Team
     self.save
   end
 
-  def update_timetable_item(timetable_item, from_user, to_user, to_date)
-    # puts "Update from #{from_user.name} (#{timetable_item.to_s}) to #{to_user.name} (#{to_date})"
-    project_id = timetable_item.project_id
-
-    timetable_item.date = to_date
-
-    if from_user != to_user
-      did_delete = self.delete_timetable_item_with_id!(from_user, timetable_item.id)
-
-      if did_delete
-        to_user_timetable = self.user_timetable(to_user)
-
-        to_user_timetable.timetable_items ||= []
-        to_user_timetable.timetable_items << timetable_item
-
-      else
-        return false
-      end
-    end
-
-    self.save
-  end
-
   def url_slug
     self.id.to_s
   end

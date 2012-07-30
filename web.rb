@@ -534,7 +534,7 @@ post '/:team_id/timetable-items/:timetable_item_id/update.json' do
     to_user = User.find(params[:to_user_id])
 
 
-    timetable_item = team.user_timetable_items(from_user).find(params[:timetable_item_id]) if from_user
+    timetable_item = TimetableItem.find(params[:timetable_item_id]) if from_user
 
     to_date = Date.parse(params[:to_date]) if params[:to_date]
 
@@ -543,7 +543,10 @@ post '/:team_id/timetable-items/:timetable_item_id/update.json' do
     if (from_user.present? and to_user.present? and timetable_item.present? and to_date.present?)
 
       if ((from_user.team_ids.include? team.id) and (to_user.team_ids.include? team.id))
-        successful_update = team.update_timetable_item(timetable_item, from_user, to_user, to_date)
+        timetable_item.date = to_date
+        timetable_item.user_timetable = UserTimetable.find_by_user_id_and_team_id(to_user.id, team_id)
+        successful_update = timetable_item.save
+
 
         if successful_update
           status HTTP_STATUS_OK
