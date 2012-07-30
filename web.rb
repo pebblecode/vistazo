@@ -588,7 +588,7 @@ post '/:team_id/users/:user_id/timetable-items/:timetable_item_id/delete.json' d
 
     logger.info "Deleting: Team(#{team.id}), user (#{user.id}), timetable_item_id (#{timetable_item_id})"
 
-    did_delete = team.delete_timetable_item_with_id!(user, timetable_item_id)
+    did_delete = TimetableItem.delete(timetable_item_id)
 
     if did_delete
       status HTTP_STATUS_OK

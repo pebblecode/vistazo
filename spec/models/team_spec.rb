@@ -99,21 +99,6 @@ describe "Team model" do
     end
   end
 
-  describe "delete timetable item" do
-    before do
-      @timetable_item = @team.add_timetable_item(@user, @project, Time.now)
-    end
-
-    it "should create user_timetables" do
-      ut = @team.user_timetable(@user)
-      ut.timetable_items.length.should == 1
-
-      @team.delete_timetable_item_with_id!(@user, @timetable_item.id)
-      ut.timetable_items.length.should == 0
-
-    end
-  end
-
   describe "delete project in timetables" do
     before do
       @timetable_item = @team.add_timetable_item(@user, @project, Time.now)
