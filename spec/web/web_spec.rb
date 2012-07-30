@@ -300,7 +300,7 @@ describe "Timetable items:" do
     before do
       @date = Time.new(2012, 3, 26)
       @another_date = (@date + 1.day)
-      @timetable_item = @team.add_timetable_item(@user, @project, @date)
+      @timetable_item = Factory(:timetable_item, :user => @user, :project => @project, :date => @date, :team => @team)
 
       @another_user = Factory(:user)
       @team.add_user(@another_user)
@@ -336,7 +336,7 @@ describe "Timetable items:" do
       end
 
       it "should not create any new timetable items" do
-        @team.user_timetable_items(@from_user).count.should == 1
+        TimetableItem.find_by_user_id(@from_user.id).count.should == 1
       end
 
       it "should return 200 status" do
@@ -449,14 +449,14 @@ describe "Timetable items:" do
     before do
       @date = Time.new(2012, 3, 26)
       @another_date = (@date + 1.day)
-      @timetable_item = @team.add_timetable_item(@user, @project, @date)
+      @timetable_item = Factory(:timetable_item, :user => @user, :project => @project, :date => @date, :team => @team)
     end
 
     it "should delete" do
       post_params! delete_timetable_item_path(@team, @user, @timetable_item), nil, @session
       @team.reload
 
-      @team.user_timetable_items(@user).count.should == 0
+      TimetableItem.count.should == 0
     end
   end
 end
@@ -507,42 +507,43 @@ describe "Delete project:" do
 
         it "should delete for 1 timetable item" do
 
-          @timetable_item = @team.add_timetable_item(@user, @project, @date)
-          @team.user_timetable_items(@user).length.should == 1
+          @timetable_item = Factory(:timetable_item, :user => @user, :project => @project, :date => @date, :team => @team)
+          TimetableItem.find_by_user_id(@user.id).nil? == false
 
           post_params! delete_project_path(@team, @project), nil, @session
           @team.reload
 
-          @team.user_timetable_items(@user).length.should == 0
+          TimetableItem.find_by_user_id(@user.id).nil? == true
         end
 
         it "should delete for multiple timetable items" do
-          @timetable_item = @team.add_timetable_item(@user, @project, @date)
-          @timetable_item = @team.add_timetable_item(@user, @project, @date + 1.day)
-          @timetable_item = @team.add_timetable_item(@user, @project, @date + 5.day)
-          @team.user_timetable_items(@user).length.should == 3
+          @timetable_item = Factory(:timetable_item, :user => @user, :project => @project, :date => @date, :team => @team)
+          @timetable_item = Factory(:timetable_item, :user => @user, :project => @project, :team => @team, :date => @date + 1.day)
+          @timetable_item = Factory(:timetable_item, :user => @user, :project => @project, :team => @team, :date => @date + 5.day)
+
+          TimetableItem.count.should == 3
 
           post_params! delete_project_path(@team, @project), nil, @session
           @team.reload
 
-          @team.user_timetable_items(@user).length.should == 0
+          TimetableItem.count.should == 0
         end
 
         it "should delete for different users" do
           @other_user = Factory(:user)
           @team.add_user(@other_user)
 
-          @timetable_item = @team.add_timetable_item(@user, @project, @date)
-          @timetable_item = @team.add_timetable_item(@other_user, @project, @date)
+          @timetable_item = Factory(:timetable_item, :user => @user, :project => @project, :date => @date, :team => @team)
+          @timetable_item = Factory(:timetable_item, :user => @user, :project => @project, :date => @date, :team => @team)
 
-          @team.user_timetable_items(@user).length.should == 1
-          @team.user_timetable_items(@other_user).length.should == 1
+          TimetableItem.count.should == 1
+          TimetableItem.find_by_user_id(@other_user.id).length.should == 1
 
           post_params! delete_project_path(@team, @project), nil, @session
           @team.reload
 
-          @team.user_timetable_items(@user).length.should == 0
-          @team.user_timetable_items(@other_user).length.should == 0
+          TimetableItem.count.should == 0
+          TimetableItem.find_by_user_id(@other_user.id).length.should == 0
         end
       end
 
@@ -623,7 +624,7 @@ describe "Projects:" do
       last_response.body.should include("Successfully added 'Business time' project for #{@user.name} on 2011-12-16.")
 
       @team.reload
-      @team.user_timetable_items(@user).count.should == 1
+      TimetableItem.count.should == 1
     end
 
     it "should return error message if project name is empty string or nil" do
@@ -636,7 +637,7 @@ describe "Projects:" do
 
       Project.count.should == 0
       @team.reload
-      @team.user_timetable_items(@user).count.should == 0
+      TimetableItem.count.should == 0
 
       invalid_params = @params.merge({
         "project_name" => nil
@@ -647,7 +648,7 @@ describe "Projects:" do
 
       Project.count.should == 0
       @team.reload
-      @team.user_timetable_items(@user).count.should == 0
+      TimetableItem.count.should == 0
     end
   end
 
@@ -675,7 +676,7 @@ describe "Projects:" do
       Project.count.should == 1
 
       @team.reload
-      @team.user_timetable_items(@user).count.should == 1
+      TimetableItem.count.should == 1
     end
   end
 end

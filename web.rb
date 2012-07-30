@@ -469,7 +469,12 @@ post '/:team_id/users/:user_id/timetable-items/new.json' do
   if request_body["project_id"].present?
     project = Project.find(request_body["project_id"])
     if (user.present? and project.present? and date.present?)
-      timetable_item = team.add_timetable_item(user, project, date)
+      user_timetable = UserTimetable.where({:user_id => user.id, :team_id => team.id}).first
+      timetable_item = TimetableItem.create({
+        :project => project,
+        :date => date,
+        :user_timetable => user_timetable
+      })
 
       outputMsg = "Successfully added '#{project.name}' project for #{user.name} on #{date}."
 
@@ -488,7 +493,12 @@ post '/:team_id/users/:user_id/timetable-items/new.json' do
     if project_name.present?
       if team.present?
         project = Project.create(:name => project_name, :team => team)
-        timetable_item = team.add_timetable_item(user, project, date)
+        user_timetable = UserTimetable.where({:user_id => user.id, :team_id => team.id}).first
+        timetable_item = TimetableItem.create({
+          :project => project,
+          :date => date,
+          :user_timetable => user_timetable
+        })
 
         outputMsg = "Successfully added '#{project.name}' project for #{user.name} on #{date}."
 

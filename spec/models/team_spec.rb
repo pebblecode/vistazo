@@ -99,41 +99,6 @@ describe "Team model" do
     end
   end
 
-  describe "user_timetable_items" do
-    before do
-      @team.add_user(@user)
-      @timetable_item = @team.add_timetable_item(@user, @project, Time.now)
-    end
-
-    it "should return the correct timetable items" do
-      @team.user_timetable_items(@user).should == [@timetable_item]
-    end
-  end
-
-  describe "add timetable item" do
-    it "should create user_timetables" do
-      @team.add_timetable_item(@user, @project, Time.now)
-
-      @team.user_timetables.length.should == 1
-    end
-
-    it "should add into the user timetable items" do
-      tti = @team.add_timetable_item(@user, @project, Time.now)
-      user_timetable = @team.user_timetables.first
-
-      user_timetable.timetable_items.length.should == 1
-      user_timetable.timetable_items.first.should == tti
-    end
-
-    it "should reference user and team in added user timetable" do
-      @team.add_timetable_item(@user, @project, Time.now)
-      user_timetable = @team.user_timetables.first
-
-      user_timetable.team_id.should == @team.id
-      user_timetable.user_id.should == @user.id
-    end
-  end
-
   describe "update timetable item" do
     before do
       @from_user = @user
@@ -200,23 +165,6 @@ describe "Team model" do
       ut = @team.user_timetable(@user)
 
       ut.user_id.should == @user.id
-    end
-  end
-
-  describe "add multiple timetable items" do
-    it "should add them into the user timetable items" do
-      @team.add_timetable_item(@user, Factory(:project), Time.now)
-      @team.add_timetable_item(@user, Factory(:project), Time.now)
-      @team.add_timetable_item(@user, Factory(:project), Time.now)
-
-      @team.user_timetable(@user).timetable_items.length.should == 3
-    end
-
-    it "should not add the user multiple times" do
-      @team.add_timetable_item(@user, @project, Time.now)
-      @team.add_timetable_item(@user, @project, Time.now)
-
-      @team.user_timetables.length.should == 1
     end
   end
 end

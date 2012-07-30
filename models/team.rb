@@ -82,27 +82,6 @@ class Team
     self.save
   end
 
-  # Convenience method to access a users timetable items(user)
-  def user_timetable_items(user)
-    user = user_timetable(user)
-    user.timetable_items
-  end
-
-  # Returns the timetable item added, or nil if it isn't saved properly
-  def add_timetable_item(user, project, date)
-    user_timetable = self.user_timetable(user) ? self.user_timetable(user) : UserTimetable.new(:user => user, :team => self)
-
-    ttItem = TimetableItem.new(:project => project, :date => date)
-    user_timetable.timetable_items ||= []
-    user_timetable.timetable_items << ttItem
-
-    self.user_timetables ||= []
-    self.user_timetables.delete_if { |ut| ut.user == user }
-    self.user_timetables << user_timetable
-
-    self.save ? ttItem : nil
-  end
-
   def delete_timetable_item_with_id!(user, timetable_item_id)
     user_timetable = self.user_timetable(user)
 

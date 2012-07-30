@@ -25,12 +25,4 @@ class UserTimetable
     }.merge(options))
   end
 
-  private
-
-  def cache_project_name
-    if self.project_id.present?
-      project = Project.find(self.project_id)
-      self.project_name = project.name
-    end
-  end
 end
