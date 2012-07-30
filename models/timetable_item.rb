@@ -29,6 +29,18 @@ class TimetableItem
   # Public methods
   #############################################################################
 
+  # Create a TimetableItem with a team and a user. Needed because
+  # when user_timetable caches team and user from user_timetable
+  #
+  # Returns nil if user_timetable not found.
+  def self.create_with_team_id_and_user_id(team_id, user_id, create_params)
+    user_timetable = UserTimetable.find_by_team_id_and_user_id(team_id, user_id)
+
+    timetable_item = self.create(create_params) unless user_timetable.nil?
+
+    timetable_item
+  end
+
   def self.by_team_year_week(team, year, week_num)
     where(:team_id => team.id, :year => year.to_i, :week_num => week_num.to_i)
   end
