@@ -153,6 +153,19 @@ def get_mongolab_uri(app_name)
 end
 
 namespace "db" do
+  desc "Reset development database and import from mongo export folder"
+  task "reset_seed_development", [:import_dir] do |task, args|
+    import_dir = args.import_dir
+    unless (import_dir.nil?)
+      Rake::Task["db:reset:development"]
+      restore_cmd = "mongorestore -d vistazo-development #{import_dir}"
+      puts "Running: #{restore_cmd}"
+      `#{restore_cmd}`
+    else
+      puts "No import directory specified. Usage: bundle exec rake #{task}[import directory]"
+    end
+  end
+
   namespace "reset" do
     desc "Reset the development database"
     task :development do
