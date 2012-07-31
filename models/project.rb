@@ -2,7 +2,7 @@
 #
 #      Project.create(:name => "ideapi")
 #
-# The class will figure out the hex colour for you. If you specify a 
+# The class will figure out the hex colour for you. If you specify a
 # `:hex_colour` explicitly, this will still be stored, however, if the colour
 # is not in `COLOURS`, the next project added will use the first colour in
 # `COLOURS`
@@ -12,7 +12,7 @@ class Project
 
   key :name, String, :required => true
   key :hex_colour, String
-  
+
   timestamps!
 
   # Relationships
@@ -28,8 +28,8 @@ class Project
   #############################################################################
 
   def serializable_hash(options = {})
-    pre_sanitized_hash = super({ 
-      :only => [:id, :name, :hex_colour] 
+    pre_sanitized_hash = super({
+      :only => [:id, :name, :hex_colour]
     }.merge(options))
 
     # Sanitize
@@ -47,7 +47,7 @@ class Project
       if last_colour_setting.present?
         last_colour_index = COLOURS.index{ |c| c.values.include? last_colour_setting.last_hex_colour_saved }
 
-        self.hex_colour = last_colour_index.present? ? 
+        self.hex_colour = last_colour_index.present? ?
                             COLOURS[(last_colour_index + 1) % COLOURS.length].values[0] :
                             COLOURS[0].values[0]
       else
