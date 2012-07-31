@@ -469,6 +469,7 @@ describe "Delete project:" do
     create_normal_user(@session)
     @user = User.first
     @team = @user.teams.first
+    @user_timetable = Factory(:user_timetable, :team => @team, :user => @user)
   end
 
   after do
@@ -507,24 +508,22 @@ describe "Delete project:" do
 
         it "should delete for 1 timetable item" do
 
-          @timetable_item = Factory(:timetable_item, :user => @user, :project => @project, :date => @date, :team => @team)
+          Factory(:timetable_item, :project => @project, :date => @date, :user_timetable => @user_timetable)
           TimetableItem.find_by_user_id(@user.id).nil? == false
 
           post_params! delete_project_path(@team, @project), nil, @session
-          @team.reload
 
           TimetableItem.find_by_user_id(@user.id).nil? == true
         end
 
-        it "should delete for multiple timetable items" do
-          @timetable_item = Factory(:timetable_item, :user => @user, :project => @project, :date => @date, :team => @team)
-          @timetable_item = Factory(:timetable_item, :user => @user, :project => @project, :team => @team, :date => @date + 1.day)
-          @timetable_item = Factory(:timetable_item, :user => @user, :project => @project, :team => @team, :date => @date + 5.day)
+        it "should delete for multiple timetable items with same project but different dates" do
+          Factory(:timetable_item, :project => @project, :user_timetable => @user_timetable, :date => @date)
+          Factory(:timetable_item, :project => @project, :user_timetable => @user_timetable, :date => @date + 1.day)
+          Factory(:timetable_item, :project => @project, :user_timetable => @user_timetable, :date => @date + 5.day)
 
           TimetableItem.count.should == 3
 
           post_params! delete_project_path(@team, @project), nil, @session
-          @team.reload
 
           TimetableItem.count.should == 0
         end
@@ -532,18 +531,17 @@ describe "Delete project:" do
         it "should delete for different users" do
           @other_user = Factory(:user)
           @team.add_user(@other_user)
+          @other_user_timetable = Factory(:user_timetable, :user => @other_user, :team => @team)
 
-          @timetable_item = Factory(:timetable_item, :user => @user, :project => @project, :date => @date, :team => @team)
-          @timetable_item = Factory(:timetable_item, :user => @user, :project => @project, :date => @date, :team => @team)
+          Factory(:timetable_item, :project => @project, :date => @date, :user_timetable => @user_timetable)
+          Factory(:timetable_item, :project => @project, :date => @date, :user_timetable => @other_user_timetable)
 
-          TimetableItem.count.should == 1
-          TimetableItem.find_by_user_id(@other_user.id).length.should == 1
+          TimetableItem.count.should == 2
+          TimetableItem.where({:user_id => @other_user.id}).count.should == 1
 
           post_params! delete_project_path(@team, @project), nil, @session
-          @team.reload
 
           TimetableItem.count.should == 0
-          TimetableItem.find_by_user_id(@other_user.id).length.should == 0
         end
       end
 

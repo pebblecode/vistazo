@@ -83,11 +83,7 @@ class Team
   end
 
   def delete_project_in_timetables!(project)
-    self.user_timetables.each do |user_timetable|
-      user_timetable.timetable_items.reject! { |ttItem| ttItem.project_id == project.id }
-    end
-
-    self.save
+    TimetableItem.delete_all({:team_id => self.id, :project_id => project.id})
   end
 
   def url_slug
