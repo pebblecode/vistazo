@@ -3,13 +3,13 @@ require_relative '../spec_helper'
 feature "Month view" do
   background do
     http_authorization_capybara!
-    
+
     # Create new user
     get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:normal_user] }
     @user = User.first
     @team = Team.first
   end
-  
+
   after do
     clean_db!
     @session = nil
@@ -18,7 +18,7 @@ feature "Month view" do
   scenario "should show error message if there is an invalid team id" do
     visit "/"
     click_link "start-btn"
-      
+
     visit team_id_month_path("invalid_id", 2012, 4)
     page.should have_content("You're not authorized to view this page")
   end
