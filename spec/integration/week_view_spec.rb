@@ -56,18 +56,17 @@ feature "Week view" do
     scenario "should show correct timetable items for multiple users" do
       another_user = Factory(:user)
       another_user_user_timetable = Factory(:user_timetable, :user => another_user, :team => @team)
-      another_user_week_timetable_item = Factory(:timetable_item, :user_timetable => another_user_user_timetable, :project => @project, :date => @date)
+      another_user_user_timetable_item = Factory(:timetable_item, :user_timetable => another_user_user_timetable, :project => @project, :date => @date)
 
       visit team_week_path(@team, @year, @date_week)
       timetable_items = backbone_collection_on_page(:timetable_items, page)
 
       timetable_items.length.should == 2
 
-      user_timetable_item_id = timetable_items.first["id"]
-      user_timetable_item_id.should == @timetable_item.id.to_s
+      timetable_item_ids = timetable_items.map{|tti| tti["id"]}
+      timetable_item_ids.include?(@timetable_item.id.to_s).should == true
+      timetable_item_ids.include?(another_user_user_timetable_item.id.to_s).should == true
 
-      another_timetable_item_id = timetable_items.last["id"]
-      another_timetable_item_id.should == another_user_week_timetable_item.id.to_s
     end
   end
 end
