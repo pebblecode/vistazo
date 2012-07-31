@@ -30,8 +30,8 @@ class Team
   #############################################################################
 
   def serializable_hash(options = {})
-    pre_sanitized_hash = super({ 
-      :only => [:id, :name] 
+    pre_sanitized_hash = super({
+      :only => [:id, :name]
     }.merge(options))
 
     # Sanitize
@@ -58,8 +58,8 @@ class Team
     user.team_ids.delete_if { |tid| tid == self.id }
     user.save
 
-    self.user_timetables.delete_if { |ut| ut.user_id == user.id }
-    self.save
+    UserTimetable.delete_all({:user_id => user.id, :team_id => self.id})
+    TimetableItem.delete_all({:user_id => user.id, :team_id => self.id})
   end
 
   def has_user_timetable?(user)
@@ -84,6 +84,7 @@ class Team
 
   def delete_project_in_timetables!(project)
     TimetableItem.delete_all({:team_id => self.id, :project_id => project.id})
+    Project.delete(project.id)
   end
 
   def url_slug
