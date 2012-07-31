@@ -94,6 +94,21 @@ describe "TimetableItem model" do
     end
   end
 
+  describe "month" do
+    it "should be cached on creation" do
+      timetable_item = Factory(:timetable_item, :date => "2012-07-26")
+      timetable_item.month.should == 7
+    end
+
+    it "should be cached on save" do
+      timetable_item = Factory(:timetable_item)
+      timetable_item.date = "2011-01-01"
+      timetable_item.save
+
+      timetable_item.month.should == 1
+    end
+  end
+
   describe "self.create_with_team_id_and_user_id" do
     before do
       @user_timetable = Factory(:user_timetable)
@@ -130,6 +145,15 @@ describe "TimetableItem model" do
         })
 
       timetable_item.user.should == @user
+    end
+
+    it "should save user_timetable" do
+      timetable_item = TimetableItem.create_with_team_id_and_user_id(@team.id, @user.id, {
+          :project => @project,
+          :date => @date
+        })
+
+      timetable_item.user_timetable.should == @user_timetable
     end
 
     it "should not save timetable item if not in right team" do

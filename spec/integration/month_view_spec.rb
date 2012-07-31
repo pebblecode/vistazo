@@ -29,8 +29,8 @@ feature "Month view" do
       @year = 2012
       @date = Time.new(@year, 3, 26) # An artibtrary Monday
       @date_month = @date.month
-      @timetable_item = @team.add_timetable_item(@user, @project, @date)
-      @team.reload
+      @user_timetable = Factory(:user_timetable, :team => @team, :user => @user)
+      @timetable_item = Factory(:timetable_item, :project => @project, :date => @date, :user_timetable => @user_timetable)
 
       visit "/"
       click_link "start-btn"
@@ -38,10 +38,10 @@ feature "Month view" do
 
     scenario "should show correct timetable item" do
       visit team_month_path(@team, @year, @date_month)
-      uts = backbone_collection_on_page(:user_timetables, page)
+      timetable_items = backbone_collection_on_page(:timetable_items, page)
 
-      uts.first["timetable_items"].length.should == 1
-      uts.first["timetable_items"].first["id"].should == @timetable_item.id.to_s
+      timetable_items.length.should == 1
+      timetable_items.first["id"].should == @timetable_item.id.to_s
     end
   end
 end

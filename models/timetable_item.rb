@@ -2,7 +2,7 @@ class TimetableItem
   include MongoMapper::Document
   plugin MongoMapper::Plugins::Timestamps
 
-  before_save :cache_project_name, :cache_week_num, :cache_year, :cache_user, :cache_team
+  before_save :cache_project_name, :cache_date, :cache_user, :cache_team
 
   key :date, Date, :required => true
 
@@ -10,6 +10,7 @@ class TimetableItem
   key :project_name, String
   key :week_num, Integer
   key :year, Integer
+  key :month, Integer
 
   timestamps!
 
@@ -45,15 +46,8 @@ class TimetableItem
     where(:team_id => team.id, :year => year.to_i, :week_num => week_num.to_i)
   end
 
-  def user_timetables_in_month(month)
-    # TODO
-    # user_timetables = self.user_timetables
-
-    # user_timetables.each do |ut|
-    #   ut.timetable_items = ut.timetable_items.select { |ti| ti.date.month.to_s == month.to_s }
-    # end
-
-    # user_timetables
+  def self.by_team_year_month(team, year, month)
+    where(:team_id => team.id, :year => year.to_i, :month => month.to_i)
   end
 
 
@@ -81,11 +75,9 @@ class TimetableItem
     end
   end
 
-  def cache_week_num
+  def cache_date
     self.week_num = self.date.strftime("%U").to_i
-  end
-
-  def cache_year
+    self.month = self.date.month.to_i
     self.year = self.date.year.to_i
   end
 

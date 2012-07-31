@@ -267,7 +267,8 @@ get '/:team_id/:year/month/:month' do
 
       @projects = Project.where(:team_id => @team.id).sort(:name)
       @users = User.where(:team_ids => @team.id).sort(:name)
-      @user_timetables = @team.user_timetables_in_month(@month)
+      @user_timetables = UserTimetable.where(:team_id => @team.id)
+      @timetable_items = TimetableItem.by_team_year_month(@team, @year, @month)
 
       # This month
       @month_link_url = "/#{params[:team_id]}/#{@year}/month/#{@month}"
