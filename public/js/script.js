@@ -535,7 +535,7 @@ App.ProjectListingView = Backbone.View.extend({
 
     var projectListingVars = {
       projects: App.teamProjects.toArray(),
-      userTimetables: App.userTimetables.toArray()
+      timetableItems: App.timetableItems,
     };
     var projectListing = _.template($("#project-listing-template").html(), projectListingVars);
     $("#content").append(projectListing);

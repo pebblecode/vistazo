@@ -331,21 +331,15 @@
               <p class="project-title" title="{{ project.escape("name") }}">{{ project.escape("name").substring(0, 40) }}</p>
             </div>
           </td>
-          
+
           <% prev_cols = 1 %>
           <% (MONDAY..SUNDAY).each do |work_day| %>
             <% date = (@monday_date - 1.day) + work_day.day %>
             <td class="{{ rowClass }} <%= "col#{work_day + prev_cols}" %>" data-date="<%= date %>">
-
-              {% _.each(userTimetables, function(userTimetable) { %}
-                {% var ttItems = userTimetable.get("timetable_items"); %}
-                {% _.each(ttItems, function(ttItem) { %}
-                  {% if ((ttItem["date"] == "<%= date %>") && (ttItem["project_id"] === project.escape("id"))) { %}
-                    <div class="user-name">{{ userTimetable.userName() }}</div>
-                  {% } %} 
-                {% }); %}
-              {% }); %}
-
+              {% ttItems = timetableItems.where({"date": "<%= date %>", "project_id": project.get("id")}) %}
+              {% _.each(ttItems, function(ttItem) { %}
+                <div class="user-name">{{ ttItem.userName() }}</div>
+              {% }) %}
             </td>
           <% end %>
           <td class="{{ rowClass }} col-last" %></td>
