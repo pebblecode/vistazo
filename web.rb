@@ -17,7 +17,7 @@ require 'rack-force_domain'
 # Require all in lib directory
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
 
-set :version_string, "1.0.0 release"
+set :version_string, "1.1.0 release"
 
 # Adding this to fix IE9 bug. See #237, and http://stackoverflow.com/q/10102893/111884
 set :protection, except: :session_hijacking
