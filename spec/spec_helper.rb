@@ -66,18 +66,18 @@ end
 #
 # Return a hash of the collection
 def backbone_collection_on_page(collection_name, page)
-  coll_string = case collection_name
+  coll_match = case collection_name
                 when :users
-                  /App.users.reset\((\[.*\])\)/.match(page.body)[1]
+                  /App.users.reset\((\[.*\])\)/.match(page.body)
                 when :projects
-                  /App.projects.reset\((\[.*\])\)/.match(page.body)[1]
+                  /App.projects.reset\((\[.*\])\)/.match(page.body)
                 when :user_timetables
-                  /App.userTimetables.reset\((\[.*\])\)/.match(page.body)[1]
+                  /App.userTimetables.reset\((\[.*\])\)/.match(page.body)
                 when :timetable_items
-                  /App.timetableItems.reset\((\[.*\])\)/.match(page.body)[1]
+                  /App.timetableItems.reset\((\[.*\])\)/.match(page.body)
                 end
-
-  ActiveSupport::JSON.decode(coll_string)
+  coll_string = coll_match[1] if coll_match
+  coll_string.nil? ? [] : ActiveSupport::JSON.decode(coll_string)
 end
 
 # Define application for all spec files
