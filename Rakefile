@@ -275,17 +275,8 @@ namespace "db" do
     output += "#{Project.count} projects\n"
     output += "#{Team.count} teams\n"
     output += "#{User.count} users\n"
-
-    num_user_timetables = Team.all.inject(0) do |num_uts, team| num_uts + team.user_timetables.count
-    end
-    output += "#{num_user_timetables} user timetables\n"
-
-    num_timetable_items = Team.all.inject(0) do |num_uts, team|
-      num_uts + team.user_timetables.inject(0) do |num_ts, ut|
-        num_ts + ut.timetable_items.count
-      end
-    end
-    output += "#{num_timetable_items} timetable items\n"
+    output += "#{UserTimetable.count} user timetables\n"
+    output += "#{TimetableItem.count} timetable items\n"
 
     output
   end
