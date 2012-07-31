@@ -1158,7 +1158,7 @@ function deleteTimetableItem(proj) {
           $(this).remove();
 
           // Remove from collection
-          App.userTimetables.removeTimetableItemIdFromUser(resp["timetable_item_id"], userId);
+          App.timetableItems.remove(resp["timetable_item_id"]);
         });
       })
       .error(function(response) {
