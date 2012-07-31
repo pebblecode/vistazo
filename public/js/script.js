@@ -85,6 +85,13 @@ App.UserTimetable = Backbone.Model.extend({
 App.UserTimetables = Backbone.Collection.extend({
   model: App.UserTimetable,
 
+  // Find user timetable from the user id (should only be one)
+  getByUserId: function(userId) {
+    var userTimetables = this.where({user_id: userId});
+
+    // Should only be 1 user timetable, so return the first
+    return _.first(userTimetables);
+  },
   // Array of timetables that are visible
   visibleTimetables: function() {
     return _.filter(this.models, function(tt) {
@@ -424,7 +431,7 @@ App.EditUserDialogView = Backbone.View.extend({
     var editUserDialogId = "#edit-user-dialog";
 
     var userId = $(nameButton).parents(".user").first().attr("data-user-id");
-    var userTimetable = App.userTimetables.where({user_id: userId});
+    var userTimetable = App.userTimetables.getByUserId(userId);
     var editUserVars = {
       userTimetable: userTimetable
     };
