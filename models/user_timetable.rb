@@ -26,3 +26,10 @@ class UserTimetable
   end
 
 end
+
+#############################################################################
+# Indexes
+#############################################################################
+
+# Only need to search by team, or team and user, never by user
+UserTimetable.ensure_index([[:team_id, 1], [:user_id, 1]])

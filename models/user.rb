@@ -49,3 +49,12 @@ class User
     self.save
   end
 end
+
+
+#############################################################################
+# Indexes
+#############################################################################
+
+User.ensure_index(:uid)
+User.ensure_index(:email)
+User.ensure_index(:team_ids)

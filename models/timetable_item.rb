@@ -89,3 +89,11 @@ class TimetableItem
     self.team = self.user_timetable.team if self.user_timetable
   end
 end
+
+#############################################################################
+# Indexes
+#############################################################################
+
+TimetableItem.ensure_index([[:team_id, 1], [:year, -1], [:week_num, -1]])
+TimetableItem.ensure_index([[:team_id, 1], [:year, -1], [:month, -1]])
+
