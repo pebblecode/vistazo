@@ -153,17 +153,47 @@ def get_mongolab_uri(app_name)
 end
 
 namespace "db" do
-  desc "Reset development database and import from mongo export folder"
-  task "reset_seed_development", [:import_dir] do |task, args|
-    import_dir = args.import_dir
-    unless (import_dir.nil?)
-      Rake::Task["db:reset:development"].invoke
-      restore_cmd = "mongorestore -d vistazo-development #{import_dir}"
-      puts "Running: #{restore_cmd}"
-      `#{restore_cmd}`
-    else
-      puts "No import directory specified. Usage: bundle exec rake #{task}[import directory]"
+  desc "Reset and seed database"
+  namespace "reset_seed" do
+
+    desc "Reset and seed development database from import directory"
+    task :development, [:import_dir] do |task, args|
+      import_dir = args.import_dir
+      unless (import_dir.nil?)
+        Rake::Task["db:reset:development"].invoke
+        restore_cmd = "mongorestore -d vistazo-development #{import_dir}"
+        puts "Running: #{restore_cmd}"
+        `#{restore_cmd}`
+      else
+        puts "No import directory specified. Usage: bundle exec rake #{task}[import directory]"
+      end
     end
+
+    task :staging, [:import_dir] do |task, args|
+      import_dir = args.import_dir
+      unless (import_dir.nil?)
+        url = get_mongolab_uri("vistazo-staging")
+        puts "\n\nSetting up mongo connection with: #{url}"
+        setup_mongo_connection(url)
+
+        # Delete everything
+        delete_all_collections
+
+        # Import from import directory
+        mongo_credentials_regex = /mongodb:\/\/(.*):(.*)@(.+:.+)\/(.*)/
+        mongo_host = url.match(mongo_credentials_regex)[3]
+        mongo_database = url.match(mongo_credentials_regex)[1]
+        mongo_user = url.match(mongo_credentials_regex)[1]
+        mongo_password = url.match(mongo_credentials_regex)[2]
+
+        mongo_import_cmd = "mongorestore -h #{mongo_host} -d #{mongo_database} -u #{mongo_user} -p #{mongo_password} #{import_dir}"
+        sh mongo_import_cmd
+        puts "\n"
+      else
+        puts "No import directory specified. Usage: bundle exec rake #{task}[import directory]"
+      end
+    end
+
   end
 
   namespace "reset" do
