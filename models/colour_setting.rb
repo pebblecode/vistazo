@@ -13,6 +13,6 @@ COLOURS = [
   ]
 class ColourSetting
   include MongoMapper::Document
-  
+
   key :last_hex_colour_saved, String
 end

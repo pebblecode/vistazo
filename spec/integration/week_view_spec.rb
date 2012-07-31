@@ -3,22 +3,22 @@ require_relative '../spec_helper'
 feature "Week view" do
   background do
     http_authorization_capybara!
-    
+
     # Create new user
     get '/auth/google_oauth2/callback', nil, { "omniauth.auth" => OmniAuth.config.mock_auth[:normal_user] }
     @user = User.first
     @team = Team.first
   end
-  
+
   after do
     clean_db!
     @session = nil
   end
-  
+
   scenario "should show error message if there is an invalid team id" do
     visit "/"
     click_link "start-btn"
-      
+
     visit team_id_current_week_path("invalid_id")
     page.should have_content("You're not authorized to view this page")
   end
@@ -29,7 +29,8 @@ feature "Week view" do
       @year = 2012
       @date = Time.new(@year, 3, 26) # An artibtrary Monday
       @date_week = @date.strftime("%U")
-      @timetable_item = @team.add_timetable_item(@user, @project, @date)
+      @user_timetable = Factory(:user_timetable, :team => @team, :user => @user)
+      @timetable_item = Factory(:timetable_item, :project => @project, :date => @date, :user_timetable => @user_timetable)
 
       visit "/"
       click_link "start-btn"
@@ -38,38 +39,34 @@ feature "Week view" do
     scenario "should show correct timetable items from different weeks" do
       next_week_date = @date + 7.day
       next_week_date_week = next_week_date.strftime("%U")
-      next_week_timetable_item = @team.add_timetable_item(@user, @project, next_week_date)
-      @team.reload
+      next_week_timetable_item = Factory(:timetable_item, :user_timetable => @user_timetable, :project => @project, :date => next_week_date)
 
       visit team_week_path(@team, @year, @date_week)
-      uts = backbone_collection_on_page(:user_timetables, page)
+      timetable_items = backbone_collection_on_page(:timetable_items, page)
 
-      uts.first["timetable_items"].length.should == 1
-      uts.first["timetable_items"].first["id"].should == @timetable_item.id.to_s
+      timetable_items.length.should == 1
+      timetable_items.first["id"].should == @timetable_item.id.to_s
 
       visit team_week_path(@team, @year, next_week_date_week)
-      next_week_uts = backbone_collection_on_page(:user_timetables, page)
-      next_week_uts.first["timetable_items"].length == 1
-      next_week_uts.first["timetable_items"].first["id"].should == next_week_timetable_item.id.to_s
+      next_week_timetable_items = backbone_collection_on_page(:timetable_items, page)
+      next_week_timetable_items.length == 1
+      next_week_timetable_items.first["id"].should == next_week_timetable_item.id.to_s
     end
 
     scenario "should show correct timetable items for multiple users" do
       another_user = Factory(:user)
-      another_user_week_timetable_item = @team.add_timetable_item(another_user, @project, @date)
+      another_user_user_timetable = Factory(:user_timetable, :user => another_user, :team => @team)
+      another_user_week_timetable_item = Factory(:timetable_item, :user_timetable => another_user_user_timetable, :project => @project, :date => @date)
 
       visit team_week_path(@team, @year, @date_week)
-      uts = backbone_collection_on_page(:user_timetables, page)
-      num_users = uts.length
+      timetable_items = backbone_collection_on_page(:timetable_items, page)
 
-      num_users.should == 2
-      uts.each do |ut|
-        ut["timetable_items"].length.should == 1
-      end
+      timetable_items.length.should == 2
 
-      user_timetable_item_id = uts.first["timetable_items"].first["id"]
+      user_timetable_item_id = timetable_items.first["id"]
       user_timetable_item_id.should == @timetable_item.id.to_s
-      
-      another_timetable_item_id = uts.last["timetable_items"].first["id"]
+
+      another_timetable_item_id = timetable_items.last["id"]
       another_timetable_item_id.should == another_user_week_timetable_item.id.to_s
     end
   end

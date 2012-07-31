@@ -17,9 +17,18 @@ _.templateSettings = {
 // Model/Collection declarations
 ///////////////////////////////////////////////////////////////
 
-App.UserTimetable = Backbone.Model.extend({
-  // // Use user_id as the id
-  idAttribute: "user_id",
+App.TimetableItem = Backbone.Model.extend({
+  defaults: {
+    project_id: "",
+    project_name: "",
+    user_timetable_id: "",
+    team_id: "",
+    user_id: "",
+    date: ""
+  },
+  url: function() {
+    return "/" + this.get("team_id") + "/users/" + this.get("user_id") + "/timetable-items/new.json";
+  },
   // Convenience method fo getting access to the user name
   userName: function() {
     var user = App.users.get(this.get("user_id"));
@@ -28,7 +37,7 @@ App.UserTimetable = Backbone.Model.extend({
       console.log("Undefined user (for userName): " + this.escape("user_id"));
       return "";
     } else {
-      return user.escape("name");  
+      return user.escape("name");
     }
   },
   // Convenience method fo getting access to the user email
@@ -41,36 +50,48 @@ App.UserTimetable = Backbone.Model.extend({
     } else {
       return user.escape("email");
     }
+  }
+});
+
+App.TimetableItems = Backbone.Collection.extend({
+  model: App.TimetableItem
+});
+
+App.UserTimetable = Backbone.Model.extend({
+  // Convenience method fo getting access to the user name
+  userName: function() {
+    var user = App.users.get(this.get("user_id"));
+
+    if (user === undefined) {
+      console.log("Undefined user (for userName): " + this.escape("user_id"));
+      return "";
+    } else {
+      return user.escape("name");
+    }
   },
-  addTimetableItem: function(ttItem) {
-    var newTimetableItems = this.get("timetable_items");
-    newTimetableItems.push(ttItem);
-    this.set("timetable_items", newTimetableItems);
-  },
-  removeTimetableItemId: function(ttItemId) {
-    var newTimetableItems = _.reject(this.get("timetable_items"), 
-      function(ttItem) {
-        return ttItem["id"] === ttItemId;
-      });
-    this.set("timetable_items", newTimetableItems);
+  // Convenience method fo getting access to the user email
+  userEmail: function() {
+    var user = App.users.get(this.get("user_id"));
+
+    if (user === undefined) {
+      console.log("Undefined user (for userEmail): " + this.escape("user_id"));
+      return "";
+    } else {
+      return user.escape("email");
+    }
   }
 });
 
 App.UserTimetables = Backbone.Collection.extend({
   model: App.UserTimetable,
-  addTimetableItemForUser: function(ttItem, userId) {
-    var userTimetable = this.get(userId);
-    userTimetable.addTimetableItem(ttItem);
-  },
-  removeTimetableItemIdFromUser: function(ttItemId, userId) {
-    var userTimetable = this.get(userId);
-    userTimetable.removeTimetableItemId(ttItemId);
-  },
-  updateTimetableItemForUser: function(ttItem, fromUserId, toUserId) {
-    this.removeTimetableItemIdFromUser(ttItem["id"], fromUserId);
-    this.addTimetableItemForUser(ttItem, toUserId);
-  },
 
+  // Find user timetable from the user id (should only be one)
+  getByUserId: function(userId) {
+    var userTimetables = this.where({user_id: userId});
+
+    // Should only be 1 user timetable, so return the first
+    return _.first(userTimetables);
+  },
   // Array of timetables that are visible
   visibleTimetables: function() {
     return _.filter(this.models, function(tt) {
@@ -82,7 +103,7 @@ App.UserTimetables = Backbone.Collection.extend({
     return _.filter(this.models, function(tt) {
       return tt.get("is_visible") !== true;
     });
-  }  
+  }
 });
 
 App.User = Backbone.Model.extend({
@@ -114,19 +135,6 @@ App.Users = Backbone.Collection.extend({
   model: App.User
 });
 
-App.TimetableItem = Backbone.Model.extend({
-  defaults: {
-    project_id: "",
-    project_name: "",
-    team_id: "",
-    user_id: "",
-    date: ""
-  },
-  url: function() {
-    return "/" + this.get("team_id") + "/users/" + this.get("user_id") + "/timetable-items/new.json";
-  }
-});
-
 App.Project = Backbone.Model.extend({
   defaults: {
     id: "",
@@ -153,11 +161,11 @@ App.Projects = Backbone.Collection.extend({
 App.FlashView = Backbone.View.extend({
   render: function(flashType, msg) {
     var flashMessage = "<div class='flash " + flashType + "'>" + msg + "</div>";
-    
+
     if ($("#flash").length <= 0) {
       $(this.el).before("<div id='flash'></div>");
-    }  
-    
+    }
+
     $("#flash .flash").remove();
     // Flash the flash message
     $("#flash").append(flashMessage).hide(0, function() {
@@ -167,6 +175,20 @@ App.FlashView = Backbone.View.extend({
 
   renderError: function() {
     this.render("warning", "Something weird happened. Please contact support about it.");
+  },
+
+  renderErrorForResponseData: function(data) {
+    if (data) {
+      try {
+        response = JSON.parse(data.responseText);
+        this.render("warning", response["message"]);
+      } catch(error) {
+        console.log(error);
+        this.renderError();
+      }
+    } else {
+      this.renderError();
+    }
   }
 });
 
@@ -223,7 +245,7 @@ App.TimetableViewSelector = Backbone.View.extend({
       console.log("Unknown timetable page");
     }
   },
-  events: { 
+  events: {
     "click #view-selector li a": "render"
   },
   render: function(event) {
@@ -298,7 +320,7 @@ App.TimetableViewSelector = Backbone.View.extend({
 });
 
 App.AddUserDialogView = Backbone.View.extend({
-  events: { 
+  events: {
     "click #add-user-button": "render",
 
     // Event created after initialize when add user dialog
@@ -394,17 +416,7 @@ App.AddUserDialogView = Backbone.View.extend({
       App.flashView.render("success", "Successfully added '" + user.escape('name') + "'.");
     })
     .error(function(data) {
-      if (data) {
-        try {
-          response = JSON.parse(data.responseText);
-          App.flashView.render("warning", response["message"]);
-        } catch(error) {
-          console.log(error);
-          App.flashView.renderError();
-        }
-      } else {
-        App.flashView.renderError();
-      }
+      App.flashView.renderErrorForResponseData(data);
     });
   }
 });
@@ -419,7 +431,7 @@ App.EditUserDialogView = Backbone.View.extend({
     var editUserDialogId = "#edit-user-dialog";
 
     var userId = $(nameButton).parents(".user").first().attr("data-user-id");
-    var userTimetable = App.userTimetables.get(userId);
+    var userTimetable = App.userTimetables.getByUserId(userId);
     var editUserVars = {
       userTimetable: userTimetable
     };
@@ -467,7 +479,7 @@ App.UserListingView = Backbone.View.extend({
     }
     var newUserRow = _.template($("#new-user-row-template").html());
     $("#timetable").append(newUserRow);
-    
+
     // Show users
     this._renderVisibleUserTimetables();
     this.renderOtherUsers();
@@ -482,7 +494,7 @@ App.UserListingView = Backbone.View.extend({
   },
   renderVisibleUserTimetable: function(userTimetable) {
     // console.log("Render team member row for: " + JSON.stringify(user) + " (" + user.escape("id") + "): " + user.escape("name"));
-    
+
     var rowNum = $(this.el).find(".user").length + 1 + 1; // 1 to increment and 1 for header row
     var oddOrEvenClass = rowNum % 2 == 0 ? "even" : "odd";
     var userTemplateVars = {
@@ -490,7 +502,7 @@ App.UserListingView = Backbone.View.extend({
       oddOrEvenClass: oddOrEvenClass
     };
     var userTimetableHtml = _.template($("#visible-user-template").html(), userTemplateVars);
-    
+
     $(this.el).find('#content').append(userTimetableHtml);
 
     setupNewProjectDialog();
@@ -506,7 +518,7 @@ App.UserListingView = Backbone.View.extend({
     if ($("#other-users").length > 0) {
       $("#other-users").replaceWith(otherUsersHtml);
     } else {
-      $("#new-user-row").after(otherUsersHtml);  
+      $("#new-user-row").after(otherUsersHtml);
     }
   }
 });
@@ -523,7 +535,7 @@ App.ProjectListingView = Backbone.View.extend({
 
     var projectListingVars = {
       projects: App.teamProjects.toArray(),
-      userTimetables: App.userTimetables.toArray()
+      timetableItems: App.timetableItems,
     };
     var projectListing = _.template($("#project-listing-template").html(), projectListingVars);
     $("#content").append(projectListing);
@@ -558,7 +570,7 @@ App.MonthListingView = Backbone.View.extend({
   },
   renderVisibleUserTimetable: function(userTimetable) {
     // console.log("Render team member row for: " + JSON.stringify(user) + " (" + user.escape("id") + "): " + user.escape("name"));
-    
+
     var rowNum = $(this.el).find(".user").length + 1 + 1; // 1 to increment and 1 for header row
     var oddOrEvenClass = rowNum % 2 == 0 ? "even" : "odd";
     var userTemplateVars = {
@@ -566,7 +578,7 @@ App.MonthListingView = Backbone.View.extend({
       oddOrEvenClass: oddOrEvenClass
     };
     var userTimetableHtml = _.template($("#month-visible-user-template").html(), userTemplateVars);
-    
+
     $(this.el).find('#content').append(userTimetableHtml);
 
     setupNewProjectDialog();
@@ -581,7 +593,7 @@ App.MonthListingView = Backbone.View.extend({
     if ($("#other-users").length > 0) {
       $("#other-users").replaceWith(otherUsersHtml);
     } else {
-      $("#new-user-row").after(otherUsersHtml);  
+      $("#new-user-row").after(otherUsersHtml);
     }
   }
 });
@@ -613,17 +625,21 @@ App.ExistingProjectsView = Backbone.View.extend({
     var projDate = $(button).parents('#new-timetable-item-form').find("input[name=date]").val();
     var projName = $(button).attr("title");
     var projHandleCssClass = $(button).parent().find(".handle").attr("class");
-    
+    var userTimetable = _.first(App.userTimetables.where({user_id: userId}));
     timetableItem = new App.TimetableItem({
       project_id: projId,
       project_name: projName,
-      team_id: TEAM_ID,
+      user_timetable_id: userTimetable.get("id"),
+      date: projDate,
+
+      // Would be generated by the server, but declared here
+      // to generate url
       user_id: userId,
-      date: projDate
+      team_id: userTimetable.get("team_id")
     });
-    
+
     timetableItem.save();
-    
+
     // Show temporary project
     var tempProject = projectTemplate({
       tmId: userId,
@@ -634,14 +650,14 @@ App.ExistingProjectsView = Backbone.View.extend({
     });
     var projContainer = $(".box[data-user-id=" + userId + "][data-date='" + projDate + "']");
 
-    $(projContainer).append(tempProject);      
+    $(projContainer).append(tempProject);
     var newProj = $(projContainer).find(".project").last();
     $(newProj).addClass('is_loading');
 
     timetableItem.on("sync", function(resp) {
       var ttItem = resp.get("timetable_item");
       var tmProjId = ttItem["id"];
-      
+
       // Regenerate project using template
       submittedProj = projectTemplate({
         tmId: userId,
@@ -653,8 +669,8 @@ App.ExistingProjectsView = Backbone.View.extend({
       $(newProj).replaceWith(submittedProj);
       setupProjectEvents();
 
-      // Update model
-      App.userTimetables.addTimetableItemForUser(ttItem, userId);
+      // Add to timetable items collection
+      App.timetableItems.add(ttItem);
 
       // Don't need to show flash
       // App.flashView.render("success", resp.escape("message"));
@@ -662,13 +678,13 @@ App.ExistingProjectsView = Backbone.View.extend({
     timetableItem.on("error", function(data) {
       $(newProj).remove();
       $(newProj).removeClass('is_loading');
-      
-      App.flashView.render("warning", JSON.parse(data.responseText)["message"]);
+
+      App.flashView.renderErrorForResponseData(data);
     });
 
     // Hide dialog box
     $("#new-project-dialog").hide();
-    
+
     return false;
   } // existingProjectButtonClickHandle
 });
@@ -686,7 +702,7 @@ App.ProjectDialogView = Backbone.View.extend({
 
     $("#new-project-dialog form input[name=date]").val($(box).attr("data-date"));
     $("#new-project-dialog form input[name=team_member_id]").val($(box).attr("data-user-id"));
-    
+
     // If clicked on weekend add class for weekend, and place dialog on the left
     // Otherwise, place dialog on the right
     $( "#new-project-dialog" ).removeClass("is-flipped");
@@ -705,7 +721,7 @@ App.ProjectDialogView = Backbone.View.extend({
 
     $("#new-project-dialog").show().offset({ top: event.pageY + new_project_dialog_top_offset, left: event.pageX + new_project_dialog_left_offset });
     $("#new-project-dialog").show();
-    
+
     // Focus on new project text box
     $("#new-project-dialog .new-object-text-box").focus();
 
@@ -721,7 +737,7 @@ App.ProjectDialogView = Backbone.View.extend({
       // Add project to existing project list
       this.existingProjectsView().render();
 
-      // Set up delete project dialog view - only gets called 
+      // Set up delete project dialog view - only gets called
       // when needed
       this.deleteProjectDialogView();
 
@@ -757,7 +773,7 @@ App.ProjectDialogView = Backbone.View.extend({
     $('html').click(function() {
       $("#new-project-dialog").hide();
     });
-    
+
     $("#new-project-dialog").click(function(event) {
       event.stopPropagation(); // Prevent clicking on form from hiding the form
     });
@@ -777,7 +793,7 @@ App.ProjectDialogView = Backbone.View.extend({
       var projDate = $(this).parents('#new-timetable-item-form').find("input[name=date]").val();
       var projNameTextbox = $(this).parent().find("input[name=project_name]");
       var projName = projNameTextbox.val();
-      
+
       if (projName.length <= 0) {
         // Focus textbox and exit
         $(projNameTextbox).focus();
@@ -789,9 +805,9 @@ App.ProjectDialogView = Backbone.View.extend({
           user_id: userId,
           date: projDate
         });
-        
+
         timetableItem.save();
-        
+
         // Show temporary project
         var tempProject = projectTemplate({
           tmId: userId,
@@ -802,7 +818,7 @@ App.ProjectDialogView = Backbone.View.extend({
         });
         var projContainer = $(".box[data-user-id=" + userId + "][data-date='" + projDate + "']");
 
-        $(projContainer).append(tempProject);      
+        $(projContainer).append(tempProject);
         var newProj = $(projContainer).find(".project").last();
         $(newProj).addClass('is_loading');
 
@@ -821,7 +837,7 @@ App.ProjectDialogView = Backbone.View.extend({
           var tooltipCssSel = "#tiptip_content." + retProj.css_class();
           var tooltipCssStyle = 'border: 3px solid' + retProj.escape("hex_colour") + ';';
           projectStyles.addRule(tooltipCssSel, tooltipCssStyle);
-          
+
           // Add project to existing project list
           projectDialog.existingProjectsView().render();
 
@@ -837,8 +853,8 @@ App.ProjectDialogView = Backbone.View.extend({
 
           setupProjectEvents();
 
-          // Update model
-          App.userTimetables.addTimetableItemForUser(ttItem, userId);
+          // Add to timetable items collection
+          App.timetableItems.add(ttItem);
 
           // Don't need to show flash
           // App.flashView.render("success", resp.escape("message"));
@@ -846,8 +862,8 @@ App.ProjectDialogView = Backbone.View.extend({
         timetableItem.on("error", function(data) {
           $(newProj).remove();
           $(newProj).removeClass('is_loading');
-          
-          App.flashView.render("warning", JSON.parse(data.responseText)["message"]);
+
+          App.flashView.renderErrorForResponseData(data);
         });
 
         // Clear new project name textbox
@@ -876,7 +892,7 @@ App.DeleteProjectDialogView = Backbone.View.extend({
     var deleteProjectDialog = _.template($("#delete-project-dialog-template").html());
 
     $("#main").append(deleteProjectDialog({
-      teamId: TEAM_ID, 
+      teamId: TEAM_ID,
       projectId: $(button).parent().find("button[name=project_id]").val(),
       projectName: $(button).parent().find("button[name=project_id]").text()
     }));
@@ -945,14 +961,14 @@ $(function () {
       return createStyleSheet;
     })();
   }
-  
+
   // Flash the flash message
   if ($("#flash").length > 0) {
     $("#flash").hide(0, function() {
       $(this).fadeIn(1000);
     });
   }
-  
+
   // First signed on
   {
     // Show help text
@@ -960,7 +976,7 @@ $(function () {
       $("body").addClass("help-on");
     }
   }
-  
+
   // Declare dialogs (but don't open by default)
   {
     // User settings
@@ -975,18 +991,18 @@ $(function () {
     $("#top-nav .action-bar .user-settings").click(function() {
       $( "#team-users-dialog" ).dialog('open');
       overlayCloseOnClick();
-      
+
       return false;
     });
   }
-  
+
   // Add help body class
   $("#top-nav .action-bar .help").click(function() {
     $("body").toggleClass("help-on");
-    
+
     return false;
   });
-  
+
   //remove help body class
   $("#overlay-bg, #help-nav, #help-week, #help-new, #help-close, #help-project, help-team").click(function() {
     $("body").removeClass("help-on");
@@ -1017,7 +1033,7 @@ function setupProjectEvents() {
       $(this).find(".delete-timetable-item-form button").fadeOut(100);
     }
   );
-  
+
   // AJAX-ify delete
   $(".project .delete-timetable-item-form button").click(
     function(event) {
@@ -1067,14 +1083,14 @@ function setupNewProjectDialog() {
         var project = ui.item;
         var projectUserId = $(project).attr("data-user-id");
         var projectDate = $(project).attr("data-date");
-        
+
         var containerUserId = $(project).parents(".user").first().attr("data-user-id");
         var containerDate = $(project).parents(".box").first().attr("data-date");
-        
+
         if ((projectUserId != containerUserId) || (projectDate != containerDate)) {
           updateTimetableItem(project);
         }
-        
+
         // Hide new dialog in case a click gets triggered and shows it
         $("#new-project-dialog").hide();
       }
@@ -1088,7 +1104,7 @@ function updateTimetableItem(proj) {
   var toUserId = $(proj).parents('.user').first().attr("data-user-id");
   var timetableItemId = $(proj).attr("data-timetable-item-id");
   var toDate = $(proj).parents('.box').first().attr("data-date");
-    
+
   var url = "/" + TEAM_ID + "/timetable-items/" + timetableItemId + "/update.json";
   $(proj).addClass('is_loading');
   $.post(url, { from_user_id: fromUserId, to_user_id: toUserId, to_date: toDate })
@@ -1096,7 +1112,7 @@ function updateTimetableItem(proj) {
       // Update timetable item info in data attributes
       $(proj).attr("data-user-id", toUserId);
       $(proj).attr("data-date", toDate);
-      
+
       // Update delete link
       var delete_url = $(proj).find(".delete-timetable-item-form").attr("action");
       // Should be in the form /users/[user id]/project/[timetable id]/delete
@@ -1107,38 +1123,28 @@ function updateTimetableItem(proj) {
       setupProjectEvents();
 
       // Update model
-      App.userTimetables.updateTimetableItemForUser(response["timetable_item"], fromUserId, toUserId);
+      var timetableItem = App.timetableItems.get(response["timetable_item"].id);
+      timetableItem.set(response["timetable_item"]);
 
       // Don't need to show flash
       // App.flashView.render("success", response["message"]);
-      
+
       $(proj).removeClass('is_loading');
     })
     .error(function(data) {
       // Move timetable item back
       var fromDate = $(proj).attr("data-date");
       var fromLocation = $(".user[data-user-id=" + fromUserId + "]").find(".box[data-date=" + fromDate + "]");
-      
+
       $(proj).remove();
       $(fromLocation).append(proj);
 
       setupProjectEvents();
       $(proj).removeClass('is_loading');
 
-      try {
-        response = JSON.parse(data.responseText);
-        if (response) {
-          App.flashView.render("warning", respJson["message"]);
-        } else {
-          App.flashView.renderError();  
-        }
-      } catch(error) {
-        console.log(error);
-        App.flashView.renderError();
-      }
-
+      App.flashView.renderErrorForResponseData(data);
     });
-  
+
 }
 
 // Delete timetable item
@@ -1148,7 +1154,7 @@ function deleteTimetableItem(proj) {
   if ($(deleteButton).is(":enabled")) {
     var userId = $(proj).attr("data-user-id");
     var timetableItemId = $(proj).attr("data-timetable-item-id");
-      
+
     var url = "/" + TEAM_ID + "/users/" + userId + "/timetable-items/" + timetableItemId + "/delete.json";
     $(proj).addClass('is_loading');
     $(deleteButton).attr("disabled", "disabled");
@@ -1159,7 +1165,7 @@ function deleteTimetableItem(proj) {
           $(this).remove();
 
           // Remove from collection
-          App.userTimetables.removeTimetableItemIdFromUser(resp["timetable_item_id"], userId);
+          App.timetableItems.remove(resp["timetable_item_id"]);
         });
       })
       .error(function(response) {
@@ -1176,15 +1182,11 @@ function deleteTimetableItem(proj) {
             // Don't need to show flash
             // App.flashView.render("success", response["message"]);
           } else {
-            if (response) {
-              App.flashView.render("warning", response["message"]);
-            } else {
-              App.flashView.render("warning", "Something weird happened. Please contact support about it.");
-            }
+            App.flashView.renderErrorForResponseData(data);
           }
         } catch(error) {
           console.log(error);
-          App.flashView.renderError();
+          App.flashView.renderErrorForResponseData(data);
         }
       });
   }

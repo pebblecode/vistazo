@@ -4,7 +4,7 @@ describe "Homepage" do
   before do
     http_authorization!
   end
-  
+
   it "should have 'Start using Vistazo'" do
     get '/'
     last_response.body.should include("Start using vistazo")
@@ -16,7 +16,7 @@ describe "Week view" do
     http_authorization!
     @session = init_omniauth_session
   end
-  
+
   after do
     clean_db!
     @session = nil
@@ -24,12 +24,12 @@ describe "Week view" do
 
   it "should require login" do
     create_normal_user(@session)
-    
+
     # Find added user
     team = User.first.teams.first
     get_with_session_login! team_current_week_path(team), @session
     follow_redirect_with_session_login!(@session)
-    
+
     last_response.body.should include("You must be logged in")
     last_response.body.should include("Start using vistazo")
   end
@@ -40,23 +40,23 @@ describe "Teams:" do
     http_authorization!
     @session = init_omniauth_session
   end
-  
+
   after do
     clean_db!
     @session = nil
   end
-  
+
   # New team: see new_team_spec.rb
   # Edit team: see team_name_spec.rb
 
   describe "Teams page" do
     it "should redirect to the home page and show an error if it is an invalid team" do
       create_normal_user(@session)
-      
+
       # Find added user
       get_with_session_login! team_id_path("invalid_id"), @session
       follow_redirect_with_session_login!(@session)
-      
+
       last_request.path.should == "/"
       last_response.body.should include("Invalid team.")
     end
@@ -68,31 +68,31 @@ describe "Teams:" do
       login_super_admin_with_session!(@session)
       super_admin_team = user_from_session(@session).teams.first
       logout_session!(@session)
-      
+
       # Create normal user team
       login_normal_user_with_session!(@session)
       normal_user_team = user_from_session(@session).teams.first
-      
+
       # Try and log into super user team as normal user
       get_with_session_login! team_current_week_path(super_admin_team), @session
       follow_redirect_with_session_login!(@session)
-      
+
       # Redirect to homepage
       last_request.path.should == "/"
-      
+
       # Redirect to normal user team page
       follow_redirect_with_session_login!(@session)
       last_request.path.should == user_team_path(user_from_session(@session))
-      
+
       # Redirect to normal user week view
       follow_redirect_with_session_login!(@session)
       last_request.path.should == user_team_current_week_path(user_from_session(@session))
-      
+
       last_response.body.should include("You're not authorized to view this page")
-      
+
     end
   end
-  
+
 end
 
 describe "Users:" do
@@ -106,7 +106,7 @@ describe "Users:" do
 
     login_normal_user_with_session!(@session)
   end
-  
+
   after do
     clean_db!
     @session = nil
@@ -125,7 +125,7 @@ describe "Users:" do
       post_params! team_add_user(@team), @valid_params, @session
       @team.reload
       @new_user = User.find_by_email(@valid_params[:email])
-      
+
       @new_user.name.should == @valid_params[:name]
       @new_user.email.should == @valid_params[:email]
 
@@ -236,8 +236,8 @@ describe "Users:" do
 
   describe "delete user" do
     before do
-      new_user_params = { 
-        :name => "Karen O", 
+      new_user_params = {
+        :name => "Karen O",
         :email => "karen.o@gmail.com"
       }
       post_params! team_add_user(@team), new_user_params, @session
@@ -286,12 +286,12 @@ describe "Timetable items:" do
 
     login_normal_user_with_session!(@session)
   end
-  
+
   after do
     clean_db!
     @session = nil
   end
-  
+
   describe "Add timetable item" do
     # Tested in add existing and new projects
   end
@@ -300,7 +300,7 @@ describe "Timetable items:" do
     before do
       @date = Time.new(2012, 3, 26)
       @another_date = (@date + 1.day)
-      @timetable_item = @team.add_timetable_item(@user, @project, @date)
+      @timetable_item = Factory(:timetable_item, :user => @user, :project => @project, :date => @date, :team => @team)
 
       @another_user = Factory(:user)
       @team.add_user(@another_user)
@@ -309,14 +309,14 @@ describe "Timetable items:" do
       @from_date = @date
       @team.reload
     end
-    
+
     it "should require login" do
       post update_timetable_item_path(@team, @timetable_item), nil
 
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("You must be logged in.")
     end
-    
+
     describe "to different date and same user" do
       before do
         @to_user = @user
@@ -336,7 +336,7 @@ describe "Timetable items:" do
       end
 
       it "should not create any new timetable items" do
-        @team.user_timetable_items(@from_user).count.should == 1
+        TimetableItem.where({:user_id => @from_user.id}).count.should == 1
       end
 
       it "should return 200 status" do
@@ -347,7 +347,7 @@ describe "Timetable items:" do
         last_response.body.should include("Successfully moved '#{@project.name}' project to #{@to_user.name} on #{@to_date.strftime("%F")}.")
       end
     end
-    
+
     describe "to same date and different user" do
       before do
         @to_user = @another_user
@@ -393,7 +393,7 @@ describe "Timetable items:" do
         last_response.body.should include("Successfully moved '#{@project.name}' project to #{@to_user.name} on #{@to_date.strftime("%F")}.")
       end
     end
-    
+
     describe "to invalid user" do
       before do
         @to_date = @date
@@ -421,7 +421,7 @@ describe "Timetable items:" do
         @another_team = Factory(:team)
         @another_team_user = Factory(:user)
         @another_team.add_user(@another_team_user)
-        
+
         @to_user = @another_team_user
         @to_date = @another_date
 
@@ -449,14 +449,14 @@ describe "Timetable items:" do
     before do
       @date = Time.new(2012, 3, 26)
       @another_date = (@date + 1.day)
-      @timetable_item = @team.add_timetable_item(@user, @project, @date)
+      @timetable_item = Factory(:timetable_item, :user => @user, :project => @project, :date => @date, :team => @team)
     end
 
     it "should delete" do
       post_params! delete_timetable_item_path(@team, @user, @timetable_item), nil, @session
       @team.reload
 
-      @team.user_timetable_items(@user).count.should == 0
+      TimetableItem.count.should == 0
     end
   end
 end
@@ -465,12 +465,13 @@ describe "Delete project:" do
   before do
     http_authorization!
     @session = init_omniauth_session
-    
+
     create_normal_user(@session)
     @user = User.first
     @team = @user.teams.first
+    @user_timetable = Factory(:user_timetable, :team => @team, :user => @user)
   end
-  
+
   after do
     clean_db!
     @session = nil
@@ -479,16 +480,16 @@ describe "Delete project:" do
   it "should require login" do
     @project = Project.create(:name => "New project", :team_id => @team.id)
     post_params! delete_project_path(@team, @project), nil, @session
-    
+
     flash_message = last_request.session[:flash]
     flash_message[:warning].should include("You must be logged in.")
   end
-  
+
   describe "After login:" do
     before do
       login_normal_user_with_session!(@session)
     end
-    
+
     describe "with a valid project" do
       before do
         @project = Project.create(:name => "Business time", :team => @team)
@@ -506,43 +507,41 @@ describe "Delete project:" do
         end
 
         it "should delete for 1 timetable item" do
-          
-          @timetable_item = @team.add_timetable_item(@user, @project, @date)
-          @team.user_timetable_items(@user).length.should == 1
+
+          Factory(:timetable_item, :project => @project, :date => @date, :user_timetable => @user_timetable)
+          TimetableItem.find_by_user_id(@user.id).nil? == false
 
           post_params! delete_project_path(@team, @project), nil, @session
-          @team.reload
 
-          @team.user_timetable_items(@user).length.should == 0
+          TimetableItem.find_by_user_id(@user.id).nil? == true
         end
 
-        it "should delete for multiple timetable items" do
-          @timetable_item = @team.add_timetable_item(@user, @project, @date)
-          @timetable_item = @team.add_timetable_item(@user, @project, @date + 1.day)
-          @timetable_item = @team.add_timetable_item(@user, @project, @date + 5.day)
-          @team.user_timetable_items(@user).length.should == 3
+        it "should delete for multiple timetable items with same project but different dates" do
+          Factory(:timetable_item, :project => @project, :user_timetable => @user_timetable, :date => @date)
+          Factory(:timetable_item, :project => @project, :user_timetable => @user_timetable, :date => @date + 1.day)
+          Factory(:timetable_item, :project => @project, :user_timetable => @user_timetable, :date => @date + 5.day)
+
+          TimetableItem.count.should == 3
 
           post_params! delete_project_path(@team, @project), nil, @session
-          @team.reload
 
-          @team.user_timetable_items(@user).length.should == 0
+          TimetableItem.count.should == 0
         end
 
         it "should delete for different users" do
           @other_user = Factory(:user)
           @team.add_user(@other_user)
+          @other_user_timetable = Factory(:user_timetable, :user => @other_user, :team => @team)
 
-          @timetable_item = @team.add_timetable_item(@user, @project, @date)
-          @timetable_item = @team.add_timetable_item(@other_user, @project, @date)
+          Factory(:timetable_item, :project => @project, :date => @date, :user_timetable => @user_timetable)
+          Factory(:timetable_item, :project => @project, :date => @date, :user_timetable => @other_user_timetable)
 
-          @team.user_timetable_items(@user).length.should == 1
-          @team.user_timetable_items(@other_user).length.should == 1
+          TimetableItem.count.should == 2
+          TimetableItem.where({:user_id => @other_user.id}).count.should == 1
 
           post_params! delete_project_path(@team, @project), nil, @session
-          @team.reload
 
-          @team.user_timetable_items(@user).length.should == 0
-          @team.user_timetable_items(@other_user).length.should == 0
+          TimetableItem.count.should == 0
         end
       end
 
@@ -558,22 +557,22 @@ describe "Delete project:" do
     describe "from a different team" do
       it "should give you an error message" do
         @user = User.first
-        
+
         @project = Project.create(:name => "Business time", :team_id => @team.id)
         @other_team = Team.create(:name => "Monday-itis")
         @other_team.add_user(@user)
-        
+
         post_params! delete_project_path(@other_team, @project), nil, @session
-        
+
         flash_message = last_request.session[:flash]
         flash_message[:warning].should include("Invalid team.")
       end
     end
-    
+
     describe "with an invalid project" do
       it "should give you an error message" do
         post_params! delete_project_path_with_project_id(@team, "1234"), nil, @session
-        
+
         flash_message = last_request.session[:flash]
         flash_message[:warning].should include("Invalid project.")
       end
@@ -585,22 +584,22 @@ describe "Projects:" do
   before do
     http_authorization!
     @session = init_omniauth_session
-    
+
     create_normal_user(@session)
     login_normal_user_with_session!(@session)
-      
+
     User.count.should == 1
     @user = User.first
     @team = @user.teams.first
   end
-  
+
   after do
     clean_db!
     @session = nil
   end
-  
+
   pending "Colour settings"
-  
+
   describe "Create new project" do
     before do
       @params = {
@@ -608,27 +607,27 @@ describe "Projects:" do
         "date" => "2011-12-16"
       }
     end
-    
+
     it "should require login" do
       post add_timetable_item_path(@team, @user), @valid_params
-      
+
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("You must be logged in.")
     end
-    
+
     it "should show success message if passing valid parameters" do
       post_params! add_timetable_item_path(@team, @user), @params.to_json, @session
       Project.count.should == 1
 
       last_response.body.should include("Successfully added 'Business time' project for #{@user.name} on 2011-12-16.")
-      
+
       @team.reload
-      @team.user_timetable_items(@user).count.should == 1
+      TimetableItem.count.should == 1
     end
-    
+
     it "should return error message if project name is empty string or nil" do
-      invalid_params = @params.merge({ 
-        "project_name" => "" 
+      invalid_params = @params.merge({
+        "project_name" => ""
       })
       post_params! add_timetable_item_path(@team, @user), invalid_params.to_json, @session
 
@@ -636,21 +635,21 @@ describe "Projects:" do
 
       Project.count.should == 0
       @team.reload
-      @team.user_timetable_items(@user).count.should == 0
-      
-      invalid_params = @params.merge({ 
-        "project_name" => nil 
+      TimetableItem.count.should == 0
+
+      invalid_params = @params.merge({
+        "project_name" => nil
       })
       post_params! add_timetable_item_path(@team, @user), invalid_params.to_json, @session
-      
+
       last_response.body.should include("Please specify a project name.")
 
       Project.count.should == 0
       @team.reload
-      @team.user_timetable_items(@user).count.should == 0
+      TimetableItem.count.should == 0
     end
   end
-  
+
   describe "Add existing project" do
     before do
       @project = Factory(:project, :team => @team)
@@ -660,22 +659,22 @@ describe "Projects:" do
         "date" => @date_to_add
       }
     end
-    
+
     it "should require login" do
       post add_timetable_item_path(@team, @user), @params
-      
+
       flash_message = last_request.session[:flash]
       flash_message[:warning].should include("You must be logged in.")
     end
-    
+
     it "should show success message if passing valid parameters" do
       post_params! add_timetable_item_path(@team, @user), @params.to_json, @session
-      
+
       last_response.body.should include("Successfully added '#{@project.name}' project for #{@user.name} on #{@date_to_add}.")
       Project.count.should == 1
 
       @team.reload
-      @team.user_timetable_items(@user).count.should == 1
+      TimetableItem.count.should == 1
     end
   end
 end
@@ -685,7 +684,7 @@ describe "Authentication:" do
     http_authorization!
     @session = init_omniauth_session
   end
-  
+
   after do
     clean_db!
     @session = nil
@@ -696,25 +695,25 @@ describe "Authentication:" do
       true.should == true
     end
   end
-  
+
   describe "Logging in as a new user" do
     it "should create a new team with the user's name" do
       User.count.should == 0
-      
+
       login_normal_user_with_session!(@session)
-      
+
       # Should create new user
       User.count.should == 1
-      
+
       # Should create new user team with user name
       team = User.first.teams.first # Only have 1 user, so find first works
       team.name.should == DEFAULT_TEAM_NAME
-      
+
       last_response.body.should include(SANITIZED_DEFAULT_TEAM_NAME)
       last_response.body.should include("Welcome to Vistazo")
     end
   end
-  
+
   describe "Logging in with wrong credentials:" do
     describe "empty omniauth.auth hash" do
       it "should redirect to homepage with error message" do
@@ -725,7 +724,7 @@ describe "Authentication:" do
         last_response.body.should include("Invalid login: No details.")
       end
     end
-    
+
     describe "nil" do
       describe "uid" do
         it "should redirect to homepage with error message" do
@@ -739,12 +738,12 @@ describe "Authentication:" do
           get google_oauth2_callback_path, nil, { "omniauth.auth" => empty_oa_credentials }
           @session.merge!(last_request.session)
           follow_redirect_with_session_login!(@session)
-          
+
           last_request.path.should == "/"
           last_response.body.should include("Invalid login: No user id.")
         end
       end
-      
+
       describe "email" do
         it "should redirect to homepage with error message" do
           no_email_oa_credentials = OmniAuth.config.mock_auth[:normal_user].merge({
@@ -756,36 +755,36 @@ describe "Authentication:" do
           get google_oauth2_callback_path, nil, { "omniauth.auth" => no_email_oa_credentials }
           @session.merge!(last_request.session)
           follow_redirect_with_session_login!(@session)
-          
+
           last_request.path.should == "/"
           last_response.body.should include("Invalid login: No email.")
         end
       end
     end
   end
-  
+
   describe "User save failure" do
     # Not sure how to test this
     pending "Should show 'Could not retrieve user' message"
   end
-  
+
   describe "Logging in as an existing user" do
     it "should redirect them to their team week view" do
       create_normal_user(@session)
-      
+
       login_normal_user_with_session!(@session)
       last_request.path.should == user_team_current_week_path(user_from_session(@session))
       last_response.body.should include(SANITIZED_DEFAULT_TEAM_NAME)
     end
   end
-  
+
   pending "Protect all pages with login redirect"
-  
+
   describe "Logging out" do
     it "should return to homepage" do
       login_normal_user_with_session!(@session)
       logout_session!(@session)
-      
+
       last_request.path.should == "/"
     end
   end

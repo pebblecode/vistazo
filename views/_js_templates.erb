@@ -142,7 +142,7 @@
     {% var userId = userTimetable.escape("user_id") %}
     {% var userName = userTimetable.userName() %}
     {% var userEmail = userTimetable.userEmail() %}
-    {% var timetableItems = userTimetable.get("timetable_items") %}
+    {% var timetableItems = App.timetableItems.where({user_id: userId}) %}
     {% var isFirst = (App.userTimetables.first() === userTimetable) %}
 
     <tr class="row-divider">
@@ -166,17 +166,17 @@
         <td class="box <%= is_weekend ? "is-weekend" : "" %>" data-date="<%= date %>" data-user-id="{{ userId }}">
 
           {% _.each(timetableItems, function(ti) { %}
-            {% if (ti["date"] == "<%= date %>") { %}
-              <div class="project" data-user-id="{{ userId }}" data-timetable-item-id="{{ _.escape(ti['id']) }}" data-date="<%= date %>"> 
+            {% if (ti.get("date") == "<%= date %>") { %}
+              <div class="project" data-user-id="{{ userId }}" data-timetable-item-id="{{ _.escape(ti.id) }}" data-date="<%= date %>">
                 <div class="handle-container">
-                  <div class="handle project-{{ _.escape(ti['project_id']) }}" title="{{ _.escape(ti['project_name']) }}"></div>
+                  <div class="handle project-{{ _.escape(ti.get('project_id')) }}" title="{{ _.escape(ti.get('project_name')) }}"></div>
                 </div>
-                <p class="project-title" title="{{ _.escape(ti['project_name']) }}">{{ _.escape(ti['project_name'].substring(0, 40)) }}</p>
+                <p class="project-title" title="{{ _.escape(ti.get('project_name')) }}">{{ _.escape(ti.get('project_name').substring(0, 40)) }}</p>
                 <form class="delete-timetable-item-form" action="#" method="post">
                   <button name="delete_project" type="submit" value="true">×</button>
                 </form>
               </div>
-            {% } %} 
+            {% } %}
           {% }); %}
         </td>
       <% end %>
@@ -267,7 +267,7 @@
     {% var userId = userTimetable.escape("user_id") %}
     {% var userName = userTimetable.userName() %}
     {% var userEmail = userTimetable.userEmail() %}
-    {% var timetableItems = userTimetable.get("timetable_items") %}
+    {% var timetableItems = App.timetableItems.where({user_id: userId}) %}
     {% var isFirst = (App.userTimetables.first() === userTimetable) %}
 
     <tr class="row-divider">
@@ -279,7 +279,7 @@
           {{ userName.substring(0, 40) }}
         </a>
       </td>
-      
+
       <% prev_cols = 1 %>
       <% (MONDAY..SUNDAY).each do |work_day| %>
         <%#
@@ -290,17 +290,17 @@
         <td class="box <%= "col#{work_day + prev_cols}" %>" data-date="<%= date %>" data-user-id="{{ userId }}">
 
           {% _.each(timetableItems, function(ti) { %}
-            {% if (ti["date"] == "<%= date %>") { %}
-              <div class="project" data-user-id="{{ userId }}" data-timetable-item-id="{{ _.escape(ti['id']) }}" data-date="<%= date %>"> 
+            {% if (ti.get("date") == "<%= date %>") { %}
+              <div class="project" data-user-id="{{ userId }}" data-timetable-item-id="{{ _.escape(ti.get('id')) }}" data-date="<%= date %>">
                 <div class="handle-container">
-                  <div class="handle project-{{ _.escape(ti['project_id']) }}"></div>
+                  <div class="handle project-{{ _.escape(ti.get('project_id')) }}"></div>
                 </div>
-                <p class="project-title" title="{{ _.escape(ti['project_name']) }}">{{ _.escape(ti['project_name'].substring(0, 40)) }}</p>
+                <p class="project-title" title="{{ _.escape(ti.get('project_name')) }}">{{ _.escape(ti.get('project_name').substring(0, 40)) }}</p>
                 <form class="delete-timetable-item-form" action="#" method="post">
                   <button name="delete_project" type="submit" value="true">×</button>
                 </form>
               </div>
-            {% } %} 
+            {% } %}
           {% }); %}
 
           <% if (work_day == THURSDAY) %>
@@ -331,21 +331,15 @@
               <p class="project-title" title="{{ project.escape("name") }}">{{ project.escape("name").substring(0, 40) }}</p>
             </div>
           </td>
-          
+
           <% prev_cols = 1 %>
           <% (MONDAY..SUNDAY).each do |work_day| %>
             <% date = (@monday_date - 1.day) + work_day.day %>
             <td class="{{ rowClass }} <%= "col#{work_day + prev_cols}" %>" data-date="<%= date %>">
-
-              {% _.each(userTimetables, function(userTimetable) { %}
-                {% var ttItems = userTimetable.get("timetable_items"); %}
-                {% _.each(ttItems, function(ttItem) { %}
-                  {% if ((ttItem["date"] == "<%= date %>") && (ttItem["project_id"] === project.escape("id"))) { %}
-                    <div class="user-name">{{ userTimetable.userName() }}</div>
-                  {% } %} 
-                {% }); %}
-              {% }); %}
-
+              {% ttItems = timetableItems.where({"date": "<%= date %>", "project_id": project.get("id")}) %}
+              {% _.each(ttItems, function(ttItem) { %}
+                <div class="user-name">{{ ttItem.userName() }}</div>
+              {% }) %}
             </td>
           <% end %>
           <td class="{{ rowClass }} col-last" %></td>

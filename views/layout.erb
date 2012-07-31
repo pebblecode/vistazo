@@ -70,6 +70,9 @@
         App.userTimetables = new App.UserTimetables;
         App.userTimetables.reset(<%= @user_timetables.to_json if @user_timetables %>)
 
+        App.timetableItems = new App.TimetableItems;
+        App.timetableItems.reset(<%= @timetable_items.to_json %>);
+
         App.timetableViewSelector = new App.TimetableViewSelector({el: $("#view-selector")})
       });
 

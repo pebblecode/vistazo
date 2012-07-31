@@ -21,6 +21,12 @@ Factory.define :user_timetable do |f|
 end
 
 Factory.define :timetable_item do |f|
-  f.date Time.now 
+  f.date Time.now
   f.association :project
+  f.association :user_timetable
+
+  # Note: To construct manually, you will want to pass it an
+  # user_timetable, as user and team are generated on creation
+  f.association :user
+  f.association :team
 end

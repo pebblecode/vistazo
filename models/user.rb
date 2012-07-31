@@ -21,13 +21,13 @@ class User
   #############################################################################
 
   def serializable_hash(options = {})
-    pre_sanitized_hash = super({ 
-      :only => [:id, :name, :email] 
+    pre_sanitized_hash = super({
+      :only => [:id, :name, :email]
     }.merge(options))
 
     # Sanitize
     pre_sanitized_hash.merge({
-      "name" => Rack::Utils.escape_html(self.name), 
+      "name" => Rack::Utils.escape_html(self.name),
       "email" => Rack::Utils.escape_html(self.email)
     })
   end
@@ -49,3 +49,12 @@ class User
     self.save
   end
 end
+
+
+#############################################################################
+# Indexes
+#############################################################################
+
+User.ensure_index(:uid)
+User.ensure_index(:email)
+User.ensure_index(:team_ids)

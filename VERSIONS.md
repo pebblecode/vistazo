@@ -1,3 +1,8 @@
+# 1.1.0
+
+* [#248] Unembed `UserTimetable` and `TimetableItem` documents, and make them first class documents.
+* [#248] Add model indexes
+
 # 1.0.0
 
 * Remove http auth
