@@ -29,7 +29,8 @@ feature "Week view" do
       @year = 2012
       @date = Time.new(@year, 3, 26) # An artibtrary Monday
       @date_week = @date.strftime("%U")
-      @timetable_item = @team.add_timetable_item(@user, @project, @date)
+      @user_timetable = Factory(:user_timetable, :team => @team, :user => @user)
+      @timetable_item = Factory(:timetable_item, :project => @project, :date => @date, :user_timetable => @user_timetable)
 
       visit "/"
       click_link "start-btn"
@@ -38,8 +39,7 @@ feature "Week view" do
     scenario "should show correct timetable items from different weeks" do
       next_week_date = @date + 7.day
       next_week_date_week = next_week_date.strftime("%U")
-      next_week_timetable_item = @team.add_timetable_item(@user, @project, next_week_date)
-      @team.reload
+      next_week_timetable_item = Factory(:timetable_item, :user_timetable => @user_timetable, :project => @project, :date => next_week_date)
 
       visit team_week_path(@team, @year, @date_week)
       timetable_items = backbone_collection_on_page(:timetable_items, page)
@@ -55,7 +55,8 @@ feature "Week view" do
 
     scenario "should show correct timetable items for multiple users" do
       another_user = Factory(:user)
-      another_user_week_timetable_item = @team.add_timetable_item(another_user, @project, @date)
+      another_user_user_timetable = Factory(:user_timetable, :user => another_user, :team => @team)
+      another_user_week_timetable_item = Factory(:timetable_item, :user_timetable => another_user_user_timetable, :project => @project, :date => @date)
 
       visit team_week_path(@team, @year, @date_week)
       timetable_items = backbone_collection_on_page(:timetable_items, page)
