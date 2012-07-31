@@ -157,7 +157,7 @@ namespace "db" do
   task "reset_seed_development", [:import_dir] do |task, args|
     import_dir = args.import_dir
     unless (import_dir.nil?)
-      Rake::Task["db:reset:development"]
+      Rake::Task["db:reset:development"].invoke
       restore_cmd = "mongorestore -d vistazo-development #{import_dir}"
       puts "Running: #{restore_cmd}"
       `#{restore_cmd}`
