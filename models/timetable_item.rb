@@ -36,7 +36,7 @@ class TimetableItem
   def self.create_with_team_id_and_user_id(team_id, user_id, create_params)
     user_timetable = UserTimetable.find_by_team_id_and_user_id(team_id, user_id)
 
-    timetable_item = self.create(create_params) unless user_timetable.nil?
+    timetable_item = self.create(create_params.merge({:user_timetable => user_timetable})) unless user_timetable.nil?
 
     timetable_item
   end

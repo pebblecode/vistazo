@@ -94,7 +94,7 @@ describe "TimetableItem model" do
     end
   end
 
-  describe "self.create_with_team_and_user" do
+  describe "self.create_with_team_id_and_user_id" do
     before do
       @user_timetable = Factory(:user_timetable)
       @team = @user_timetable.team
@@ -112,6 +112,24 @@ describe "TimetableItem model" do
 
       timetable_item.nil?.should == false
       TimetableItem.count.should == 1
+    end
+
+    it "should save team" do
+      timetable_item = TimetableItem.create_with_team_id_and_user_id(@team.id, @user.id, {
+          :project => @project,
+          :date => @date
+        })
+
+      timetable_item.team.should == @team
+    end
+
+    it "should save user" do
+      timetable_item = TimetableItem.create_with_team_id_and_user_id(@team.id, @user.id, {
+          :project => @project,
+          :date => @date
+        })
+
+      timetable_item.user.should == @user
     end
 
     it "should not save timetable item if not in right team" do
