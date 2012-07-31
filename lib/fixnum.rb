@@ -15,6 +15,7 @@ class Fixnum
   end
 
   def to_abbr_month_name
-    Date.new(Time.now.year, self, Time.now.day).strftime("%b")
+    # Just use any year and day - what the abbreviated month name
+    Date.new(2012, self, 1).strftime("%b")
   end
 end
