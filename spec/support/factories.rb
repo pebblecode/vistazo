@@ -6,7 +6,8 @@ end
 
 Factory.define :user do |f|
   f.sequence(:name) { |n| "User #{n}" }
-  f.sequence(:email) { |n| "user_#{n}@example.com" }
+  # email `n` seems to be off by 1
+  f.sequence(:email) { |n| "user_#{n - 1}@example.com" }
   # No teams by default
 end
 
@@ -25,8 +26,9 @@ Factory.define :timetable_item do |f|
   f.association :project
   f.association :user_timetable
 
-  # Note: To construct manually, you will want to pass it an
-  # user_timetable, as user and team are generated on creation
-  f.association :user
-  f.association :team
+  # To construct manually, you will want to pass it an
+  # user_timetable, as user and team are generated on creation.
+  # So, :user and :team should not be created when creating :timetable_item
+  # f.association :user
+  # f.association :team
 end
