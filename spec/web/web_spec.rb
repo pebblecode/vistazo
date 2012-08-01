@@ -300,7 +300,8 @@ describe "Timetable items:" do
     before do
       @date = Time.new(2012, 3, 26)
       @another_date = (@date + 1.day)
-      @timetable_item = Factory(:timetable_item, :user => @user, :project => @project, :date => @date, :team => @team)
+      @user_timetable = UserTimetable.find_by_user_id(@user.id)
+      @timetable_item = Factory(:timetable_item, :user_timetable => @user_timetable, :project => @project, :date => @date)
 
       @another_user = Factory(:user)
       @team.add_user(@another_user)
