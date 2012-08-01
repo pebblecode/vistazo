@@ -308,6 +308,9 @@ namespace "db" do
     output += "#{UserTimetable.count} user timetables\n"
     output += "#{TimetableItem.count} timetable items\n"
 
+    tti_created_last_24hrs = TimetableItem.where({:created_at.gte => Time.now - 1.day}).count
+    output += "#{tti_created_last_24hrs} timetable items created in the last 24hrs"
+
     output
   end
 
