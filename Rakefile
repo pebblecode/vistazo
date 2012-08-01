@@ -285,11 +285,16 @@ namespace "db" do
       mongo_user = url.match(mongo_credentials_regex)[1]
       mongo_password = url.match(mongo_credentials_regex)[2]
 
-      MongoMapper.database.collections.each do |coll|
-        mongo_export_cmd = "mongoexport -h #{mongo_host} -d #{mongo_database} -c #{coll.name} -u #{mongo_user} -p #{mongo_password} -o #{dir_path}/#{env_prefix}-#{coll.name}.json"
-        sh mongo_export_cmd
-        puts "\n"
-      end
+      # Download collections separately
+      # MongoMapper.database.collections.each do |coll|
+      #   mongo_export_cmd = "mongoexport -h #{mongo_host} -d #{mongo_database} -c #{coll.name} -u #{mongo_user} -p #{mongo_password} -o #{dir_path}/#{env_prefix}-#{coll.name}.json"
+      #   sh mongo_export_cmd
+      #   puts "\n"
+      # end
+
+      # Download binary
+      mongo_export_cmd = "mongodump -h #{mongo_host} -d #{mongo_database} -u #{mongo_user} -p #{mongo_password} -o #{dir_path}"
+      sh mongo_export_cmd
     end
   end
 
