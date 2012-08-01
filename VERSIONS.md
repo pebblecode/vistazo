@@ -1,3 +1,7 @@
+# 1.1.1
+
+* Add last logged in to user
+
 # 1.1.0
 
 * [#248] Unembed `UserTimetable` and `TimetableItem` documents, and make them first class documents.
