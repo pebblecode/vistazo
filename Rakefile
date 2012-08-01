@@ -309,8 +309,14 @@ namespace "db" do
     output = ""
     output += "#{Project.count} projects\n"
     output += "#{Team.count} teams\n"
+
+    # Users
     output += "#{User.count} users\n"
+    users_logged_in_last_24hrs = User.where({:last_logged_in.gte => Time.now - 1.day}).count
+    output += "#{users_logged_in_last_24hrs} users logged in in the last 24hrs\n"
     output += "#{UserTimetable.count} user timetables\n"
+
+    # Timetable items
     output += "#{TimetableItem.count} timetable items\n"
 
     tti_created_last_24hrs = TimetableItem.where({:created_at.gte => Time.now - 1.day}).count

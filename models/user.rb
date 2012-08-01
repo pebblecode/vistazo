@@ -6,6 +6,7 @@ class User
   key :email, String, :required => true
   key :team_ids, Array
   key :is_new, Boolean, :default => true
+  key :last_logged_in, Time
 
   timestamps!
 

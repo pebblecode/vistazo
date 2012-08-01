@@ -164,6 +164,8 @@ get '/auth/:provider/callback' do
       end
     end
 
+    @user.last_logged_in = Time.now
+    @user.save
     session['uid'] = @user.uid
   end
 
