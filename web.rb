@@ -516,7 +516,7 @@ post '/:team_id/users/:user_id/timetable-items/new.json' do
       output = { :message => outputMsg }
     end
   end
-  
+
   content_type :json
   output.to_json
 end
@@ -653,7 +653,7 @@ end
 # Update user and user timetable
 post '/:team_id/users/:user_id' do
   require_team_user!(params[:team_id])
-  
+
   logger.info "Update user: #{params}"
 
   @team = Team.find(params[:team_id])

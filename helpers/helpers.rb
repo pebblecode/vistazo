@@ -10,7 +10,7 @@ module Sinatra
       options.reverse_merge!(:length => 30)
       text.truncate(options.delete(:length), options) if text
     end
-    
+
     def is_today?(date)
       (date.year == Time.now.year) and (date.month == Time.now.month) and (date.day == Time.now.day)
     end

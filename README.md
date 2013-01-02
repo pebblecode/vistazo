@@ -16,7 +16,7 @@ A light weight application to keep track of who's working on what, when.
 
 ### Data migrations
 
-Currently all migrations are manually run. We will look into automated migrations in #160. 
+Currently all migrations are manually run. We will look into automated migrations in #160.
 
 The easiest approach for fixing data migration issues is to reset the database:
 
@@ -63,7 +63,7 @@ To run all specs manually
 To run an individual spec
 
     bundle exec rake spec:run[filename]
-    
+
     # eg,
     bundle exec rake spec:run[spec/models/team_spec.rb]
 
@@ -101,7 +101,7 @@ To push code to the sandbox, checkout the branch and run:
 
 ## Sandbox
 
-For playing around with things, where you don't want to break staging or production. 
+For playing around with things, where you don't want to break staging or production.
 Deployed on [heroku](http://www.heroku.com/).
 
 Project was created with (shouldn't need to be done again, but here just for reference)
@@ -125,13 +125,13 @@ Add remote url to local git
 To push
 
     git push sandbox [branch of code]:master
-    
+
     # Or if there are conflicts, you may need to do a force push
     git push sandbox [branch of code]:master --force
 
 ## Sandbox 2
 
-Another place for playing around with things, where you don't want to break staging or production. 
+Another place for playing around with things, where you don't want to break staging or production.
 Deployed on [heroku](http://www.heroku.com/).
 
 Project was created with (shouldn't need to be done again, but here just for reference)
@@ -155,7 +155,7 @@ Add remote url to local git
 To push
 
     git push sandbox2 [branch of code]:master
-    
+
     # Or if there are conflicts, you may need to do a force push
     git push sandbox2 [branch of code]:master --force
 
@@ -220,20 +220,20 @@ Project was created with (shouldn't need to be done again, but here just for ref
     heroku config:add LOG_LEVEL=DEBUG --app vistazo
     heroku config:add GOOGLE_CLIENT_ID=[google client id] --app vistazo
     heroku config:add GOOGLE_SECRET=[google api secret] --app vistazo
-    
+
     heroku addons:add custom_domains --app vistazo
     heroku domains:add www.vistazoapp.com --app vistazo
     heroku domains:add vistazoapp.com --app vistazo
-    
+
     # For redirects (http://github.com/cwninja/rack-force_domain)
     heroku config:add DOMAIN="vistazoapp.com" --app vistazo
-    
+
 To find the google api client id/secret go to [google api console](https://code.google.com/apis/console/b/0/#project:139948808699:access)
 
 Google client callback url:
 
     http://vistazo.herokuapp.com/auth/google_oauth2/callback
-    
+
 Production uses [MongoLab](http://devcenter.heroku.com/articles/mongolab).
 
 Initial setup
@@ -244,21 +244,21 @@ Merging code and pushing to production branch
 
     git checkout production; git merge master
     git push origin production:production
-    
+
     # Or as a rake task
     rake merge_push_to:production
-    
+
 
 To push to the production server
 
     git push production production:master
-    
+
     # Or as a rake task
     rake deploy:production
-    
+
     # Or as a merge, push and deploy rake task
     rake shipit:production
-    
+
 This is deployed at: http://vistazo.herokuapp.com/
 
 ### Usage statitics
@@ -336,7 +336,7 @@ Or to back up production manually:
 
     # Binary form
     mongodump -h ds031827.mongolab.com:31827 -d heroku_app1810392 -u heroku_app1810392 -p <password> -o vistazo-production
-    
+
     # JSON file for a particular collection
     mongoexport -h dbh85.mongolab.com:27857 -d heroku_app1810392 -c <collection> -u heroku_app1810392 -p cvrq46aj94ck3ltmbq14cm1bd4 -o <output file>
 
@@ -346,7 +346,7 @@ Or to back up production manually:
 To an a new team member in the mongo backend interface on staging or production:
 
 1. Log into heroku
-1. My apps > `vistazo` or `vistazo-staging` > Add-ons > Mongo Lab > team_members > 
+1. My apps > `vistazo` or `vistazo-staging` > Add-ons > Mongo Lab > team_members >
 Add > Copy the following code (making sure oid is unique):
 
     ```
@@ -368,12 +368,12 @@ Pending users
             "$exists": true
         }
     }
-    
+
 ## Troubleshooting
 
 ## Problems with starting the server
 
-eg, 
+eg,
 
     16:19:46 web.1     | /Users/markdurrant/.rbenv/versions/1.9.2-p290/lib/ruby/gems/1.9.1/gems/eventmachine-0.12.10/lib/eventmachine.rb:572:in `start_tcp_server': no acceptor (RuntimeError)
 
@@ -389,9 +389,9 @@ which outputs something like:
 
     25:ttt      44616   0.1  0.8  2471192  32192 s000  S+   11:45am   0:02.94 ruby /Users/ttt/.rbenv/versions/1.9.2-p290/lib/ruby/gems/1.9.1/bin/shotgun --server=thin config.ru -p 6100
     122:ttt      44653   0.0  0.0  2425700    264 s001  R+   11:46am   0:00.00 grep -n shotgun
-    
+
 The 2nd column is the process id, so to kill the shotgun server from the previous output, you would run
 
     kill 44616
-    
+
 Then run the server again.
