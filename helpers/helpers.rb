@@ -2,9 +2,12 @@
 
 # encoding: utf-8
 require 'sinatra/base'
+require_relative 'date_helper'
 
 module Sinatra
   module HelperMethods
+    include DateHelper
+
     # From http://api.rubyonrails.org/classes/ActionView/Helpers/TextHelper.html#method-i-truncate
     def truncate(text, options = {})
       options.reverse_merge!(:length => 30)
@@ -16,7 +19,7 @@ module Sinatra
     end
 
     def team_id_current_week_link_url(team_id)
-      "/#{team_id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+      "/#{team_id}/#{Time.now.year}/week/#{week_num_now}"
     end
 
     # Works for any day in the week, but note that weeks start

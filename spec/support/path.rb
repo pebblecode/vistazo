@@ -1,5 +1,9 @@
 # Helper methods to navigate to paths in the application
+
+require_relative '../../helpers/date_helper'
+
 module PathSpecHelper
+  include DateHelper
 
   def homepage
     '/'
@@ -38,11 +42,11 @@ module PathSpecHelper
   end
 
   def team_current_week_path(team)
-    "/#{team.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+    team_id_current_week_path(team.id)
   end
 
   def team_id_current_week_path(team_id)
-    "/#{team_id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+    "/#{team_id}/#{Time.now.year}/week/#{week_num_now}"
   end
 
   ############################################################################

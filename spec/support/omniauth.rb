@@ -1,5 +1,7 @@
 # Helper rspec methods for [omniauth](http://github.com/intridea/omniauth)
 module OmniauthSpecHelper
+  include DateHelper
+
   # Omniauth settings
   OmniAuth.config.test_mode = true
   # Set default provider to be "google_oauth2"
@@ -124,7 +126,7 @@ module OmniauthSpecHelper
 
     # Should redirect to current week
     follow_redirect_with_session_login!(@session)
-    last_request.path.should == "/#{team.id}/#{Time.now.year}/week/#{Time.now.strftime("%U")}"
+    last_request.path.should == team_current_week_path(team)
   end
 
   def logout_session!(session)
