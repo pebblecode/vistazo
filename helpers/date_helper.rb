@@ -6,6 +6,12 @@ module DateHelper
     week_num(Time.now)
   end
 
+  # @param {Date} The date to check
+  # @return {Boolean} Whether the date is today or not
+  def is_today?(date)
+    (date.year == Time.now.year) and (date.month == Time.now.month) and (date.day == Time.now.day)
+  end
+
   # Get the week number from the time, from 1 to 52 inclusive.
   #
   # @param {Time} time The time
