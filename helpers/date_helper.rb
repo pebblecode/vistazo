@@ -27,4 +27,12 @@ module DateHelper
       time_week
     end
   end
+
+  # Get the week range for the given year
+  def week_range(year)
+    start_week = Time.parse("#{year}-1-1").strftime("%U").to_i
+    end_week = Time.parse("#{year}-12-31").strftime("%U").to_i
+
+    start_week..end_week
+  end
 end
