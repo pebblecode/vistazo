@@ -36,6 +36,19 @@ module DateHelper
     start_week..end_week
   end
 
+  # Get previous week's year. If it is the first week of the
+  # year, return the previous year
+  def prev_week_year(week, year)
+    prev_week = week - 1
+    previous_week_year = year
+
+    if prev_week < week_range(year).first
+      previous_week_year = year - 1
+    end
+
+    previous_week_year
+  end
+
   # Get the previous week number. If it is the first week of the
   # year, return the last week of the previous year
   def prev_week_num(week, year)
@@ -46,6 +59,19 @@ module DateHelper
     end
 
     prev_week
+  end
+
+  # Get next week's year. If it is the last week of the
+  # year, return the next year
+  def next_week_year(week, year)
+    next_week = week + 1
+    n_week_year = year
+
+    if next_week > week_range(year).last
+      n_week_year = year + 1
+    end
+
+    n_week_year
   end
 
   # Get the next week number. If it is the last week of the
