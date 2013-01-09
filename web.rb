@@ -219,13 +219,13 @@ get '/:team_id/:year/week/:week_num' do
       next_week_year = ((week_num + 1) > NUM_WEEKS_IN_A_YEAR) ? year + 1 : year
       @next_week_url = "/#{params[:team_id]}/#{next_week_year}/week/#{next_week_num}"
 
-      @monday_date = Date.commercial(year, week_num, MONDAY)
-      @tuesday_date = Date.commercial(year, week_num, TUESDAY)
+      @monday_date    = Date.commercial(year, week_num, MONDAY)
+      @tuesday_date   = Date.commercial(year, week_num, TUESDAY)
       @wednesday_date = Date.commercial(year, week_num, WEDNESDAY)
-      @thursday_date = Date.commercial(year, week_num, THURSDAY)
-      @friday_date = Date.commercial(year, week_num, FRIDAY)
-      @saturday_date = Date.commercial(year, week_num, SATURDAY)
-      @sunday_date = Date.commercial(year, week_num, SUNDAY)
+      @thursday_date  = Date.commercial(year, week_num, THURSDAY)
+      @friday_date    = Date.commercial(year, week_num, FRIDAY)
+      @saturday_date  = Date.commercial(year, week_num, SATURDAY)
+      @sunday_date    = Date.commercial(year, week_num, SUNDAY)
 
       @projects = Project.where(:team_id => @team.id).sort(:name)
       @users = User.where(:team_ids => @team.id).sort(:name)
