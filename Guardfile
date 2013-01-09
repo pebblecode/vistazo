@@ -17,18 +17,18 @@ guard 'rspec', :cli => '--color', :version => 2 do
 
   # Models
   watch(%r{^models/(.+)\.rb$})          { |m| "spec/models/#{m[1]}_spec.rb" }
-  watch(%r{^spec/models/(.+)\.rb$})     { |m| "spec/models/#{m[1]}.rb" }
 
   # Helpers
   watch(%r{^helpers/(.+)\.rb$})          { |m| "spec/helpers/#{m[1]}_spec.rb" }
-  watch(%r{^spec/helpers/(.+)\.rb$})     { |m| "spec/helpers/#{m[1]}.rb" }
 
   # Library files
   watch(%r{^lib/(.+)\.rb$})             { |m| "spec/lib/#{m[1]}_spec.rb" }
   watch(%r{^spec/lib/(.+)\.rb$})        { |m| "spec/lib/#{m[1]}.rb" }
 
+  # Run all specs that are changed
+  watch(%r{^spec/(.+_spec)\.rb$})       { |m| "spec/#{m[1]}.rb" }
+
   # Others
-  watch(%r{^spec/.+_spec\.rb$})         { "spec" }
   watch(%r{^spec/support/(.+)\.rb$})    { "spec" }
   watch('spec/spec_helper.rb')          { "spec" }
 
