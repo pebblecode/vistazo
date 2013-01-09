@@ -21,6 +21,7 @@ guard 'rspec', :cli => '--color', :version => 2 do
 
   # Helpers
   watch(%r{^helpers/(.+)\.rb$})          { |m| "spec/helpers/#{m[1]}_spec.rb" }
+  watch(%r{^spec/helpers/(.+)\.rb$})     { |m| "spec/helpers/#{m[1]}.rb" }
 
   # Library files
   watch(%r{^lib/(.+)\.rb$})             { |m| "spec/lib/#{m[1]}_spec.rb" }
