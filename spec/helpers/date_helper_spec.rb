@@ -3,125 +3,135 @@ require_relative '../../helpers/date_helper'
 
 describe "DateHelper" do
   describe "week_range" do
-    describe "for 54 week year that starts mid week and ends mid week)" do
-      it "should be 0..53" do
-        week_range(2000).should == (0..53)
-      end
-    end
+    @year_check = {
+      # A year that starts mid week and ends on sunday
+      2000 => (0..52),
+      # A year that starts on monday and ends mid week
+      2001 => (1..53),
+      # A year with 54 weeks (happens every 28 years)
+      2012 => (0..53)
+    }
 
-    describe "for 53 week year that ends mid week" do
-      it "should be 1..53" do
-        week_range(2012).should == (1..53)
-      end
-    end
-
-    describe "for 53 week year that starts mid week" do
-      it "should be 0..52" do
-        week_range(2001).should == (0..52)
+    @year_check.keys.each do |year|
+      year_range = @year_check[year]
+      it "should be #{year_range} for #{year}" do
+        week_range(year).should == year_range
       end
     end
   end
 
   describe "prev_week_year" do
-    describe "for week 3 in year 2000" do
-      it "should be 2" do
-        prev_week_year(3, 2000).should == 2000
-      end
-    end
+    @data = {
+      # A year that starts mid week and ends on sunday
+      2000 => {
+        2 => 2000,
+        1 => 2000,
+        0 => 1999
+      },
+      # A year that starts on monday and ends mid week
+      2001 => {
+        1 => 2000
+      },
+      # A year with 54 weeks (happens every 28 years)
+      2012 => {
+        0 => 2011
+      }
+    }
 
-    describe "for week 1 in year 2000" do
-      it "should be 0" do
-        prev_week_year(1, 2000).should == 2000
-      end
-    end
-
-    describe "for week 0 in year 2000" do
-      it "should be 52" do
-        prev_week_year(0, 2000).should == 1999
-      end
-    end
-
-    describe "for week 0 in year 2013" do
-      it "should be 53" do
-        prev_week_year(0, 2013).should == 2012
+    @data.keys.each do |year|
+      year_weeks = @data[year].keys
+      year_weeks.each do |week|
+        year_check = @data[year][week]
+        it "should be #{year_check} for #{year} in week #{week}" do
+          prev_week_year(week, year).should == year_check
+        end
       end
     end
   end
 
   describe "prev_week_num" do
-    describe "for week 3 in year 2000" do
-      it "should be 2" do
-        prev_week_num(3, 2000).should == 2
-      end
-    end
+    @data = {
+      # A year that starts mid week and ends on sunday
+      2000 => {
+        2 => 1,
+        1 => 0,
+        0 => 52
+      },
+      # A year that starts on monday and ends mid week
+      2001 => {
+        1 => 52
+      },
+      # A year with 54 weeks (happens every 28 years)
+      2012 => {
+        0 => 52
+      }
+    }
 
-    describe "for week 1 in year 2000" do
-      it "should be 0" do
-        prev_week_num(1, 2000).should == 0
-      end
-    end
-
-    describe "for week 0 in year 2000" do
-      it "should be 52" do
-        prev_week_num(0, 2000).should == 52
-      end
-    end
-
-    describe "for week 0 in year 2013" do
-      it "should be 53" do
-        prev_week_num(0, 2013).should == 53
+    @data.keys.each do |year|
+      year_weeks = @data[year].keys
+      year_weeks.each do |week|
+        year_check = @data[year][week]
+        it "should be #{year_check} for #{year} in week #{week}" do
+          prev_week_num(week, year).should == year_check
+        end
       end
     end
   end
 
   describe "next_week_year" do
-    describe "for week 3 in year 2000" do
-      it "should be 2000" do
-        next_week_year(3, 2000).should == 2000
-      end
-    end
+    @data = {
+      # A year that starts mid week and ends on sunday
+      2000 => {
+        2 => 2000,
+        52 => 2001
+      },
+      # A year that starts on monday and ends mid week
+      2001 => {
+        52 => 2001,
+        53 => 2002
+      },
+      # A year with 54 weeks (happens every 28 years)
+      2012 => {
+        53 => 2013
+      }
+    }
 
-    describe "for week 52 in year 2000" do
-      it "should be 2000" do
-        next_week_year(52, 2000).should == 2000
-      end
-    end
-
-    describe "for week 53 in year 2000" do
-      it "should be 2001" do
-        next_week_year(53, 2000).should == 2001
-      end
-    end
-
-    describe "for week 52 in year 2001" do
-      it "should be 2002" do
-        next_week_year(52, 2001).should == 2002
+    @data.keys.each do |year|
+      year_weeks = @data[year].keys
+      year_weeks.each do |week|
+        year_check = @data[year][week]
+        it "should be #{year_check} for #{year} in week #{week}" do
+          next_week_year(week, year).should == year_check
+        end
       end
     end
   end
 
   describe "next_week_num" do
-    describe "for week 3 in year 2000" do
-      it "should be 4" do
-        next_week_num(3, 2000).should == 4
-      end
-    end
+    @data = {
+      # A year that starts mid week and ends on sunday
+      2000 => {
+        2 => 3,
+        52 => 1
+      },
+      # A year that starts on monday and ends mid week
+      2001 => {
+        52 => 53,
+        53 => 0
+      },
+      # A year with 54 weeks (happens every 28 years)
+      2012 => {
+        53 => 0
+      }
+    }
 
-    describe "for week 52 in year 2000" do
-      it "should be 53" do
-        next_week_num(52, 2000).should == 53
-      end
-    end
-
-    describe "for week 53 in year 2000" do
-      it "should be 0" do
-        next_week_num(53, 2000).should == 0
-      end
-    end
-
-    describe "for week 52 in year 2001" do
-      it "should be 1" do
-        next_week_num(52, 2001).should == 0
+    @data.keys.each do |year|
+      year_weeks = @data[year].keys
+      year_weeks.each do |week|
+        year_check = @data[year][week]
+        it "should be #{year_check} for #{year} in week #{week}" do
+          next_week_num(week, year).should == year_check
+        end
       end
     end
   end

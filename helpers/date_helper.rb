@@ -28,10 +28,11 @@ module DateHelper
     end
   end
 
-  # Get the week range for the given year
+  # Get the week range for the given year.
+  # Note, week starts from Monday, as per "%W" of http://ruby-doc.org/stdlib-1.9.3/libdoc/date/rdoc/Date.html#method-i-strftime
   def week_range(year)
-    start_week = Time.parse("#{year}-1-1").strftime("%U").to_i
-    end_week = Time.parse("#{year}-12-31").strftime("%U").to_i
+    start_week = Time.parse("#{year}-1-1").strftime("%W").to_i
+    end_week = Time.parse("#{year}-12-31").strftime("%W").to_i
 
     start_week..end_week
   end
