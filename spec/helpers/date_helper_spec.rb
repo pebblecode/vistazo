@@ -2,8 +2,6 @@ require_relative '../spec_helper'
 require_relative '../../helpers/date_helper'
 
 describe "DateHelper" do
-  # include "DateHelper"
-
   describe "week_range" do
     describe "for 54 week year that starts mid week and ends mid week)" do
       it "should be 0..53" do
