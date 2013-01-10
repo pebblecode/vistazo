@@ -1,6 +1,5 @@
 # Helper rspec methods for [omniauth](http://github.com/intridea/omniauth)
 module OmniauthSpecHelper
-  include DateHelper
 
   # Omniauth settings
   OmniAuth.config.test_mode = true

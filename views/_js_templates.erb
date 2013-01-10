@@ -6,7 +6,7 @@
     <form id="new-timetable-item-form" action="/" method="post">
       <input type="hidden" name="date" value=""/>
       <input type="hidden" name="team_member_id" value=""/>
-      
+
       <%# Dummy div to be replaced by js %>
       <div id="existing-projects-listing"></div>
 
@@ -18,7 +18,7 @@
         </fieldset> <!-- New project -->
       </fieldset>
     </form>
-    
+
     <div id="dialog-arrow"></div>
   </div>
 </script>
@@ -108,7 +108,7 @@
             <% num_weeks += 1 %>
           <% end %>
         </tr>
-        
+
         <tr class="row-spacer">
           <% extra_cols = 2 %>
           <td colspan="<%= @days_in_month + extra_cols %>"><div></div></td>
@@ -190,72 +190,72 @@
     <table id="timetable" class="week-view">
       <thead>
         <tr>
-          <th class="first-row col1"> 
+          <th class="first-row col1">
             <% if @prev_week_url.present? %>
               <a href="<%= @prev_week_url %>" class="arrows" title="Previous week">( <div id="help-week"></div>
               <div id="help-edit"></div></a>
             <% end %>
           </th>
-        
+
           <th class="first-row col2">
-            
+
             <p class="day"><%= @monday_date.strftime("%a") %></p> <p class="date"><%= @monday_date.day.ordinalize %></p><p class="month"><%= @monday_date.strftime("%b") %></p>
-            
-            <% if is_today?(@monday_date) %>
+
+            <% if Date.is_today?(@monday_date) %>
               <div class="today"></div>
             <% end %>
           </th>
           <th class="first-row col3">
             <p class="day"><%= @tuesday_date.strftime("%a") %></p> <p class="date"><%= @tuesday_date.day.ordinalize %></p><p class="month"><%= @tuesday_date.strftime("%b") %></p>
-            
-            <% if is_today?(@tuesday_date) %>
+
+            <% if Date.is_today?(@tuesday_date) %>
               <div class="today"></div>
             <% end %>
           </th>
           <th class="first-row col4">
             <p class="day"><%= @wednesday_date.strftime("%a") %></p> <p class="date"><%= @wednesday_date.day.ordinalize %></p><p class="month"><%= @wednesday_date.strftime("%b") %></p>
-            
-            <% if is_today?(@wednesday_date) %>
+
+            <% if Date.is_today?(@wednesday_date) %>
               <div class="today"></div>
             <% end %>
           </th>
           <th class="first-row col5">
             <p class="day"><%= @thursday_date.strftime("%a") %></p> <p class="date"><%= @thursday_date.day.ordinalize %></p><p class="month"><%= @thursday_date.strftime("%b") %></p>
-            
-            <% if is_today?(@thursday_date) %>
+
+            <% if Date.is_today?(@thursday_date) %>
               <div class="today"></div>
             <% end %>
           </th>
           <th class="first-row col6">
             <p class="day"><%= @friday_date.strftime("%a") %></p> <p class="date"><%= @friday_date.day.ordinalize %></p><p class="month"><%= @friday_date.strftime("%b") %></p>
-            
-            <% if is_today?(@friday_date) %>
+
+            <% if Date.is_today?(@friday_date) %>
               <div class="today"></div>
             <% end %>
           </th>
-          
+
           <th class="first-row col7">
             <p class="day"><%= @saturday_date.strftime("%a") %></p> <p class="date"><%= @saturday_date.day.ordinalize %></p><p class="month"><%= @saturday_date.strftime("%b") %></p>
-            
-            <% if is_today?(@saturday_date) %>
+
+            <% if Date.is_today?(@saturday_date) %>
               <div class="today"></div>
             <% end %>
           </th>
-          
+
           <th class="first-row col8">
             <p class="day"><%= @sunday_date.strftime("%a") %></p> <p class="date"><%= @sunday_date.day.ordinalize %></p><p class="month"><%= @sunday_date.strftime("%b") %></p>
-            
-            <% if is_today?(@sunday_date) %>
+
+            <% if Date.is_today?(@sunday_date) %>
               <div class="today"></div>
             <% end %>
           </th>
-          
+
           <th class="first-row col-last">
             <a href="<%= @next_week_url %>" class="arrows" title="Next week">)</a>
           </th>
         </tr>
       </thead>
-      
+
       <tbody id="content">
         <%# Updated using js %>
       </tbody>
@@ -392,7 +392,7 @@
         <input id="new-user-visible" type="checkbox" name="is_visible" value="true" {{ isVisible ? "checked='checked'" : "" }} />
         <button type="submit" class="submit-button">update</button>
       </div>
-      
+
     </form>
 
     <form action="/{{ teamId }}/users/{{ userId }}/delete" method="post">

@@ -1,14 +1,15 @@
-module DateHelper
+# Extend date object with helpers
+class Date
   # The week number right now
   #
   # @return {String} Week from 1 to 52 inclusive
-  def week_num_now
+  def self.week_num_now
     week_num(Time.now)
   end
 
   # @param {Date} The date to check
   # @return {Boolean} Whether the date is today or not
-  def is_today?(date)
+  def self.is_today?(date)
     (date.year == Time.now.year) and (date.month == Time.now.month) and (date.day == Time.now.day)
   end
 
@@ -16,7 +17,7 @@ module DateHelper
   #
   # @param {Time} time The time
   # @return {String} Week from 1 to 52 inclusive
-  def week_num(time)
+  def self.week_num(time)
     time_week = time.strftime("%U")
     case time_week
     when "00"
@@ -30,7 +31,7 @@ module DateHelper
 
   # Get the week range for the given year.
   # Note, week starts from Monday, as per "%W" of http://ruby-doc.org/stdlib-1.9.3/libdoc/date/rdoc/Date.html#method-i-strftime
-  def week_range(year)
+  def self.week_range(year)
     start_week = Time.parse("#{year}-1-1").strftime("%W").to_i
     end_week = Time.parse("#{year}-12-31").strftime("%W").to_i
 
@@ -39,7 +40,7 @@ module DateHelper
 
   # Get previous week's year. If it is the first week of the
   # year, return the previous year
-  def prev_week_year(week, year)
+  def self.prev_week_year(week, year)
     prev_week = week - 1
     previous_week_year = year
 
@@ -52,7 +53,7 @@ module DateHelper
 
   # Get the previous week number. If it is the first week of the
   # year, return the last week of the previous year
-  def prev_week_num(week, year)
+  def self.prev_week_num(week, year)
     prev_week = week - 1
 
     if prev_week < week_range(year).first
@@ -64,7 +65,7 @@ module DateHelper
 
   # Get next week's year. If it is the last week of the
   # year, return the next year
-  def next_week_year(week, year)
+  def self.next_week_year(week, year)
     next_week = week + 1
     n_week_year = year
 
@@ -77,7 +78,7 @@ module DateHelper
 
   # Get the next week number. If it is the last week of the
   # year, return the first week of the next year
-  def next_week_num(week, year)
+  def self.next_week_num(week, year)
     next_week = week + 1
 
     if next_week > week_range(year).last

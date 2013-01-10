@@ -1,7 +1,6 @@
 require_relative '../spec_helper'
-require_relative '../../helpers/date_helper'
 
-describe "DateHelper" do
+describe "Date" do
   describe "week_range" do
     @year_check = {
       # A year that starts mid week and ends on sunday
@@ -15,7 +14,7 @@ describe "DateHelper" do
     @year_check.keys.each do |year|
       year_range = @year_check[year]
       it "should be #{year_range} for #{year}" do
-        week_range(year).should == year_range
+        Date.week_range(year).should == year_range
       end
     end
   end
@@ -43,7 +42,7 @@ describe "DateHelper" do
       year_weeks.each do |week|
         year_check = @data[year][week]
         it "should be #{year_check} for #{year} in week #{week}" do
-          prev_week_year(week, year).should == year_check
+          Date.prev_week_year(week, year).should == year_check
         end
       end
     end
@@ -72,7 +71,7 @@ describe "DateHelper" do
       year_weeks.each do |week|
         year_check = @data[year][week]
         it "should be #{year_check} for #{year} in week #{week}" do
-          prev_week_num(week, year).should == year_check
+          Date.prev_week_num(week, year).should == year_check
         end
       end
     end
@@ -101,7 +100,7 @@ describe "DateHelper" do
       year_weeks.each do |week|
         year_check = @data[year][week]
         it "should be #{year_check} for #{year} in week #{week}" do
-          next_week_year(week, year).should == year_check
+          Date.next_week_year(week, year).should == year_check
         end
       end
     end
@@ -130,7 +129,7 @@ describe "DateHelper" do
       year_weeks.each do |week|
         year_check = @data[year][week]
         it "should be #{year_check} for #{year} in week #{week}" do
-          next_week_num(week, year).should == year_check
+          Date.next_week_num(week, year).should == year_check
         end
       end
     end
