@@ -76,7 +76,7 @@ class TimetableItem
   end
 
   def cache_date
-    self.week_num = self.date.strftime("%U").to_i
+    self.week_num = Date.week_num(self.date)
     self.month = self.date.month.to_i
     self.year = self.date.year.to_i
   end

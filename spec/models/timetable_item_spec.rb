@@ -185,7 +185,7 @@ describe "TimetableItem model" do
       @team = user_timetable.team
       @date = Date.parse("2012-07-26")
       @year = @date.year
-      @week_num = @date.strftime("%U").to_i
+      @week_num = Date.week_num(@date).to_i
 
       @timetable_item = Factory(:timetable_item, :date => @date, :user_timetable => user_timetable)
     end

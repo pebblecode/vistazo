@@ -82,7 +82,7 @@
             <td class="<%= ((num_weeks % 2) == 0) ? "odd" : "even" %>" colspan="<%= days_before_first_monday %>">
               <%
                 first_date = Date.new(@year, @month, 1)
-                first_of_month_week = first_date.strftime("%U").to_i
+                first_of_month_week = Date.week_num(first_date).to_i
 
                 # To take into consideration Sunday being the start of the
                 # week for week function, whereas Vistazo starts on Monday

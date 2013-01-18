@@ -21,7 +21,8 @@ module Sinatra
     # on Sunday
     # http://www.ruby-doc.org/stdlib-1.9.3/libdoc/date/rdoc/Date.html#method-i-strftime
     def week_for_day_url(team, year, month, day)
-      week = Date.new(year, month, day).strftime("%U")
+      date = Date.parse("#{year}-#{month}-#{day}")
+      week = Date.week_num(date)
 
       week_url(team, year, week)
     end

@@ -28,7 +28,7 @@ feature "Week view" do
       @project = Factory(:project)
       @year = 2013
       @date = Time.new(@year, 1, 1)
-      @date_week = @date.strftime("%U")
+      @date_week = Date.week_num(@date)
 
       @user_timetable = Factory(:user_timetable, :team => @team, :user => @user)
       @timetable_item = Factory(:timetable_item, :project => @project, :date => @date, :user_timetable => @user_timetable)
@@ -39,8 +39,8 @@ feature "Week view" do
       visit team_week_path(@team, @year, @date_week)
     end
 
-    scenario "should redirect to week 0" do
-      page.current_path.should == "/#{@team.id}/#{@year}/week/00"
+    scenario "should redirect to week 1" do
+      page.current_path.should == "/#{@team.id}/#{@year}/week/1"
     end
 
     scenario "should show timetable item added" do
@@ -55,7 +55,7 @@ feature "Week view" do
       @project = Factory(:project)
       @year = 2012
       @date = Time.new(@year, 3, 26) # An artibtrary Monday
-      @date_week = @date.strftime("%U")
+      @date_week = Date.week_num(@date)
       @user_timetable = Factory(:user_timetable, :team => @team, :user => @user)
       @timetable_item = Factory(:timetable_item, :project => @project, :date => @date, :user_timetable => @user_timetable)
 
@@ -65,7 +65,7 @@ feature "Week view" do
 
     scenario "should show correct timetable items from different weeks" do
       next_week_date = @date + 7.day
-      next_week_date_week = next_week_date.strftime("%U")
+      next_week_date_week = Date.week_num(next_week_date)
       next_week_timetable_item = Factory(:timetable_item, :user_timetable => @user_timetable, :project => @project, :date => next_week_date)
 
       visit team_week_path(@team, @year, @date_week)
