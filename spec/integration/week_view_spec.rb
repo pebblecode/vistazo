@@ -39,10 +39,6 @@ feature "Week view" do
       visit team_week_path(@team, @year, @date_week)
     end
 
-    scenario "should redirect to week 1" do
-      page.current_path.should == "/#{@team.id}/#{@year}/week/1"
-    end
-
     scenario "should show timetable item added" do
       timetable_items = backbone_collection_on_page(:timetable_items, page)
 

@@ -72,7 +72,7 @@ describe "TimetableItem model" do
 
     it "should be cached on save" do
       timetable_item = Factory(:timetable_item)
-      timetable_item.date = "2012-01-01"
+      timetable_item.date = "2012-01-05"
       timetable_item.save
 
       timetable_item.week_num.should == 1

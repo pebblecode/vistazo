@@ -13,20 +13,13 @@ class Date
     (date.year == Time.now.year) and (date.month == Time.now.month) and (date.day == Time.now.day)
   end
 
-  # Get the week number from the time, from 1 to 52 inclusive.
+  # Get the week number from the time. Uses ISO 8601 format
+  # See http://www.ruby-doc.org/core-1.9.3/Time.html#method-i-strftime
   #
   # @param {Time} time The time
-  # @return {String} Week from 1 to 52 inclusive
+  # @return {String} Week from 1 to 53 inclusive
   def self.week_num(time)
-    time_week = time.strftime("%U")
-    case time_week
-    when "00"
-      "1" # Move forward, because strftime starts from 0
-    when "53"
-      "52" # Move back, because strftime ends at 53
-    else
-      time_week
-    end
+    time.strftime("%V")
   end
 
   # Get the week range for the given year.
