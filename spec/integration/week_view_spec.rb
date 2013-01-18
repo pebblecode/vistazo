@@ -23,29 +23,6 @@ feature "Week view" do
     page.should have_content("You're not authorized to view this page")
   end
 
-  describe "after logged in, in the first week of a year" do
-    background do
-      @project = Factory(:project)
-      @year = 2013
-      @date = Time.new(@year, 1, 1)
-      @date_week = Date.week_num(@date)
-
-      @user_timetable = Factory(:user_timetable, :team => @team, :user => @user)
-      @timetable_item = Factory(:timetable_item, :project => @project, :date => @date, :user_timetable => @user_timetable)
-
-      visit "/"
-      click_link "start-btn"
-
-      visit team_week_path(@team, @year, @date_week)
-    end
-
-    scenario "should show timetable item added" do
-      timetable_items = backbone_collection_on_page(:timetable_items, page)
-
-      timetable_items.length.should == 1
-    end
-  end
-
   describe "after logged in" do
     background do
       @project = Factory(:project)
