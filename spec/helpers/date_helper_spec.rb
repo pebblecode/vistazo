@@ -2,13 +2,28 @@ require_relative '../spec_helper'
 
 describe "Date" do
   describe "week_range" do
+    # Based on ISO 8601 date ranges
+    # http://www.ruby-doc.org/core-1.9.3/Time.html#method-i-strftime
     @year_check = {
-      # A year that starts mid week and ends on sunday
-      2000 => (0..52),
-      # A year that starts on monday and ends mid week
-      2001 => (1..53),
-      # A year with 54 weeks (happens every 28 years)
-      2012 => (0..53)
+      # Years that starts before Thursday
+      1999 => (1..52),
+      2000 => (1..52),
+      2001 => (1..52),
+      2002 => (1..52),
+      2003 => (1..52),
+
+      # Years that starts on Thursday
+      1992 => (1..53),
+      1998 => (1..53),
+      2004 => (1..53),
+      2009 => (1..53),
+      2015 => (1..53),
+
+      # Year that after Thursday
+      2005 => (1..52),
+      2006 => (1..52),
+      2007 => (1..52),
+      2008 => (1..52)
     }
 
     @year_check.keys.each do |year|
@@ -20,20 +35,22 @@ describe "Date" do
   end
 
   describe "prev_week_year" do
+    # Data format:
+    #   year_to_check => {
+    #     week_in_year => output
+    #   }
     @data = {
-      # A year that starts mid week and ends on sunday
-      2000 => {
-        2 => 2000,
-        1 => 2000,
-        0 => 1999
+      # A 53 week year
+      2004 => {
+        53 => 2004,
+        52 => 2004,
+        1 => 2003
       },
-      # A year that starts on monday and ends mid week
-      2001 => {
-        1 => 2000
-      },
-      # A year with 54 weeks (happens every 28 years)
-      2012 => {
-        0 => 2011
+
+      # After a 53 week year
+      2005 => {
+        52 => 2005,
+        1 => 2004
       }
     }
 
@@ -49,20 +66,22 @@ describe "Date" do
   end
 
   describe "prev_week_num" do
+    # Data format:
+    #   year_to_check => {
+    #     week_in_year => output
+    #   }
     @data = {
-      # A year that starts mid week and ends on sunday
-      2000 => {
-        2 => 1,
-        1 => 0,
-        0 => 52
-      },
-      # A year that starts on monday and ends mid week
-      2001 => {
+      # A 53 week year
+      2004 => {
+        53 => 52,
+        52 => 51,
         1 => 52
       },
-      # A year with 54 weeks (happens every 28 years)
-      2012 => {
-        0 => 52
+
+      # After a 53 week year
+      2005 => {
+        52 => 51,
+        1 => 53
       }
     }
 
@@ -78,20 +97,22 @@ describe "Date" do
   end
 
   describe "next_week_year" do
+    # Data format:
+    #   year_to_check => {
+    #     week_in_year => output
+    #   }
     @data = {
-      # A year that starts mid week and ends on sunday
-      2000 => {
-        2 => 2000,
-        52 => 2001
+      # A 53 week year
+      2004 => {
+        53 => 2005,
+        52 => 2004,
+        1 => 2004
       },
-      # A year that starts on monday and ends mid week
-      2001 => {
-        52 => 2001,
-        53 => 2002
-      },
-      # A year with 54 weeks (happens every 28 years)
-      2012 => {
-        53 => 2013
+
+      # After a 53 week year
+      2005 => {
+        52 => 2006,
+        1 => 2005
       }
     }
 
@@ -107,20 +128,22 @@ describe "Date" do
   end
 
   describe "next_week_num" do
+    # Data format:
+    #   year_to_check => {
+    #     week_in_year => output
+    #   }
     @data = {
-      # A year that starts mid week and ends on sunday
-      2000 => {
-        2 => 3,
-        52 => 1
-      },
-      # A year that starts on monday and ends mid week
-      2001 => {
+      # A 53 week year
+      2004 => {
+        53 => 1,
         52 => 53,
-        53 => 0
+        1 => 2
       },
-      # A year with 54 weeks (happens every 28 years)
-      2012 => {
-        53 => 0
+
+      # After a 53 week year
+      2005 => {
+        52 => 1,
+        1 => 2
       }
     }
 

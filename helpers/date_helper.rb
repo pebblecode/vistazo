@@ -13,7 +13,9 @@ class Date
     (date.year == Time.now.year) and (date.month == Time.now.month) and (date.day == Time.now.day)
   end
 
-  # Get the week number from the time. Uses ISO 8601 format
+  # Get the week number from the time. Uses ISO 8601 format.
+  # Note that a date can exist at the start of a year and be
+  # in the week at the end of the previous year.
   # See http://www.ruby-doc.org/core-1.9.3/Time.html#method-i-strftime
   #
   # @param {Time} time The time
@@ -25,8 +27,10 @@ class Date
   # Get the week range for the given year.
   # Note, week starts from Monday, as per "%W" of http://ruby-doc.org/stdlib-1.9.3/libdoc/date/rdoc/Date.html#method-i-strftime
   def self.week_range(year)
-    start_week = Time.parse("#{year}-1-1").strftime("%W").to_i
-    end_week = Time.parse("#{year}-12-31").strftime("%W").to_i
+    start_week = 1
+
+    last_day_of_year = Time.parse("#{year}-12-31")
+    end_week = (last_day_of_year.strftime("%V") == "53") ? 53 : 52
 
     start_week..end_week
   end
