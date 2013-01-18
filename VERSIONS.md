@@ -1,3 +1,7 @@
+# 1.1.2
+
+* [#252] Fix year bug
+
 # 1.1.1
 
 * Add last logged in to user
