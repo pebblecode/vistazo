@@ -27,6 +27,7 @@ However, for reference, here is a listing of migrations that can be run (from th
 
     ruby db/migrations/2012-01-13-upgrade-0.5.1-to-multiple-teams.rb
     ruby db/migrations/2012-01-17-remove-pending-teams-from-user-team_ids.rb
+    ruby db/migrations/2013-01-18-fix-week-cache.rb
 
 
 ## Development
