@@ -87,10 +87,53 @@ describe "TimetableItem model" do
 
     it "should be cached on save" do
       timetable_item = Factory(:timetable_item)
-      timetable_item.date = "2011-01-01"
+      timetable_item.date = "2011-02-10"
       timetable_item.save
 
       timetable_item.year.should == 2011
+    end
+  end
+
+  describe "ISO 8601 week edge case:" do
+    # Data format:
+    #   date_to_check => {
+    #     :description => explanation of date,
+    #     :week_num => week output,
+    #     :year => year output
+    #   }
+    @data = {
+      "2012-12-31" => {
+        :description => "last day of year saves as first week in next year",
+        :week_num => 1,
+        :year => 2013
+      },
+      "2013-12-30" => {
+        :description => "2nd last day of year saves as first week in next year",
+        :week_num => 1,
+        :year => 2014
+      },
+      "2016-1-1" => {
+        :description => "first day of year saves as 53rd week in previous year",
+        :week_num => 53,
+        :year => 2015
+      },
+      "2012-1-1" => {
+        :description => "first day of year saves as 52nd week in previous year",
+        :week_num => 52,
+        :year => 2011
+      }
+    }
+
+    @data.keys.each do |date_key|
+      date_output = @data[date_key]
+      it "#{date_key} - #{date_output[:description]}" do
+        @timetable_item = Factory(:timetable_item)
+        @timetable_item.date = date_key
+        @timetable_item.save
+
+        @timetable_item.year.should == date_output[:year]
+        @timetable_item.week_num.should == date_output[:week_num]
+      end
     end
   end
 

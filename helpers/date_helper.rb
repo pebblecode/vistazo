@@ -15,13 +15,24 @@ class Date
 
   # Get the week number from the time. Uses ISO 8601 format.
   # Note that a date can exist at the start of a year and be
-  # in the week at the end of the previous year.
+  # in the week at the end of the previous year, and vice versa.
   # See http://www.ruby-doc.org/core-1.9.3/Time.html#method-i-strftime
   #
   # @param {Time} time The time
   # @return {String} Week from 1 to 53 inclusive
   def self.week_num(time)
     time.strftime("%V")
+  end
+
+  # Get the year based on the week, using the ISO 8601 format.
+  # Note that a date can exist at the start of a year and be
+  # in the previous year, and vice versa.
+  # See http://www.ruby-doc.org/core-1.9.3/Time.html#method-i-strftime
+  #
+  # @param {Time} time The time
+  # @return {String} Week based year
+  def self.week_year(time)
+    time.strftime("%G")
   end
 
   # Get the week range for the given year.
